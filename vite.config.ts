@@ -12,4 +12,37 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    minify: 'terser',
+    reportCompressedSize: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': [
+            'react',
+            'react-dom',
+            'react-hook-form',
+            'date-fns',
+          ],
+          'ui': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-accordion',
+          ],
+        },
+      },
+    },
+  },
+  server: {
+    port: 5173,
+    strictPort: false,
+    open: true,
+  },
+  preview: {
+    port: 4173,
+  },
 });

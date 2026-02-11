@@ -25,12 +25,12 @@ export default function WellnessSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 overflow-hidden bg-black"
+      className="relative py-16 sm:py-20 md:py-24 overflow-hidden bg-black"
     >
       {/* Orange Gradient Circle Background */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
-          className={`w-[90%] max-w-[800px] aspect-square rounded-full gradient-orange transition-all duration-1000 ${
+          className={`w-[95%] sm:w-[90%] max-w-[600px] sm:max-w-[800px] aspect-square rounded-full gradient-orange transition-all duration-1000 ${
             isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
           }`}
           style={{
@@ -43,7 +43,7 @@ export default function WellnessSection() {
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Title */}
         <h2
-          className={`text-3xl sm:text-4xl lg:text-5xl font-bold text-black mb-6 transition-all duration-700 ${
+          className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4 sm:mb-6 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
           style={{ transitionDelay: '0.2s' }}
@@ -53,7 +53,7 @@ export default function WellnessSection() {
 
         {/* Description */}
         <p
-          className={`text-base sm:text-lg text-black/80 max-w-xl mx-auto mb-12 transition-all duration-700 ${
+          className={`text-sm sm:text-base md:text-lg text-black/80 max-w-xl mx-auto mb-8 sm:mb-12 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
           style={{ transitionDelay: '0.4s' }}

@@ -47,7 +47,7 @@ function FAQAccordionItem({ item, index, isOpen, onToggle, isVisible }: {
         onClick={onToggle}
         className="w-full py-5 flex items-center justify-between text-left group"
       >
-        <span className="text-base sm:text-lg font-medium text-white pr-8 group-hover:text-teal-400 transition-colors">
+        <span className="text-sm sm:text-base md:text-lg font-medium text-white pr-4 sm:pr-8 group-hover:text-teal-400 transition-colors">
           {item.question}
         </span>
         <ChevronDown
@@ -99,12 +99,12 @@ export default function FAQSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 bg-black"
+      className="relative py-16 sm:py-20 md:py-24 bg-black"
     >
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <h2
-          className={`text-3xl sm:text-4xl font-bold text-white text-center mb-12 transition-all duration-700 ${
+          className={`text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >

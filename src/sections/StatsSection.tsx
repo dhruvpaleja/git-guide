@@ -48,17 +48,17 @@ function StatCard({ stat, index, isVisible }: { stat: StatItem; index: number; i
 
   return (
     <div
-      className={`text-center py-10 transition-all duration-700 ${
+      className={`text-center py-8 sm:py-10 transition-all duration-700 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
       }`}
       style={{ transitionDelay: `${0.3 + index * 0.15}s` }}
     >
-      <div className="text-2xl sm:text-3xl font-semibold text-white mb-3">
+      <div className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-2 sm:mb-3">
         {stat.prefix}
         {count}
         {stat.suffix}
       </div>
-      <p className="text-xs text-zinc-500 uppercase tracking-widest">
+      <p className="text-xs sm:text-sm text-zinc-500 uppercase tracking-widest">
         {stat.label}
       </p>
     </div>

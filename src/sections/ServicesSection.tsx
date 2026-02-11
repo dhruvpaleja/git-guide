@@ -38,7 +38,7 @@ const services: Service[] = [
 function ServiceCard({ service, index, isVisible }: { service: Service; index: number; isVisible: boolean }) {
   return (
     <div
-      className={`flex-shrink-0 w-[280px] sm:w-[320px] snap-start transition-all duration-700 ${
+      className={`flex-shrink-0 w-[calc(100vw-2rem)] sm:w-[280px] md:w-[320px] snap-start transition-all duration-700 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}
       style={{ transitionDelay: `${0.2 + index * 0.1}s` }}
@@ -122,12 +122,12 @@ export default function ServicesSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-20 bg-zinc-50"
+      className="relative py-16 sm:py-20 bg-zinc-50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <h2
-          className={`text-3xl sm:text-4xl font-bold text-black text-center mb-12 transition-all duration-700 ${
+          className={`text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center mb-8 sm:mb-12 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >

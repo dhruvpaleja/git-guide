@@ -84,12 +84,12 @@ export default function HowItWorksSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-20 bg-white"
+      className="relative py-16 sm:py-20 bg-white"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <h2
-          className={`text-3xl sm:text-4xl font-bold text-black text-center mb-14 transition-all duration-700 ${
+          className={`text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center mb-10 sm:mb-14 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
@@ -97,7 +97,7 @@ export default function HowItWorksSection() {
         </h2>
 
         {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {features.map((feature, index) => (
             <FeatureCard
               key={feature.title}

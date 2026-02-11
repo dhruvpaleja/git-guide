@@ -25,7 +25,7 @@ export default function CorporateSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 overflow-hidden bg-black"
+      className="relative py-16 sm:py-20 md:py-24 overflow-hidden bg-black"
     >
       {/* Background Glow */}
       <div className="absolute inset-0 pointer-events-none">
@@ -37,17 +37,17 @@ export default function CorporateSection() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* Content */}
           <div
             className={`transition-all duration-700 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
               Corporate Wellness
             </h2>
-            <p className="text-base sm:text-lg text-zinc-400 leading-relaxed mb-8 max-w-lg">
+            <p className="text-sm sm:text-base md:text-lg text-zinc-400 leading-relaxed mb-6 sm:mb-8 max-w-lg">
               Bring wellness to your workplace. Our corporate programs help teams manage stress, improve focus, and build resilience. Create a healthier, happier, and more productive work environment.
             </p>
             <button className="px-8 py-3.5 border border-white text-white font-medium text-sm rounded-full transition-all duration-300 hover:bg-white hover:text-black hover:scale-105">

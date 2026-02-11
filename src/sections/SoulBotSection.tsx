@@ -26,13 +26,13 @@ export default function SoulBotSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-20 bg-zinc-50"
+      className="relative py-16 sm:py-20 bg-zinc-50"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 sm:mb-12">
           <h2
-            className={`text-3xl sm:text-4xl font-bold text-black mb-4 transition-all duration-700 ${
+            className={`text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-3 sm:mb-4 transition-all duration-700 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
@@ -55,7 +55,7 @@ export default function SoulBotSection() {
           }`}
           style={{ transitionDelay: '0.3s' }}
         >
-          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-md mx-auto">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden w-full max-w-md mx-auto">
             {/* Chat Header */}
             <div className="bg-black px-5 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">

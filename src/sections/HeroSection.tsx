@@ -11,7 +11,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-16 bg-black"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 sm:pt-24 pb-12 sm:pb-16 bg-black"
     >
       {/* Background Glow Effects */}
       <div className="absolute inset-0 pointer-events-none">
@@ -37,7 +37,7 @@ export default function HeroSection() {
           {/* Left Column - Headline */}
           <div className="lg:col-span-3 text-center lg:text-left order-2 lg:order-1">
             <h1
-              className={`text-4xl sm:text-5xl lg:text-[56px] font-bold text-white leading-[1.05] tracking-tight transition-all duration-700 ${
+              className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] sm:leading-[1.05] tracking-tight transition-all duration-700 ${
                 isVisible
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-8'

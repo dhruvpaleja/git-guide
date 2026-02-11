@@ -38,10 +38,10 @@ export default function Footer() {
 
   return (
     <footer className="bg-black border-t border-zinc-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-8">
           {/* Logo & Description */}
-          <div className="lg:col-span-4">
+          <div className="sm:col-span-2 lg:col-span-4">
             <a href="#" className="flex items-center gap-2 mb-4">
               <svg
                 width="28"
@@ -96,8 +96,8 @@ export default function Footer() {
           </div>
 
           {/* Links */}
-          <div className="lg:col-span-8">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+          <div className="sm:col-span-2 lg:col-span-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
               {/* Overview */}
               <div>
                 <h4 className="text-sm font-semibold text-white mb-4">Overview</h4>

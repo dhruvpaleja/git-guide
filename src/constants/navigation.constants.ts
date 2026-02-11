@@ -2,7 +2,7 @@
  * Navigation Constants
  */
 
-import { NavItem } from '@/types';
+import type { NavItem } from '@/types';
 
 export const NAV_ITEMS: NavItem[] = [
   {

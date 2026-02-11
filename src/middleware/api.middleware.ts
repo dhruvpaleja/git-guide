@@ -3,7 +3,7 @@
  * Middleware for handling API requests
  */
 
-import { ApiResponse } from '@/types';
+import type { ApiResponse } from '@/types';
 
 /**
  * Add authentication token to requests
@@ -41,7 +41,7 @@ export async function errorMiddleware<T>(response: ApiResponse<T>): Promise<ApiR
  * Log requests and responses
  */
 export function loggingMiddleware<T>(response: ApiResponse<T>): ApiResponse<T> {
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.DEV) {
     console.log('API Response:', response);
   }
   

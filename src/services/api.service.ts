@@ -4,7 +4,7 @@
  */
 
 import { API_CONSTANTS } from '@/constants';
-import { ApiResponse, RequestConfig } from '@/types';
+import type { ApiResponse, RequestConfig } from '@/types';
 
 class ApiService {
   private baseUrl: string;

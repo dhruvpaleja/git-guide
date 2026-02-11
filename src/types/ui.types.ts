@@ -2,7 +2,7 @@
  * UI Component type definitions
  */
 
-import { ReactNode, CSSProperties } from 'react';
+import type { ReactNode, CSSProperties } from 'react';
 
 export interface BaseComponentProps {
   className?: string;

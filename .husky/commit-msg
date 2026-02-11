@@ -1,0 +1,13 @@
+#!/bin/sh
+# Commit message hook
+# Ensure commit messages follow conventional commits format
+
+if ! head -1 "$1" | grep -qE "^(feat|fix|docs|style|refactor|test|chore|ci|perf|revert)(\(.+\))?!?: .{1,}"; then
+  echo "❌ Commit message does not follow conventional commits format"
+  echo ""
+  echo "Format: <type>(<scope>): <subject>"
+  echo ""
+  echo "Types: feat, fix, docs, style, refactor, test, chore, ci, perf, revert"
+  echo "Example: feat(auth): add login functionality"
+  exit 1
+fi

@@ -2,7 +2,7 @@
  * React Helper Functions
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * Check if component is mounted
@@ -24,7 +24,7 @@ export const useIsMounted = () => {
  * Debounce hook
  */
 export const useDebounce = <T,>(value: T, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = React.useState(value);
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -41,7 +41,7 @@ export const useDebounce = <T,>(value: T, delay: number) => {
  * Previous value hook
  */
 export const usePrevious = <T,>(value: T) => {
-  const ref = useRef<T>();
+  const ref = useRef<T>(null);
 
   useEffect(() => {
     ref.current = value;

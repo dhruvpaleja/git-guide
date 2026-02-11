@@ -1,2 +1,49 @@
-node_modules
-node_modules
+# Dependencies
+node_modules/
+*.pnp
+.pnp.js
+package-lock.json
+yarn.lock
+
+# Testing
+coverage/
+.nyc_output/
+
+# Production
+dist/
+build/
+out/
+
+# Misc
+.DS_Store
+.AppleDouble
+.LSOverride
+*.log
+*.logs
+*.swp
+*.swo
+*~
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.iml
+.sass-cache/
+
+# Development
+.next/
+*.tsbuildinfo
+.turbo/
+.cache/
+.parcel-cache
+.eslintcache
+
+# IDE
+.vscode
+.idea
+*.sublime-workspace
+*.sublime-project
+
+# OS
+Thumbs.db

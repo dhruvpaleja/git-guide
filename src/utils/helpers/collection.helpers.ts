@@ -27,8 +27,19 @@ export const arrayHelpers = {
   /**
    * Flatten nested array
    */
-  flatten: <T,>(arr: (T | T[])[]): T[] => {
-    return arr.reduce((flat, item) => flat.concat(Array.isArray(item) ? flatten(item) : item), [] as T[]);
+  flatten: <T,>(arr: any[]): T[] => {
+    const result: T[] = [];
+    const flatten = (items: any[]) => {
+      for (const item of items) {
+        if (Array.isArray(item)) {
+          flatten(item);
+        } else {
+          result.push(item as T);
+        }
+      }
+    };
+    flatten(arr);
+    return result;
   },
 
   /**
@@ -56,7 +67,7 @@ export const objectHelpers = {
         const targetValue = result[key];
         
         if (sourceValue && typeof sourceValue === 'object' && !Array.isArray(sourceValue)) {
-          result[key] = objectHelpers.deepMerge(targetValue || {}, sourceValue);
+          result[key] = objectHelpers.deepMerge((targetValue || {}) as T[Extract<keyof T, string>], sourceValue);
         } else {
           result[key] = sourceValue as any;
         }

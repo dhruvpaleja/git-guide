@@ -3,8 +3,9 @@
  * Global authentication state management
  */
 
-import { createContext, ReactNode, useContext, useState, useCallback } from 'react';
-import { User } from '@/types';
+import { createContext, useContext, useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
+import type { User } from '@/types';
 
 interface AuthContextType {
   user: User | null;
@@ -21,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (_email: string, _password: string) => {
     setIsLoading(true);
     try {
       // API call would go here
@@ -36,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
-  const signup = useCallback(async (data: Partial<User>) => {
+  const signup = useCallback(async (_data: Partial<User>) => {
     setIsLoading(true);
     try {
       // API call would go here

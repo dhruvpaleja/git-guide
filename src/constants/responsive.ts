@@ -171,17 +171,16 @@ export function useResponsive() {
  *    Desktop: md:px-8 md:py-16
  * 
  * 3. Group Responsive Classes
- *    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8">
+ *    className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8"
  * 
  * 4. Touch Targets (minimum 44px x 44px)
- *    <button className="px-4 py-3 min-h-11"> (44px height)
+ *    className="px-4 py-3 min-h-11" (44px height)
  * 
  * 5. Container Queries for Components (Future)
- *    @container (min-width: 200px) { /* card styles */ }
+ *    Use @container media queries for component-based responsiveness
  * 
  * 6. Responsive Images
- *    <img srcSet="mobile.jpg 640w, tablet.jpg 1024w, desktop.jpg 1920w"
- *         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 80vw" />
+ *    Use srcSet and sizes attributes for responsive image loading
  */
 
 /**

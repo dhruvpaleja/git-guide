@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SplashScreen from '@/pages/SplashScreen';
-import LandingPage from '@/pages/LandingPage';
+import LandingPage from '@/pages/sections/landing_page/LandingPage';
 
 function App() {
   return (

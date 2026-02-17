@@ -31,63 +31,91 @@
   * {
     @apply border-border;
   }
-  
+
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 100px;
   }
-  
+
   body {
     @apply bg-black text-white antialiased;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Manrope', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Selection styling */
+  ::selection {
+    @apply bg-white/20 text-white;
+  }
+
+  /* Focus outline styling */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-white/20 ring-offset-2 ring-offset-black;
   }
 }
 
 @layer utilities {
+
   /* Glow Effects */
   .glow-teal {
     background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.35) 0%, transparent 70%);
   }
-  
+
   .glow-cyan {
     background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
   }
-  
+
   /* Orange Gradient for Wellness Section */
   .gradient-orange {
     background: radial-gradient(circle at center, #FBBF24 0%, #F97316 50%, #EA580C 100%);
   }
-  
+
   /* Glassmorphism */
   .glass {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
-  
+
   .glass-dark {
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   /* Gradient Divider */
   .gradient-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
   }
-  
+
   /* Card Gradient Overlay */
   .card-gradient-overlay {
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
   }
-  
+
   /* Hide scrollbar */
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Text balance for headings */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Smooth image loading */
+  .image-loading {
+    @apply transition-opacity duration-500;
+    opacity: 0;
+  }
+
+  .image-loaded {
+    opacity: 1;
   }
 }
 
@@ -97,6 +125,7 @@
     transform: scale(1);
     opacity: 1;
   }
+
   100% {
     transform: scale(3);
     opacity: 0;
@@ -119,95 +148,53 @@
   animation-delay: 2.5s;
 }
 
-/* Animations */
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.05);
-  }
-}
+/* Floating animation for decorative elements */
+@keyframes float {
 
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
+  0%,
+  100% {
     transform: translateY(0);
   }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Pulse animation for subtle emphasis */
+@keyframes pulse-soft {
+
+  0%,
+  100% {
     opacity: 1;
-    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
   }
 }
 
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
 }
 
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
+/* Skeleton loading shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+
+  100% {
+    background-position: 200% 0;
   }
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-scale-in {
-  animation: scale-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-slide-in-left {
-  animation: slide-in-left 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* Stagger delays */
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-.stagger-5 { animation-delay: 0.5s; }
-.stagger-6 { animation-delay: 0.6s; }
-
-/* Initial state for animations */
-.animate-on-scroll {
-  opacity: 0;
-}
-
-.animate-on-scroll.visible {
-  opacity: 1;
+.skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }

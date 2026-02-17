@@ -12,28 +12,27 @@ const features: Feature[] = [
     title: 'Get A Guided Plan',
     description: 'Get a personalized wellness plan tailored to your unique needs and goals.',
     buttonText: 'Get Now',
-    image: '/asset_7.jpg',
+    image: '/images/feature-guided-plan.jpg',
   },
   {
     title: '1-1 Sessions',
     description: 'Connect with experts one-on-one for personalized guidance and support.',
     buttonText: 'Book Now',
-    image: '/asset_8.jpg',
+    image: '/images/feature-1on1-sessions.jpg',
   },
   {
     title: 'Micro Tools',
     description: 'Access quick exercises and tools to manage stress and anxiety anytime.',
     buttonText: 'Start Now',
-    image: '/asset_9.jpg',
+    image: '/images/feature-micro-tools.jpg',
   },
 ];
 
 function FeatureCard({ feature, index, isVisible }: { feature: Feature; index: number; isVisible: boolean }) {
   return (
     <div
-      className={`transition-all duration-700 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-      }`}
+      className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
       style={{ transitionDelay: `${0.2 + index * 0.15}s` }}
     >
       <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
@@ -45,7 +44,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: Feature; index: n
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
-        
+
         {/* Content */}
         <div className="p-6">
           <h3 className="text-xl font-semibold text-black mb-2">{feature.title}</h3>
@@ -89,9 +88,8 @@ export default function HowItWorksSection() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <h2
-          className={`text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center mb-10 sm:mb-14 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          className={`text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center mb-10 sm:mb-14 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
         >
           How Soul Yatri Works For You
         </h2>

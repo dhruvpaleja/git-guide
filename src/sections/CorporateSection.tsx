@@ -30,9 +30,8 @@ export default function CorporateSection() {
       {/* Background Glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className={`absolute right-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] glow-teal blur-[120px] rounded-full transition-all duration-1000 ${
-            isVisible ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`absolute right-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] glow-teal blur-[120px] rounded-full transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
         />
       </div>
 
@@ -40,9 +39,8 @@ export default function CorporateSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* Content */}
           <div
-            className={`transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
-            }`}
+            className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+              }`}
           >
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
               Corporate Wellness
@@ -57,14 +55,13 @@ export default function CorporateSection() {
 
           {/* Image */}
           <div
-            className={`transition-all duration-1000 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
-            }`}
+            className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
+              }`}
             style={{ transitionDelay: '0.2s' }}
           >
             <div className="relative">
               <img
-                src="/asset_10.jpg"
+                src="/images/corporate-wellness.jpg"
                 alt="Corporate wellness team"
                 className="w-full rounded-3xl shadow-2xl"
               />

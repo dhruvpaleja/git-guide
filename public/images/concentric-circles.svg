@@ -1,0 +1,9 @@
+<svg viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="f0794bd" x="0" y="0"><g id="Wesbite Entry Page UI Indian" data-node-id="1:125" clip-path="url(#clip0_1_125)"><circle id="Ellipse 2" data-node-id="1:127" cx="500" cy="500" r="499.5" stroke="url(#paint1_linear_1_125)"/><circle id="Ellipse 1" data-node-id="1:128" cx="500" cy="500" r="249.5" stroke="url(#paint2_linear_1_125)"/></g><defs><linearGradient id="paint1_linear_1_125" x1="500" y1="0" x2="500" y2="781" gradientUnits="userSpaceOnUse">
+<stop stop-color="#18A2B8"/>
+<stop offset="1"/>
+</linearGradient><linearGradient id="paint2_linear_1_125" x1="500" y1="250" x2="500" y2="679" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FF7B00"/>
+<stop offset="1"/>
+</linearGradient><clipPath id="clip0_1_125">
+<rect width="1440" height="1024" fill="white" x="-220" y="-12"/>
+</clipPath></defs></svg>

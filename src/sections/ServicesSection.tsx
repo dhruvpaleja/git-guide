@@ -13,34 +13,33 @@ const services: Service[] = [
     title: 'Breathwork',
     description: 'Learn powerful breathing techniques to reduce stress and increase energy.',
     buttonText: 'Start Now',
-    image: '/asset_3.jpg',
+    image: '/images/service-breathwork.jpg',
   },
   {
     title: 'Therapist',
     description: 'Connect with licensed therapists for professional mental health support.',
     buttonText: 'Book Now',
-    image: '/asset_4.jpg',
+    image: '/images/service-therapist.jpg',
   },
   {
     title: 'Counsellor',
     description: "Get guidance from experienced counsellors for life's challenges.",
     buttonText: 'Consult Now',
-    image: '/asset_5.jpg',
+    image: '/images/service-counsellor.jpg',
   },
   {
     title: 'Healer',
     description: 'Experience holistic healing practices for mind-body wellness.',
     buttonText: 'Heal Now',
-    image: '/asset_6.jpg',
+    image: '/images/service-healer.jpg',
   },
 ];
 
 function ServiceCard({ service, index, isVisible }: { service: Service; index: number; isVisible: boolean }) {
   return (
     <div
-      className={`flex-shrink-0 w-[calc(100vw-2rem)] sm:w-[280px] md:w-[320px] snap-start transition-all duration-700 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-      }`}
+      className={`flex-shrink-0 w-[calc(100vw-2rem)] sm:w-[280px] md:w-[320px] snap-start transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
       style={{ transitionDelay: `${0.2 + index * 0.1}s` }}
     >
       <div className="relative h-[380px] sm:h-[420px] rounded-3xl overflow-hidden group cursor-pointer">
@@ -50,10 +49,10 @@ function ServiceCard({ service, index, isVisible }: { service: Service; index: n
           alt={service.title}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        
+
         {/* Gradient Overlay */}
         <div className="absolute inset-0 card-gradient-overlay" />
-        
+
         {/* Content */}
         <div className="absolute inset-0 flex flex-col justify-end p-6">
           <h3 className="text-2xl font-bold text-white mb-2">{service.title}</h3>
@@ -127,9 +126,8 @@ export default function ServicesSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <h2
-          className={`text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center mb-8 sm:mb-12 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          className={`text-2xl sm:text-3xl md:text-4xl font-bold text-black text-center mb-8 sm:mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
         >
           What Soul Yatri Offers To You
         </h2>
@@ -139,18 +137,16 @@ export default function ServicesSection() {
           {/* Scroll Buttons */}
           <button
             onClick={() => scroll('left')}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-              canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
           >
             <ChevronLeft className="w-6 h-6 text-black" />
           </button>
-          
+
           <button
             onClick={() => scroll('right')}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-              canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
+            className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
           >
             <ChevronRight className="w-6 h-6 text-black" />
           </button>

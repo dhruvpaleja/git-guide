@@ -8,27 +8,54 @@ Soul Yatri is a modern, scalable web application built with React, Vite, and Typ
 
 ```
 src/
-├── assets/              # Static assets
-│   ├── images/         # Image files
-│   └── icons/          # SVG and icon assets
 ├── components/         # React components
-│   ├── ui/            # Reusable UI components
-│   ├── common/        # Shared components
-│   ├── layouts/       # Layout components
-│   └── sections/      # Page sections
+│   ├── ui/            # Reusable UI primitives (shadcn/ui)
+│   └── error-boundary.tsx
 ├── config/            # Configuration files
+│   ├── index.ts       # App/env config
+│   ├── routes.ts      # Route definitions
+│   ├── permissions.ts # RBAC permissions
+│   └── validation.schemas.ts  # Zod schemas
 ├── constants/         # Application constants
-├── context/           # React Context API
+├── context/           # React Context providers
 ├── hooks/             # Custom React hooks
+├── lib/               # Third-party library utilities
 ├── middleware/        # Request/response middleware
-├── pages/             # Page components
+├── pages/             # Page-level components
+│   ├── LandingPage.tsx
+│   └── SplashScreen.tsx
+├── sections/          # Landing page sections
+│   ├── Navigation.tsx
+│   ├── HeroSection.tsx
+│   ├── StatsSection.tsx
+│   ├── WellnessSection.tsx
+│   ├── ServicesSection.tsx
+│   ├── HowItWorksSection.tsx
+│   ├── SoulBotSection.tsx
+│   ├── CorporateSection.tsx
+│   ├── FAQSection.tsx
+│   ├── CTASection.tsx
+│   └── Footer.tsx
 ├── services/          # API and external services
-├── styles/            # Global styles
 ├── types/             # TypeScript type definitions
-└── utils/             # Utility functions
-    ├── helpers/       # Helper functions
-    └── validators/    # Validation functions
+├── utils/             # Utility functions
+│   ├── helpers/       # Pure helper functions
+│   ├── validators/    # Validation functions
+│   └── errors/        # Error class definitions
+├── App.tsx            # Root component with routing
+├── main.tsx           # Entry point
+└── index.css          # Global styles + design tokens
 ```
+
+### Assets Location
+All static assets live in `public/images/` with semantic names:
+- `hero-monk.png` — Hero section meditation image
+- `wellness-silhouette.png` — Wellness section silhouette
+- `service-*.jpg` — Service cards (breathwork, therapist, counsellor, healer)
+- `feature-*.jpg` — Feature cards (guided-plan, 1on1-sessions, micro-tools)
+- `corporate-wellness.jpg` — Corporate section image
+- `soul-yatri-logo.png` — Brand logo
+- `concentric-circles.svg` — Splash screen background
 
 ## Code Organization Principles
 

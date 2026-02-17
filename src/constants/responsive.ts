@@ -3,6 +3,8 @@
  * Mobile-first approach for Soul Yatri
  */
 
+import { useEffect, useState } from 'react';
+
 /**
  * Tailwind Breakpoints (in px)
  */
@@ -130,12 +132,12 @@ export const CONTAINER_WIDTHS = {
  * Usage: const breakpoint = useResponsive()
  */
 export function useResponsive() {
-  const [breakpoint, setBreakpoint] = React.useState<keyof typeof BREAKPOINTS>('sm');
+  const [breakpoint, setBreakpoint] = useState<keyof typeof BREAKPOINTS>('sm');
 
-  React.useEffect(() => {
+  useEffect(() => {
     const updateBreakpoint = () => {
       const width = window.innerWidth;
-      
+
       if (width < BREAKPOINTS.sm) {
         setBreakpoint('sm');
       } else if (width < BREAKPOINTS.md) {
@@ -197,4 +199,3 @@ export const IMAGE_SIZES = {
   containerLarge: '(max-width: 1024px) 100vw, (max-width: 1536px) 85vw, 65vw',
 } as const;
 
-import React from 'react';

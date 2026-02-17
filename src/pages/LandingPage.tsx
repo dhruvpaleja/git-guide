@@ -6,8 +6,9 @@ import HowItWorksSection from '@/sections/HowItWorksSection';
 import SoulBotSection from '@/sections/SoulBotSection';
 import CorporateSection from '@/sections/CorporateSection';
 import FAQSection from '@/sections/FAQSection';
+import CTASection from '@/sections/CTASection';
 
-export default function HomePage() {
+export default function LandingPage() {
   return (
     <>
       <HeroSection />
@@ -18,6 +19,7 @@ export default function HomePage() {
       <SoulBotSection />
       <CorporateSection />
       <FAQSection />
+      <CTASection />
     </>
   );
 }

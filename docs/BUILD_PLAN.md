@@ -479,25 +479,90 @@ VERIFY: Complete payment for therapy session → webhook confirms → session ac
 
 ```
 TASK: Build comprehensive admin/head office dashboard.
+The HEAD OFFICE dashboard must have FULL visibility and control over EVERY
+section of the platform. Nothing should be hidden from admin view.
 
-STEP 1 — src/pages/admin/:
-  - AdminDashboardPage: KPIs, revenue, user growth, alerts
-  - UsersPage: all users, search, filter, view details
-  - TherapistsPage: therapist management, verification, performance
-  - AstrologersPage: astrologer management, accuracy scores
-  - SessionsPage: all therapy sessions, recordings access
-  - RevenuePage: detailed revenue breakdown by source
-  - ComplaintsPage: complaint management queue
-  - EmergencyPage: all emergency flags, resolution workflow
-  - BlogModeration: approve/reject blog posts
-  - CourseModeration: approve/reject courses
-  - ShopManagement: products, orders, inventory
-  - EmployeeTracker: every action logged, hours, performance
-  - SettingsPage: platform settings, plans, integrations
-STEP 2 — Action logging: every admin/therapist/astrologer action is recorded
-STEP 3 — Revenue reports: daily, weekly, monthly with charts
+STEP 1 — src/pages/admin/ (every page in the platform has an admin view):
+  === CORE OVERVIEW ===
+  - HeadOfficePage: CEO-level dashboard aggregating ALL stats from every section
+    (uses HeadOfficeDashboard type from admin.types.ts)
+  - AdminDashboardPage: KPIs, revenue, user growth, critical alerts
+  - AnalyticsPage: platform-wide analytics, user behavior, retention
 
-VERIFY: Login as admin → see all dashboards → manage users → view revenue.
+  === PEOPLE MANAGEMENT ===
+  - UsersPage: all users, search, filter, suspend, change role
+  - TherapistsPage: therapist management, verification, performance, quality scores
+  - AstrologersPage: astrologer management, accuracy scores, verification
+  - EmployeeTracker: every employee action logged, hours, performance, revenue
+
+  === SESSIONS & SAFETY ===
+  - SessionsPage: all therapy sessions, recordings access, transcriptions
+  - SessionRecordingsPage: access any session recording (with audit logging)
+  - AIMonitoringPage: AI assistant usage, conversations flagged, patterns detected
+  - FraudAlertsPage: therapist fraud indicators, quality violations, compliance
+  - EmergencyPage: all emergency flags, escalation workflow, resolution
+  - TherapistQualityPage: per-therapist quality scores, session analysis
+
+  === REVENUE & PAYMENTS ===
+  - RevenuePage: revenue breakdown by source (therapy, astrology, courses, shop,
+    memberships, events, corporate), daily/weekly/monthly/quarterly
+  - PaymentsPage: all transactions, pending refunds, failed payments
+  - MembershipsPage: tier management, subscriber analytics, churn
+
+  === CONTENT & MODERATION ===
+  - BlogModeration: approve/reject blog posts, SEO analytics
+  - CourseModeration: approve/reject courses, enrollment stats
+  - CommunityModerationPage: reported posts, user bans, warnings
+
+  === COMMERCE ===
+  - ShopManagement: products, orders, inventory, shop analytics
+  - EventsPage: event management, registrations, revenue, feedback
+
+  === ORGANIZATION ===
+  - DepartmentsPage: all departments, targets, performance tracking
+  - HiringPage: job positions, applications, pipeline management
+  - ComplaintsPage: complaint queue, assignment, resolution tracking
+  - AuditLogPage: every action by every user/employee, exportable
+
+  === EXTERNAL ===
+  - CorporatePage: corporate accounts, employee wellness reports
+  - InstitutionsPage: school/college accounts, student usage
+  - NGOPage: NGO partners, beneficiaries, impact reports
+  - IntegrationsPage: Slack, Teams, SAP, API webhooks
+
+  === PLATFORM ===
+  - SettingsPage: platform config, feature flags, plans, maintenance mode
+  - NotificationsPage: broadcast messages, notification management
+  - PlatformHealthPage: API uptime, response times, storage, error rates
+
+STEP 2 — Action logging middleware: every admin/therapist/astrologer action
+  is recorded with userId, role, action, resource, timestamp, IP address
+
+STEP 3 — Revenue reports: daily, weekly, monthly with charts, export to CSV
+
+STEP 4 — Head Office Dashboard (HeadOfficePage.tsx):
+  This is the CEO-level view. It pulls from HeadOfficeDashboard type:
+  - Platform-wide stats (users, revenue, sessions, memberships, events, NGO)
+  - All department overviews with target status
+  - Top performers (therapists, astrologers, content creators)
+  - Critical alerts (emergency flags, fraud, complaints, system errors)
+  - Platform health (uptime, response times, error rates)
+  - Pending actions queue (blog/course approvals, complaints, refunds, hiring)
+  - Quick action buttons for every admin function
+
+STEP 5 — Every section must have:
+  - Search + filter capabilities
+  - Bulk actions where appropriate
+  - Export to CSV/PDF
+  - Real-time updates via WebSocket
+
+VERIFY:
+  Login as admin → Head Office shows ALL stats →
+  Can see every user → Can see every session recording →
+  Can see therapist quality scores → Can see fraud alerts →
+  Can manage events, memberships, NGO → Can see all revenue →
+  Can see all departments and targets → Can manage all content →
+  Nothing is hidden from admin view.
 ```
 
 ---
@@ -642,11 +707,19 @@ STEP 3 — Department dashboards (admin sees all, dept head sees theirs):
 
 STEP 4 — Head Office / CEO Dashboard:
   src/pages/admin/HeadOfficePage.tsx
-  - All departments at a glance
-  - Total revenue vs targets
-  - Employee count and growth
-  - Top performers
-  - Critical alerts
+  Uses HeadOfficeDashboard type (from admin.types.ts) which aggregates:
+  - platformStats: ALL user/session/revenue/event/membership/NGO/community/blog/
+    course/shop/AI/fraud stats in one object
+  - revenue: full RevenueReport breakdown by source
+  - departments: all departments with targets and performance status
+  - topPerformers: best employees by rating/revenue
+  - criticalAlerts: emergency flags, fraud, critical complaints, system errors
+  - platformHealth: API uptime, response times, storage, error rates
+  - pendingActions: count of items needing approval (blogs, courses, complaints,
+    hiring, NGO requests, therapist verification, fraud reviews, refunds, events)
+
+  The head office page is the SINGLE source of truth for the entire platform.
+  Every section of Soul Yatri is visible and controllable from here.
 
 STEP 5 — Action logging middleware:
   Every API call by any employee → logged to EmployeeAction table
@@ -1144,17 +1217,26 @@ ASTROLOGER DASHBOARD:
 
 ADMIN / HEAD OFFICE:
 /admin                → Admin Dashboard (all KPIs)
-/admin/users          → User management
-/admin/therapists     → Therapist management + verification
-/admin/astrologers    → Astrologer management
-/admin/revenue        → Revenue reports (by source, period)
-/admin/complaints     → Complaint queue
-/admin/emergency      → Emergency flags
-/admin/blog           → Blog moderation (approve/reject)
-/admin/courses        → Course moderation
-/admin/shop           → Shop management (products, orders, inventory)
-/admin/employees      → Employee tracker (all actions logged)
-/admin/settings       → Platform settings
+/admin/head-office    → CEO / Head Office — EVERYTHING visible from here
+/admin/analytics      → Platform-wide analytics, user behavior, retention
+/admin/users          → User management (search, filter, suspend, role change)
+/admin/therapists     → Therapist management + verification + quality scores
+/admin/astrologers    → Astrologer management + accuracy scores
+/admin/revenue        → Revenue reports (by source, period, export)
+/admin/complaints     → Complaint queue + assignment + resolution
+/admin/emergency      → Emergency flags + escalation workflow
+/admin/fraud-alerts   → Therapist fraud indicators + compliance violations
+/admin/therapist-quality → Per-therapist quality scores + session analysis
+/admin/ai-monitoring  → AI assistant usage, flagged conversations, patterns
+/admin/session-recordings → Access any session recording (audit-logged)
+/admin/blog           → Blog moderation (approve/reject/delete)
+/admin/courses        → Course moderation (approve/reject/delete)
+/admin/community      → Community moderation (reported posts, bans, warnings)
+/admin/shop           → Shop management (products, orders, inventory, analytics)
+/admin/events         → Event management (create, registrations, revenue)
+/admin/memberships    → Membership tiers, subscriber analytics, churn
+/admin/ngo            → NGO partners, beneficiaries, impact reports
+/admin/employees      → Employee tracker (all actions logged, performance)
 /admin/departments    → All departments overview
 /admin/departments/therapy     → Therapy dept KPIs
 /admin/departments/astrology   → Astrology dept KPIs
@@ -1163,8 +1245,9 @@ ADMIN / HEAD OFFICE:
 /admin/departments/support     → Support dept KPIs
 /admin/departments/content     → Content dept KPIs
 /admin/departments/engineering → Engineering dept KPIs
-/admin/head-office    → CEO / Head Office dashboard
 /admin/hiring         → Manage job postings + applications
+/admin/audit-log      → Full audit trail (every action, exportable)
+/admin/settings       → Platform config, feature flags, maintenance mode
 
 CORPORATE:
 /corporate            → Corporate Dashboard
@@ -1286,19 +1369,39 @@ SEO (PROGRAMMATIC):
 /api/v1/notifications         → User notifications
 /api/v1/notifications/preferences → Notification settings
 
-/api/v1/admin/dashboard       → Admin KPIs
-/api/v1/admin/users           → User management
-/api/v1/admin/employees       → Employee tracker
-/api/v1/admin/departments     → Department stats + targets
-/api/v1/admin/revenue         → Revenue reports (by source, period)
-/api/v1/admin/complaints      → Complaint management
-/api/v1/admin/emergency       → Emergency flags
-/api/v1/admin/actions          → Action logs (full audit trail)
-/api/v1/admin/blog/pending    → Blog moderation queue
-/api/v1/admin/courses/pending → Course moderation queue
-/api/v1/admin/head-office     → CEO / head office dashboard
-/api/v1/admin/hiring          → Job position + application management
-/api/v1/admin/therapist-quality/:id → Therapist quality scores
+/api/v1/admin/head-office     → CEO dashboard (aggregates ALL platform data)
+/api/v1/admin/dashboard       → Admin-level KPIs
+/api/v1/admin/platform-health → API uptime, response times, storage, errors
+/api/v1/admin/analytics       → Platform-wide analytics + per-metric drilldown
+/api/v1/admin/alerts          → Critical alerts (emergency, fraud, system errors)
+/api/v1/admin/pending-actions → All items pending approval (blogs, courses, etc.)
+/api/v1/admin/users           → User management (list, detail, suspend, role change)
+/api/v1/admin/employees       → Employee tracker (list, detail, action history)
+/api/v1/admin/departments     → Department stats + targets (CRUD)
+/api/v1/admin/revenue         → Revenue reports (by source, period, breakdown)
+/api/v1/admin/therapists      → Therapist management (list, verify, suspend)
+/api/v1/admin/therapist-quality → Therapist quality scores (list + per-therapist)
+/api/v1/admin/astrologers     → Astrologer management (list, verify, accuracy)
+/api/v1/admin/sessions        → All sessions (list, detail, recording, monitor data)
+/api/v1/admin/fraud-alerts    → Fraud indicators (list, detail, review)
+/api/v1/admin/ai-monitoring   → AI usage, flagged conversations, behavior patterns
+/api/v1/admin/complaints      → Complaint management (list, detail, assign)
+/api/v1/admin/emergency       → Emergency flags (list, detail, escalate)
+/api/v1/admin/blog            → Blog moderation (pending, all, approve, reject, delete)
+/api/v1/admin/courses         → Course moderation (pending, all, approve, reject, delete)
+/api/v1/admin/community       → Community moderation (reported, remove, ban, warn)
+/api/v1/admin/events          → Event management (CRUD, registrations, analytics)
+/api/v1/admin/memberships     → Membership management (tiers, subscribers, analytics)
+/api/v1/admin/ngo             → NGO management (partners, beneficiaries, impact)
+/api/v1/admin/shop            → Shop management (products, orders, inventory, analytics)
+/api/v1/admin/payments        → Payment management (transactions, refunds)
+/api/v1/admin/corporate       → Corporate account management
+/api/v1/admin/institutions    → School/college account management
+/api/v1/admin/integrations    → Third-party integration management (CRUD)
+/api/v1/admin/actions          → Audit trail (action logs, exportable)
+/api/v1/admin/hiring          → Hiring management (positions, applications)
+/api/v1/admin/notifications   → Notification management + broadcast
+/api/v1/admin/settings        → Platform settings (get, update)
 
 /api/v1/corporate/accounts    → Corporate account management
 /api/v1/corporate/employees   → Corporate employee management

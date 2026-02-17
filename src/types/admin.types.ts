@@ -8,15 +8,108 @@ import type { UserRole } from './auth.types';
 export interface AdminDashboardStats {
   totalUsers: number;
   activeUsers: number;
+  newUsersThisMonth: number;
   totalTherapists: number;
   totalAstrologers: number;
+  totalModerators: number;
   totalSessions: number;
+  activeSessions: number;
   totalRevenue: number;
   monthlyRevenue: number;
   pendingComplaints: number;
   activeEmergencyFlags: number;
   averageUserRating: number;
   churnRate: number;
+  /** Events */
+  totalEvents: number;
+  upcomingEvents: number;
+  eventRegistrations: number;
+  /** Memberships */
+  totalMembers: number;
+  activeMemberships: number;
+  membershipRevenue: number;
+  /** NGO */
+  ngoPartners: number;
+  ngoBeneficiariesServed: number;
+  ngoSessionsDonated: number;
+  /** Community (Soul Circle) */
+  communityPosts: number;
+  communityActiveUsers: number;
+  pendingModerationItems: number;
+  /** Blog */
+  publishedBlogs: number;
+  pendingBlogApprovals: number;
+  /** Courses */
+  totalCourses: number;
+  pendingCourseApprovals: number;
+  courseEnrollments: number;
+  /** Shop */
+  shopProducts: number;
+  pendingOrders: number;
+  shopRevenue: number;
+  /** AI */
+  aiConversationsToday: number;
+  aiEmergencyFlagsToday: number;
+  /** Session monitoring */
+  fraudAlertsActive: number;
+  therapistQualityAverage: number;
+}
+
+/**
+ * Head Office Dashboard — aggregates EVERYTHING visible at CEO level.
+ * Every section of the platform is summarized here.
+ */
+export interface HeadOfficeDashboard {
+  /** Overall platform stats */
+  platformStats: AdminDashboardStats;
+  /** Revenue breakdown by source */
+  revenue: RevenueReport;
+  /** All departments and their current targets */
+  departments: DepartmentOverview[];
+  /** Top-performing employees */
+  topPerformers: EmployeeTracker[];
+  /** Critical alerts that need immediate attention */
+  criticalAlerts: CriticalAlert[];
+  /** Platform health */
+  platformHealth: PlatformHealth;
+  /** Quick access controls */
+  pendingActions: PendingAction[];
+}
+
+export interface DepartmentOverview {
+  department: Department;
+  targets: DepartmentTarget[];
+  employees: number;
+  revenue: number;
+  performance: 'exceeding' | 'on-track' | 'at-risk' | 'behind';
+}
+
+export interface CriticalAlert {
+  id: string;
+  type: 'emergency-flag' | 'fraud-alert' | 'complaint-critical' | 'system-error' | 'payment-failure' | 'therapist-violation';
+  title: string;
+  description: string;
+  severity: 'warning' | 'critical';
+  resourceType: string;
+  resourceId: string;
+  actionUrl: string;
+  createdAt: Date;
+  acknowledged: boolean;
+}
+
+export interface PlatformHealth {
+  apiUptime: number;
+  apiResponseTimeMs: number;
+  activeWebSocketConnections: number;
+  storageUsedGB: number;
+  errorRateLast24h: number;
+  lastDeployment: Date;
+}
+
+export interface PendingAction {
+  type: 'blog-approval' | 'course-approval' | 'complaint' | 'hiring-application' | 'ngo-request' | 'therapist-verification' | 'fraud-review' | 'refund-request' | 'event-approval';
+  count: number;
+  actionUrl: string;
 }
 
 export interface EmployeeTracker {

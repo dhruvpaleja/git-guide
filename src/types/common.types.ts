@@ -4,31 +4,6 @@
 
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  avatar?: string;
-  role: 'user' | 'admin' | 'moderator';
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  excerpt: string;
-  author: User;
-  tags: string[];
-  published: boolean;
-  views: number;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt?: Date;
-}
-
 export interface Service {
   id: string;
   title: string;

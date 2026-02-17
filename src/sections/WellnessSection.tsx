@@ -85,9 +85,8 @@ export default function WellnessSection() {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
           ref={circleRef}
-          className={`w-[95%] sm:w-[90%] max-w-[600px] sm:max-w-[800px] aspect-square rounded-full gradient-orange transition-opacity duration-300 ${
-            isVisible ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`w-[95%] sm:w-[90%] max-w-[600px] sm:max-w-[800px] aspect-square rounded-full gradient-orange transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
           style={{
             background: 'radial-gradient(circle at 40% 40%, #FCD34D 0%, #F59E0B 30%, #EA580C 60%, #9A3412 100%)',
             transform: `scale(${1 + scrollProgress * 4.5})`,
@@ -101,9 +100,8 @@ export default function WellnessSection() {
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Title */}
         <h2
-          className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4 sm:mb-6 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4 sm:mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
           style={{ transitionDelay: '0.2s' }}
         >
           Wellness Feels Fragmented
@@ -111,9 +109,8 @@ export default function WellnessSection() {
 
         {/* Description */}
         <p
-          className={`text-sm sm:text-base md:text-lg text-black/80 max-w-xl mx-auto mb-8 sm:mb-12 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          className={`text-sm sm:text-base md:text-lg text-black/80 max-w-xl mx-auto mb-8 sm:mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
           style={{ transitionDelay: '0.4s' }}
         >
           Mental health care is scattered across apps, appointments, and advice that doesn't stick. We're bringing it all together.
@@ -121,13 +118,12 @@ export default function WellnessSection() {
 
         {/* Silhouette Image */}
         <div
-          className={`relative transition-all duration-1000 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
-          }`}
+          className={`relative transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+            }`}
           style={{ transitionDelay: '0.5s' }}
         >
           <img
-            src="/asset_2.png"
+            src="/images/wellness-silhouette.png"
             alt="Woman silhouette"
             className="w-full max-w-[500px] mx-auto h-auto object-contain"
           />

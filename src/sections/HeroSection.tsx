@@ -65,7 +65,7 @@ export default function HeroSection() {
               {/* Image Container with subtle glow */}
               <div className="relative">
                 <img
-                  src="/hero-monk.png"
+                  src="/images/hero-monk.png"
                   alt="Meditation practitioner with headphones"
                   className="w-full max-w-[420px] h-auto object-contain mx-auto"
                 />

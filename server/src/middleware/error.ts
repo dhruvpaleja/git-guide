@@ -1,12 +1,16 @@
 import type { Request, Response, NextFunction } from 'express';
 
+interface AppError extends Error {
+  status?: number;
+}
+
 export function errorHandler(
-  err: Error,
+  err: AppError,
   _req: Request,
   res: Response,
   _next: NextFunction,
 ): void {
-  const status = 'status' in err ? (err as { status: number }).status : 500;
+  const status = err.status ?? 500;
   const message = err.message || 'Internal Server Error';
 
   if (process.env.NODE_ENV !== 'production') {
@@ -15,7 +19,7 @@ export function errorHandler(
 
   res.status(status).json({
     success: false,
-    error: { message, ...(process.env.NODE_ENV !== 'production' && { stack: err.stack }) },
+    error: { message },
   });
 }
 

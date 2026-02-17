@@ -15,7 +15,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
-    minify: 'terser',
+    minify: 'esbuild',
     reportCompressedSize: true,
     rollupOptions: {
       output: {
@@ -23,6 +23,7 @@ export default defineConfig({
           'vendor': [
             'react',
             'react-dom',
+            'react-router-dom',
             'react-hook-form',
             'date-fns',
           ],

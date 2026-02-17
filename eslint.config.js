@@ -28,10 +28,6 @@ export default defineConfig([
     rules: {
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/explicit-function-return-types': ['warn', {
-        allowExpressions: true,
-        allowTypedFunctionExpressions: true,
-      }],
       '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
@@ -44,5 +40,8 @@ export default defineConfig([
   {
     files: ['**/*.js'],
     extends: [js.configs.recommended],
+    languageOptions: {
+      globals: globals.node,
+    },
   },
 ])

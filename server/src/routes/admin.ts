@@ -100,11 +100,11 @@ router.get('/revenue', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 
-router.get('/revenue/:period', (_req: Request, res: Response) => {
+router.get('/revenue/breakdown/source', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 
-router.get('/revenue/breakdown/source', (_req: Request, res: Response) => {
+router.get('/revenue/:period', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 
@@ -282,6 +282,10 @@ router.get('/events', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 
+router.get('/events/analytics', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
 router.get('/events/:id', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
@@ -299,10 +303,6 @@ router.delete('/events/:id', (_req: Request, res: Response) => {
 });
 
 router.get('/events/:id/registrations', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
-
-router.get('/events/analytics', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 

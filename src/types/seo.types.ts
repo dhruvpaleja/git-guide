@@ -19,7 +19,8 @@ export interface DomainConfig {
   region?: string; // e.g., 'global', 'india'
   ssl: boolean;
   cdn: boolean;
-  hreflangTag?: string; // e.g., 'en', 'en-IN'
+  /** Language/region code for hreflang, e.g., 'en', 'en-IN' */
+  langRegionCode?: string;
 }
 
 /** Soul Yatri owns: soulyatri.com, soulyatri.in, soulyatri.net */
@@ -85,10 +86,12 @@ export interface SitemapConfig {
 
 // ── Keyword Tracking & Research ──────────────────────────────────────────
 
+export type KeywordCategory = 'therapy' | 'astrology' | 'meditation' | 'wellness' | 'mental-health' | 'brand' | 'competitor' | 'long-tail';
+
 export interface TrackedKeyword {
   id: string;
   keyword: string;
-  category: 'therapy' | 'astrology' | 'meditation' | 'wellness' | 'mental-health' | 'brand' | 'competitor' | 'long-tail';
+  category: KeywordCategory;
   currentRank?: number;
   previousRank?: number;
   searchVolume: number;

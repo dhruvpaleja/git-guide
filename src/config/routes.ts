@@ -744,6 +744,26 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     requiredRole: ['admin'],
   },
 
+  // ── Programmatic SEO Pages (auto-generated) ────────────────────────────
+  SEO_THERAPIST_FOR_ISSUE: {
+    path: '/therapist-for-:issue',
+    name: 'Therapist for Issue',
+    isPublic: true,
+    showInNavigation: false,
+  },
+  SEO_MEDITATION_FOR_GOAL: {
+    path: '/meditation-for-:goal',
+    name: 'Meditation for Goal',
+    isPublic: true,
+    showInNavigation: false,
+  },
+  SEO_CITY_THERAPIST: {
+    path: '/:city-therapist',
+    name: 'City Therapist',
+    isPublic: true,
+    showInNavigation: false,
+  },
+
   // ── 404 ────────────────────────────────────────────────────────────────
   NOT_FOUND: {
     path: '/404',

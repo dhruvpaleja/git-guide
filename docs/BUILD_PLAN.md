@@ -514,6 +514,88 @@ PLATFORM-WIDE:
 
 ---
 
+## Background Jobs & Scheduled Tasks (Cron)
+
+```
+These run in the background. Implement as part of the relevant phase.
+Use node-cron or BullMQ (Redis-based job queue) for scheduling.
+
+EVERY MINUTE:
+  - Check for emergency flags needing escalation (5-min timeout)
+  - Process real-time notification delivery queue
+
+EVERY 5 MINUTES:
+  - Sync active WebSocket connections count
+  - Update real-time dashboard metrics
+
+EVERY HOUR:
+  - Refresh exchange rates for multi-currency (Open Exchange Rates API)
+  - Process AI content moderation queue (batch)
+  - Check for sessions starting in 1-3 hours → create astrology tasks
+  - Send session reminder notifications (1 hour before)
+
+EVERY 6 HOURS:
+  - Aggregate analytics data (roll up hourly → daily)
+  - Check for membership expiring within 7 days → send reminder
+  - Run churn prediction model on at-risk users
+
+DAILY (midnight IST):
+  - Generate daily revenue reports
+  - Update keyword rankings (TrackedKeyword)
+  - Run behavioral pattern detection across all users
+  - Archive audit logs older than 2 years to cold storage
+  - Check therapist/astrologer license expiry dates
+  - Generate proactive AI insights for admin dashboard
+  - Update astrologer brownie point tiers
+
+WEEKLY (Sunday midnight):
+  - Generate weekly department performance reports
+  - Trending keyword analysis → suggest blog topics
+  - Run A/B test evaluation on AI models
+  - Backup database to secondary storage
+  - Generate SEO performance report
+
+MONTHLY:
+  - Generate monthly revenue and payout reports
+  - Process auto-renewal for subscriptions and memberships
+  - Run cohort analysis
+  - Generate NGO impact reports
+  - Check AI brand mentions in ChatGPT/Gemini/Perplexity
+  - Generate therapist/astrologer performance reviews
+
+IMPLEMENTATION:
+  server/src/jobs/               — job definitions
+  server/src/jobs/scheduler.ts   — cron schedule config
+  server/src/jobs/workers/       — individual job workers
+  Use BullMQ for reliable job processing with retries
+```
+
+---
+
+## Validation Schemas (Zod)
+
+```
+Every API endpoint MUST have a Zod validation schema.
+Schemas live in: src/config/validation.schemas.ts (already exists)
+Server-side: server/src/validators/<feature>.ts
+
+Example pattern (already established):
+  import { z } from 'zod';
+
+  export const loginSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8),
+  });
+
+  // In route handler:
+  const parsed = loginSchema.parse(req.body);
+
+RULE: Never trust client data. Validate EVERYTHING server-side.
+Frontend can share schemas via a shared npm package (later optimization).
+```
+
+---
+
 ## Build Phases (Give ONE phase to an AI agent at a time)
 
 ### PHASE 1: Database & Auth Foundation
@@ -914,21 +996,56 @@ VERIFY: Browse shop → add to cart → checkout → payment → order confirmed
 ---
 
 ### PHASE 13: Payment Gateway
-**Time estimate: 1 session**
+**Time estimate: 2 sessions**
 
 ```
-TASK: Integrate Razorpay (and/or Stripe) for all payment flows.
+TASK: Integrate Razorpay + Stripe for multi-currency global payments.
 
-STEP 1 — Server: /api/v1/payments/ routes
-  - Create order → get payment link
-  - Webhook handler for payment confirmation
-  - Refund API
-STEP 2 — Frontend: reusable PaymentModal component
-  - Used by therapy booking, course enrollment, shop checkout, subscription
-STEP 3 — Subscription management: plans, upgrades, cancellation
-STEP 4 — Therapist/Astrologer payouts: track earnings, payout requests
+CONTEXT: Types in src/types/payment.types.ts.
+Multi-currency: SupportedCurrency (8 currencies), CurrencyConfig, UserCurrencyPreference.
+Payouts: PayoutAccount, PayoutRequest, EarningsSummary.
 
-VERIFY: Complete payment for therapy session → webhook confirms → session activated.
+STEP 1 — Multi-currency setup:
+  - INR payments → Razorpay gateway
+  - USD/EUR/GBP/AUD/CAD/SGD/AED → Stripe gateway
+  - Auto-detect user currency from IP geolocation
+  - User can override currency in settings
+  - All amounts stored in BOTH original currency AND INR (base)
+  - Exchange rates updated daily (Open Exchange Rates API or similar)
+  - API: GET /api/v1/payments/currencies — list supported currencies
+  - API: PUT /api/v1/payments/currency-preference — set user preference
+
+STEP 2 — Server: /api/v1/payments/ routes
+  - POST /create — create order (auto-routes to Razorpay or Stripe based on currency)
+  - POST /verify — verify payment (handles both gateway responses)
+  - POST /webhook — webhook handler (separate endpoints for Razorpay and Stripe)
+  - POST /refund — process refund in original currency
+  - GET /history — payment history with currency conversion display
+
+STEP 3 — Frontend: reusable PaymentModal component
+  - Detects user currency preference
+  - Shows price in user's currency + INR equivalent
+  - Routes to correct gateway (Razorpay checkout for INR, Stripe Elements for others)
+  - Used by: therapy booking, course enrollment, shop checkout, subscription,
+    event registration, membership, astrology session booking
+  - Zomato/Swiggy-level smooth UX (saved cards, UPI, wallets)
+
+STEP 4 — Subscription management: plans, upgrades, cancellation
+  - Razorpay subscriptions for INR users
+  - Stripe subscriptions for international users
+  - Proration on plan changes
+
+STEP 5 — Therapist/Astrologer/Creator payouts:
+  - POST /api/v1/payments/payouts/account — set up payout bank account
+  - GET /api/v1/payments/payouts/earnings — view earnings summary
+  - POST /api/v1/payments/payouts/request — request payout
+  - Platform commission deducted automatically
+  - Payouts processed in therapist's local currency
+  - Payout history and tax documents
+
+VERIFY: Set currency to USD → book therapy → Stripe checkout →
+payment confirmed → webhook → session activated → therapist sees earnings.
+Then: INR user → Razorpay checkout → same flow.
 ```
 
 ---
@@ -1664,19 +1781,23 @@ User ──────── TherapySession ──── SessionRecording
   │        │
   │   EmergencyFlag ── BehaviorPattern
   │
+  ├── Notification ── NotificationPreference
+  │
   ├── Enrollment ── Course ── Module ── Lesson
   │                    │
   │               CourseReview
   │
   ├── CommunityPost ── Comment ── Like ── Follow
   │        │
-  │     Report (moderation)
+  │     Report (moderation) ── ContentModerationResult
   │
   ├── ShopOrder ── OrderItem ── Product ── ProductReview
   │     │
   │   ShippingAddress
   │
-  ├── PaymentTransaction
+  ├── PaymentTransaction ── CurrencyConfig
+  │
+  ├── PayoutAccount ── PayoutRequest (therapist/astrologer earnings)
   │
   ├── UserMembership ── MembershipTier ── MembershipFeature
   │
@@ -1688,11 +1809,17 @@ User ──────── TherapySession ──── SessionRecording
   │
   ├── Complaint
   │
-  └── ActionLog
+  ├── ProfessionalOnboarding ── QualificationDocument
+  │
+  ├── UserCurrencyPreference
+  │
+  └── ActionLog ── UserBehaviorEvent
 
 Department ── DepartmentTarget
     │
-Employee ── EmployeeAction
+Employee ── EmployeeAction ── EmployeeLifecycle
+    │
+TrainingModule
 
 CorporateAccount ── CorporatePlan
     │
@@ -1700,13 +1827,21 @@ CorporateEmployee
 
 InstitutionAccount (school/college)
 
-Integration (Slack, SAP, Teams, etc.)
+Integration ── IntegrationFieldMapping
+
+AdminBroadcast
 
 NGOPartner ── NGOBeneficiary
     │
 NGOImpactReport
 
 JobPosition ── JobApplication
+
+TrackedKeyword ── KeywordRankHistory (SEO)
+ProgrammaticPage ── PSEOTemplate (PSEO)
+AIModelConfig ── FineTuningDataset (AI)
+
+TOTAL MODELS: ~80+
 ```
 
 ---
@@ -1833,10 +1968,206 @@ Sub-pages:      src/pages/<feature>/<Name>Page.tsx    (e.g., dashboard/SessionsP
 Components:     src/components/<Name>.tsx              (e.g., LoadingSpinner.tsx)
 UI primitives:  src/components/ui/<name>.tsx           (e.g., button.tsx)
 Types:          src/types/<feature>.types.ts           (e.g., therapy.types.ts)
+Config:         src/config/<name>.ts                   (e.g., routes.ts)
+Context:        src/context/<Name>Context.tsx           (e.g., AuthContext.tsx)
+Hooks:          src/hooks/<name>.hooks.ts               (e.g., responsive.hooks.ts)
+Services:       src/services/<name>.service.ts          (e.g., api.service.ts)
+Layouts:        src/layouts/<Name>Layout.tsx             (e.g., DashboardLayout.tsx)
+Sections:       src/sections/<Name>Section.tsx           (e.g., HeroSection.tsx)
+Utils:          src/utils/<category>/<name>.ts           (e.g., helpers/date.helpers.ts)
 API routes:     server/src/routes/<feature>.ts         (e.g., therapy.ts)
 Middleware:     server/src/middleware/<name>.ts         (e.g., auth.ts)
-Services:       server/src/services/<feature>.ts       (e.g., matching.ts)
+Server services: server/src/services/<feature>.ts      (e.g., matching.ts)
 Validators:     server/src/validators/<feature>.ts     (e.g., therapy.ts)
+```
+
+### Frontend Hooks Pattern (src/hooks/)
+
+```
+Existing:
+  src/hooks/use-mobile.ts           — isMobile detection
+  src/hooks/responsive.hooks.ts     — responsive breakpoint hooks
+  src/hooks/advanced.hooks.ts       — advanced utility hooks
+
+To add per phase:
+  src/hooks/use-auth.ts             — login, logout, signup, current user
+  src/hooks/use-api.ts              — generic API caller with loading/error
+  src/hooks/use-notifications.ts    — notification bell, real-time updates
+  src/hooks/use-socket.ts           — Socket.IO connection management
+  src/hooks/use-payment.ts          — payment flow, currency preference
+  src/hooks/use-media.ts            — video/audio stream, recording
+```
+
+### Frontend Services Pattern (src/services/)
+
+```
+Existing:
+  src/services/api.service.ts       — axios instance, interceptors, base URL
+  src/services/analytics.service.ts — event tracking, page views
+  src/services/storage.service.ts   — localStorage/sessionStorage wrapper
+
+To add per phase:
+  src/services/auth.service.ts      — auth API calls (login, register, refresh)
+  src/services/therapy.service.ts   — booking, sessions, therapist search
+  src/services/ai.service.ts        — AI chat, voice, emergency
+  src/services/payment.service.ts   — Razorpay/Stripe integration
+  src/services/notification.service.ts — push notification registration
+  src/services/socket.service.ts    — Socket.IO client setup
+  src/services/media.service.ts     — Daily.co/100ms video integration
+```
+
+---
+
+## Complete Page File Map (kidhar kya rahega)
+
+Every page in the app and its exact file path:
+
+```
+=== STANDALONE (no layout) ===
+src/pages/SplashScreen.tsx              → / (animated loading intro)
+
+=== PUBLIC PAGES (MainLayout — nav + footer) ===
+src/pages/LandingPage.tsx               → /home
+src/pages/AboutPage.tsx                 → /about
+src/pages/ContactPage.tsx               → /contact
+src/pages/CareersPage.tsx               → /careers
+src/pages/careers/CareerDetailPage.tsx   → /careers/:id
+src/pages/BlogListingPage.tsx           → /blog
+src/pages/blog/BlogPostPage.tsx         → /blog/:slug
+src/pages/CourseCatalogPage.tsx         → /courses
+src/pages/courses/CourseDetailPage.tsx   → /courses/:id
+src/pages/ShopPage.tsx                  → /shop
+src/pages/shop/ProductDetailPage.tsx     → /shop/:id
+src/pages/CommunityPreviewPage.tsx      → /community
+src/pages/EventsPage.tsx               → /events
+src/pages/events/EventDetailPage.tsx     → /events/:slug
+src/pages/MembershipsPage.tsx           → /memberships
+src/pages/NGOPage.tsx                   → /ngo
+src/pages/NotFoundPage.tsx              → /404 and /*
+
+=== AUTH PAGES (AuthLayout — centered card) ===
+src/pages/auth/LoginPage.tsx            → /login
+src/pages/auth/SignupPage.tsx           → /signup
+src/pages/auth/ForgotPasswordPage.tsx   → /forgot-password
+src/pages/auth/ResetPasswordPage.tsx    → /reset-password
+
+=== ONBOARDING (standalone, no layout chrome) ===
+src/pages/onboarding/OnboardingPage.tsx → /onboarding
+  Sub-steps (internal components, not separate routes):
+  src/pages/onboarding/steps/WelcomeStep.tsx
+  src/pages/onboarding/steps/BirthDateStep.tsx
+  src/pages/onboarding/steps/ContactStep.tsx
+  src/pages/onboarding/steps/MoodStep.tsx
+  src/pages/onboarding/steps/StrugglesStep.tsx
+  src/pages/onboarding/steps/GoalsStep.tsx
+  src/pages/onboarding/steps/TherapyHistoryStep.tsx
+  src/pages/onboarding/steps/PreferencesStep.tsx
+  src/pages/onboarding/steps/InterestsStep.tsx
+  src/pages/onboarding/steps/ConsentStep.tsx
+
+=== USER DASHBOARD (ProtectedRoute + DashboardLayout) ===
+src/pages/dashboard/UserDashboardPage.tsx       → /dashboard
+src/pages/dashboard/SessionsPage.tsx            → /dashboard/sessions
+src/pages/dashboard/SessionDetailPage.tsx       → /dashboard/sessions/:id
+src/pages/dashboard/BookSessionPage.tsx         → /dashboard/book
+src/pages/dashboard/HealthToolsPage.tsx         → /dashboard/health
+src/pages/dashboard/MeditationPage.tsx          → /dashboard/meditate
+src/pages/dashboard/JournalPage.tsx             → /dashboard/journal
+src/pages/dashboard/MoodTrackerPage.tsx         → /dashboard/mood
+src/pages/dashboard/BreathingPage.tsx           → /dashboard/breathing
+src/pages/dashboard/CoursesPage.tsx             → /dashboard/courses
+src/pages/dashboard/CommunityPage.tsx           → /dashboard/community
+src/pages/dashboard/ShopPage.tsx                → /dashboard/shop
+src/pages/dashboard/AIAssistantPage.tsx         → /dashboard/ai
+src/pages/dashboard/ReportsPage.tsx             → /dashboard/reports
+src/pages/dashboard/SettingsPage.tsx            → /dashboard/settings
+src/pages/dashboard/ComplaintsPage.tsx          → /dashboard/complaints
+src/pages/dashboard/PaymentHistoryPage.tsx      → /dashboard/payments
+src/pages/dashboard/MyEventsPage.tsx            → /dashboard/events
+src/pages/dashboard/MyMembershipPage.tsx        → /dashboard/membership
+
+=== USER PROFILE (ProtectedRoute + DashboardLayout) ===
+src/pages/ProfilePage.tsx                       → /profile
+
+=== THERAPIST DASHBOARD (ProtectedRoute + DashboardLayout) ===
+src/pages/therapist/TherapistDashboardPage.tsx  → /therapist
+src/pages/therapist/ClientsPage.tsx             → /therapist/clients
+src/pages/therapist/ClientDetailPage.tsx        → /therapist/clients/:id
+src/pages/therapist/SessionsPage.tsx            → /therapist/sessions
+src/pages/therapist/SessionDetailPage.tsx       → /therapist/sessions/:id
+src/pages/therapist/RevenuePage.tsx             → /therapist/revenue
+src/pages/therapist/ReviewsPage.tsx             → /therapist/reviews
+src/pages/therapist/ProfilePage.tsx             → /therapist/profile
+
+=== ASTROLOGER DASHBOARD (ProtectedRoute + DashboardLayout) ===
+src/pages/astrologer/AstrologerDashboardPage.tsx → /astrologer
+src/pages/astrologer/AnalysesPage.tsx            → /astrologer/analyses
+src/pages/astrologer/ClientsPage.tsx             → /astrologer/clients
+src/pages/astrologer/ClientDetailPage.tsx        → /astrologer/clients/:id
+src/pages/astrologer/SessionsPage.tsx            → /astrologer/sessions
+src/pages/astrologer/PredictionsPage.tsx         → /astrologer/predictions
+src/pages/astrologer/ProfilePage.tsx             → /astrologer/profile
+
+=== ADMIN / HEAD OFFICE (ProtectedRoute + DashboardLayout) ===
+src/pages/admin/AdminDashboardPage.tsx           → /admin
+src/pages/admin/HeadOfficePage.tsx               → /admin/head-office
+src/pages/admin/AnalyticsPage.tsx                → /admin/analytics
+src/pages/admin/UsersPage.tsx                    → /admin/users
+src/pages/admin/TherapistsPage.tsx               → /admin/therapists
+src/pages/admin/AstrologersPage.tsx              → /admin/astrologers
+src/pages/admin/RevenuePage.tsx                  → /admin/revenue
+src/pages/admin/ComplaintsPage.tsx               → /admin/complaints
+src/pages/admin/EmergencyPage.tsx                → /admin/emergency
+src/pages/admin/FraudAlertsPage.tsx              → /admin/fraud-alerts
+src/pages/admin/TherapistQualityPage.tsx         → /admin/therapist-quality
+src/pages/admin/AIMonitoringPage.tsx             → /admin/ai-monitoring
+src/pages/admin/SessionRecordingsPage.tsx        → /admin/session-recordings
+src/pages/admin/BlogModerationPage.tsx           → /admin/blog
+src/pages/admin/CourseModerationPage.tsx         → /admin/courses
+src/pages/admin/CommunityModerationPage.tsx      → /admin/community
+src/pages/admin/ShopManagementPage.tsx           → /admin/shop
+src/pages/admin/EventsPage.tsx                   → /admin/events
+src/pages/admin/MembershipsPage.tsx              → /admin/memberships
+src/pages/admin/NGOPage.tsx                      → /admin/ngo
+src/pages/admin/EmployeesPage.tsx                → /admin/employees
+src/pages/admin/DepartmentsPage.tsx              → /admin/departments
+src/pages/admin/HiringPage.tsx                   → /admin/hiring
+src/pages/admin/AuditLogPage.tsx                 → /admin/audit-log
+src/pages/admin/SettingsPage.tsx                 → /admin/settings
+src/pages/admin/PaymentsPage.tsx                 → /admin/payments
+src/pages/admin/CorporatePage.tsx                → /admin/corporate
+src/pages/admin/InstitutionsPage.tsx             → /admin/institutions
+src/pages/admin/IntegrationsPage.tsx             → /admin/integrations
+src/pages/admin/NotificationsPage.tsx            → /admin/notifications
+src/pages/admin/PlatformHealthPage.tsx           → /admin/platform-health
+src/pages/admin/SEODashboardPage.tsx             → /admin/seo
+  Department sub-pages:
+  src/pages/admin/departments/TherapyDeptPage.tsx     → /admin/departments/therapy
+  src/pages/admin/departments/AstrologyDeptPage.tsx   → /admin/departments/astrology
+  src/pages/admin/departments/MarketingDeptPage.tsx   → /admin/departments/marketing
+  src/pages/admin/departments/SalesDeptPage.tsx       → /admin/departments/sales
+  src/pages/admin/departments/SupportDeptPage.tsx     → /admin/departments/support
+  src/pages/admin/departments/ContentDeptPage.tsx     → /admin/departments/content
+  src/pages/admin/departments/EngineeringDeptPage.tsx → /admin/departments/engineering
+
+=== EMPLOYEE (ProtectedRoute + DashboardLayout) ===
+src/pages/employee/EmployeeDashboardPage.tsx     → /employee
+src/pages/employee/TargetsPage.tsx               → /employee/targets
+src/pages/employee/TasksPage.tsx                 → /employee/tasks
+src/pages/employee/TeamPage.tsx                  → /employee/team
+
+=== CORPORATE (ProtectedRoute + DashboardLayout) ===
+src/pages/corporate/CorporateDashboardPage.tsx   → /corporate
+src/pages/corporate/EmployeesPage.tsx            → /corporate/employees
+src/pages/corporate/SessionsPage.tsx             → /corporate/sessions
+src/pages/corporate/ReportsPage.tsx              → /corporate/reports
+
+=== PROGRAMMATIC SEO (MainLayout, auto-generated) ===
+src/pages/seo/TherapistForIssuePage.tsx          → /therapist-for-:issue
+src/pages/seo/MeditationForGoalPage.tsx          → /meditation-for-:goal
+src/pages/seo/CityTherapistPage.tsx              → /:city-therapist
+
+TOTAL PAGES: ~110 unique page files
 ```
 
 ## Route Structure
@@ -1886,6 +2217,7 @@ USER DASHBOARD:
 /dashboard/payments   → Payment history
 /dashboard/events     → My registered events
 /dashboard/membership → My membership plan + manage
+/profile              → User profile page (shared by all roles)
 
 THERAPIST DASHBOARD:
 /therapist            → Therapist Dashboard (overview + alerts)
@@ -1991,6 +2323,8 @@ SEO (PROGRAMMATIC):
 /api/v1/users/onboarding      → Save onboarding data
 /api/v1/users/profile         → Get/update profile
 /api/v1/users/dashboard       → Dashboard stats
+/api/v1/users/export-my-data  → Export all user data (DPDPA/GDPR/CCPA)
+/api/v1/users/delete-account  → Delete account (30-day workflow)
 
 /api/v1/therapy/request       → Request therapy (auto-match)
 /api/v1/therapy/sessions      → List sessions
@@ -2005,13 +2339,21 @@ SEO (PROGRAMMATIC):
 /api/v1/therapists/:id        → Therapist profile
 /api/v1/therapists/dashboard  → Therapist dashboard stats
 /api/v1/therapists/clients    → Therapist's clients
+/api/v1/therapists/clients/:id → Client detail (full history)
 /api/v1/therapists/revenue    → Revenue data
+/api/v1/therapists/reviews    → Client reviews
+/api/v1/therapists/profile    → Therapist own profile (get/update)
 
 /api/v1/astrology/charts      → Kundali charts
 /api/v1/astrology/reports     → Pre-session reports
 /api/v1/astrology/predictions → Predictions with voting
+/api/v1/astrology/predictions/accuracy → Prediction accuracy tracking
 /api/v1/astrology/sessions    → Direct consultations
 /api/v1/astrology/dashboard   → Astrologer dashboard stats
+/api/v1/astrology/clients     → Astrologer's clients
+/api/v1/astrology/clients/:id → Client kundali detail
+/api/v1/astrology/profile     → Astrologer own profile (get/update)
+/api/v1/astrology/revenue     → Revenue + brownie points
 
 /api/v1/ai/chat               → AI text chat (streaming)
 /api/v1/ai/voice              → AI voice (audio in/out)
@@ -2057,6 +2399,13 @@ SEO (PROGRAMMATIC):
 /api/v1/payments/memberships/tiers → Membership tier listing
 /api/v1/payments/memberships/subscribe → Subscribe to membership
 /api/v1/payments/memberships/mine → Current membership
+
+/api/v1/payments/payouts        → Payout history (therapist/astrologer)
+/api/v1/payments/payouts/request → Request payout
+/api/v1/payments/payouts/earnings → Earnings summary
+/api/v1/payments/payouts/account → Payout bank account (get/set)
+/api/v1/payments/currencies     → Supported currencies list
+/api/v1/payments/currency-preference → Set user currency preference
 
 /api/v1/events                → Event listing + creation
 /api/v1/events/:slug          → Event detail

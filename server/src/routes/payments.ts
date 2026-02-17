@@ -49,4 +49,34 @@ router.get('/memberships/mine', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 
+// Payouts (therapist / astrologer / course creator earnings)
+router.get('/payouts', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.post('/payouts/request', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/payouts/earnings', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/payouts/account', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.post('/payouts/account', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+// Currency
+router.get('/currencies', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.put('/currency-preference', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
 export default router;

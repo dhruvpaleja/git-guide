@@ -19,4 +19,13 @@ router.get('/dashboard', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 
+// Privacy (DPDPA/GDPR/CCPA compliance)
+router.get('/export-my-data', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.delete('/delete-account', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
 export default router;

@@ -294,7 +294,7 @@ mobile app (React Native / Flutter), third-party integrations, or even other ser
 2. Kundali/birth data: encrypted, access-logged
 3. Payment data: NEVER stored — handled by Razorpay/Stripe tokenization
 4. Session recordings: encrypted S3 with signed URLs (expire in 1 hour)
-5. AI conversations: encrypted, auto-purge after 90 days (configurable)
+5. AI conversations: encrypted, retained permanently (see Data Retention Policy)
 6. Emergency flags: admin-only access, audit-logged
 7. HIPAA-style audit logs: every data access is logged
 ```
@@ -6288,6 +6288,991 @@ VERIFY:
   - Quality scores aggregate correctly across sessions
   - Fraud alerts appear in admin dashboard in real-time
 ```
+---
+
+## Phase Dependency Matrix & Critical Path
+
+### Hard Prerequisites (MUST complete before starting)
+
+| Phase | Hard Prerequisites | Soft Prerequisites (nice to have first) |
+|------|-------------------|----------------------------------------|
+| Phase 1 (Auth) | None — START HERE | — |
+| Phase 2 (Onboarding) | Phase 1 (auth, DB, user model) | — |
+| Phase 3 (Dashboard) | Phase 1 (auth) | Phase 2 (onboarding data populates dashboard) |
+| Phase 4 (Therapy) | Phase 1 (auth), Phase 13 (payments) | Phase 3 (dashboard shell to embed booking) |
+| Phase 5 (Video) | Phase 1 (auth), Phase 4 (session model) | Phase 17 (notifications for join reminders) |
+| Phase 6 (AI Assistant) | Phase 1 (auth) | Phase 4 (therapy context), Phase 16 (mood data for context) |
+| Phase 7 (Astrologer) | Phase 1 (auth), Phase 4 (session model) | Phase 5 (video for consultations) |
+| Phase 8 (Therapist Dash) | Phase 1 (auth), Phase 4 (therapy model), Phase 5 (recordings) | Phase 25 (AI monitoring data) |
+| Phase 9 (Blog) | Phase 1 (auth, admin role) | Phase 21 (SEO automation) |
+| Phase 10 (Community) | Phase 1 (auth) | Phase 17 (notifications) |
+| Phase 11 (Courses) | Phase 1 (auth), Phase 13 (payments) | Phase 9 (blog for marketing) |
+| Phase 12 (Shop) | Phase 1 (auth), Phase 13 (payments) | Phase 17 (order notifications) |
+| Phase 13 (Payments) | Phase 1 (auth, user model) | — |
+| Phase 14 (Admin) | Phase 1 (auth), Phase 13 (payments) | ALL other phases (admin manages everything) |
+| Phase 15 (Corporate) | Phase 1 (auth), Phase 4 (therapy), Phase 13 (payments) | Phase 14 (admin approval) |
+| Phase 16 (Health Tools) | Phase 1 (auth) | Phase 3 (dashboard to embed widgets) |
+| Phase 17 (Notifications) | Phase 1 (auth) | Phase 4 (therapy reminders), Phase 13 (payment receipts) |
+| Phase 18 (Animations) | None (static frontend) | Phase 1 (auth links in nav) |
+| Phase 19 (About/Careers) | Phase 1 (auth, admin role for hiring) | Phase 14 (admin for job management) |
+| Phase 20 (Departments) | Phase 1 (auth), Phase 14 (admin base) | All feature phases (data to show) |
+| Phase 21 (SEO) | Phase 9 (blog content) | Phase 11 (courses), Phase 22 (events) |
+| Phase 22 (Events) | Phase 1 (auth), Phase 13 (payments) | Phase 17 (notifications) |
+| Phase 23 (Memberships) | Phase 1 (auth), Phase 13 (payments) | Phase 4 (therapy discounts) |
+| Phase 24 (NGO) | Phase 1 (auth), Phase 4 (therapy), Phase 13 (payments) | Phase 14 (admin oversight) |
+| Phase 25 (AI Monitoring) | Phase 1 (auth), Phase 5 (video sessions) | Phase 8 (therapist dashboard) |
+
+### Entry Gates (checklist BEFORE starting a phase)
+
+```
+Before starting ANY phase, confirm:
+  ✅ All hard prerequisite phases are COMPLETE (build passes, features work)
+  ✅ Database migrations from prerequisite phases have been run
+  ✅ Required environment variables are set (see Environment Blueprint below)
+  ✅ Type definitions for this phase exist in src/types/ (they do — already scaffolded)
+  ✅ Route stubs for this phase exist in server/src/routes/ (they do — 501 stubs)
+  ✅ Previous phase's VERIFY checklist has been completed
+```
+
+### Exit Gates (checklist AFTER completing a phase)
+
+```
+Before marking a phase COMPLETE, confirm:
+  ✅ npx tsc --noEmit — zero type errors (frontend)
+  ✅ cd server && npx tsc --noEmit — zero type errors (backend)
+  ✅ npm run build — builds successfully
+  ✅ All API endpoints respond correctly (not 501)
+  ✅ All pages render without console errors
+  ✅ All VERIFY scenarios from the phase pass
+  ✅ Minimum automated tests pass (see QA Requirements below)
+  ✅ No hardcoded secrets in code (grep for API keys, passwords)
+  ✅ New environment variables documented in server/.env.example
+  ✅ Loading, empty, and error states work for every new UI component
+```
+
+### Critical Path (shortest path to MVP launch)
+
+```
+Phase 1 → Phase 13 → Phase 2 → Phase 3 → Phase 4 → Phase 5 → Phase 8 → Phase 6 → Phase 17 → Phase 14
+   ↓           ↓                                        ↓
+ Auth      Payments                                   Video
+   ↓                                                    ↓
+ Phase 16 (Health Tools — can parallel with Phase 4+)  Phase 25 (AI Monitor — after video works)
+   ↓
+ Phase 7 (Astrologer — after therapy model exists)
+```
+
+### Safe Parallel Pairs (zero shared code paths)
+
+```
+These pairs share NO database models, NO API routes, NO UI components:
+  • Phase 9 (Blog) ‖ Phase 6 (AI Assistant)
+  • Phase 10 (Community) ‖ Phase 12 (Shop)
+  • Phase 11 (Courses) ‖ Phase 22 (Events)
+  • Phase 23 (Memberships) ‖ Phase 24 (NGO)
+  • Phase 15 (Corporate) ‖ Phase 19 (About/Careers)
+  • Phase 18 (Animations) ‖ ANY backend-only phase
+  • Phase 20 (Departments) ‖ Phase 21 (SEO Automation)
+
+⚠️  NEVER run in parallel:
+  • Phase 4 + Phase 7 (both modify therapy/session models)
+  • Phase 13 + Phase 23 (both modify payment tables)
+  • Phase 14 + Phase 20 (both modify admin dashboard code)
+```
+
+---
+
+## Minimum Automated QA Requirements Per Phase
+
+```
+PHILOSOPHY: Every phase ships with automated tests. "It works when I click it"
+is NOT sufficient for a platform handling therapy sessions, payments, and crisis detection.
+
+TEST PYRAMID PER PHASE:
+  - Unit tests: business logic, utilities, validation (fastest, most)
+  - Integration tests: API endpoint + database (medium)
+  - E2E tests: critical user flows only (slowest, fewest)
+
+TOOLS:
+  - Backend unit + integration: Vitest + Supertest
+  - Frontend unit: Vitest + React Testing Library
+  - E2E: Playwright (add in Phase 14+ when enough UI exists)
+  - API contract: Zod schema validation tests
+
+MINIMUM REQUIREMENT:
+  Every phase MUST have at least the tests listed below before marking complete.
+```
+
+### Phase-by-Phase Test Requirements
+
+```
+PHASE 1 (Auth) — HIGH RISK — 15+ tests minimum
+  Unit tests:
+    - Password hashing: bcrypt produces valid hash
+    - Password validation: rejects weak passwords (< 8 chars, no uppercase, no number)
+    - JWT generation: produces valid token with correct claims
+    - JWT verification: rejects expired tokens
+    - JWT verification: rejects tampered tokens
+    - Refresh token rotation: old token invalidated after use
+  Integration tests (Supertest):
+    - POST /auth/register: 201 with valid data, 400 with missing fields, 409 with duplicate email
+    - POST /auth/login: 200 with correct creds, 401 with wrong password, 404 with unknown email
+    - POST /auth/refresh: 200 with valid refresh, 401 with expired refresh
+    - GET /auth/me: 200 with valid token, 401 without token
+    - POST /auth/logout: 200 clears refresh token
+
+PHASE 2 (Onboarding) — MEDIUM RISK — 8+ tests minimum
+  Unit tests:
+    - Zod validation: each of 10 steps validates correctly
+    - Zod validation: rejects invalid birthdates (future, < 13 years old)
+    - Progress calculation: correctly identifies completed steps
+  Integration tests:
+    - PUT /users/onboarding: saves progress, returns next step
+    - PUT /users/onboarding: completes all steps, marks onboarding done
+    - GET /users/onboarding: returns saved progress for resume
+
+PHASE 3 (Dashboard) — LOW RISK — 5+ tests minimum
+  Integration tests:
+    - GET /users/dashboard: returns all widget data for authenticated user
+    - GET /users/dashboard: 401 for unauthenticated request
+  Frontend unit tests:
+    - Dashboard renders loading skeleton while fetching
+    - Dashboard renders empty state when no data
+    - Dashboard renders all widgets when data present
+
+PHASE 4 (Therapy) — HIGH RISK — 18+ tests minimum
+  Unit tests:
+    - Matching algorithm: returns therapist with highest score
+    - Matching algorithm: filters by specialization correctly
+    - Matching algorithm: handles no available therapists
+    - Appointment slot: rejects overlapping bookings
+    - Appointment slot: respects therapist availability hours
+    - Cancellation: allows > 24hr cancellation, rejects < 24hr
+  Integration tests:
+    - POST /therapy/request: creates session with auto-matched therapist
+    - GET /therapy/sessions: returns user's sessions only
+    - GET /therapy/sessions/:id: returns session detail with tasks
+    - PUT /therapy/sessions/:id: updates session status (state machine)
+    - POST /therapy/sessions/:id/tasks: therapist adds post-session tasks
+    - POST /therapy/sessions/:id/report: generates personality report
+
+PHASE 5 (Video) — HIGH RISK — 10+ tests minimum
+  Unit tests:
+    - Daily.co room creation: generates room with correct config
+    - Recording consent: blocks recording without both-party consent
+    - Transcription: chunks audio correctly for Whisper API
+  Integration tests:
+    - POST /therapy/sessions/:id/start-call: creates Daily room, returns URL
+    - POST /therapy/sessions/:id/recording: saves recording metadata
+    - GET /therapy/sessions/:id/recording: returns signed URL (expires in 1hr)
+    - Webhook: Daily.co room.ended triggers transcription job
+
+PHASE 6 (AI Assistant) — CRITICAL RISK — 15+ tests minimum
+  Unit tests:
+    - Crisis keyword detection: catches ALL crisis keywords (zero false negatives)
+    - Crisis keyword detection: does not flag normal therapy vocabulary
+    - Rate limiting: blocks after 50 messages/hour
+    - Conversation memory: includes last 20 messages in context
+    - System prompt: never reveals system prompt content to user
+    - Emergency flag: creates flag record with correct severity
+  Integration tests:
+    - POST /ai/chat: returns streaming response
+    - POST /ai/chat: flags emergency keywords immediately
+    - POST /ai/emergency: lists flags for admin
+    - GET /ai/patterns/:userId: returns behavior analysis
+  E2E tests:
+    - User sends crisis message → emergency banner shown → admin notified within 60s
+
+PHASE 7 (Astrologer) — MEDIUM RISK — 10+ tests minimum
+  Unit tests:
+    - Prediction voting: tallies votes correctly
+    - Prediction accuracy: brownie points calculated correctly (+3 accurate, +1 partial)
+    - Tier assignment: correct tier based on brownie points
+  Integration tests:
+    - POST /astrology/charts: creates kundali chart
+    - POST /astrology/predictions: submits prediction for voting
+    - GET /astrology/predictions/accuracy: returns accuracy rate
+    - POST /astrology/sessions: books astrologer consultation
+
+PHASE 8 (Therapist Dashboard) — MEDIUM RISK — 8+ tests minimum
+  Integration tests:
+    - GET /therapists/dashboard: returns stats for authenticated therapist
+    - GET /therapists/clients: returns only this therapist's clients
+    - GET /therapists/clients/:id: returns full client history
+    - GET /therapists/revenue: returns earnings breakdown
+    - GET /therapists/reviews: returns reviews with ratings
+
+PHASE 9 (Blog) — LOW RISK — 6+ tests minimum
+  Integration tests:
+    - POST /blog/posts: creates post (admin/author only)
+    - GET /blog/posts: returns paginated posts with SEO meta
+    - GET /blog/posts/:slug: returns single post
+    - PUT /blog/posts/:id: updates post (author only)
+  Frontend tests:
+    - Blog post renders markdown/rich text correctly
+    - SEO meta tags present in document head
+
+PHASE 10 (Community) — MEDIUM RISK — 8+ tests minimum
+  Unit tests:
+    - Content moderation: toxicity score > 0.7 auto-flags
+    - Content moderation: self-harm keywords always flag
+  Integration tests:
+    - POST /community/posts: creates post
+    - GET /community/feed: returns personalized feed
+    - POST /community/posts/:id/report: creates moderation report
+    - GET /community/moderation: returns queue (moderator only)
+
+PHASE 11 (Courses) — MEDIUM RISK — 8+ tests minimum
+  Integration tests:
+    - GET /courses: returns catalog with pagination
+    - POST /courses/:id/enroll: enrolls user (payment verified)
+    - PUT /courses/:id/progress: updates lesson progress
+    - GET /courses/:id/progress: returns completion percentage
+    - POST /courses/create: creates course (creator role)
+
+PHASE 12 (Shop) — MEDIUM RISK — 10+ tests minimum
+  Integration tests:
+    - GET /shop/products: returns catalog with filters
+    - POST /shop/cart: adds item to cart
+    - POST /shop/orders: creates order (payment verified)
+    - GET /shop/orders/:id: returns order detail with tracking
+    - POST /shop/orders/:id/return: initiates return (within 7 days)
+
+PHASE 13 (Payments) — CRITICAL RISK — 20+ tests minimum
+  Unit tests:
+    - Razorpay signature verification: validates correctly
+    - Stripe webhook signature: validates correctly
+    - Amount calculation: handles multi-currency conversion
+    - Refund calculation: prorates correctly
+    - Subscription: next billing date calculated correctly
+  Integration tests:
+    - POST /payments/create: creates Razorpay order (INR)
+    - POST /payments/create: creates Stripe intent (non-INR)
+    - POST /payments/verify: marks payment complete on valid signature
+    - POST /payments/verify: rejects invalid signature (CRITICAL)
+    - POST /payments/webhook: processes Razorpay/Stripe webhooks idempotently
+    - POST /payments/refund: processes refund (admin only)
+    - GET /payments/history: returns user's payment history
+    - POST /payments/subscriptions: creates recurring subscription
+    - POST /payments/memberships/subscribe: activates membership tier
+  Security tests:
+    - Webhook endpoint rejects requests without valid signature
+    - Payment amount cannot be tampered by client
+    - Double-payment prevention (idempotency key)
+
+PHASE 14 (Admin) — HIGH RISK — 12+ tests minimum
+  Integration tests:
+    - GET /admin/head-office: 200 for admin, 403 for user/therapist
+    - GET /admin/dashboard: returns aggregated stats
+    - GET /admin/users: returns paginated user list with filters
+    - PUT /admin/users/:id: suspends user (audit logged)
+    - GET /admin/employees: returns employee list
+    - GET /admin/actions: returns audit log (filterable)
+    - All admin endpoints: 403 for non-admin roles
+
+PHASE 15 (Corporate) — MEDIUM RISK — 6+ tests minimum
+  Integration tests:
+    - POST /corporate/accounts: creates corporate account
+    - GET /corporate/reports: returns anonymized wellness report
+    - GET /corporate/employees: returns enrolled employees
+
+PHASE 16 (Health Tools) — LOW RISK — 8+ tests minimum
+  Integration tests:
+    - POST /health-tools/mood: saves mood log with triggers
+    - GET /health-tools/mood: returns mood history with trends
+    - POST /health-tools/journal: saves encrypted journal entry
+    - POST /health-tools/meditation: logs completed session
+
+PHASE 17 (Notifications) — MEDIUM RISK — 8+ tests minimum
+  Unit tests:
+    - Priority routing: critical notifications bypass quiet hours
+    - Retry logic: retries with exponential backoff on failure
+    - Digest mode: batches low-priority notifications
+  Integration tests:
+    - POST /notifications: sends notification to user
+    - GET /notifications: returns user's notification list
+    - PUT /notifications/preferences: updates user preferences
+    - WebSocket: real-time notification delivered within 2 seconds
+
+PHASE 18 (Animations) — LOW RISK — 2+ tests minimum
+  Frontend tests:
+    - Splash screen renders and transitions to landing
+    - Landing page: Three.js canvas renders without errors
+
+PHASE 19 (About/Careers) — LOW RISK — 4+ tests minimum
+  Integration tests:
+    - GET /careers/positions: returns open positions
+    - POST /careers/positions/:id/apply: submits application
+
+PHASE 20 (Departments) — MEDIUM RISK — 6+ tests minimum
+  Integration tests:
+    - GET /admin/departments: returns all departments with KPIs
+    - PUT /admin/departments/:id: updates targets (admin only)
+
+PHASE 21 (SEO) — LOW RISK — 4+ tests minimum
+  Integration tests:
+    - GET /blog/seo: returns sitemap data
+    - Programmatic page generation: produces valid HTML
+
+PHASE 22 (Events) — MEDIUM RISK — 8+ tests minimum
+  Integration tests:
+    - POST /events: creates event (admin only)
+    - GET /events/:slug: returns event detail
+    - POST /events/:id/register: registers user (handles capacity)
+    - POST /events/:id/feedback: submits feedback (attendee only)
+
+PHASE 23 (Memberships) — HIGH RISK — 8+ tests minimum
+  Integration tests:
+    - POST /payments/memberships/subscribe: activates correct tier
+    - GET /payments/memberships/mine: returns current membership
+    - Upgrade: prorates payment correctly
+    - Downgrade: applies at next billing cycle
+    - Expiry: grace period of 7 days, then deactivation
+
+PHASE 24 (NGO) — MEDIUM RISK — 6+ tests minimum
+  Integration tests:
+    - GET /ngo/partners: returns NGO list
+    - POST /ngo/partners/:id/beneficiaries: registers beneficiary
+    - Sponsored session: creates therapy session at ₹0 for beneficiary
+
+PHASE 25 (AI Monitoring) — CRITICAL RISK — 12+ tests minimum
+  Unit tests:
+    - Emotion detection: correctly maps facial landmarks to emotions
+    - Crisis detection: flags suicidal ideation within 5 seconds
+    - Fraud detection: flags session < 15 min as "session-too-short"
+    - Fraud detection: flags camera-off > 50% as suspicious
+    - Quality scoring: aggregates across dimensions correctly
+  Integration tests:
+    - POST /ai/session-monitor/start: initializes monitoring session
+    - POST /ai/session-monitor/frame: processes frame, returns emotion
+    - POST /ai/session-monitor/audio: processes audio chunk
+    - GET /ai/session-monitor/:id/client: returns client analysis
+    - GET /ai/session-monitor/:id/therapist: returns quality + fraud report
+    - Emergency detection → admin alert → within 60 seconds
+
+TOTAL MINIMUM TESTS: 250+ across all 25 phases
+```
+
+---
+
+## Environment & Secrets Management Blueprint
+
+### Master Environment Variable Matrix
+
+```
+VARIABLE                        | PHASE NEEDED | REQUIRED/OPTIONAL | EXAMPLE VALUE
+-------------------------------|-------------|-------------------|----------------------------------
+# === CORE (Phase 1) ===
+NODE_ENV                        | Phase 1     | Required          | development | staging | production
+PORT                            | Phase 1     | Required          | 3000
+DATABASE_URL                    | Phase 1     | Required          | postgresql://user:pass@localhost:5432/soulyatri
+JWT_ACCESS_SECRET               | Phase 1     | Required          | <256-bit random string>
+JWT_REFRESH_SECRET              | Phase 1     | Required          | <256-bit random string, DIFFERENT from access>
+JWT_ACCESS_EXPIRY               | Phase 1     | Required          | 15m
+JWT_REFRESH_EXPIRY              | Phase 1     | Required          | 7d
+CORS_ORIGIN                     | Phase 1     | Required          | http://localhost:5173
+BCRYPT_SALT_ROUNDS              | Phase 1     | Optional          | 12 (default)
+
+# === STORAGE (Phase 5) ===
+S3_BUCKET_NAME                  | Phase 5     | Required          | soulyatri-recordings
+S3_REGION                       | Phase 5     | Required          | ap-south-1
+S3_ACCESS_KEY                   | Phase 5     | Required          | <AWS access key>
+S3_SECRET_KEY                   | Phase 5     | Required          | <AWS secret key>
+S3_ENDPOINT                     | Phase 5     | Optional          | <for R2/MinIO: custom endpoint>
+
+# === VIDEO (Phase 5) ===
+DAILY_API_KEY                   | Phase 5     | Required          | <Daily.co API key>
+DAILY_WEBHOOK_SECRET            | Phase 5     | Required          | <Daily.co webhook secret>
+
+# === AI (Phase 6) ===
+OPENAI_API_KEY                  | Phase 6     | Required          | sk-...
+OPENAI_ORG_ID                   | Phase 6     | Optional          | org-...
+OPENAI_MODEL_CHAT               | Phase 6     | Optional          | gpt-4o (default)
+OPENAI_MODEL_FAST               | Phase 6     | Optional          | gpt-4o-mini (default)
+OPENAI_MODEL_WHISPER            | Phase 6     | Optional          | whisper-1 (default)
+
+# === PAYMENTS (Phase 13) ===
+RAZORPAY_KEY_ID                 | Phase 13    | Required          | rzp_test_...
+RAZORPAY_KEY_SECRET             | Phase 13    | Required          | <Razorpay secret>
+RAZORPAY_WEBHOOK_SECRET         | Phase 13    | Required          | <Razorpay webhook secret>
+STRIPE_SECRET_KEY               | Phase 13    | Required          | sk_test_...
+STRIPE_PUBLISHABLE_KEY          | Phase 13    | Required (FE)     | pk_test_...
+STRIPE_WEBHOOK_SECRET           | Phase 13    | Required          | whsec_...
+
+# === EMAIL (Phase 17) ===
+EMAIL_PROVIDER                  | Phase 17    | Required          | resend | sendgrid | ses
+RESEND_API_KEY                  | Phase 17    | Required          | re_...
+EMAIL_FROM_ADDRESS              | Phase 17    | Required          | noreply@soulyatri.com
+EMAIL_FROM_NAME                 | Phase 17    | Optional          | Soul Yatri (default)
+
+# === PUSH NOTIFICATIONS (Phase 17) ===
+FCM_PROJECT_ID                  | Phase 17    | Required          | soul-yatri-prod
+FCM_PRIVATE_KEY                 | Phase 17    | Required          | <Firebase service account key>
+FCM_CLIENT_EMAIL                | Phase 17    | Required          | firebase-adminsdk@...
+
+# === REDIS (Phase 17) ===
+REDIS_URL                       | Phase 17    | Required          | redis://localhost:6379
+REDIS_PASSWORD                  | Phase 17    | Optional          | <password for production>
+
+# === ANALYTICS (Phase 20) ===
+POSTHOG_API_KEY                 | Phase 20    | Optional          | phc_...
+POSTHOG_HOST                    | Phase 20    | Optional          | https://app.posthog.com
+SENTRY_DSN                      | Phase 20    | Optional          | https://...@sentry.io/...
+
+# === SEO (Phase 21) ===
+GOOGLE_SEARCH_CONSOLE_KEY       | Phase 21    | Optional          | <verification key>
+BING_WEBMASTER_KEY              | Phase 21    | Optional          | <verification key>
+
+# === FRONTEND (.env) ===
+VITE_API_BASE_URL               | Phase 1     | Required          | http://localhost:3000/api/v1
+VITE_DAILY_DOMAIN               | Phase 5     | Required          | soulyatri.daily.co
+VITE_STRIPE_PUBLISHABLE_KEY     | Phase 13    | Required          | pk_test_...
+VITE_POSTHOG_KEY                | Phase 20    | Optional          | phc_...
+VITE_SENTRY_DSN                 | Phase 20    | Optional          | https://...
+```
+
+### Per-Environment Rules
+
+```
+DEVELOPMENT (local machine):
+  - Use .env file (gitignored) — copy from server/.env.example
+  - DATABASE_URL: local PostgreSQL or Docker container
+  - Payment keys: use Razorpay/Stripe TEST keys only
+  - DAILY_API_KEY: use Daily.co free tier
+  - OPENAI_API_KEY: personal key with spend limit ($20/month cap)
+  - REDIS_URL: local Redis or skip (use in-memory fallback)
+  - EMAIL: use Resend free tier or console.log fallback
+  - S3: use local MinIO container or Cloudflare R2 free tier
+
+STAGING (pre-production, mirrors production):
+  - All environment variables set via platform secrets (Railway/Render)
+  - DATABASE_URL: separate staging PostgreSQL instance
+  - Payment keys: still TEST keys
+  - All other services: production-like but separate instances
+  - Seed data: anonymized copy of production (if available)
+
+PRODUCTION:
+  - All secrets in platform secret manager (Railway/Render secrets)
+  - NEVER in .env files, NEVER in code, NEVER in git
+  - DATABASE_URL: managed PostgreSQL (Neon/Supabase/RDS)
+  - Payment keys: LIVE keys (Razorpay + Stripe)
+  - DAILY_API_KEY: paid plan
+  - OPENAI_API_KEY: organization key with billing
+  - S3: AWS S3 or Cloudflare R2 production bucket
+  - REDIS: managed Redis (Upstash/ElastiCache)
+  - EMAIL: production domain verified with SPF/DKIM/DMARC
+```
+
+### Secret Rotation Policy
+
+```
+SECRET                    | ROTATION FREQUENCY | HOW TO ROTATE
+--------------------------|-------------------|----------------------------------------------
+JWT_ACCESS_SECRET         | Every 90 days     | Generate new secret, deploy, old tokens expire in 15min
+JWT_REFRESH_SECRET        | Every 90 days     | Generate new secret, deploy, old refresh tokens expire in 7d
+DATABASE_URL password     | Every 180 days    | Change in DB, update in platform secrets, restart
+RAZORPAY_KEY_SECRET       | On compromise     | Regenerate in Razorpay dashboard, update secret
+STRIPE_SECRET_KEY         | On compromise     | Roll in Stripe dashboard, update secret
+OPENAI_API_KEY            | Every 90 days     | Generate new key in OpenAI dashboard, delete old
+DAILY_API_KEY             | Every 180 days    | Regenerate in Daily dashboard
+S3_ACCESS_KEY             | Every 90 days     | Create new IAM key, deploy, delete old key
+FCM_PRIVATE_KEY           | Every 365 days    | Generate new service account key in Firebase
+RESEND_API_KEY            | Every 180 days    | Generate new key in Resend dashboard
+
+ROTATION PROCEDURE:
+  1. Generate new secret in provider dashboard
+  2. Update in platform secret manager (Railway/Render)
+  3. Trigger deployment (auto-restarts with new secret)
+  4. Verify app works with new secret (health check + manual test)
+  5. Delete/disable old secret in provider dashboard
+  6. Log rotation in audit trail
+```
+
+### .env.example Template (keep in sync)
+
+```
+# Server — copy to server/.env and fill in values
+# DO NOT commit .env files to git
+
+# Core
+NODE_ENV=development
+PORT=3000
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/soulyatri
+CORS_ORIGIN=http://localhost:5173
+
+# Auth (Phase 1) — generate with: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+JWT_ACCESS_SECRET=
+JWT_REFRESH_SECRET=
+JWT_ACCESS_EXPIRY=15m
+JWT_REFRESH_EXPIRY=7d
+BCRYPT_SALT_ROUNDS=12
+
+# Storage (Phase 5)
+S3_BUCKET_NAME=soulyatri-recordings-dev
+S3_REGION=ap-south-1
+S3_ACCESS_KEY=
+S3_SECRET_KEY=
+
+# Video (Phase 5)
+DAILY_API_KEY=
+DAILY_WEBHOOK_SECRET=
+
+# AI (Phase 6)
+OPENAI_API_KEY=
+OPENAI_ORG_ID=
+
+# Payments (Phase 13)
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
+RAZORPAY_WEBHOOK_SECRET=
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+# Email & Push (Phase 17)
+EMAIL_PROVIDER=resend
+RESEND_API_KEY=
+EMAIL_FROM_ADDRESS=noreply@soulyatri.com
+FCM_PROJECT_ID=
+FCM_PRIVATE_KEY=
+FCM_CLIENT_EMAIL=
+
+# Redis (Phase 17)
+REDIS_URL=redis://localhost:6379
+
+# Analytics (Phase 20)
+POSTHOG_API_KEY=
+SENTRY_DSN=
+```
+
+---
+
+### PHASE 26: Mobile App Design (Figma)
+**Time estimate: 4-6 weeks (June-July 2026)**
+**Prerequisites: ALL web phases 1-25 complete and launched**
+
+```
+WHAT TO BUILD:
+  Complete mobile app Figma designs that map to the existing web interface.
+  Every web screen gets a mobile-native equivalent.
+
+TASKS:
+  1. Design system — mobile
+     a. Create mobile design tokens (smaller text sizes, touch targets 44px min)
+     b. Bottom tab navigation (5 tabs: Home, Explore, AI Assistant, Sessions, Profile)
+     c. Mobile header component (back arrow, title, action buttons)
+     d. Pull-to-refresh pattern for all list screens
+     e. Swipe gestures (swipe to delete, swipe between tabs)
+     f. Bottom sheet pattern (replaces modals on mobile)
+     g. Haptic feedback indicators
+
+  2. Screen mapping (web → mobile)
+     a. Splash Screen → same (but native, not browser)
+     b. Onboarding → swipeable cards (not multi-step form)
+     c. Dashboard → scrollable card feed (not grid layout)
+     d. Therapy booking → bottom sheet calendar picker
+     e. Video call → full-screen native (camera, mic controls at bottom)
+     f. AI chat → WhatsApp-style chat bubbles (voice input button always visible)
+     g. Meditation → immersive full-screen with system audio controls
+     h. Journal → native keyboard with formatting toolbar above keyboard
+     i. Community feed → Instagram/Twitter-style infinite scroll
+     j. Shop → product grid with bottom cart button
+     k. Blog → reader mode with adjustable font size
+     l. Notifications → grouped by type (like iOS notification center)
+     m. Settings → native settings pattern (grouped sections)
+     n. Therapist/Astrologer dashboards → simplified mobile versions (key actions only)
+
+  3. Mobile-specific screens (not in web)
+     a. App onboarding (3 swipeable intro slides)
+     b. Biometric login (Face ID / fingerprint)
+     c. Push notification permission request screen
+     d. Camera permission request screen
+     e. Microphone permission request screen
+     f. Offline mode indicator
+     g. App update required screen
+     h. Deep link landing (when opening shared links)
+
+  4. Design review
+     a. Test all designs in Figma mobile preview
+     b. Verify touch targets ≥ 44x44px
+     c. Verify text readable at arm's length (min 16px body)
+     d. Verify dark mode versions of all screens
+     e. Verify landscape mode for video call screen
+
+DELIVERABLES:
+  - Complete Figma file with all mobile screens
+  - Component library (shared with web where possible)
+  - Interaction prototype for key flows
+  - Screen count target: ~200 mobile screens
+
+VERIFY:
+  - Every web screen has a mobile equivalent
+  - All interactive prototypes work in Figma preview
+  - Stakeholder sign-off on mobile UX
+```
+
+### PHASE 27: React Native App Development
+**Time estimate: 12-16 weeks (July-October 2026)**
+**Prerequisites: Phase 26 (designs), ALL web phases (API is ready)**
+
+```
+WHAT TO BUILD:
+  React Native app using Expo that connects to the SAME backend API.
+  Zero backend changes needed — the API-first architecture pays off here.
+
+TASKS:
+  1. Project setup
+     a. npx create-expo-app soul-yatri-mobile --template expo-template-blank-typescript
+     b. Install shared dependencies:
+        - @tanstack/react-query (same as web — API caching)
+        - zustand (same as web — state management)
+        - zod (same as web — validation)
+        - react-native-mmkv (secure storage, replaces localStorage)
+        - expo-router (file-based routing)
+        - expo-av (audio/video)
+        - expo-camera (video calls)
+        - expo-notifications (push)
+        - expo-local-authentication (biometrics)
+        - expo-haptics (tactile feedback)
+     c. Create shared npm package: @soul-yatri/shared
+        - Move Zod schemas from web to shared package
+        - Move TypeScript types to shared package
+        - Both web and mobile import from @soul-yatri/shared
+     d. Configure deep linking (soulyatri.com/* → app)
+     e. Configure universal links (iOS) + app links (Android)
+
+  2. Core screens (Months 1-2)
+     a. Splash screen + animated logo
+     b. Login/Signup (biometric option after first login)
+     c. Onboarding (swipeable cards)
+     d. Dashboard (scrollable card feed)
+     e. AI chat (text + voice input)
+     f. Mood logging (quick entry from home screen widget)
+     g. Journal (rich text with native keyboard)
+     h. Meditation player (background audio, timer)
+     i. Breathing exercise (animated circles)
+     j. Profile + settings
+
+  3. Therapy & video (Month 2-3)
+     a. Therapist listing + booking
+     b. Session calendar (native calendar integration)
+     c. Video call (expo-camera + Daily.co React Native SDK)
+     d. Session recording consent
+     e. Post-session tasks + review
+     f. Astrologer booking
+
+  4. Social & content (Month 3-4)
+     a. Community feed (infinite scroll)
+     b. Blog reader
+     c. Course viewer (video + progress)
+     d. Event listing + registration
+     e. Shop (product grid + cart + checkout)
+     f. Notification center
+
+  5. Push notifications
+     a. Configure FCM (Android) + APNs (iOS) via expo-notifications
+     b. Register device token on login → POST /notifications/register-device
+     c. Handle notification taps → deep link to correct screen
+     d. Notification categories: therapy-reminder, ai-alert, community, marketing
+     e. Silent notifications for data sync
+
+  6. Offline mode
+     a. Journal entries: save locally, sync when online
+     b. Mood logs: save locally, sync when online
+     c. Meditation: cache audio files for offline playback
+     d. Breathing exercises: fully offline (no API needed)
+     e. Sync indicator: show "syncing..." badge on tab bar
+     f. Conflict resolution: server wins for conflicts
+
+  7. Platform-specific
+     a. iOS: Live Activities for meditation timer
+     b. iOS: Widgets (daily mood, next session countdown)
+     c. Android: Widgets (daily mood, next session)
+     d. Android: Material You theming
+     e. Both: Dark mode matching system setting
+
+PRISMA / API:
+  No new backend endpoints needed. Mobile uses the SAME API as web.
+  Only addition: POST /notifications/register-device (add to existing notification routes)
+
+VERIFY:
+  - App runs on iOS simulator + Android emulator
+  - Login flow works with backend auth API
+  - Video call works between mobile and web users
+  - Push notifications arrive within 10 seconds
+  - Offline journaling syncs correctly when reconnected
+  - Deep links open correct screens
+  - All screens match Figma designs from Phase 26
+```
+
+### PHASE 28: App Store Submission & ASO
+**Time estimate: 2-4 weeks (November 2026)**
+**Prerequisites: Phase 27 (app development complete)**
+
+```
+WHAT TO BUILD:
+  Submit app to Apple App Store and Google Play Store with full ASO optimization.
+
+TASKS:
+  1. App Store assets
+     a. App icon: 1024x1024 (App Store), 512x512 (Play Store)
+     b. Screenshots: 6.7" iPhone, 6.5" iPhone, 12.9" iPad, phone + 7"/10" tablet
+     c. App preview video: 30-second demo of key features
+     d. Feature graphic (Play Store): 1024x500
+     e. Promotional text: 170 chars (App Store)
+     f. Description: up to 4000 chars, keyword-optimized
+     g. Keywords: 100 chars (App Store keyword field)
+
+  2. ASO optimization (use ASOConfig type from seo.types.ts)
+     a. Title: "Soul Yatri — Mental Health & Therapy" (30 chars max)
+     b. Subtitle: "Therapy, Astrology & Wellness" (30 chars max)
+     c. Keywords: mental health, therapy, counselling, meditation, wellness, astrology,
+        healing, self-care, mood tracker, journal, breathing, mindfulness
+     d. Category: Health & Fitness (primary), Lifestyle (secondary)
+     e. Localization: English (US, UK, India), Hindi
+     f. A/B test: 2 sets of screenshots, measure conversion rate
+
+  3. Compliance
+     a. Apple: Health data privacy disclosure (HealthKit NOT used, but mental health data collected)
+     b. Apple: App privacy labels (data collected, data linked to identity)
+     c. Google: Data safety section (same disclosures)
+     d. Both: Terms of service URL → soulyatri.com/terms
+     e. Both: Privacy policy URL → soulyatri.com/privacy
+     f. Apple: Review notes (explain therapy/astrology features, demo credentials)
+     g. Both: Age rating: 17+ (therapy/mental health content)
+     h. Both: Content rating questionnaire
+
+  4. Beta testing
+     a. TestFlight: invite 50 beta users (internal team + selected users)
+     b. Google Play internal testing track: same 50 users
+     c. Collect feedback for 2 weeks
+     d. Fix critical bugs from beta feedback
+     e. Graduate to open beta (optional, 100-500 users)
+
+  5. Submission
+     a. Submit to Apple App Store review (allow 1-2 weeks for review)
+     b. Submit to Google Play review (typically 1-3 days)
+     c. Prepare rejection response plan (common reasons: mental health claims, payment policies)
+     d. If rejected: address feedback, resubmit within 48 hours
+
+VERIFY:
+  - App approved on both stores
+  - App searchable for "mental health therapy India"
+  - Install → onboard → book session flow works on fresh install
+  - Push notifications work on fresh install
+  - App size < 50MB initial download
+```
+
+### PHASE 29: Ship Mobile App
+**Time estimate: 2 weeks (December 2026)**
+**Prerequisites: Phase 28 (app approved on stores)**
+
+```
+WHAT TO BUILD:
+  Public launch of mobile app with marketing push and monitoring.
+
+TASKS:
+  1. Launch preparation
+     a. Set release date in App Store Connect + Google Play Console
+     b. Prepare announcement: in-app banner on web ("Download our app!")
+     c. Prepare email blast to all registered users
+     d. Prepare social media posts (Instagram, LinkedIn, Twitter)
+     e. Update soulyatri.com landing page with app download badges
+     f. Smart banner: iOS Safari shows "Open in App" banner
+     g. Android: Chrome "Add to Home Screen" prompt + app install banner
+
+  2. Launch day
+     a. Release app on both stores simultaneously
+     b. Send email blast to user base
+     c. Post on social media channels
+     d. Monitor crash reports (Sentry) every 30 minutes for first 24 hours
+     e. Monitor app store reviews — respond to all reviews within 24 hours
+     f. Monitor server load — app users hit same API endpoints
+
+  3. Post-launch monitoring (first 2 weeks)
+     a. Track daily active users (DAU) on mobile vs web
+     b. Track crash-free rate (target: > 99.5%)
+     c. Track app store rating (target: > 4.5 stars)
+     d. Track retention: Day 1, Day 7, Day 30
+     e. Track funnel: install → signup → onboarding complete → first session
+     f. Fix any crashes with hotfix releases (Expo OTA updates for JS, store update for native)
+
+  4. Iteration
+     a. Collect top 10 user complaints from reviews
+     b. Prioritize and fix in next sprint
+     c. Release update within 2 weeks of launch
+
+VERIFY:
+  - App available in App Store + Play Store
+  - 100+ downloads in first week
+  - Crash-free rate > 99%
+  - All web features accessible from mobile
+  - Push notifications working for all notification types
+```
+
+### PHASE 30: AI Model Fine-Tuning
+**Time estimate: Ongoing (3+ months post-launch)**
+**Prerequisites: Phase 6 (AI assistant live), 3+ months of real conversation data**
+
+```
+WHAT TO BUILD:
+  Fine-tune AI models on anonymized real user data to improve therapy-specific
+  accuracy, crisis detection, and Indian English understanding.
+
+TASKS:
+  1. Data collection pipeline
+     a. Create anonymization job (BullMQ):
+        - Strip PII: names → [USER], phone → [PHONE], email → [EMAIL]
+        - Remove identifying details from conversation logs
+        - Keep: emotional content, crisis patterns, therapy vocabulary
+     b. Minimum dataset requirements:
+        - Chat fine-tuning: 10,000+ anonymized conversations
+        - Crisis detection: 500+ confirmed crisis interactions
+        - Sentiment analysis: 5,000+ mood-labeled conversations
+        - Transcription: 100+ hours of therapy audio (Indian English accents)
+     c. Data quality review:
+        - Manual review of 10% sample for PII leaks
+        - Verify anonymization removes ALL identifying info
+        - Label quality check (are crisis flags accurate?)
+
+  2. Whisper fine-tuning (transcription)
+     a. Collect 100+ hours of consented therapy recordings
+     b. Create ground truth transcripts (human-reviewed)
+     c. Fine-tune on therapy vocabulary: chakra, kundali, prana, doshas, etc.
+     d. Fine-tune on Indian English accents + code-switching (Hindi-English)
+     e. Evaluate: Word Error Rate (WER) < 10% on therapy vocabulary
+     f. A/B test: fine-tuned vs base Whisper on 50 new recordings
+
+  3. GPT fine-tuning (chat/sentiment)
+     a. Format training data as JSONL (system + user + assistant messages)
+     b. Fine-tune GPT-4o-mini for sentiment analysis:
+        - Goal: better accuracy on Indian English mental health terminology
+        - Evaluation: F1 score > 0.90 on test set
+     c. Fine-tune GPT-4o-mini for crisis detection:
+        - Goal: recall > 99.5% (NEVER miss a real crisis)
+        - Acceptable false positive rate: < 5%
+        - Test on 100 known crisis interactions + 100 normal ones
+     d. Do NOT fine-tune the main chat model initially
+        - Prompt engineering is cheaper and more flexible
+        - Fine-tune only if prompt engineering plateaus
+
+  4. Deployment & A/B testing
+     a. Deploy fine-tuned models as separate OpenAI deployments
+     b. Route 10% of traffic to fine-tuned model (A/B test)
+     c. Compare metrics:
+        - User satisfaction rating (thumbs up/down on AI responses)
+        - Crisis detection accuracy (human-reviewed false negatives)
+        - Transcription accuracy (WER on random sample)
+     d. If fine-tuned model wins → gradually increase to 100%
+     e. If fine-tuned model loses → keep base model, collect more data
+
+  5. Continuous improvement
+     a. Monthly: retrain models with new anonymized data
+     b. Monthly: review crisis detection false negatives (zero tolerance)
+     c. Quarterly: evaluate if newer base models (GPT-5, etc.) outperform fine-tuned
+     d. Annually: full model evaluation against all benchmarks
+
+VERIFY:
+  - Fine-tuned Whisper WER < 10% on therapy vocabulary
+  - Crisis detection recall > 99.5% (test with synthetic crisis messages)
+  - A/B test shows improvement (or at least no regression)
+  - Zero PII in training data (audit 10% sample)
+  - Models deployed without downtime (gradual rollout)
+```
+
+### PHASE 31: Infrastructure Scaling
+**Time estimate: Ongoing (based on user growth)**
+**Prerequisites: Platform launched, monitoring in place (Sentry + PostHog)**
+
+```
+WHAT TO BUILD:
+  Scale infrastructure from bootstrap (Railway/Render) to production-grade
+  cloud infrastructure as user count grows.
+
+TASKS:
+  1. Monitoring & alerts (implement FIRST, before scaling)
+     a. Application monitoring:
+        - Sentry: error tracking, performance monitoring
+        - Alert: error rate > 1% → Slack notification
+        - Alert: p95 response time > 500ms → Slack notification
+     b. Infrastructure monitoring:
+        - Database: connection pool usage, query time, storage
+        - Redis: memory usage, eviction rate, connection count
+        - S3: storage usage, request count
+        - Alert: DB connections > 80% pool → Slack notification
+        - Alert: Redis memory > 80% → Slack notification
+     c. Business monitoring:
+        - PostHog: DAU, MAU, session count, conversion funnels
+        - Custom: revenue dashboard (already in admin)
+        - Alert: DAU drops > 20% day-over-day → email founder
+
+  2. Scaling triggers (when to upgrade)
+     a. 0-1,000 users: Railway/Render (current setup, $30-50/month)
+        - Single server, single database, no Redis needed
+        - In-memory session store, BullMQ with in-process mode
+     b. 1,000-10,000 users: upgrade within Railway/Render ($100-300/month)
+        - Add Redis (Upstash or Railway addon)
+        - Upgrade database (Neon Pro or Supabase Pro)
+        - Add CDN for static assets (Cloudflare free tier)
+        - Enable database connection pooling (PgBouncer)
+     c. 10,000-50,000 users: migrate to AWS/GCP ($500-2,000/month)
+        - AWS ECS or GCP Cloud Run (auto-scaling containers)
+        - RDS PostgreSQL with read replicas
+        - ElastiCache Redis cluster
+        - S3 + CloudFront CDN
+        - Route 53 for DNS (multi-domain)
+        - WAF (Web Application Firewall) for API protection
+     d. 50,000+ users: full cloud-native ($2,000-10,000/month)
+        - Kubernetes (EKS/GKE) for container orchestration
+        - Database sharding or Aurora Serverless
+        - Multi-region deployment (Mumbai + Singapore)
+        - Global CDN (CloudFront/Cloudflare Pro)
+        - Dedicated video infrastructure (Daily.co enterprise)
+        - AI inference: dedicated GPU instances or Azure OpenAI
+
+  3. Database scaling steps
+     a. Connection pooling: PgBouncer (when connections > 50)
+     b. Read replicas: route GET queries to replica (when reads > 80% of load)
+     c. Indexing audit: EXPLAIN ANALYZE on slow queries (when any query > 100ms)
+     d. Archival: move old audit logs to cold storage (when DB > 50GB)
+     e. Partitioning: partition large tables by date (analytics_events, audit_logs)
+
+  4. API scaling steps
+     a. Rate limiting: already implemented (upgrade limits for paying users)
+     b. Response caching: Redis cache for frequently-read data (therapist listings, blog posts)
+     c. Queue heavy work: BullMQ for email, transcription, AI analysis (already designed)
+     d. Horizontal scaling: add more server instances behind load balancer
+     e. API gateway: Kong or AWS API Gateway for request routing
+
+  5. Frontend scaling steps
+     a. CDN: serve built assets from Cloudflare/CloudFront (100ms load globally)
+     b. Code splitting: already done (lazy loading per route)
+     c. Image optimization: Sharp.js for server-side + WebP/AVIF format
+     d. Service worker: cache static assets for offline access
+
+  6. Security scaling steps
+     a. WAF rules: block common attacks (SQL injection, XSS, bot traffic)
+     b. DDoS protection: Cloudflare or AWS Shield
+     c. SSL/TLS: enforce TLS 1.3 minimum
+     d. Secrets: migrate from platform env vars to AWS Secrets Manager or Vault
+     e. Penetration testing: annual third-party pentest
+
+  7. Cost optimization
+     a. Reserved instances: 1-year commit for 30-40% savings on AWS
+     b. Spot instances: use for background jobs (AI processing, transcription)
+     c. S3 lifecycle rules: move old recordings to S3 Glacier (cheaper storage)
+     d. Right-sizing: monitor CPU/memory usage, downsize over-provisioned resources
+     e. Cloudflare R2: switch from S3 for zero egress costs
+
+VERIFY:
+  - p95 API response time < 200ms at current load
+  - Database query time p95 < 50ms
+  - Zero downtime during scaling migrations
+  - Automated alerts fire correctly (test with synthetic errors)
+  - Cost stays within budget for current user tier
+  - All data encrypted in transit (TLS) and at rest (AES-256)
+```
+
 ---
 
 ## How to Work with AI Agents — Rules

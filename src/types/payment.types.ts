@@ -1,18 +1,44 @@
 /**
  * Payment & E-commerce Types
- * Payment gateway, Soul Shop merchandise, subscriptions
+ * Payment gateway, Soul Shop merchandise, subscriptions, multi-currency
  */
+
+// ── Multi-Currency Support ───────────────────────────────────────────────
+
+export type SupportedCurrency = 'INR' | 'USD' | 'EUR' | 'GBP' | 'AUD' | 'CAD' | 'SGD' | 'AED';
+
+export interface CurrencyConfig {
+  code: SupportedCurrency;
+  symbol: string;
+  name: string;
+  gateway: 'razorpay' | 'stripe'; // INR → Razorpay, rest → Stripe
+  exchangeRateToINR: number;
+  exchangeRateUpdatedAt: Date;
+  active: boolean;
+}
+
+export interface UserCurrencyPreference {
+  userId: string;
+  preferredCurrency: SupportedCurrency;
+  detectedCurrency?: SupportedCurrency; // from IP geolocation
+  autoDetect: boolean;
+}
+
+// ── Payment Transaction ──────────────────────────────────────────────────
 
 export interface PaymentTransaction {
   id: string;
   userId: string;
   amount: number;
-  currency: string;
+  currency: SupportedCurrency;
+  /** Amount in base currency (INR) for consistent reporting */
+  amountInBaseCurrency: number;
+  exchangeRateUsed: number;
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded';
   gateway: 'razorpay' | 'stripe';
   gatewayOrderId: string;
   gatewayPaymentId?: string;
-  type: 'therapy-session' | 'course' | 'shop-order' | 'subscription' | 'astrology-session';
+  type: 'therapy-session' | 'course' | 'shop-order' | 'subscription' | 'astrology-session' | 'event-ticket' | 'membership';
   referenceId: string; // sessionId, courseId, orderId, etc.
   metadata?: Record<string, unknown>;
   createdAt: Date;

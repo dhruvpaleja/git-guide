@@ -11,7 +11,7 @@
 | Layer | Choice | Why |
 |-------|--------|-----|
 | **Frontend** | React 19 + TypeScript + Vite | Already set up. Fast builds, type safety, huge ecosystem |
-| **UI Library** | Tailwind CSS + Radix UI (shadcn/ui) | Already set up. Apple-style clean design, accessible |
+| **UI Library** | Tailwind CSS + Radix UI (shadcn/ui) | Already set up. Apple-style clean design, WCAG 2.1 AA accessible |
 | **3D / Animations** | Framer Motion + (optional) Three.js/React Three Fiber | Framer Motion for page transitions & scroll animations. Three.js only for specific hero effects |
 | **Routing** | React Router v7 | Already set up with lazy loading |
 | **State** | Zustand (replace Context for complex state) | Tiny, fast, works outside React, perfect for AI agent dev |
@@ -19,14 +19,198 @@
 | **Database** | PostgreSQL + Prisma ORM | Type-safe queries, auto-generated types, migrations |
 | **Auth** | JWT + bcrypt + refresh tokens | Industry standard, works with any frontend |
 | **Real-time** | Socket.IO | For therapy video sessions, AI chat, notifications |
-| **AI** | OpenAI API (GPT-4) + Whisper (transcription) | Voice assistant, session transcription, sentiment analysis |
-| **Payments** | Razorpay (India) + Stripe (international) | Smooth checkout, subscriptions, marketplace payouts |
+| **AI** | OpenAI GPT-4o + Whisper + fine-tuned models | See AI Model Strategy below |
+| **Payments** | Razorpay (India/INR) + Stripe (global/multi-currency) | INR → Razorpay, all other currencies → Stripe |
 | **File Storage** | AWS S3 / Cloudflare R2 | Session recordings, course videos, product images |
 | **Email** | Resend or AWS SES | Transactional emails, notifications |
 | **Video Calls** | Daily.co or 100ms SDK | In-platform therapy sessions with recording |
 | **Search/SEO** | Next.js (migrate for SSR) OR pre-rendering | For blog SEO. Can be done later as a separate service |
 | **Deployment** | Docker + Railway / Render (start) → AWS (scale) | Cheap to start, easy to scale |
 | **Monitoring** | Sentry (errors) + PostHog (analytics) | Free tiers available |
+| **Accessibility** | Radix UI + axe-core + Lighthouse a11y | WCAG 2.1 AA target, automated + manual testing |
+
+### AI Model Strategy (Detailed)
+
+Types defined in: `src/types/ai.types.ts` (AIModelConfig, FineTuningDataset, ModelEvaluationMetrics)
+
+```
+MODEL SELECTION PER USE CASE:
+
+1. Chat Assistant (24/7 text):
+   Model: GPT-4o (fast, capable, cost-effective)
+   Fine-tuning: YES — on anonymized therapy conversation patterns
+   Safety: Custom system prompt with therapy safety guardrails
+   Crisis keywords: hardcoded list that bypasses AI and triggers instant flag
+   Fallback: GPT-4o-mini for simple queries (cost optimization)
+
+2. Voice Assistant (24/7 voice):
+   STT: Whisper (large-v3) for transcription
+   TTS: OpenAI TTS or ElevenLabs for response audio
+   Processing: Whisper → GPT-4o → TTS pipeline
+   Latency target: < 2 seconds end-to-end
+
+3. Session Transcription:
+   Model: Whisper (large-v3) — most accurate for therapy-specific language
+   Fine-tuning: YES — on therapy session vocabulary (mental health terms,
+   therapeutic techniques like CBT/DBT, Indian English accents)
+   Post-processing: GPT-4o extracts key points, action items, emotional highlights
+
+4. Sentiment & Emotion Analysis:
+   Model: Fine-tuned GPT-4o-mini (fast inference needed for real-time)
+   Training data: Labeled therapy conversation sentiments (anonymized)
+   Output: sentiment score (-1 to 1), detected emotions, risk level
+   Crisis detection recall target: >99.5% (NEVER miss a crisis signal)
+
+5. Therapist Quality & Fraud Detection:
+   Model: GPT-4o (needs reasoning for nuanced conduct analysis)
+   No fine-tuning needed — prompt engineering sufficient
+   Evaluation: Monthly review of false positive/negative rates
+
+6. Content Moderation (Community):
+   Model: GPT-4o-mini (fast, cheap, good enough for toxicity scoring)
+   Supplemented by: Perspective API (Google) for toxicity scoring
+   Auto-flag threshold: toxicity > 0.7 → flag for human review
+   Auto-remove threshold: toxicity > 0.95 OR self-harm > 0.8
+
+7. SEO Content Generation:
+   Model: GPT-4o for blog drafts, meta descriptions, keyword suggestions
+   Human review: ALL AI-generated content requires admin approval before publish
+
+8. Kundali AI Analysis:
+   Model: GPT-4o with custom prompt including Vedic astrology knowledge
+   Purpose: Supplement (not replace) astrologer analysis
+   Output: AI predictions alongside astrologer predictions for comparison
+
+FINE-TUNING STRATEGY:
+  Phase 1 (launch): Use base models with careful prompt engineering
+  Phase 2 (3 months post-launch): Collect anonymized data, begin fine-tuning
+  Phase 3 (6 months): Deploy fine-tuned models, A/B test against base
+  Phase 4 (ongoing): Continuous evaluation, retrain quarterly
+
+  ALL training data MUST be:
+    - Fully anonymized (PII removed, synthetic names)
+    - Consent-verified (users opt-in to data being used for improvement)
+    - Reviewed for bias before training
+    - Evaluated with therapy-specific metrics (see ModelEvaluationMetrics)
+
+  CRITICAL SAFETY RULE: Crisis detection recall must be >99.5%.
+  False negatives (missing a real crisis) are unacceptable.
+  False positives (flagging non-crisis) are acceptable — better safe.
+```
+
+### Multi-Currency Payment Strategy
+
+Types defined in: `src/types/payment.types.ts` (SupportedCurrency, CurrencyConfig, UserCurrencyPreference)
+
+```
+SUPPORTED CURRENCIES:
+  INR (₹) — Razorpay — primary market (India)
+  USD ($) — Stripe   — US, global default
+  EUR (€) — Stripe   — Europe
+  GBP (£) — Stripe   — UK
+  AUD ($) — Stripe   — Australia
+  CAD ($) — Stripe   — Canada
+  SGD ($) — Stripe   — Singapore
+  AED (د.إ) — Stripe — UAE / Middle East
+
+ROUTING LOGIC:
+  If currency == INR → route to Razorpay
+  If currency != INR → route to Stripe
+  All amounts stored in BOTH original currency AND INR (base currency)
+  Exchange rates updated daily via Open Exchange Rates API
+
+USER EXPERIENCE:
+  1. Auto-detect currency from IP geolocation on first visit
+  2. User can manually change currency in settings
+  3. All prices displayed in user's preferred currency
+  4. Checkout shows amount in user's currency + base INR equivalent
+  5. Receipts show both currencies
+
+ADMIN REPORTING:
+  All revenue reports show amounts in INR (base currency)
+  Exchange rate at time of transaction stored for audit
+```
+
+### Accessibility (A11y) Strategy
+
+```
+TARGET: WCAG 2.1 Level AA compliance on all pages
+
+AUTOMATED TESTING:
+  1. axe-core integration in CI pipeline — every PR checked
+  2. Lighthouse accessibility score target: 95+
+  3. eslint-plugin-jsx-a11y for React components
+  4. Automated color contrast checking
+
+MANUAL TESTING (quarterly):
+  1. Screen reader testing (VoiceOver, NVDA) on key flows
+  2. Keyboard-only navigation test on all pages
+  3. High contrast mode testing
+  4. 200% zoom testing (no horizontal scrolling)
+  5. Reduced motion preference respected
+
+DESIGN PRINCIPLES:
+  1. Color is never the only indicator (always paired with text/icon)
+  2. Focus indicators visible on all interactive elements
+  3. All images have alt text (or aria-hidden if decorative)
+  4. Form inputs have visible labels (not just placeholder)
+  5. Error messages linked to form fields via aria-describedby
+  6. Skip-to-content link on every page
+  7. Semantic HTML (main, nav, aside, article, section)
+  8. ARIA landmarks for complex widgets
+  9. Minimum touch target size: 44x44px (mobile)
+  10. prefers-reduced-motion: disable all animations
+
+SPECIFIC TO SOUL YATRI:
+  - Meditation timer: audio cues, not just visual
+  - Mood tracker: slider + number input option
+  - Video sessions: live captions via Whisper STT
+  - AI assistant: both text and voice modes
+  - Community: screen reader friendly post/comment flow
+```
+
+### Performance SLAs & Benchmarks
+
+```
+FRONTEND TARGETS:
+  Lighthouse Performance: 90+ (95+ target)
+  Lighthouse Accessibility: 95+
+  Lighthouse SEO: 100
+  Lighthouse Best Practices: 100
+  LCP (Largest Contentful Paint): < 2.5 seconds
+  FID (First Input Delay): < 100ms
+  CLS (Cumulative Layout Shift): < 0.1
+  TTI (Time to Interactive): < 3.5 seconds
+  Page load on 3G: < 5 seconds
+  Page load on 4G: < 2 seconds
+  JS bundle size (initial): < 200KB gzipped
+
+API RESPONSE TIME SLAs:
+  Auth endpoints: < 200ms p95
+  Dashboard data: < 300ms p95
+  Search/filter: < 500ms p95
+  AI chat (first token): < 1 second
+  AI voice (end-to-end): < 2 seconds
+  Session recording upload: < 5 seconds for 1 hour recording
+  Payment processing: < 3 seconds
+  Real-time notifications: < 100ms via WebSocket
+
+DATABASE:
+  Simple queries: < 50ms
+  Complex aggregations: < 500ms
+  Full-text search: < 200ms
+
+UPTIME:
+  API: 99.9% (< 8.76 hours downtime per year)
+  WebSocket: 99.5%
+  Video calling: 99.5% (depends on Daily.co SLA)
+
+MONITORING:
+  All metrics tracked in real-time via PostHog + custom dashboard
+  Alerts via Slack/email if any SLA breached
+  Weekly performance report to admin dashboard
+  Tracked at: /admin/platform-health
+```
 
 ---
 
@@ -132,35 +316,61 @@ mobile app (React Native / Flutter), third-party integrations, or even other ser
    - Right to erasure (users can request full data deletion)
    - Data Processing Agreements with all service providers
    - Data localization: primary storage in India (AWS Mumbai / Cloudflare India)
-2. GDPR (for international users):
+   - Data Protection Officer (DPO) designated
+   - Grievance redressal mechanism for data subjects
+2. GDPR (for international/EU users):
    - Cookie consent banner on first visit
    - Data export API: GET /api/v1/users/export-my-data (JSON)
    - Right to be forgotten: DELETE /api/v1/users/delete-account
-3. Mental health data sensitivity:
+   - Lawful basis for processing documented for each data category
+   - Data breach notification within 72 hours
+3. CCPA (California users):
+   - "Do Not Sell My Personal Information" link in footer
+   - Right to know what data is collected
+   - Right to delete personal information
+   - Non-discrimination for exercising privacy rights
+4. Mental health data sensitivity:
    - Therapy session content: highest encryption tier (AES-256-GCM)
-   - AI conversation logs: encrypted, auto-purge after 90 days
-   - Emergency flag data: retained 1 year then anonymized
+   - AI conversation logs: encrypted, retained permanently per policy
+   - Emergency flag data: retained permanently for safety
    - Kundali/birth data: encrypted at rest, access-logged
    - Mood/journal data: user-owned, deletable on request
-4. Therapist/Astrologer credential verification:
+   - ALL user data retained permanently (see Data Retention Policy)
+5. Therapist/Astrologer credential verification:
+   - Aadhaar/PAN document upload (encrypted storage)
    - License number verification against official databases
-   - Background check consent during onboarding
-   - Qualification document upload (verified by admin)
+   - Background check via third-party provider
+   - Interview + assessment test (astrologers take prediction test)
+   - Trial period with monitored sessions
+   - Mandatory platform training modules
    - Annual re-verification reminders
+   - Types defined in: src/types/auth.types.ts (ProfessionalOnboarding)
 ```
 
 ### Data Retention Policy
 ```
-1. Active user data: retained while account is active
-2. Deleted accounts: anonymize within 30 days, hard-delete within 90 days
-3. Therapy session recordings: retained 1 year, then auto-archived (user can download)
-4. AI conversations: 90-day auto-purge (configurable per user)
-5. Emergency flags: retained 1 year for safety, then anonymized
-6. Payment records: retained 7 years (legal/tax requirement)
-7. Audit logs: retained 2 years, then archived to cold storage
-8. Community posts: retained unless user deletes or admin removes
-9. Blog content: retained indefinitely (SEO value)
-10. Analytics data: aggregated after 90 days (raw events deleted)
+PHILOSOPHY: Soul Yatri retains ALL user data permanently (unless user requests deletion).
+Every data point helps build deeper personalization and better healing outcomes.
+
+1. Active user data: retained PERMANENTLY while account is active
+2. Deleted accounts: anonymize within 30 days per DPDPA/GDPR, hard-delete within 90 days
+3. Therapy session recordings: retained PERMANENTLY (encrypted, user can download anytime)
+4. AI conversations: retained PERMANENTLY (encrypted, never auto-purged)
+   — Every AI conversation helps build better understanding of the user
+   — Users can request export or deletion at any time
+5. Emergency flags: retained PERMANENTLY for safety (audit-logged access)
+6. Mood logs, journal entries: retained PERMANENTLY (core of healing journey data)
+7. Payment records: retained PERMANENTLY (7+ years legally required for tax)
+8. Audit logs: retained PERMANENTLY (archived to cold storage after 2 years)
+9. Community posts: retained unless user deletes or admin removes
+10. Blog content: retained indefinitely (SEO value)
+11. Analytics data: raw events retained 1 year, then aggregated (summaries kept permanently)
+12. Kundali/birth data: retained PERMANENTLY (encrypted, access-logged)
+13. Therapy session tasks & progress: retained PERMANENTLY
+
+NOTE: "Retained permanently" means stored in encrypted cold storage after
+the relevant active period. Users always retain the right to request full
+data deletion under DPDPA/GDPR — this triggers a 30-day deletion workflow.
 ```
 
 ### Crisis Intervention Protocol
@@ -496,29 +706,66 @@ VERIFY: Chat with AI → negative message → flag created → therapist notifie
 ---
 
 ### PHASE 7: Astrologer System
-**Time estimate: 2 sessions**
+**Time estimate: 2-3 sessions**
 
 ```
-TASK: Build astrologer dashboard and pre-session analysis workflow.
+TASK: Build astrologer dashboard, pre-session analysis workflow, brownie point
+system, and prediction accuracy tracking.
+
+CONTEXT: Types in src/types/astrology.types.ts.
+AstrologerProfile has: browniePoints, predictionAccuracyRate, tier.
+AstrologyPrediction has: accuracyResult, browniePointsAwarded.
 
 STEP 1 — Prisma models: Astrologer, KundaliChart, AstrologyReport, AstrologyPrediction
-STEP 2 — Workflow: When therapy session is booked:
+
+STEP 2 — Pre-session workflow: When therapy session is booked:
   - 1-3 hours before, auto-create astrology task
-  - Astrologer sees client's birth data + chart
-  - Writes predictions, personality traits, challenge periods
+  - Astrologer sees client's birth data + chart (Parasara Light format)
+  - AI system also analyzes chart data independently
+  - Astrologer writes predictions, personality traits, challenge periods
   - Multiple astrologers can vote on predictions (poll system)
   - Highest-voted predictions sent to therapist before session
-STEP 3 — Astrologer Dashboard: src/pages/astrologer/
-  - Pending analyses (pre-therapy)
-  - Client charts (kundali viewer)
-  - Direct consultations (bookable by users)
-  - Prediction accuracy tracking
-  - Revenue & stats
-STEP 4 — Integration with therapist view:
-  - Therapist sees astrology report on session detail page
-  - Can confirm/deny prediction accuracy after session
 
-VERIFY: Book therapy → astrologer gets notification → writes report → therapist sees it.
+STEP 3 — Brownie Point System:
+  - After therapy session, therapist confirms prediction accuracy:
+    • 'accurate' → +3 brownie points to astrologer
+    • 'partially-accurate' → +1 brownie point
+    • 'inaccurate' → 0 points (no penalty)
+    • 'unverifiable' → 0 points
+  - Brownie points determine astrologer tier:
+    • Bronze: 0-49 points (new astrologers)
+    • Silver: 50-149 points
+    • Gold: 150-299 points
+    • Platinum: 300-499 points
+    • Diamond: 500+ points
+  - Higher tier = more visibility to users + higher session rates
+  - Prediction accuracy rate tracked: correctPredictions / totalPredictions
+  - Leaderboard on admin dashboard (top astrologers by accuracy)
+
+STEP 4 — AI-Assisted Kundali Analysis:
+  - AI (GPT-4o with Vedic astrology knowledge) analyzes chart alongside astrologer
+  - AI generates its own set of predictions
+  - Both AI and astrologer predictions presented to poll
+  - This helps catch inconsistencies and improve accuracy
+  - Over time, AI accuracy compared to astrologer accuracy
+
+STEP 5 — Astrologer Dashboard: src/pages/astrologer/
+  - Pending analyses (pre-therapy tasks)
+  - Client charts (kundali viewer with dasha/subdasha timeline)
+  - Direct consultations (bookable by users)
+  - Prediction accuracy tracking + brownie points + tier progress
+  - Revenue & stats
+  - Profile management (/astrologer/profile)
+
+STEP 6 — Integration with therapist view:
+  - Therapist sees astrology report on session detail page
+  - After session: prompt to confirm/deny prediction accuracy
+  - Accuracy feedback auto-awards brownie points
+
+VERIFY: Book therapy → astrologer gets notification → writes report →
+AI also generates predictions → poll determines top predictions →
+therapist sees report → after session confirms accuracy →
+astrologer gets brownie points → tier upgrades.
 ```
 
 ---
@@ -576,20 +823,55 @@ VERIFY: Write blog → admin approves → published with proper SEO meta tags.
 ---
 
 ### PHASE 10: Soul Circle (Community)
-**Time estimate: 1-2 sessions**
+**Time estimate: 2 sessions**
 
 ```
-TASK: Build social media-style community for healing.
+TASK: Build social media-style community for healing with ML-based
+content moderation for safe, non-judgmental space at scale.
+
+CONTEXT: Community types in src/types/community.types.ts.
+ML moderation types: ContentModerationResult, ModerationRule, ContentReport.
 
 STEP 1 — Prisma models: Post, Comment, Like, Follow, Report, CommunityCategory
 STEP 2 — Feed page: /soul-circle — algorithmic feed of posts
 STEP 3 — Create post: text, images, anonymous option
 STEP 4 — Comments, likes, shares
 STEP 5 — Follow users, categories
-STEP 6 — Moderation: report posts, admin review queue, auto-flag negative content
-STEP 7 — User profiles within community: badges, reputation, post history
+STEP 6 — User profiles within community: badges, reputation, post history
 
-VERIFY: Create post → others see in feed → comment → like → report works.
+STEP 7 — ML-Based Content Moderation (AI-powered at scale):
+  Every piece of content (post, comment, bio update) passes through AI pipeline:
+
+  7a. Real-time AI Analysis:
+    - GPT-4o-mini scores content for: toxicity, self-harm, hate-speech,
+      spam, sexual content, violence, misinformation
+    - Each score 0-1 (higher = more problematic)
+    - Uses ContentModerationResult type
+
+  7b. Auto-Decision Engine:
+    - All scores < 0.3 → auto-approve (no human needed)
+    - Any score 0.3-0.7 → flag for human review (stays visible, queued)
+    - Any score > 0.7 → auto-remove + notify admin
+    - Self-harm score > 0.5 → auto-flag + emergency protocol
+    - Uses ModerationRule type for triggered rules
+
+  7c. Human Review Queue:
+    - Flagged content appears in /admin/community
+    - Moderator can: approve, remove, warn user, ban user
+    - Decision feeds back into AI model improvement
+
+  7d. User Reporting:
+    - Users can report content with reason (ContentReport type)
+    - Reported content auto-prioritized in review queue
+    - Reporters notified when action taken
+
+  7e. Proactive Monitoring:
+    - AI scans for patterns: user consistently posting negative content
+    - Auto-suggest wellness resources to struggling users
+    - Community health metrics on admin dashboard
+
+VERIFY: Create post → AI checks in <2 seconds → approved if clean.
+Post harmful content → auto-removed → admin notified → user warned.
 ```
 
 ---
@@ -750,19 +1032,93 @@ VERIFY:
 ---
 
 ### PHASE 15: Corporate & Institution System
-**Time estimate: 1-2 sessions**
+**Time estimate: 2-3 sessions**
 
 ```
-TASK: Build corporate wellness and school/college integration.
+TASK: Build corporate wellness and school/college integration with one-click
+enterprise connectivity to any ERP/HRMS system.
 
-STEP 1 — Corporate account management
-STEP 2 — Employee enrollment with corporate email verification
-STEP 3 — Corporate dashboard: employee wellness metrics (anonymized)
-STEP 4 — School/college accounts
-STEP 5 — Integration connectors: Slack bot, Microsoft Teams, API webhooks
-STEP 6 — Awareness session booking for corporates
+CONTEXT: Types in src/types/admin.types.ts (CorporateAccount, InstitutionAccount,
+Integration, IntegrationConfig, IntegrationFieldMapping, IntegrationType).
 
-VERIFY: Create corporate account → add employees → they access platform.
+STEP 1 — Corporate account management:
+  - Corporate signup → admin approval → account activated
+  - Corporate admin dashboard: /corporate
+  - Employee enrollment with corporate email domain verification
+  - Bulk employee import (CSV upload or API sync)
+  - Employee usage tracking (sessions used vs allocated)
+
+STEP 2 — Corporate dashboard: /corporate
+  - Employee wellness metrics (ANONYMIZED — no individual data exposed)
+  - Aggregate mood trends across organization
+  - Session utilization rates
+  - Department-wise wellness breakdown
+  - ROI reports for HR leadership
+
+STEP 3 — School/college accounts:
+  - Institution onboarding (school/college/university)
+  - Student batch enrollment
+  - Age-appropriate content gating for schools
+  - Parent consent workflow for minors
+  - Counsellor dashboard within institution
+
+STEP 4 — ONE-CLICK Integration Engine:
+  Build a universal integration connector that can sync with ANY enterprise system.
+
+  4a. Slack Bot:
+    - /soulyatri mood — quick mood check-in from Slack
+    - /soulyatri book — book therapy session from Slack
+    - Automated wellness reminders in channels
+    - Emergency keyword monitoring in DMs (with consent)
+    - OAuth2 app installation flow
+
+  4b. Microsoft Teams:
+    - Same features as Slack bot (Teams app)
+    - Tab integration for dashboard within Teams
+    - Calendar sync for therapy sessions
+
+  4c. SAP / Oracle HCM / Workday Integration:
+    - One-click connector setup (admin provides API credentials)
+    - Auto-sync employee directory (name, email, department)
+    - Real-time sync when employees join/leave (webhook or polling)
+    - Field mapping UI: map SAP fields → Soul Yatri fields
+    - Support for institutions like SVKM (1 lakh+ students)
+    - Uses IntegrationConfig and IntegrationFieldMapping types
+
+  4d. LDAP / Active Directory:
+    - SSO via SAML 2.0 or LDAP bind
+    - User provisioning from directory
+    - Group-based access control
+
+  4e. Google Workspace:
+    - SSO via Google OAuth
+    - Google Calendar sync for session reminders
+    - Google Meet fallback for video sessions
+
+  4f. Custom Webhook / API:
+    - Provide REST API endpoints for any custom integration
+    - Webhook events: user-enrolled, session-booked, session-completed
+    - API key authentication with rate limiting
+    - Full API documentation auto-generated
+
+  4g. Custom Database Sync:
+    - Direct database connector for legacy systems
+    - Support PostgreSQL, MySQL, MSSQL source databases
+    - Scheduled sync (hourly/daily) with conflict resolution
+    - Ideal for educational institutions with centralized databases
+
+STEP 5 — Awareness session booking:
+  - Corporates can book group wellness sessions
+  - Therapist assigned based on group size and topic
+  - Post-session feedback and impact report
+
+STEP 6 — Admin visibility:
+  - All corporate accounts visible in /admin/corporate
+  - All institution accounts in /admin/institutions
+  - Integration health monitoring in /admin/integrations
+
+VERIFY: Create corporate account → one-click Slack integration → employees
+sync automatically → they access platform → admin sees anonymized reports.
 ```
 
 ---
@@ -818,11 +1174,17 @@ VERIFY: Landing page loads smoothly with animations, scores 90+ on Lighthouse.
 
 ---
 
-### PHASE 19: About Us, Careers & Public Pages
-**Time estimate: 1 session**
+### PHASE 19: About Us, Careers, Public Pages & Professional Onboarding
+**Time estimate: 2 sessions**
 
 ```
-TASK: Build About Us, Careers/Hiring portal, and other public pages.
+TASK: Build About Us, Careers/Hiring portal, professional onboarding flow
+(therapist & astrologer credentialing), and other public pages.
+
+CONTEXT: Professional onboarding types in src/types/auth.types.ts
+(ProfessionalOnboarding, QualificationDocument).
+Employee lifecycle types in src/types/admin.types.ts
+(EmployeeLifecycle, TrainingModule).
 
 STEP 1 — src/pages/AboutPage.tsx:
   - Company mission, vision, story
@@ -848,9 +1210,89 @@ STEP 4 — src/pages/ContactPage.tsx:
   - Office address, email, phone
   - Map embed
 
-STEP 5 — Add all routes to router under MainLayout
+STEP 5 — Therapist/Astrologer Professional Onboarding Flow:
+  Uses ProfessionalOnboarding type from auth.types.ts.
+  This is the full credentialing pipeline:
+
+  5a. Application Stage:
+    - Public "Join as Therapist" / "Join as Astrologer" page
+    - Collect: name, email, phone, qualifications, experience, bio
+    - Upload: Aadhaar card, PAN card, license/degree documents
+    - Submit application → status: 'application-received'
+
+  5b. Document Verification:
+    - Admin reviews uploaded documents
+    - License number verified against official databases
+    - Aadhaar verification (optional: DigiLocker API integration)
+    - Status: 'documents-pending' → verified
+
+  5c. Background Check:
+    - Initiate background check via third-party provider
+    - Criminal record check, identity verification
+    - Status tracking: pending → in-progress → cleared/flagged
+    - Flagged applications → admin review
+
+  5d. Interview:
+    - Schedule interview with HR/admin
+    - Video interview via platform (same Daily.co/100ms setup)
+    - Interview score (0-100)
+    - Status: scheduled → completed → passed/failed
+
+  5e. Assessment Test (especially for astrologers):
+    - Astrologers: Take prediction accuracy test
+      (given sample birth charts, write predictions, AI + senior astrologers evaluate)
+    - Therapists: Case study evaluation
+    - Minimum score required to proceed
+    - Correct predictions earn initial brownie points
+
+  5f. Trial Period:
+    - Approved professionals get trial access (3-5 supervised sessions)
+    - Sessions monitored by AI (same TherapistSessionMonitor system)
+    - Senior therapist/astrologer reviews trial sessions
+    - Trial feedback score determines final approval
+    - Status tracking: trial-started → sessions-completed → reviewed
+
+  5g. Platform Training:
+    - Mandatory training modules (using TrainingModule type):
+      • Platform usage and features
+      • Emergency protocol and crisis handling
+      • Data privacy and confidentiality rules
+      • Session recording consent procedures
+      • Ethical guidelines and boundaries
+      • Payment and payout procedures
+    - Must complete ALL modules before going live
+    - Quiz after each module — minimum 80% to pass
+
+  5h. Approval & Go-Live:
+    - All steps passed → admin final approval
+    - Profile activated → visible to users for booking
+    - Welcome kit + first-month support from assigned mentor
+
+  5i. Ongoing Verification:
+    - Annual license re-verification reminder
+    - Continuous AI quality monitoring (every session scored)
+    - Performance reviews (quarterly)
+    - Brownie point tracking for astrologers
+
+STEP 6 — Employee Lifecycle Management:
+  Uses EmployeeLifecycle type from admin.types.ts.
+  - Probation period tracking (3-6 months)
+  - Performance reviews (monthly/quarterly)
+  - Notice period management
+  - Exit interview workflow
+  - Knowledge transfer tracking
+  - Rehire eligibility status
+
+STEP 7 — Admin views:
+  - /admin/hiring — see all applications, pipeline stages
+  - /admin/employees — see employee lifecycle status (training/probation/active/notice/exited)
+  - Professional onboarding pipeline dashboard with stage-by-stage funnel
+
+STEP 8 — Add all routes to router under MainLayout
 
 VERIFY: Visit /about → see team. Visit /careers → see jobs → apply.
+Apply as therapist → upload documents → background check → interview →
+trial sessions → training → approved → visible to users.
 ```
 
 ---
@@ -1337,9 +1779,31 @@ MONTH 4 (May 17 – Jun 15): SCALE + POLISH + LAUNCH
     LAUNCH 🚀
 
 POST-LAUNCH (Jun 16+):
-    Mobile app (React Native) using same API — zero backend changes needed
-    AI model fine-tuning based on real session data
-    Scale infrastructure based on load
+    Phase 26 — Mobile app design in Figma (June-July 2026)
+    Phase 27 — React Native app development (July-October 2026)
+      - Same API, zero backend changes
+      - Shared Zod validation schemas (npm package)
+      - Same Socket.IO connection for real-time
+      - FCM for mobile push notifications
+      - Deep linking: map mobile routes to web routes
+      - Camera integration for video therapy sessions
+      - Voice recording for AI assistant
+      - Offline mode for journaling and mood tracking
+    Phase 28 — App store submission & ASO (November 2026)
+      - Apple App Store + Google Play Store
+      - ASO optimization (see ASOConfig type in seo.types.ts)
+      - Beta testing with 50-100 users first
+    Phase 29 — Ship mobile app (December 2026)
+    Phase 30 — AI model fine-tuning (ongoing post 3 months of data)
+      - Collect anonymized data from real sessions
+      - Fine-tune Whisper for therapy vocabulary + Indian accents
+      - Fine-tune GPT-4o-mini for sentiment analysis
+      - A/B test fine-tuned vs base models
+    Phase 31 — Scale infrastructure based on load
+      - Migrate from Railway/Render → AWS ECS/EKS
+      - Add Redis caching layer
+      - CDN optimization for global users
+      - Database read replicas
 ```
 
 ### Parallel work tips

@@ -4,6 +4,85 @@
  * in-session AI monitoring of both client and therapist
  */
 
+// ── AI Model Configuration & Fine-Tuning ─────────────────────────────────
+
+/** AI model selection and configuration for each use case */
+export interface AIModelConfig {
+  useCase: AIUseCase;
+  provider: 'openai' | 'anthropic' | 'google' | 'custom';
+  model: string; // e.g., 'gpt-4', 'gpt-4o-mini', 'whisper-1'
+  version: string;
+  /** Fine-tuning config (therapy-specific language) */
+  fineTuned: boolean;
+  fineTuneId?: string;
+  fineTuneDataset?: string;
+  /** Performance */
+  averageLatencyMs: number;
+  costPer1kTokens: number;
+  maxContextTokens: number;
+  /** Guardrails */
+  contentFilterEnabled: boolean;
+  therapySafetyPrompt: string; // system prompt with therapy safety rules
+  crisisKeywords: string[]; // hardcoded keywords that trigger instant flag
+  /** Evaluation */
+  lastEvaluatedAt?: Date;
+  evaluationScore?: number;
+  active: boolean;
+}
+
+export type AIUseCase =
+  | 'chat-assistant'           // 24/7 text chat
+  | 'voice-assistant'          // 24/7 voice
+  | 'session-transcription'    // Whisper for therapy session recording
+  | 'sentiment-analysis'       // Real-time sentiment scoring
+  | 'emotion-detection'        // Video frame emotion detection
+  | 'crisis-detection'         // Emergency keyword/pattern detection
+  | 'session-summary'          // Post-session summary generation
+  | 'personality-report'       // Deep personality analysis
+  | 'therapist-quality'        // Therapist conduct analysis
+  | 'fraud-detection'          // Therapist fraud detection
+  | 'content-moderation'       // Community/blog content flagging
+  | 'seo-content'              // Blog topic/content generation
+  | 'recommendation-engine'    // Course/therapist/content recommendations
+  | 'kundali-analysis'         // AI-assisted kundali interpretation
+  | 'behavior-pattern'         // Long-term behavior pattern detection
+  | 'churn-prediction'         // User churn risk scoring
+  | 'lead-scoring';            // Conversion likelihood scoring
+
+/** Fine-tuning dataset for therapy-specific language */
+export interface FineTuningDataset {
+  id: string;
+  name: string;
+  useCase: AIUseCase;
+  /** Training data sources */
+  dataSource: 'therapy-transcripts' | 'crisis-conversations' | 'session-notes' | 'community-posts' | 'synthetic';
+  sampleCount: number;
+  /** Anonymization — ALL training data must be fully anonymized */
+  anonymized: boolean;
+  anonymizationMethod: 'pii-removal' | 'synthetic-replacement' | 'differential-privacy';
+  /** Training runs */
+  lastTrainedAt?: Date;
+  trainedModelId?: string;
+  evaluationMetrics: ModelEvaluationMetrics;
+  status: 'collecting' | 'preparing' | 'training' | 'evaluating' | 'deployed' | 'retired';
+  createdAt: Date;
+}
+
+export interface ModelEvaluationMetrics {
+  accuracy: number; // 0-1
+  precision: number;
+  recall: number;
+  f1Score: number;
+  falsePositiveRate: number;
+  falseNegativeRate: number;
+  /** Therapy-specific metrics */
+  crisisDetectionRecall: number; // MUST be >0.99 — never miss a crisis
+  empathyAppropriateRate: number;
+  safetyViolationRate: number; // MUST be 0
+}
+
+// ── AI Conversations ─────────────────────────────────────────────────────
+
 export interface AIConversation {
   id: string;
   userId: string;

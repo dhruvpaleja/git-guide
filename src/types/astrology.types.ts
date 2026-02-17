@@ -16,6 +16,15 @@ export interface AstrologerProfile {
   verified: boolean;
   bio: string;
   availability: AstrologerSlot[];
+  /** Brownie point system — correct predictions earn points */
+  browniePoints: number;
+  predictionAccuracyRate: number; // 0-100%
+  totalPredictions: number;
+  correctPredictions: number;
+  /** Onboarding test score (must pass to join platform) */
+  onboardingTestScore?: number;
+  /** Tier based on brownie points */
+  tier: 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
   createdAt: Date;
 }
 
@@ -82,6 +91,13 @@ export interface AstrologyPrediction {
   /** Poll-based voting by multiple astrologers */
   votes: PredictionVote[];
   finalScore: number;
+  /** Accuracy tracking — therapist confirms after session */
+  accuracyVerified: boolean;
+  accuracyResult?: 'accurate' | 'partially-accurate' | 'inaccurate' | 'unverifiable';
+  verifiedByTherapistId?: string;
+  verifiedAt?: Date;
+  /** Brownie points awarded for correct prediction */
+  browniePointsAwarded: number;
 }
 
 export interface PredictionVote {

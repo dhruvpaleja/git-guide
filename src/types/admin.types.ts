@@ -121,6 +121,8 @@ export interface EmployeeTracker {
   userId: string;
   role: UserRole;
   name: string;
+  department: string;
+  designation: string;
   totalSessions: number;
   completedSessions: number;
   averageRating: number;
@@ -129,7 +131,48 @@ export interface EmployeeTracker {
   hoursWorked: number;
   joinedAt: Date;
   lastActiveAt: Date;
-  status: 'active' | 'inactive' | 'on-leave';
+  status: 'active' | 'inactive' | 'on-leave' | 'training' | 'probation' | 'notice-period' | 'exited';
+  /** Employee lifecycle */
+  lifecycle: EmployeeLifecycle;
+}
+
+export interface EmployeeLifecycle {
+  /** Training phase (new employees) */
+  trainingStatus: 'not-started' | 'in-progress' | 'completed' | 'n/a';
+  trainingModules: TrainingModule[];
+  trainingCompletedAt?: Date;
+  /** Probation period */
+  probationStartDate?: Date;
+  probationEndDate?: Date;
+  probationExtended: boolean;
+  probationReviewScore?: number; // 0-100
+  probationStatus: 'active' | 'passed' | 'extended' | 'failed' | 'n/a';
+  /** Performance reviews */
+  lastReviewDate?: Date;
+  lastReviewScore?: number;
+  reviewFrequency: 'monthly' | 'quarterly' | 'bi-annual' | 'annual';
+  /** Exit management */
+  exitDate?: Date;
+  exitType?: 'resignation' | 'termination' | 'contract-end' | 'mutual';
+  noticePeriodDays?: number;
+  exitInterviewCompleted: boolean;
+  exitReason?: string;
+  rehireEligible: boolean;
+  /** Knowledge transfer */
+  knowledgeTransferTo?: string; // userId of replacement
+  knowledgeTransferStatus: 'not-needed' | 'pending' | 'in-progress' | 'completed';
+}
+
+export interface TrainingModule {
+  id: string;
+  name: string;
+  description: string;
+  department: string;
+  requiredFor: UserRole[];
+  durationHours: number;
+  completedAt?: Date;
+  score?: number;
+  status: 'not-started' | 'in-progress' | 'completed' | 'failed';
 }
 
 export interface ActionLog {
@@ -239,16 +282,60 @@ export interface InstitutionAccount {
   createdAt: Date;
 }
 
-/** Third-party integrations */
+/** Third-party integrations — one-click enterprise connectivity */
 export interface Integration {
   id: string;
   accountId: string; // corporate or institution
-  type: 'slack' | 'teams' | 'sap' | 'google-workspace' | 'zoom' | 'webhook' | 'api';
+  type: IntegrationType;
   name: string;
-  config: Record<string, unknown>;
-  status: 'active' | 'inactive' | 'error';
+  /** Connection details */
+  config: IntegrationConfig;
+  status: 'active' | 'inactive' | 'error' | 'setup' | 'syncing';
+  /** Sync tracking */
   lastSyncAt?: Date;
+  lastSyncStatus?: 'success' | 'partial' | 'failed';
+  syncFrequency: 'real-time' | 'hourly' | 'daily' | 'weekly' | 'manual';
+  totalRecordsSynced: number;
+  /** Error handling */
+  lastErrorMessage?: string;
+  consecutiveErrors: number;
   createdAt: Date;
+}
+
+export type IntegrationType =
+  | 'slack'              // Slack bot — notifications, booking, mood check-ins
+  | 'teams'              // Microsoft Teams — same as Slack
+  | 'sap'                // SAP — enterprise employee data sync (one-click)
+  | 'google-workspace'   // Google — SSO, calendar sync
+  | 'zoom'               // Zoom — backup video calling
+  | 'webhook'            // Custom webhook — push/pull any data
+  | 'api'                // REST API key — for custom integrations
+  | 'oracle-hcm'         // Oracle HCM — employee data
+  | 'workday'            // Workday — HR data
+  | 'ldap'               // LDAP/AD — SSO + directory sync
+  | 'custom-database';   // Direct DB sync (SVKM-style institutions with 1L+ students)
+
+export interface IntegrationConfig {
+  /** Auth */
+  authType: 'oauth2' | 'api-key' | 'basic' | 'jwt' | 'saml' | 'ldap';
+  credentials: Record<string, unknown>; // encrypted
+  /** Endpoints */
+  baseUrl?: string;
+  webhookUrl?: string;
+  callbackUrl?: string;
+  /** Data mapping — which fields map to Soul Yatri fields */
+  fieldMapping: IntegrationFieldMapping[];
+  /** Filters — which records to sync */
+  syncFilters?: Record<string, unknown>;
+  /** Permissions */
+  scopes: string[];
+}
+
+export interface IntegrationFieldMapping {
+  sourceField: string; // field in external system (e.g., 'SAP.Employee.Name')
+  targetField: string; // field in Soul Yatri (e.g., 'user.name')
+  transform?: 'none' | 'lowercase' | 'uppercase' | 'date-format' | 'custom';
+  required: boolean;
 }
 
 /** Internal departments */

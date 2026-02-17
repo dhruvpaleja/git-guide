@@ -62,4 +62,20 @@ router.get('/therapist/revenue', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 
+router.get('/therapist/reviews', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/therapist/profile', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.put('/therapist/profile', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/therapist/clients/:id', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
 export default router;

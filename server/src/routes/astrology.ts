@@ -35,4 +35,28 @@ router.get('/dashboard', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 
+router.get('/profile', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.put('/profile', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/clients', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/clients/:id', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/predictions/accuracy', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/revenue', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
 export default router;

@@ -27,4 +27,25 @@ router.get('/patterns/:userId', (_req: Request, res: Response) => {
   res.status(501).json({ success: false, error: { message: 'Not implemented' } });
 });
 
+// ── Session Monitor (In-Session AI — runs during live therapy video) ─────
+router.post('/session-monitor/start', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.post('/session-monitor/frame', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.post('/session-monitor/audio', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/session-monitor/:sessionId/client', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
+router.get('/session-monitor/:sessionId/therapist', (_req: Request, res: Response) => {
+  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+});
+
 export default router;

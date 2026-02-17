@@ -134,6 +134,18 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     isPublic: true,
     showInNavigation: false,
   },
+  FORGOT_PASSWORD: {
+    path: '/forgot-password',
+    name: 'Forgot Password',
+    isPublic: true,
+    showInNavigation: false,
+  },
+  RESET_PASSWORD: {
+    path: '/reset-password',
+    name: 'Reset Password',
+    isPublic: true,
+    showInNavigation: false,
+  },
 
   // ── Onboarding ─────────────────────────────────────────────────────────
   ONBOARDING: {
@@ -244,6 +256,41 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     showInNavigation: false,
     requiredRole: ['user'],
   },
+  DASHBOARD_PAYMENTS: {
+    path: '/dashboard/payments',
+    name: 'Payment History',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_BREATHING: {
+    path: '/dashboard/breathing',
+    name: 'Breathing Exercises',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_SESSION_DETAIL: {
+    path: '/dashboard/sessions/:id',
+    name: 'Session Detail',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_EVENTS: {
+    path: '/dashboard/events',
+    name: 'My Events',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_MEMBERSHIP: {
+    path: '/dashboard/membership',
+    name: 'My Membership',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
   USER_PROFILE: {
     path: '/profile',
     name: 'Profile',
@@ -295,6 +342,20 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     showInNavigation: false,
     requiredRole: ['therapist', 'admin'],
   },
+  THERAPIST_SESSION_DETAIL: {
+    path: '/therapist/sessions/:id',
+    name: 'Session Detail',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['therapist', 'admin'],
+  },
+  THERAPIST_PROFILE: {
+    path: '/therapist/profile',
+    name: 'Therapist Profile',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['therapist', 'admin'],
+  },
 
   // ── Astrologer Dashboard ───────────────────────────────────────────────
   ASTROLOGER_DASHBOARD: {
@@ -321,6 +382,27 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
   ASTROLOGER_SESSIONS: {
     path: '/astrologer/sessions',
     name: 'Direct Consultations',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['astrologer', 'admin'],
+  },
+  ASTROLOGER_CLIENT_DETAIL: {
+    path: '/astrologer/clients/:id',
+    name: 'Client Kundali',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['astrologer', 'admin'],
+  },
+  ASTROLOGER_PREDICTIONS: {
+    path: '/astrologer/predictions',
+    name: 'Prediction Accuracy',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['astrologer', 'admin'],
+  },
+  ASTROLOGER_PROFILE: {
+    path: '/astrologer/profile',
+    name: 'Astrologer Profile',
     isPublic: false,
     showInNavigation: false,
     requiredRole: ['astrologer', 'admin'],
@@ -502,6 +584,105 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     showInNavigation: false,
     requiredRole: ['admin'],
   },
+  ADMIN_PAYMENTS: {
+    path: '/admin/payments',
+    name: 'Payment Management',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_CORPORATE: {
+    path: '/admin/corporate',
+    name: 'Corporate Accounts',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_INSTITUTIONS: {
+    path: '/admin/institutions',
+    name: 'School / College Accounts',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_INTEGRATIONS: {
+    path: '/admin/integrations',
+    name: 'Third-Party Integrations',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_NOTIFICATIONS: {
+    path: '/admin/notifications',
+    name: 'Notification Management',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_PLATFORM_HEALTH: {
+    path: '/admin/platform-health',
+    name: 'Platform Health',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_SEO: {
+    path: '/admin/seo',
+    name: 'SEO Dashboard',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  // ── Admin Department Sub-routes ────────────────────────────────────────
+  ADMIN_DEPT_THERAPY: {
+    path: '/admin/departments/therapy',
+    name: 'Therapy Department',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_DEPT_ASTROLOGY: {
+    path: '/admin/departments/astrology',
+    name: 'Astrology Department',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_DEPT_MARKETING: {
+    path: '/admin/departments/marketing',
+    name: 'Marketing Department',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_DEPT_SALES: {
+    path: '/admin/departments/sales',
+    name: 'Sales Department',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_DEPT_SUPPORT: {
+    path: '/admin/departments/support',
+    name: 'Support Department',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_DEPT_CONTENT: {
+    path: '/admin/departments/content',
+    name: 'Content Department',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_DEPT_ENGINEERING: {
+    path: '/admin/departments/engineering',
+    name: 'Engineering Department',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
 
   // ── Employee Dashboard (internal staff) ─────────────────────────────
   EMPLOYEE_DASHBOARD: {
@@ -537,6 +718,27 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
   CORPORATE_DASHBOARD: {
     path: '/corporate',
     name: 'Corporate Dashboard',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  CORPORATE_EMPLOYEES: {
+    path: '/corporate/employees',
+    name: 'Corporate Employees',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  CORPORATE_SESSIONS: {
+    path: '/corporate/sessions',
+    name: 'Corporate Sessions',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  CORPORATE_REPORTS: {
+    path: '/corporate/reports',
+    name: 'Wellness Reports',
     isPublic: false,
     showInNavigation: false,
     requiredRole: ['admin'],

@@ -107,7 +107,11 @@ export interface PlatformHealth {
 }
 
 export interface PendingAction {
-  type: 'blog-approval' | 'course-approval' | 'complaint' | 'hiring-application' | 'ngo-request' | 'therapist-verification' | 'fraud-review' | 'refund-request' | 'event-approval';
+  type: 'blog-approval' | 'course-approval' | 'complaint' | 'hiring-application'
+    | 'ngo-request' | 'therapist-verification' | 'astrologer-verification'
+    | 'fraud-review' | 'refund-request' | 'event-approval'
+    | 'community-report' | 'shop-order' | 'corporate-request'
+    | 'institution-request' | 'integration-request';
   count: number;
   actionUrl: string;
 }
@@ -168,6 +172,17 @@ export interface RevenueReport {
   shopRevenue: number;
   subscriptions: number;
   subscriptionRevenue: number;
+  /** Event ticket revenue */
+  eventRegistrations: number;
+  eventRevenue: number;
+  /** Membership subscription revenue */
+  membershipSubscriptions: number;
+  membershipRevenue: number;
+  /** Corporate contract revenue */
+  corporateContracts: number;
+  corporateRevenue: number;
+  /** NGO (sponsored / donated sessions) */
+  ngoSessionsDonated: number;
   totalRevenue: number;
   refunds: number;
   netRevenue: number;

@@ -113,3 +113,47 @@ export interface CartItem {
   quantity: number;
   image: string;
 }
+
+// ── Payouts (Therapist / Astrologer earnings) ────────────────────────────
+
+export interface PayoutAccount {
+  id: string;
+  userId: string;
+  role: 'therapist' | 'astrologer' | 'course-creator';
+  bankName: string;
+  accountNumber: string; // encrypted
+  ifscCode: string;
+  upiId?: string;
+  panNumber: string; // encrypted
+  verified: boolean;
+  createdAt: Date;
+}
+
+export interface PayoutRequest {
+  id: string;
+  userId: string;
+  amount: number;
+  currency: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'rejected';
+  payoutAccountId: string;
+  gatewayTransferId?: string;
+  period: string; // e.g., 'Feb 2026'
+  sessionsCount: number;
+  platformCommission: number;
+  netAmount: number;
+  requestedAt: Date;
+  processedAt?: Date;
+  notes?: string;
+}
+
+export interface EarningsSummary {
+  userId: string;
+  totalEarnings: number;
+  totalPaidOut: number;
+  pendingPayout: number;
+  currentMonthEarnings: number;
+  sessionCount: number;
+  averagePerSession: number;
+  commissionRate: number;
+  currency: string;
+}

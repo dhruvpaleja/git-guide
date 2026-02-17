@@ -2,6 +2,9 @@
  * Dashboard Types
  */
 
+import type { TherapySession } from './therapy.types';
+import type { MoodLog, JournalEntry, HealthGoal } from './health.types';
+
 export interface DashboardStats {
   totalSessions: number;
   upcomingSessions: number;
@@ -42,5 +45,3 @@ export interface Recommendation {
   actionUrl: string;
   priority: 'high' | 'medium' | 'low';
 }
-
-import type { TherapySession, MoodLog, JournalEntry, HealthGoal } from './index';

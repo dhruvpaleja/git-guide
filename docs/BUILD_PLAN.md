@@ -125,6 +125,183 @@ mobile app (React Native / Flutter), third-party integrations, or even other ser
 6. API versioning: /api/v1/ prefix for all routes
 ```
 
+### Privacy & Compliance
+```
+1. India's Digital Personal Data Protection Act (DPDPA 2023):
+   - Explicit consent before data collection (onboarding Step 10)
+   - Right to erasure (users can request full data deletion)
+   - Data Processing Agreements with all service providers
+   - Data localization: primary storage in India (AWS Mumbai / Cloudflare India)
+2. GDPR (for international users):
+   - Cookie consent banner on first visit
+   - Data export API: GET /api/v1/users/export-my-data (JSON)
+   - Right to be forgotten: DELETE /api/v1/users/delete-account
+3. Mental health data sensitivity:
+   - Therapy session content: highest encryption tier (AES-256-GCM)
+   - AI conversation logs: encrypted, auto-purge after 90 days
+   - Emergency flag data: retained 1 year then anonymized
+   - Kundali/birth data: encrypted at rest, access-logged
+   - Mood/journal data: user-owned, deletable on request
+4. Therapist/Astrologer credential verification:
+   - License number verification against official databases
+   - Background check consent during onboarding
+   - Qualification document upload (verified by admin)
+   - Annual re-verification reminders
+```
+
+### Data Retention Policy
+```
+1. Active user data: retained while account is active
+2. Deleted accounts: anonymize within 30 days, hard-delete within 90 days
+3. Therapy session recordings: retained 1 year, then auto-archived (user can download)
+4. AI conversations: 90-day auto-purge (configurable per user)
+5. Emergency flags: retained 1 year for safety, then anonymized
+6. Payment records: retained 7 years (legal/tax requirement)
+7. Audit logs: retained 2 years, then archived to cold storage
+8. Community posts: retained unless user deletes or admin removes
+9. Blog content: retained indefinitely (SEO value)
+10. Analytics data: aggregated after 90 days (raw events deleted)
+```
+
+### Crisis Intervention Protocol
+```
+When AI or session monitoring detects a crisis (self-harm, suicidal ideation):
+
+IMMEDIATE (within seconds):
+1. AI flags conversation/session as CRITICAL
+2. Show crisis helpline banner to user: iCALL 9152987821, Vandrevala 1860-2662-345
+3. Send real-time notification to assigned therapist
+4. Send real-time alert to admin/emergency dashboard
+
+WITHIN 5 MINUTES:
+5. If therapist doesn't acknowledge → escalate to admin
+6. Admin reviews and decides next step
+7. If user is in active session → therapist takes over protocol
+8. If user is chatting with AI → AI stays engaged, de-escalation mode
+
+FOLLOW-UP (within 24 hours):
+9. Assigned therapist contacts user
+10. Emergency flag documented in user's file
+11. Behavioral pattern updated
+12. Admin reviews incident report
+```
+
+---
+
+## Multi-Domain Strategy
+
+```
+Soul Yatri owns 3 domains:
+  www.soulyatri.com  → PRIMARY (all traffic points here)
+  www.soulyatri.in   → 301 redirect to soulyatri.com (Indian SEO signal)
+  www.soulyatri.net  → 301 redirect to soulyatri.com
+
+Setup:
+1. All 3 domains → Cloudflare DNS (free)
+2. soulyatri.in and soulyatri.net → 301 permanent redirect to soulyatri.com
+3. soulyatri.com has canonical URLs on every page
+4. hreflang tags: <link rel="alternate" hreflang="en" href="https://www.soulyatri.com/..." />
+5. SSL certificates on all 3 (free via Cloudflare)
+6. CDN caching on soulyatri.com (Cloudflare free tier)
+
+Why keep all 3:
+- Prevents competitors from buying similar domains
+- soulyatri.in gives India-specific SEO signal via redirect
+- All backlinks to any domain consolidate to soulyatri.com
+```
+
+---
+
+## Search Ranking Strategy (SEO + GEO + PSEO + SXO + ASO)
+
+Types defined in: `src/types/seo.types.ts`
+
+```
+SEO (Search Engine Optimization) — Google / Bing:
+  - Server-side rendering for blog, courses, shop, events
+  - JSON-LD structured data on every page type
+  - Auto-generated sitemap.xml
+  - Internal linking between related content
+  - Core Web Vitals optimized (LCP < 2.5s, FID < 100ms, CLS < 0.1)
+
+GEO (Generative Engine Optimization) — ChatGPT / Gemini / Perplexity:
+  - FAQ-style structured content on key pages
+  - Clear, factual answers to common mental health questions
+  - Organization schema markup for brand recognition
+  - Blog content structured for AI citation extraction
+  - Track brand mentions in AI responses monthly
+
+PSEO (Programmatic SEO) — Long-tail Keywords:
+  - Auto-generated pages: /therapist-for-{issue}, /meditation-for-{goal}, /{city}-therapist
+  - Templates in src/types/seo.types.ts (PSEOTemplate)
+  - Each page has unique content + internal links + CTA
+  - Target 500+ long-tail keyword pages
+
+SXO (Search Experience Optimization) — User Behavior:
+  - Page load < 3 seconds on 3G
+  - Clear CTAs above fold on every page
+  - Progressive disclosure (don't overwhelm new users)
+  - Mobile-first responsive design
+  - Track bounce rate, time on page, scroll depth
+
+ASO (App Store Optimization) — Future Mobile App:
+  - App name, subtitle, keywords optimized
+  - Screenshots and preview video
+  - Rating solicitation at key moments
+  - Deep links from web to app
+```
+
+---
+
+## Proactive AI Systems (Every Department)
+
+```
+AI is not just a chatbot — it's embedded EVERYWHERE:
+
+THERAPY DEPARTMENT:
+  - Client mood decline detection → therapist alert
+  - Session quality scoring (real-time)
+  - Therapist fraud detection (real-time)
+  - Post-session task completion tracking
+  - Client personality profiling
+
+ASTROLOGY DEPARTMENT:
+  - AI analyzes kundali chart data alongside astrologers
+  - Prediction confidence scoring
+  - Pattern matching across historical predictions
+  - Accuracy tracking per astrologer
+
+MARKETING/SEO:
+  - Trending keyword detection → auto-suggest blog topics
+  - Content gap analysis → what should we write about
+  - Competitor content monitoring
+  - SEO ranking drop alerts
+
+SALES:
+  - Lead scoring (which users are likely to subscribe)
+  - Churn prediction (who's about to leave)
+  - Upsell recommendations (which users should see premium features)
+  - Conversion funnel optimization suggestions
+
+SUPPORT:
+  - Complaint auto-categorization and priority scoring
+  - Sentiment analysis on complaint messages
+  - Resolution time prediction
+  - FAQ auto-generation from common complaints
+
+COMMUNITY:
+  - Auto-flag harmful/negative content (NLP)
+  - Spam detection
+  - User engagement scoring
+  - Topic trend detection
+
+PLATFORM-WIDE:
+  - Anomaly detection (sudden traffic spikes, error rates)
+  - Capacity planning (predict server load)
+  - Cost optimization suggestions
+  - Security threat detection
+```
+
 ---
 
 ## Build Phases (Give ONE phase to an AI agent at a time)
@@ -534,6 +711,11 @@ STEP 1 — src/pages/admin/ (every page in the platform has an admin view):
   - SettingsPage: platform config, feature flags, plans, maintenance mode
   - NotificationsPage: broadcast messages, notification management
   - PlatformHealthPage: API uptime, response times, storage, error rates
+  - SEODashboardPage: keyword rankings, PSEO pages, sitemap, GEO tracking
+  - PaymentsPage: all transactions, pending refunds, failed payments
+  - CorporatePage: corporate account management
+  - InstitutionsPage: school/college account management
+  - IntegrationsPage: Slack, Teams, SAP, API webhooks management
 
 STEP 2 — Action logging middleware: every admin/therapist/astrologer action
   is recorded with userId, role, action, resource, timestamp, IP address
@@ -731,42 +913,81 @@ VERIFY: Login as admin → see all departments → drill into each → see targe
 ---
 
 ### PHASE 21: SEO Automation & Search Ranking System
-**Time estimate: 1-2 sessions**
+**Time estimate: 2-3 sessions**
 
 ```
-TASK: Build automated SEO system to rank on every relevant search keyword.
+TASK: Build automated SEO system to rank on EVERY relevant search keyword.
+Also implement GEO (AI search), PSEO (programmatic), SXO (experience), and ASO (app store).
 
-STEP 1 — SEO infrastructure:
-  - Server-side rendering for all public pages (blog, courses, shop, about)
-  - Auto-generate sitemap.xml (all blog posts, courses, products, pages)
+CONTEXT: Types are in src/types/seo.types.ts. Soul Yatri owns 3 domains:
+  www.soulyatri.com (primary), www.soulyatri.in (redirect), www.soulyatri.net (redirect).
+
+STEP 1 — Multi-domain setup:
+  - Configure soulyatri.in and soulyatri.net as 301 redirects to soulyatri.com
+  - Set canonical URLs on every page pointing to soulyatri.com
+  - Add hreflang tags for English content
+  - SSL on all 3 domains via Cloudflare
+
+STEP 2 — SEO infrastructure:
+  - Server-side rendering for all public pages (blog, courses, shop, about, events)
+  - Auto-generate sitemap.xml (all blog posts, courses, products, events, pages)
   - robots.txt configuration
-  - JSON-LD structured data for every page type
-  - Open Graph + Twitter Card meta tags
+  - JSON-LD structured data for every page type (Organization, Article, Product,
+    Course, Event, FAQPage, MedicalBusiness, BreadcrumbList)
+  - Open Graph + Twitter Card meta tags on every page
 
-STEP 2 — Blog SEO automation:
+STEP 3 — Blog SEO automation:
   - AI-powered keyword research: fetch trending mental health keywords
   - Auto-suggest blog topics based on trending searches
   - Auto-generate meta descriptions for posts
   - Internal linking suggestions between blog posts
   - Schema markup for articles (author, date, ratings)
 
-STEP 3 — Programmatic SEO pages:
+STEP 4 — Programmatic SEO (PSEO) pages:
   - /therapist-for-[issue] pages (anxiety, depression, trauma, etc.)
   - /meditation-for-[goal] pages
   - /[city]-therapist pages (location-based)
-  - Each auto-generated with relevant content + CTA
+  - /therapy-type-[type] pages (CBT, DBT, mindfulness, etc.)
+  - /healing-guide-[topic] pages (self-help guides)
+  - Each auto-generated with unique content + internal links + CTA
+  - Use PSEOTemplate type from seo.types.ts
+  - Target 500+ long-tail keyword pages
 
-STEP 4 — Monitoring:
+STEP 5 — GEO (Generative Engine Optimization):
+  - FAQ-style structured content on key pages (for AI citation)
+  - Clear, factual answers to common mental health questions
+  - Organization schema markup (for brand recognition in AI)
+  - Track brand mentions in ChatGPT, Gemini, Perplexity monthly
+  - Use GEOConfig, StructuredAnswer, AIBrandMention from seo.types.ts
+
+STEP 6 — SXO (Search Experience Optimization):
+  - Core Web Vitals: LCP < 2.5s, FID < 100ms, CLS < 0.1
+  - Track bounce rate, time on page, scroll depth, conversion rate
+  - Clear CTAs above fold on every page
+  - Use SXOMetrics type from seo.types.ts
+
+STEP 7 — Monitoring:
   - Google Search Console integration
-  - Track keyword rankings over time
-  - Alert if ranking drops for important keywords
+  - Track keyword rankings over time (TrackedKeyword type)
+  - Alert admin if ranking drops for important keywords
+  - Dashboard: /admin/seo with keyword rankings, PSEO page performance, sitemap status
 
-STEP 5 — AI content pipeline:
+STEP 8 — AI content pipeline:
   - Scheduled job: weekly trending keyword analysis
   - Generate draft blog posts for trending topics
   - Admin reviews and publishes
+  - Auto-generate keyword suggestions (KeywordSuggestion type)
 
-VERIFY: Blog posts have proper meta tags → sitemap includes all pages → structured data validates.
+STEP 9 — ASO preparation (for future mobile app):
+  - Define app store listing content (ASOConfig type)
+  - Screenshot templates, preview video spec
+  - Deep linking strategy (web ↔ app)
+
+VERIFY:
+  Blog posts have proper meta tags → sitemap includes all pages →
+  structured data validates on Google Rich Results Test →
+  PSEO pages are indexable and have unique content →
+  3 domains all resolve correctly → canonical URLs are correct.
 ```
 
 ---
@@ -1195,6 +1416,8 @@ USER DASHBOARD:
 /dashboard/settings   → Account settings
 /dashboard/complaints → Submit / track complaints
 /dashboard/payments   → Payment history
+/dashboard/events     → My registered events
+/dashboard/membership → My membership plan + manage
 
 THERAPIST DASHBOARD:
 /therapist            → Therapist Dashboard (overview + alerts)
@@ -1248,6 +1471,13 @@ ADMIN / HEAD OFFICE:
 /admin/hiring         → Manage job postings + applications
 /admin/audit-log      → Full audit trail (every action, exportable)
 /admin/settings       → Platform config, feature flags, maintenance mode
+/admin/payments       → Payment transactions, refunds, failed payments
+/admin/corporate      → Corporate account management
+/admin/institutions   → School / college account management
+/admin/integrations   → Third-party integration management (Slack, SAP, Teams)
+/admin/notifications  → Notification management + broadcast
+/admin/platform-health → API uptime, response times, storage, error rates
+/admin/seo            → SEO dashboard (keyword rankings, PSEO pages, sitemap)
 
 CORPORATE:
 /corporate            → Corporate Dashboard

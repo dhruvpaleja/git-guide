@@ -20,3 +20,6 @@ export * from './ai.types';
 export * from './payment.types';
 export * from './admin.types';
 export * from './events.types';
+export * from './seo.types';
+export * from './notification.types';
+export * from './analytics.types';

@@ -6738,6 +6738,1214 @@ src/pages/seo/CityTherapistPage.tsx              → /:city-therapist
 TOTAL PAGES: ~110 unique page files
 ```
 
+## Figma-to-Code Design Workflow (Design Kese Perfect Aayegi)
+
+Every screen MUST follow this exact process to be pixel-perfect Apple-style:
+
+### Step 1: Export from Figma
+```
+For EVERY screen:
+1. Open Figma → select the frame
+2. Right panel → "Inspect" tab
+3. Note down:
+   - Width/height (responsive — mobile 375px, tablet 768px, desktop 1440px)
+   - All colors (exact hex: #XXXXXX) — match to Tailwind or add to tailwind.config.ts
+   - All font sizes (px → Tailwind: 12px=text-xs, 14px=text-sm, 16px=text-base, 18px=text-lg, 20px=text-xl, 24px=text-2xl, 30px=text-3xl, 36px=text-4xl, 48px=text-5xl)
+   - Font weight (400=font-normal, 500=font-medium, 600=font-semibold, 700=font-bold)
+   - Line height (tight=1.25, normal=1.5, relaxed=1.625)
+   - Letter spacing
+   - All spacing/padding/margin (px → Tailwind: 4px=1, 8px=2, 12px=3, 16px=4, 20px=5, 24px=6, 32px=8, 40px=10, 48px=12, 64px=16)
+   - Border radius (4px=rounded, 8px=rounded-lg, 12px=rounded-xl, 16px=rounded-2xl, 9999px=rounded-full)
+   - Shadows (exact box-shadow values)
+   - Opacity values
+   - Blur values (for glassmorphism)
+4. Export all icons as SVG → save to public/icons/
+5. Export all images → save to public/images/
+6. Export any illustrations → save to public/illustrations/
+```
+
+### Step 2: Design Tokens (already in codebase)
+```
+File: src/styles/tokens.ts (create during Phase 1)
+
+Export exact Figma values as constants:
+- colors: { primary, secondary, accent, neutral, success, warning, error, gradients }
+- typography: { fontFamily, sizes, weights, lineHeights }
+- spacing: { xs, sm, md, lg, xl, 2xl, 3xl }
+- shadows: { sm, md, lg, xl, glow }
+- borderRadius: { sm, md, lg, xl, full }
+- animations: { duration, easing, spring }
+- breakpoints: { mobile: 375, tablet: 768, desktop: 1024, wide: 1440 }
+
+These tokens are the SINGLE SOURCE OF TRUTH — every component uses them.
+```
+
+### Step 3: Build the Screen
+```
+For EVERY screen, the AI agent prompt MUST include:
+1. "Here is the Figma screenshot of this screen" (paste screenshot)
+2. "Use these design tokens from src/styles/tokens.ts"
+3. "Match spacing, colors, typography EXACTLY"
+4. "Make it responsive: mobile-first, then tablet, then desktop"
+5. "Add smooth transitions: all interactive elements need hover/focus/active states"
+6. "Use Framer Motion for enter/exit animations"
+7. "Apple-style = generous whitespace, subtle shadows, smooth animations, glass effects"
+```
+
+### Step 4: Verify Design Match
+```
+For EVERY screen after building:
+1. Place Figma export (PNG) next to browser screenshot side-by-side
+2. Check: colors match? ✅/❌
+3. Check: spacing match? ✅/❌
+4. Check: typography match? ✅/❌
+5. Check: shadows/effects match? ✅/❌
+6. Check: responsive mobile view correct? ✅/❌
+7. Check: responsive tablet view correct? ✅/❌
+8. Check: hover/focus states present? ✅/❌
+9. Check: animations smooth (60fps)? ✅/❌
+10. Only mark screen as DONE when ALL checks pass ✅
+```
+
+### Apple-Style Design Principles (follow for EVERY screen)
+```
+1. Whitespace is king — never crowd elements, let them breathe
+2. Typography hierarchy — one hero text, clear heading/subheading/body distinction
+3. Subtle shadows — never harsh, use layered soft shadows (shadow-sm + shadow-lg)
+4. Glass morphism — backdrop-blur-xl bg-white/10 for overlays and cards
+5. Smooth animations — 300-500ms duration, ease-out or spring, never jarring
+6. Rounded corners — minimum rounded-xl for cards, rounded-2xl for modals
+7. Gradient accents — subtle gradients on CTAs and hero sections
+8. Micro-interactions — button scale on press (scale-95), card lift on hover
+9. Consistent spacing — 8px grid system (Tailwind's spacing scale)
+10. Dark mode support — every screen must look great in both light and dark
+```
+
+---
+
+## Complete Frontend Screen Inventory (Kisme Kitni Screens Hai)
+
+This is the COMPLETE list of every screen, sub-screen, modal, dialog, and flow state
+in the entire application. Each page file may contain MULTIPLE screens/views.
+
+**TOTAL: 510+ unique screens across all sections**
+
+---
+
+### SECTION 1: SPLASH & LANDING (Phase 18) — 8 screens
+```
+1.1  SplashScreen.tsx
+     Screen 1: Black → Logo fade-in animation (0-2s)
+     Screen 2: Logo pulse → tagline reveal (2-4s)
+     Screen 3: Auto-redirect to landing page (4-5s)
+
+1.2  LandingPage.tsx (scrollable, each section = separate screen view)
+     Screen 4: Hero section — Three.js lotus + hero text + CTA
+     Screen 5: Services section — animated service cards
+     Screen 6: Features section — parallax scroll reveal
+     Screen 7: Testimonials section — carousel with video testimonials
+     Screen 8: Footer — links, social, newsletter signup
+```
+
+### SECTION 2: PUBLIC PAGES (Phase 9, 18, 19) — 32 screens
+```
+2.1  AboutPage.tsx — Phase 19
+     Screen 9:  Hero with mission statement + team photo
+     Screen 10: Our Story — timeline scroll animation
+     Screen 11: Team section — founder/co-founder cards with hover bio
+     Screen 12: Our Values — animated icons with descriptions
+     Screen 13: Press & Media — logos + article links
+
+2.2  ContactPage.tsx — Phase 19
+     Screen 14: Contact form (name, email, subject, message)
+     Screen 15: Contact form → success confirmation view
+     Screen 16: Map embed + office address + social links
+
+2.3  CareersPage.tsx — Phase 19
+     Screen 17: Open positions list with filters (department, location, type)
+     Screen 18: Career detail page — role description, requirements, perks
+     Screen 19: Job application form (resume upload, cover letter, LinkedIn)
+     Screen 20: Application submitted confirmation screen
+
+2.4  BlogListingPage.tsx — Phase 9
+     Screen 21: Blog grid view with search, category filter, tag filter
+     Screen 22: Blog list view (compact)
+     Screen 23: Blog category results page
+     Screen 24: Blog tag results page
+
+2.5  BlogPostPage.tsx — Phase 9
+     Screen 25: Blog post reading view (article, author, date, share, related posts)
+     Screen 26: Blog post with comments section expanded
+     Screen 27: Share dialog (copy link, WhatsApp, Twitter, Facebook, LinkedIn)
+
+2.6  CourseCatalogPage.tsx — Phase 11
+     Screen 28: Course grid with filters (category, price, rating, duration)
+     Screen 29: Course detail — curriculum, instructor, reviews, preview video
+     Screen 30: Course preview modal (video trailer)
+
+2.7  ShopPage.tsx — Phase 12
+     Screen 31: Product grid with filters (category, price range, rating)
+     Screen 32: Product detail — images carousel, description, variants, reviews, add to cart
+     Screen 33: Product image zoom modal
+     Screen 34: Product review submission modal
+
+2.8  CommunityPreviewPage.tsx — Phase 10
+     Screen 35: Public preview of Soul Circle (sample posts, join CTA)
+
+2.9  EventsPage.tsx — Phase 22
+     Screen 36: Events list with filters (date, type, virtual/in-person, free/paid)
+     Screen 37: Event detail — description, schedule, speakers, venue, register CTA
+     Screen 38: Event registration modal (attendee details, payment if paid)
+     Screen 39: Event registration success + add to calendar
+
+2.10 MembershipsPage.tsx — Phase 23
+     Screen 40: Membership tiers comparison table (Free/Seeker/Healer/Enlightened)
+```
+
+### SECTION 3: AUTHENTICATION (Phase 1) — 12 screens
+```
+3.1  LoginPage.tsx
+     Screen 41: Login form (email + password + remember me)
+     Screen 42: Login with Google/Apple SSO buttons
+     Screen 43: Login error state (wrong credentials)
+     Screen 44: Login → 2FA verification code entry (OTP)
+     Screen 45: Login success → redirect animation
+
+3.2  SignupPage.tsx
+     Screen 46: Signup Step 1 — name, email, password, confirm password
+     Screen 47: Signup Step 2 — phone, how did you hear about us
+     Screen 48: Signup → email verification pending screen
+     Screen 49: Email verified success screen
+     Screen 50: Signup error state (email already exists)
+
+3.3  ForgotPasswordPage.tsx
+     Screen 51: Enter email form
+     Screen 52: "Check your email" confirmation screen
+
+3.4  ResetPasswordPage.tsx
+     Screen 53: New password + confirm password form
+     Screen 54: Password reset success → redirect to login
+```
+
+### SECTION 4: ONBOARDING (Phase 2) — 14 screens
+```
+4.1  OnboardingPage.tsx → 10 internal step screens + transitions
+     Screen 55:  Step 1 — Welcome screen (personalized "Hi {name}" + what to expect)
+     Screen 56:  Step 2 — Full name input (first + last, with gentle animation)
+     Screen 57:  Step 3 — Birth date picker (date, time if known, place of birth for kundali)
+     Screen 58:  Step 4 — Contact preferences (phone, WhatsApp, notification preferences)
+     Screen 59:  Step 5 — Current mood check-in (animated mood scale 1-10 with faces)
+     Screen 60:  Step 6 — What are you struggling with? (multi-select: anxiety, depression, relationship, career, grief, trauma, self-esteem, addiction, loneliness, anger, sleep, other)
+     Screen 61:  Step 7 — Goals selection (what do you want to achieve? multi-select cards)
+     Screen 62:  Step 8 — Previous therapy experience (yes/no, details if yes)
+     Screen 63:  Step 9 — Preferences (therapist gender, language, session time preference, astrology interest y/n)
+     Screen 64:  Step 10 — Interests for content (meditation, yoga, breathwork, journaling, courses, community)
+     Screen 65:  Consent & privacy agreement screen (data usage, recording consent)
+     Screen 66:  Onboarding complete — personalized welcome + dashboard preview + "Your journey begins" animation
+     Screen 67:  Progress bar UI (visible on all steps, animated fill)
+     Screen 68:  "Save & continue later" confirmation modal
+```
+
+### SECTION 5: USER DASHBOARD (Phase 3, 4, 6, 16) — 78 screens
+```
+5.1  UserDashboardPage.tsx — Phase 3
+     Screen 69:  Dashboard home — greeting card, mood quick-check, upcoming session, AI suggestions
+     Screen 70:  Dashboard home — empty state (new user, no sessions yet)
+     Screen 71:  Quick actions bar (book session, AI chat, meditate, journal)
+     Screen 72:  Healing progress card (chart showing mood trends over time)
+     Screen 73:  Recommended content section (courses, blogs, meditations)
+     Screen 74:  Notification bell panel (slide-out drawer with recent notifications)
+
+5.2  BookSessionPage.tsx — Phase 4 (MULTI-STEP FLOW = 8 screens)
+     Screen 75:  Step 1 — Select session type (therapy/astrology/both)
+     Screen 76:  Step 2 — AI-matched therapist recommendations (top 3 ranked by match score)
+     Screen 77:  Step 2 alt — Browse all therapists (grid with filters: specialty, rating, price, language, gender)
+     Screen 78:  Step 2 detail — Therapist profile modal (bio, qualifications, reviews, availability calendar)
+     Screen 79:  Step 3 — Pick date & time slot (calendar view with available slots highlighted)
+     Screen 80:  Step 4 — Session details confirmation (therapist, date, time, type, price)
+     Screen 81:  Step 5 — Payment screen (Razorpay/Stripe integration)
+     Screen 82:  Step 6 — Booking confirmed screen (session details + add to calendar + what to prepare)
+
+5.3  SessionsPage.tsx — Phase 4
+     Screen 83:  Upcoming sessions list (date, therapist, countdown timer)
+     Screen 84:  Past sessions list (date, therapist, summary, rating)
+     Screen 85:  Session empty state (no sessions booked yet → CTA to book)
+     Screen 86:  Cancel session confirmation modal
+     Screen 87:  Reschedule session modal (new date/time picker)
+
+5.4  SessionDetailPage.tsx — Phase 4
+     Screen 88:  Pre-session view — therapist info, preparation tips, join button (active 5 min before)
+     Screen 89:  Post-session view — recording playback, transcription key points, assigned tasks
+     Screen 90:  Post-session view — rate your therapist modal (1-5 stars + comment)
+     Screen 91:  Post-session view — personality report (deep analysis PDF download)
+     Screen 92:  Astrologer pre-session report view (predictions shared before session)
+
+5.5  AIAssistantPage.tsx — Phase 6
+     Screen 93:  AI chat interface (message bubbles, typing indicator, suggested prompts)
+     Screen 94:  AI chat — voice mode (microphone active, waveform visualization)
+     Screen 95:  AI chat — crisis detection alert (emergency resources + option to connect to human)
+     Screen 96:  AI chat — session history list (past conversations by date)
+     Screen 97:  AI chat — empty state (first time, intro message with capabilities)
+
+5.6  HealthToolsPage.tsx — Phase 16
+     Screen 98:  Health tools hub (cards: meditation, breathing, journal, mood, sleep tracker)
+     Screen 99:  Health tools — empty state (personalized recommendations based on onboarding)
+
+5.7  MeditationPage.tsx — Phase 16
+     Screen 100: Meditation library (categories: sleep, anxiety, focus, morning, guided, music)
+     Screen 101: Meditation player (timer, ambient sound mixer, visual animation)
+     Screen 102: Meditation player — session complete summary (duration, streak)
+     Screen 103: Meditation favorites list
+     Screen 104: Meditation history/streak calendar
+
+5.8  BreathingPage.tsx — Phase 16
+     Screen 105: Breathing exercise selection (4-7-8, box, alternate nostril, energizing)
+     Screen 106: Breathing exercise active (animated circle expanding/contracting with timer)
+     Screen 107: Breathing complete — summary + how you feel check
+
+5.9  JournalPage.tsx — Phase 16
+     Screen 108: Journal entries list (cards with date, mood, preview text)
+     Screen 109: Journal — new entry editor (rich text, mood selector, tags, gratitude prompt)
+     Screen 110: Journal — entry detail view (full text, mood, AI insights if generated)
+     Screen 111: Journal — prompt of the day modal
+     Screen 112: Journal empty state (first entry encouragement)
+
+5.10 MoodTrackerPage.tsx — Phase 16
+     Screen 113: Mood history timeline (graph: daily/weekly/monthly trends)
+     Screen 114: Mood check-in modal (mood slider + triggers + notes)
+     Screen 115: Mood insights — AI analysis of patterns ("You tend to feel low on Mondays")
+     Screen 116: Mood calendar view (color-coded days by mood)
+
+5.11 CoursesPage.tsx (dashboard) — Phase 11
+     Screen 117: My enrolled courses list with progress bars
+     Screen 118: Course player — video lesson with chapters sidebar
+     Screen 119: Course player — quiz/exercise screen
+     Screen 120: Course — certificate earned celebration screen
+     Screen 121: Course — lesson notes view
+     Screen 122: Course empty state (no enrolled courses → recommendations)
+
+5.12 CommunityPage.tsx (dashboard) — Phase 10
+     Screen 123: Soul Circle feed (posts, likes, comments, anonymity toggle)
+     Screen 124: Create post composer (text, image, poll, anonymous toggle)
+     Screen 125: Post detail — comments thread view
+     Screen 126: Create circle/group modal
+     Screen 127: Circle/group detail — members, posts, about
+     Screen 128: My circles list
+     Screen 129: Community search (search posts, users, circles)
+     Screen 130: Community guidelines modal (first time)
+     Screen 131: Report content modal
+     Screen 132: User profile preview modal (within community)
+     Screen 133: Community empty state (no posts in circle → encourage first post)
+
+5.13 ShopPage.tsx (dashboard) — Phase 12
+     Screen 134: Shop grid with wishlist, cart icon with count badge
+     Screen 135: Shopping cart drawer (items, quantities, total, checkout CTA)
+     Screen 136: Checkout flow — shipping address form
+     Screen 137: Checkout flow — payment screen
+     Screen 138: Order placed success screen (order ID, estimated delivery)
+     Screen 139: My orders list (order status: processing/shipped/delivered/returned)
+     Screen 140: Order detail — items, tracking, invoice download
+     Screen 141: Return/exchange request form
+     Screen 142: Wishlist page
+
+5.14 ReportsPage.tsx — Phase 3
+     Screen 143: Healing journey timeline (milestones, sessions, mood trends combined)
+     Screen 144: Personality assessment results (traits, strengths, areas to work on)
+     Screen 145: Weekly healing report card (AI-generated summary)
+     Screen 146: Download reports as PDF button + preview
+
+5.15 SettingsPage.tsx — Phase 3
+     Screen 147: Profile settings (name, email, phone, photo, bio)
+     Screen 148: Password change form
+     Screen 149: Notification preferences (email, push, SMS, in-app toggles per category)
+     Screen 150: Privacy settings (data visibility, anonymous mode, data export request)
+     Screen 151: Language & currency preferences
+     Screen 152: Theme preference (light/dark/auto)
+     Screen 153: Connected accounts (Google, Apple)
+     Screen 154: Delete account confirmation flow (3-step: reason → confirm → countdown)
+     Screen 155: Data export request → processing → download ready
+
+5.16 ComplaintsPage.tsx — Phase 3
+     Screen 156: Submit complaint form (category, description, attachments)
+     Screen 157: My complaints list (status: open/in-progress/resolved)
+     Screen 158: Complaint detail — conversation thread with support
+
+5.17 PaymentHistoryPage.tsx — Phase 13
+     Screen 159: Payment history table (date, amount, type, status, invoice)
+     Screen 160: Invoice detail view
+     Screen 161: Payment receipt download
+
+5.18 MyEventsPage.tsx — Phase 22
+     Screen 162: Registered events list (upcoming/past tabs)
+     Screen 163: Event ticket view (QR code for check-in)
+
+5.19 MyMembershipPage.tsx — Phase 23
+     Screen 164: Current membership status card (tier, renewal date, benefits used)
+     Screen 165: Upgrade/downgrade membership modal
+     Screen 166: Membership payment history
+     Screen 167: Cancel membership confirmation (with retention offer)
+
+5.20 ProfilePage.tsx — Phase 3
+     Screen 168: User public profile view (avatar, bio, community posts, badges)
+     Screen 169: Edit profile modal
+```
+
+### SECTION 6: THERAPIST DASHBOARD (Phase 8) — 52 screens
+```
+6.1  TherapistDashboardPage.tsx
+     Screen 170: Dashboard home — today's schedule, upcoming sessions, client alerts, revenue summary
+     Screen 171: Dashboard — new client alert notification banner
+     Screen 172: Dashboard — client negative mood alert (proactive AI notification)
+     Screen 173: Dashboard — daily stats cards (sessions completed, revenue, new clients, avg rating)
+     Screen 174: Dashboard empty state (new therapist, no clients yet)
+
+6.2  ClientsPage.tsx
+     Screen 175: All clients list (searchable, filterable by status: active/paused/completed)
+     Screen 176: Client card — quick view (name, mood trend, next session, alerts)
+     Screen 177: Clients — AI risk alerts panel (clients who need attention flagged red/yellow)
+
+6.3  ClientDetailPage.tsx
+     Screen 178: Client overview — profile, mood trend chart, session history, assigned tasks
+     Screen 179: Client — healing journey timeline (milestones, progress)
+     Screen 180: Client — session notes list (therapist's notes per session)
+     Screen 181: Client — add/edit session notes modal (rich text + tags)
+     Screen 182: Client — assigned tasks list (status: pending/in-progress/completed)
+     Screen 183: Client — add task modal (title, description, due date, category)
+     Screen 184: Client — astrologer report view (predictions received before sessions)
+     Screen 185: Client — AI behavior analysis (patterns, risk indicators, engagement level)
+     Screen 186: Client — personality report (AI-generated deep analysis)
+     Screen 187: Client — communication log (messages exchanged)
+
+6.4  SessionsPage.tsx (therapist)
+     Screen 188: Today's sessions list (time, client, session type, join button)
+     Screen 189: Upcoming sessions list (this week, next week views)
+     Screen 190: Past sessions list with filter by client, date range
+     Screen 191: Session calendar view (FullCalendar — day/week/month)
+
+6.5  SessionDetailPage.tsx (therapist)
+     Screen 192: Pre-session view — client summary, astrologer report, previous notes, preparation
+     Screen 193: In-session view — video call + client notes sidebar + timer
+     Screen 194: Post-session checklist — key points noted, tasks to assign, follow-up date
+     Screen 195: Post-session — add/edit session summary form
+     Screen 196: Post-session — assign healing tasks to client form
+     Screen 197: Post-session — rate session quality (self-assessment)
+     Screen 198: Post-session — confirm/deny astrologer prediction accuracy
+     Screen 199: Session recording playback with transcription view
+
+6.6  RevenuePage.tsx
+     Screen 200: Revenue overview — total earnings, this month, pending payout
+     Screen 201: Revenue chart — daily/weekly/monthly earnings graph
+     Screen 202: Revenue — sessions breakdown table (each session, amount, date)
+     Screen 203: Revenue — payout history (bank transfers, dates, amounts)
+     Screen 204: Revenue — request early payout button + modal
+
+6.7  ReviewsPage.tsx
+     Screen 205: All reviews list (star rating, comment, client name, date)
+     Screen 206: Reviews — average rating card + rating distribution bar chart
+     Screen 207: Reviews — respond to review modal
+     Screen 208: Reviews — flagged/inappropriate review report modal
+
+6.8  ProfilePage.tsx (therapist)
+     Screen 209: Therapist public profile preview (how clients see it)
+     Screen 210: Edit profile form — bio, specializations, qualifications, photo, availability
+     Screen 211: Availability calendar editor (set weekly recurring slots + block dates)
+     Screen 212: Qualifications & certifications upload section
+     Screen 213: Languages & session preferences settings
+```
+
+### SECTION 7: ASTROLOGER DASHBOARD (Phase 7) — 42 screens
+```
+7.1  AstrologerDashboardPage.tsx
+     Screen 214: Dashboard home — pending kundali analyses, upcoming sessions, brownie points card
+     Screen 215: Dashboard — new analysis request notification
+     Screen 216: Dashboard — brownie points & tier progress bar (bronze→silver→gold→platinum→diamond)
+     Screen 217: Dashboard — daily/weekly stats (analyses done, accuracy rate, revenue)
+     Screen 218: Dashboard empty state (new astrologer, no assignments yet)
+
+7.2  AnalysesPage.tsx
+     Screen 219: Pending analyses queue (client name, session date, priority, deadline timer)
+     Screen 220: Analysis — kundali chart view (loaded from Parasara Light format, Rashi, Navamsa)
+     Screen 221: Analysis — dasha/sub-dasha timeline viewer (interactive expandable tree)
+     Screen 222: Analysis — AI-generated analysis summary (key planetary positions, transits, predictions)
+     Screen 223: Analysis — write predictions form (text areas per category: mental health, relationship, career, health, timeline)
+     Screen 224: Analysis — prediction poll view (other astrologers' predictions, vote on most likely)
+     Screen 225: Analysis — submit analysis confirmation
+     Screen 226: Analysis — completed analyses history list
+
+7.3  ClientsPage.tsx (astrologer)
+     Screen 227: All clients list (direct booking clients + therapy pipeline clients)
+     Screen 228: Client birth chart summary card
+
+7.4  ClientDetailPage.tsx (astrologer)
+     Screen 229: Client full kundali view (all divisional charts: D1-D60)
+     Screen 230: Client dasha periods table (current dasha highlighted)
+     Screen 231: Client transit overlay (current planetary positions over natal)
+     Screen 232: Client prediction history (past predictions + accuracy results)
+     Screen 233: Client communication thread (direct messages)
+     Screen 234: Client — schedule direct session modal
+
+7.5  SessionsPage.tsx (astrologer)
+     Screen 235: Upcoming astrology sessions list
+     Screen 236: Past sessions list
+     Screen 237: Session calendar view
+
+7.6  PredictionsPage.tsx
+     Screen 238: All predictions made — list with accuracy status (pending/verified accurate/partially accurate/inaccurate)
+     Screen 239: Prediction accuracy dashboard — overall rate, category breakdown
+     Screen 240: Prediction detail — what was predicted vs what happened
+     Screen 241: Brownie points ledger (earned/spent history)
+
+7.7  ProfilePage.tsx (astrologer)
+     Screen 242: Astrologer public profile preview
+     Screen 243: Edit profile — bio, specializations, systems practiced (Vedic, KP, Nadi)
+     Screen 244: Availability calendar editor
+     Screen 245: Qualifications upload
+```
+
+### SECTION 8: ADMIN / HEAD OFFICE DASHBOARD (Phase 14, 20) — 156 screens
+```
+8.1  HeadOfficePage.tsx — Phase 14
+     Screen 246: Head office overview — key metrics cards (total users, revenue, sessions, active therapists)
+     Screen 247: Real-time activity feed (live: new signups, sessions started, payments, alerts)
+     Screen 248: Revenue chart (daily/weekly/monthly/yearly + year-over-year comparison)
+     Screen 249: Platform health dashboard (server CPU, memory, API response times, error rates)
+     Screen 250: Critical alerts panel (emergency flagging, fraud alerts, system issues)
+     Screen 251: Pending actions queue (items needing admin approval/action)
+     Screen 252: Department performance summary cards (therapy, astrology, courses, shop, community)
+
+8.2  AdminUsersPage.tsx — Phase 14
+     Screen 253: All users table (name, email, role, status, joined date, last active) — paginated, searchable
+     Screen 254: User detail drawer (profile, sessions, payments, complaints, AI analysis)
+     Screen 255: User — edit role/status/ban modal
+     Screen 256: User — view full activity log
+     Screen 257: User — data export for this user
+     Screen 258: User — flag/unflag for review
+     Screen 259: Bulk user actions (export CSV, send notification, change status)
+     Screen 260: User filters panel (role, status, date range, location, membership tier)
+
+8.3  AdminTherapistsPage.tsx — Phase 14
+     Screen 261: All therapists table (name, rating, sessions, revenue, status, alerts)
+     Screen 262: Therapist detail — full profile, client list, revenue, reviews, AI quality score
+     Screen 263: Therapist — approve/suspend/terminate modal (with reason)
+     Screen 264: Therapist — credential verification view (uploaded docs, verification status)
+     Screen 265: Therapist — AI monitoring report (conduct score, compliance, fraud indicators)
+     Screen 266: Therapist — revenue/payout history
+     Screen 267: Therapist — assign/remove clients modal
+     Screen 268: Pending therapist applications table (onboarding pipeline)
+
+8.4  AdminAstrologersPage.tsx — Phase 14
+     Screen 269: All astrologers table (name, tier, accuracy rate, brownie points, revenue)
+     Screen 270: Astrologer detail — profile, predictions accuracy, tier, revenue
+     Screen 271: Astrologer — verify credentials view
+     Screen 272: Astrologer — brownie points adjustment modal (manual override)
+     Screen 273: Pending astrologer applications table
+
+8.5  AdminSessionsPage.tsx — Phase 14
+     Screen 274: All sessions table (date, client, therapist, type, status, duration, recording)
+     Screen 275: Session detail — recording playback, transcription, AI analysis, flagged moments
+     Screen 276: Session — AI monitoring report (client emotional state, therapist conduct)
+     Screen 277: Flagged sessions list (sessions with AI alerts or client complaints)
+     Screen 278: Session search with advanced filters
+
+8.6  AdminTherapyPage.tsx — Phase 14
+     Screen 279: Therapy overview stats — total sessions, avg rating, completion rate, cancellation rate
+     Screen 280: Matching algorithm performance — match scores, client satisfaction post-match
+     Screen 281: Therapy specialization demand chart (which issues are most common)
+     Screen 282: Waitlist management view
+     Screen 283: Therapy pricing management
+
+8.7  AdminEventsPage.tsx — Phase 14
+     Screen 284: All events table (name, date, registrations, revenue, status)
+     Screen 285: Event detail — registrations list, check-ins, feedback summary
+     Screen 286: Create/edit event form
+     Screen 287: Event analytics — attendance rate, feedback scores, revenue
+     Screen 288: Pending event proposals for approval
+
+8.8  AdminMembershipsPage.tsx — Phase 14
+     Screen 289: Membership overview — active subscribers per tier, MRR, churn rate
+     Screen 290: Members table (name, tier, start date, renewal date, status)
+     Screen 291: Edit membership tiers/pricing modal
+     Screen 292: Membership analytics — conversion funnel, upgrade/downgrade trends
+     Screen 293: Churn risk list (members likely to cancel — AI predicted)
+
+8.9  AdminNGOPage.tsx — Phase 14
+     Screen 294: NGO partners list (name, sessions sponsored, budget remaining)
+     Screen 295: NGO detail — beneficiaries, sessions used, impact reports
+     Screen 296: Add new NGO partner form
+     Screen 297: NGO impact report view
+     Screen 298: Approve/reject NGO-sponsored beneficiary access
+
+8.10 AdminCommunityPage.tsx — Phase 14
+     Screen 299: Community moderation queue (flagged posts, reported content)
+     Screen 300: Flagged content detail — original post, reports, AI analysis, action buttons
+     Screen 301: Community stats — active users, posts/day, reports, moderation actions
+     Screen 302: Banned users list + unban modal
+     Screen 303: Community guidelines editor
+     Screen 304: Create announcement post to community
+
+8.11 AdminBlogPage.tsx — Phase 14
+     Screen 305: All blogs table (title, author, status: draft/pending/published, views)
+     Screen 306: Blog review — preview + approve/reject/request changes
+     Screen 307: Blog analytics — views, engagement, SEO performance per post
+     Screen 308: Create/edit blog post (admin can also post)
+     Screen 309: Blog category & tag management
+
+8.12 AdminCoursesPage.tsx — Phase 14
+     Screen 310: All courses table (title, creator, status, enrollments, revenue, rating)
+     Screen 311: Course review — preview content + approve/reject
+     Screen 312: Course analytics — enrollments, completion rate, revenue
+     Screen 313: Creator management — approved creators, pending applications
+     Screen 314: Course category management
+
+8.13 AdminShopPage.tsx — Phase 14
+     Screen 315: Shop overview — total products, orders, revenue, inventory alerts
+     Screen 316: Products table (name, price, stock, status)
+     Screen 317: Add/edit product form (images, description, variants, pricing, inventory)
+     Screen 318: Orders table (order ID, customer, amount, status, date)
+     Screen 319: Order detail — items, shipping, tracking, customer communication
+     Screen 320: Inventory alerts — low stock, out of stock items
+     Screen 321: Returns/refunds management table
+     Screen 322: Shipping configuration (Shiprocket settings, zones, rates)
+
+8.14 AdminAIMonitoringPage.tsx — Phase 14
+     Screen 323: AI monitoring overview — total sessions monitored, alerts triggered, false positive rate
+     Screen 324: Active session monitoring list (live sessions with real-time sentiment indicators)
+     Screen 325: Flagged moments review — play flagged recording segment, AI analysis, action needed
+     Screen 326: Therapist conduct scorecards — AI scores for all therapists
+     Screen 327: Crisis intervention log — all emergency flags, escalation status, resolution
+     Screen 328: AI model performance metrics — accuracy, latency, cost per analysis
+
+8.15 AdminFraudAlertsPage.tsx — Phase 14
+     Screen 329: Fraud alerts queue (flagged therapists, suspicious payments, fake reviews)
+     Screen 330: Fraud case detail — evidence, AI analysis, previous flags, action options
+     Screen 331: Fraud patterns dashboard — common fraud types, trend chart
+     Screen 332: Resolved fraud cases history
+
+8.16 AdminPaymentsPage.tsx — Phase 14
+     Screen 333: Payment overview — total revenue, gateway split (Razorpay/Stripe), pending payouts
+     Screen 334: All transactions table (date, user, amount, currency, type, status, gateway)
+     Screen 335: Failed/disputed transactions — retry, refund, or escalate
+     Screen 336: Payout management — pending therapist/astrologer/creator payouts, approve batch
+     Screen 337: Revenue breakdown by source (therapy, courses, shop, memberships, events)
+     Screen 338: Currency-wise revenue chart
+     Screen 339: Refund requests management
+
+8.17 AdminComplaintsPage.tsx — Phase 14
+     Screen 340: All complaints table (user, category, status, priority, date)
+     Screen 341: Complaint detail — conversation thread, assign to team member, resolve
+     Screen 342: Complaint categories analytics — most common issues chart
+     Screen 343: SLA tracking — response times, resolution times, overdue complaints
+
+8.18 AdminCorporatePage.tsx — Phase 14
+     Screen 344: Corporate clients table (company name, employees, plan, revenue)
+     Screen 345: Corporate detail — employee engagement, session usage, feedback
+     Screen 346: Add new corporate client form
+     Screen 347: Corporate plan configuration modal
+
+8.19 AdminInstitutionsPage.tsx — Phase 14
+     Screen 348: Schools/colleges table (institution name, students, plan, integration status)
+     Screen 349: Institution detail — student engagement, counselor sessions, reports
+     Screen 350: Add new institution form
+     Screen 351: Institution plan configuration
+
+8.20 AdminIntegrationsPage.tsx — Phase 15
+     Screen 352: All integrations list (SAP, Slack, Teams, Google Workspace, custom DB)
+     Screen 353: Integration detail — connection status, sync logs, field mapping
+     Screen 354: Configure new integration wizard (4 steps: select type → auth → field mapping → test)
+     Screen 355: Integration sync history & error logs
+     Screen 356: Webhook configuration panel
+
+8.21 AdminNotificationsPage.tsx — Phase 17
+     Screen 357: Notification broadcast form (target: all users / segment / individual)
+     Screen 358: Notification templates list (create/edit templates)
+     Screen 359: Notification delivery stats (sent, delivered, opened, clicked)
+     Screen 360: Scheduled notifications queue
+
+8.22 AdminSEOPage.tsx — Phase 21
+     Screen 361: SEO dashboard — keyword rankings, organic traffic, PSEO page stats
+     Screen 362: Tracked keywords table (keyword, current rank, trend, volume)
+     Screen 363: PSEO pages list (auto-generated pages, their traffic, rankings)
+     Screen 364: SEO audit results (issues to fix, priority, affected pages)
+     Screen 365: GEO performance — AI search citations, brand mentions
+     Screen 366: Competitor tracking dashboard
+
+8.23 AdminPlatformHealthPage.tsx — Phase 14
+     Screen 367: Server metrics dashboard (CPU, memory, disk, network — real-time charts)
+     Screen 368: API endpoint performance table (endpoint, avg response time, error rate, p95)
+     Screen 369: Database performance (query times, slow queries, connection pool)
+     Screen 370: Error log viewer (searchable, filterable, stack traces)
+     Screen 371: Deployment history (version, date, status, rollback option)
+     Screen 372: Uptime monitor (current status, incident history, SLA %)
+
+8.24 AdminAnalyticsPage.tsx — Phase 14
+     Screen 373: User acquisition funnel (visit → signup → onboarding → first session → retention)
+     Screen 374: Cohort analysis (retention by signup month)
+     Screen 375: Feature usage heatmap (which features are most/least used)
+     Screen 376: User behavior flow diagram (common paths through the app)
+     Screen 377: A/B test results dashboard
+     Screen 378: Custom report builder (select metrics, date range, segments → generate)
+
+8.25 AdminAuditLogPage.tsx — Phase 14
+     Screen 379: Activity log table (timestamp, user, action, resource, IP, details)
+     Screen 380: Log filters panel (user, action type, date range, resource type)
+     Screen 381: Export audit log (CSV/JSON)
+
+8.26 Department Dashboards — Phase 20
+     Screen 382: Therapy Department — KPIs, targets vs actuals, team list, action items
+     Screen 383: Astrology Department — KPIs, accuracy rates, brownie points leaderboard
+     Screen 384: Content Department — blog/course production, pending approvals, engagement
+     Screen 385: Marketing Department — campaign performance, ad spend, SEO rank changes
+     Screen 386: Sales Department — leads, conversions, revenue pipeline, corporate deals
+     Screen 387: Customer Support — ticket volume, response times, satisfaction scores
+     Screen 388: Operations Department — platform health, incidents, deployments, costs
+     Screen 389: Department — target setting modal (KPI, target value, deadline, assigned to)
+     Screen 390: Department — team performance chart (individual contributions)
+     Screen 391: Department — weekly report auto-generated view
+```
+
+### SECTION 9: EMPLOYEE DASHBOARD (Phase 20) — 18 screens
+```
+9.1  EmployeeDashboardPage.tsx
+     Screen 392: Employee home — my targets, tasks, performance score, announcements
+     Screen 393: Employee — daily check-in (mood, blockers, plan for today)
+     Screen 394: Employee — performance score card (overall + per KPI breakdown)
+
+9.2  TargetsPage.tsx
+     Screen 395: My targets list (KPI, current value, target, deadline, progress bar)
+     Screen 396: Target detail — daily progress chart, actions taken log
+     Screen 397: Historical targets — past quarters/months performance
+
+9.3  TasksPage.tsx
+     Screen 398: Task board — kanban view (to-do, in-progress, done) — drag & drop
+     Screen 399: Task detail modal (description, assignee, due date, comments, attachments)
+     Screen 400: Create/edit task modal
+
+9.4  TeamPage.tsx
+     Screen 401: Team members list (name, role, performance, online status)
+     Screen 402: Team — member profile view
+     Screen 403: Team — leave calendar (who's on leave when)
+
+9.5  Employee Training
+     Screen 404: Training modules assigned to me (progress, score, status)
+     Screen 405: Training module — video lesson + quiz
+     Screen 406: Training — certificate earned screen
+
+9.6  Employee Profile
+     Screen 407: My employment profile (designation, department, joining date, reporting to)
+     Screen 408: My payslips list (month, amount, download)
+     Screen 409: My leave balance & apply leave form
+```
+
+### SECTION 10: CORPORATE DASHBOARD (Phase 15) — 20 screens
+```
+10.1 CorporateDashboardPage.tsx
+     Screen 410: Corporate home — employee wellness score, active sessions, program utilization
+     Screen 411: Corporate — wellness trend chart (monthly aggregate mood of all employees)
+     Screen 412: Corporate — ROI report card (absenteeism reduction, productivity gains)
+     Screen 413: Corporate empty state (new corporate account, setup wizard)
+
+10.2 EmployeesPage.tsx (corporate)
+     Screen 414: Employee list (name, department, wellness score, sessions attended, status)
+     Screen 415: Employee detail — session summary (anonymized), wellness trend, course completions
+     Screen 416: Employee — invite new employees (bulk CSV upload or individual email invite)
+     Screen 417: Employee — department-wise breakdown chart
+
+10.3 SessionsPage.tsx (corporate)
+     Screen 418: Corporate sessions overview — sessions used vs allocated, by department
+     Screen 419: Session utilization chart (daily/weekly/monthly)
+     Screen 420: Upcoming group wellness sessions (workshops, webinars)
+     Screen 421: Schedule group session form
+
+10.4 ReportsPage.tsx (corporate)
+     Screen 422: Monthly wellness report (auto-generated PDF preview)
+     Screen 423: Department comparison chart (wellness scores, engagement, usage)
+     Screen 424: Annual review report
+     Screen 425: Custom report builder (select date range, departments, metrics)
+     Screen 426: Download/share report modal
+     Screen 427: Benchmark comparison (vs industry averages)
+     Screen 428: Corporate billing & subscription management
+     Screen 429: Corporate admin settings (HR contacts, escalation policies, branding)
+```
+
+### SECTION 11: VIDEO CALL (Phase 5) — 12 screens
+```
+11.1 VideoCallPage.tsx (standalone — no layout)
+     Screen 430: Pre-join room — camera/mic preview, test, join button
+     Screen 431: Video call — full screen, therapist + client video tiles
+     Screen 432: Video call — screen share active view
+     Screen 433: Video call — chat sidebar (text messaging during call)
+     Screen 434: Video call — connection quality indicator + fallback to audio-only
+     Screen 435: Video call — recording consent dialog (start of session)
+     Screen 436: Video call — end session confirmation modal
+     Screen 437: Video call — therapist notes panel (side panel during session)
+     Screen 438: Video call — session timer display
+     Screen 439: Video call — emergency end (connection lost reconnecting screen)
+     Screen 440: Post-call — session summary screen (auto-redirect after call ends)
+     Screen 441: Post-call — feedback survey (how was your experience?)
+```
+
+### SECTION 12: SHARED MODALS & OVERLAYS (used across multiple pages) — 25 screens
+```
+These are NOT separate pages — they are reusable components that appear as overlays:
+
+12.1 Global Modals
+     Screen 442: Notification center drawer (all notifications, mark read, clear all)
+     Screen 443: Quick mood check-in modal (appears periodically)
+     Screen 444: Session reminder popup (5 min before scheduled session)
+     Screen 445: Emergency resources modal (crisis hotline numbers, immediate help)
+     Screen 446: Cookie consent banner
+     Screen 447: App update available modal
+     Screen 448: Maintenance mode screen
+     Screen 449: Network offline screen
+
+12.2 Payment Modals
+     Screen 450: Razorpay payment modal (Indian users)
+     Screen 451: Stripe payment modal (international users)
+     Screen 452: Payment processing loader
+     Screen 453: Payment success confirmation
+     Screen 454: Payment failed — retry or contact support
+
+12.3 Confirmation Dialogs
+     Screen 455: Generic confirm action dialog (delete, cancel, remove)
+     Screen 456: Danger zone confirm (red themed — irreversible actions)
+     Screen 457: Success toast notification
+     Screen 458: Error toast notification
+     Screen 459: Info/warning toast notification
+
+12.4 Media Modals
+     Screen 460: Image viewer/lightbox (zoom, download)
+     Screen 461: Video player modal
+     Screen 462: Audio player modal (meditation, breathing guide)
+     Screen 463: PDF viewer modal (reports, certificates, invoices)
+     Screen 464: File upload modal (drag & drop, progress bar, file type validation)
+
+12.5 Search
+     Screen 465: Global search overlay (cmd+K — search everything: users, sessions, blogs, courses, products)
+     Screen 466: Search results view (categorized: pages, content, users)
+```
+
+### SECTION 13: ERROR & EMPTY STATES (reusable across app) — 8 screens
+```
+     Screen 467: 404 Not Found page (animated illustration + search + home link)
+     Screen 468: 403 Forbidden page (no access, contact admin)
+     Screen 469: 500 Server Error page (something went wrong, auto-report sent)
+     Screen 470: Session expired — redirect to login
+     Screen 471: Under construction page (feature coming soon)
+     Screen 472: Empty state — generic (illustration + message + CTA)
+     Screen 473: Loading skeleton screens (used everywhere during data fetch)
+     Screen 474: Offline mode — cached content view
+```
+
+### SECTION 14: MOBILE-RESPONSIVE VARIANTS — 36 additional screen states
+```
+Every major page has a mobile-specific layout variation:
+     Screens 475-510: Mobile navigation (hamburger menu + bottom tab bar),
+                       mobile dashboard (stacked cards instead of grid),
+                       mobile video call (portrait mode),
+                       mobile chat (full screen),
+                       mobile shop (single column),
+                       mobile calendar (day view default),
+                       mobile settings (accordion sections),
+                       mobile tables (card view instead of table rows),
+                       mobile modals (full-screen bottom sheets),
+                       mobile onboarding (swipe-able steps),
+                       + 26 more mobile-specific states
+```
+
+---
+
+### SCREEN COUNTS SUMMARY
+```
+┌───────────────────────────────────────┬────────┬─────────────────────┐
+│ Section                               │ Screens│ Built in Phase      │
+├───────────────────────────────────────┼────────┼─────────────────────┤
+│ 1. Splash & Landing                  │      8 │ Phase 18            │
+│ 2. Public Pages                      │     32 │ Phase 9,11,12,18,19,│
+│                                       │        │ 22,23               │
+│ 3. Authentication                    │     12 │ Phase 1             │
+│ 4. Onboarding                        │     14 │ Phase 2             │
+│ 5. User Dashboard                    │     78 │ Phase 3,4,6,10,11,  │
+│                                       │        │ 12,13,16,22,23      │
+│ 6. Therapist Dashboard              │     52 │ Phase 8             │
+│ 7. Astrologer Dashboard             │     42 │ Phase 7             │
+│ 8. Admin / Head Office              │    156 │ Phase 14,20,21      │
+│ 9. Employee Dashboard               │     18 │ Phase 20            │
+│ 10. Corporate Dashboard             │     20 │ Phase 15            │
+│ 11. Video Call                       │     12 │ Phase 5             │
+│ 12. Shared Modals & Overlays        │     25 │ Phase 1,3,5,13,17   │
+│ 13. Error & Empty States            │      8 │ Phase 1,3           │
+│ 14. Mobile-Responsive Variants      │     36 │ All phases          │
+├───────────────────────────────────────┼────────┼─────────────────────┤
+│ TOTAL SCREENS                        │  ~ 510 │                     │
+└───────────────────────────────────────┴────────┴─────────────────────┘
+```
+
+---
+
+### PHASE-WISE SCREEN BUILD ORDER (Kab Konsi Screen Build Karni Hai)
+
+Within each phase, build screens in THIS exact order:
+
+#### Phase 1 — Authentication (12 screens)
+```
+Build order:
+1. Screen 41: Login form
+2. Screen 42: Login SSO buttons
+3. Screen 43: Login error state
+4. Screen 46: Signup Step 1
+5. Screen 47: Signup Step 2
+6. Screen 48: Email verification pending
+7. Screen 49: Email verified success
+8. Screen 50: Signup error state
+9. Screen 51: Forgot password email form
+10. Screen 52: Check your email confirmation
+11. Screen 53: Reset password form
+12. Screen 54: Password reset success
+13. Screen 44: 2FA OTP entry (add after basic auth works)
+14. Screen 45: Login success redirect animation (add last — polish)
+
+Shared components to build alongside:
+- Screen 457: Success toast
+- Screen 458: Error toast
+- Screen 459: Info/warning toast
+- Screen 470: Session expired redirect
+- Screen 467: 404 page
+- Screen 468: 403 page
+- Screen 469: 500 page
+```
+
+#### Phase 2 — Onboarding (14 screens)
+```
+Build order:
+1. Screen 67: Progress bar component (used on all steps)
+2. Screen 55: Step 1 — Welcome
+3. Screen 56: Step 2 — Name
+4. Screen 57: Step 3 — Birth date
+5. Screen 58: Step 4 — Contact
+6. Screen 59: Step 5 — Mood
+7. Screen 60: Step 6 — Struggles
+8. Screen 61: Step 7 — Goals
+9. Screen 62: Step 8 — Therapy history
+10. Screen 63: Step 9 — Preferences
+11. Screen 64: Step 10 — Interests
+12. Screen 65: Consent
+13. Screen 66: Onboarding complete animation
+14. Screen 68: Save & continue later modal
+```
+
+#### Phase 3 — User Dashboard Shell (20 screens)
+```
+Build order:
+1. Screen 69: Dashboard home (with placeholder widgets)
+2. Screen 70: Dashboard empty state
+3. Screen 71: Quick actions bar
+4. Screen 147: Profile settings
+5. Screen 148: Password change
+6. Screen 149: Notification preferences
+7. Screen 150: Privacy settings
+8. Screen 151: Language & currency
+9. Screen 152: Theme preference
+10. Screen 153: Connected accounts
+11. Screen 154: Delete account flow
+12. Screen 155: Data export
+13. Screen 156: Submit complaint form
+14. Screen 157: Complaints list
+15. Screen 158: Complaint detail
+16. Screen 143: Healing journey timeline
+17. Screen 168: User profile view
+18. Screen 169: Edit profile
+19. Screen 442: Notification center drawer
+20. Screen 465: Global search overlay
+```
+
+#### Phase 4 — Therapy Booking (18 screens)
+```
+Build order:
+1. Screen 75: Select session type
+2. Screen 77: Browse therapists grid
+3. Screen 78: Therapist profile modal
+4. Screen 76: AI-matched recommendations
+5. Screen 79: Pick date & time slot
+6. Screen 80: Session confirmation
+7. Screen 81: Payment screen
+8. Screen 82: Booking confirmed
+9. Screen 83: Upcoming sessions list
+10. Screen 84: Past sessions list
+11. Screen 85: Session empty state
+12. Screen 86: Cancel session modal
+13. Screen 87: Reschedule modal
+14. Screen 88: Pre-session view
+15. Screen 89: Post-session view (recordings + transcript)
+16. Screen 90: Rate therapist modal
+17. Screen 91: Personality report view
+18. Screen 92: Astrologer pre-session report
+```
+
+#### Phase 5 — Video Calling (12 screens)
+```
+Build order:
+1. Screen 430: Pre-join room (camera/mic test)
+2. Screen 435: Recording consent dialog
+3. Screen 431: Video call main view
+4. Screen 438: Session timer
+5. Screen 433: Chat sidebar
+6. Screen 437: Therapist notes panel
+7. Screen 432: Screen share view
+8. Screen 434: Connection quality indicator
+9. Screen 439: Connection lost/reconnecting
+10. Screen 436: End session confirmation
+11. Screen 440: Post-call summary
+12. Screen 441: Post-call feedback survey
+```
+
+#### Phase 6 — AI Assistant (5 screens)
+```
+Build order:
+1. Screen 93: AI chat interface
+2. Screen 97: Empty state (first time intro)
+3. Screen 96: Session history list
+4. Screen 94: Voice mode
+5. Screen 95: Crisis detection alert + Screen 445 emergency resources
+```
+
+#### Phase 7 — Astrologer System (32 screens)
+```
+Build order:
+1. Screen 214: Dashboard home
+2. Screen 218: Empty state
+3. Screen 219: Pending analyses queue
+4. Screen 220: Kundali chart view
+5. Screen 221: Dasha/sub-dasha viewer
+6. Screen 222: AI analysis summary
+7. Screen 223: Write predictions form
+8. Screen 225: Submit confirmation
+9. Screen 226: Completed analyses history
+10. Screen 224: Prediction poll
+11. Screen 227: Clients list
+12. Screen 229: Client full kundali
+13. Screen 230: Client dasha periods
+14. Screen 231: Transit overlay
+15. Screen 232: Prediction history
+16. Screen 233: Client messages
+17. Screen 234: Schedule session modal
+18. Screen 228: Client birth chart card
+19. Screen 235: Upcoming sessions
+20. Screen 236: Past sessions
+21. Screen 237: Session calendar
+22. Screen 238: All predictions list
+23. Screen 239: Accuracy dashboard
+24. Screen 240: Prediction detail
+25. Screen 241: Brownie points ledger
+26. Screen 215: New analysis request notification
+27. Screen 216: Brownie points progress bar
+28. Screen 217: Daily/weekly stats
+29. Screen 242: Public profile preview
+30. Screen 243: Edit profile
+31. Screen 244: Availability calendar
+32. Screen 245: Qualifications upload
+```
+
+#### Phase 8 — Therapist Dashboard (44 screens)
+```
+Build order:
+1. Screen 170: Dashboard home
+2. Screen 174: Empty state
+3. Screen 175: Clients list
+4. Screen 178: Client overview
+5. Screen 179: Client healing journey
+6. Screen 180: Session notes list
+7. Screen 181: Add/edit notes modal
+8. Screen 182: Assigned tasks list
+9. Screen 183: Add task modal
+10. Screen 184: Astrologer report view
+11. Screen 185: AI behavior analysis
+12. Screen 186: Personality report
+13. Screen 187: Communication log
+14. Screen 176: Client card quick view
+15. Screen 177: AI risk alerts panel
+16. Screen 188: Today's sessions
+17. Screen 189: Upcoming sessions
+18. Screen 190: Past sessions
+19. Screen 191: Session calendar
+20. Screen 192: Pre-session view
+21. Screen 193: In-session view
+22. Screen 194: Post-session checklist
+23. Screen 195: Post-session summary form
+24. Screen 196: Assign healing tasks form
+25. Screen 197: Session self-assessment
+26. Screen 198: Confirm astrologer accuracy
+27. Screen 199: Recording playback
+28. Screen 200: Revenue overview
+29. Screen 201: Revenue chart
+30. Screen 202: Sessions breakdown table
+31. Screen 203: Payout history
+32. Screen 204: Request early payout
+33. Screen 205: All reviews list
+34. Screen 206: Rating distribution chart
+35. Screen 207: Respond to review
+36. Screen 208: Report review
+37. Screen 209: Public profile preview
+38. Screen 210: Edit profile form
+39. Screen 211: Availability calendar editor
+40. Screen 212: Qualifications upload
+41. Screen 213: Language & session preferences
+42. Screen 171: New client alert banner
+43. Screen 172: Client negative mood alert
+44. Screen 173: Daily stats cards
+```
+
+#### Phase 9 — Blog/SEO (8 screens)
+```
+Build order:
+1. Screen 21: Blog grid view
+2. Screen 22: Blog list view
+3. Screen 23: Category results
+4. Screen 24: Tag results
+5. Screen 25: Blog post reading view
+6. Screen 26: Comments section
+7. Screen 27: Share dialog
+8. Screen 308: Admin blog post editor (for Phase 14 reuse)
+```
+
+#### Phase 10 — Soul Circle Community (11 screens)
+```
+Build order:
+1. Screen 35: Public preview page
+2. Screen 123: Feed view
+3. Screen 124: Create post composer
+4. Screen 125: Post detail + comments
+5. Screen 130: Community guidelines modal
+6. Screen 126: Create circle/group modal
+7. Screen 127: Circle detail
+8. Screen 128: My circles list
+9. Screen 129: Community search
+10. Screen 131: Report content modal
+11. Screen 132: User profile preview
+12. Screen 133: Empty state
+```
+
+#### Phase 11 — Courses (7 screens)
+```
+Build order:
+1. Screen 28: Public course catalog
+2. Screen 29: Course detail page
+3. Screen 30: Course preview modal
+4. Screen 117: My enrolled courses
+5. Screen 118: Course video player
+6. Screen 119: Quiz/exercise screen
+7. Screen 120: Certificate earned
+8. Screen 121: Lesson notes
+9. Screen 122: Empty state
+```
+
+#### Phase 12 — Soul Shop (11 screens)
+```
+Build order:
+1. Screen 31: Public shop grid
+2. Screen 32: Product detail page
+3. Screen 33: Image zoom modal
+4. Screen 34: Review submission modal
+5. Screen 134: Dashboard shop with wishlist
+6. Screen 135: Cart drawer
+7. Screen 136: Checkout — shipping
+8. Screen 137: Checkout — payment
+9. Screen 138: Order placed success
+10. Screen 139: My orders list
+11. Screen 140: Order detail
+12. Screen 141: Return request
+13. Screen 142: Wishlist page
+```
+
+#### Phase 13 — Payments (5 screens)
+```
+Build order:
+1. Screen 450: Razorpay modal
+2. Screen 451: Stripe modal
+3. Screen 452: Processing loader
+4. Screen 453: Payment success
+5. Screen 454: Payment failed
+6. Screen 159: Payment history table
+7. Screen 160: Invoice detail
+8. Screen 161: Receipt download
+```
+
+#### Phase 14 — Admin Dashboard (110+ screens)
+```
+Build order (grouped by sub-section, build one sub-section at a time):
+
+Group A — Head Office Core (7 screens): 246-252
+Group B — Users Management (8 screens): 253-260
+Group C — Therapists Management (8 screens): 261-268
+Group D — Astrologers Management (5 screens): 269-273
+Group E — Sessions & Therapy (9 screens): 274-283
+Group F — Events (5 screens): 284-288
+Group G — Memberships (5 screens): 289-293
+Group H — NGO (5 screens): 294-298
+Group I — Community Moderation (6 screens): 299-304
+Group J — Blog Management (5 screens): 305-309
+Group K — Courses Management (5 screens): 310-314
+Group L — Shop Management (8 screens): 315-322
+Group M — AI Monitoring (6 screens): 323-328
+Group N — Fraud Alerts (4 screens): 329-332
+Group O — Payments (7 screens): 333-339
+Group P — Complaints (4 screens): 340-343
+Group Q — Corporate (4 screens): 344-347
+Group R — Institutions (4 screens): 348-351
+Group S — Analytics (6 screens): 373-378
+Group T — Audit Log (3 screens): 379-381
+```
+
+#### Phase 15 — Corporate (11 screens)
+```
+Build order: 410-429 (20 screens, build in sub-section order)
+```
+
+#### Phase 16 — Health Tools (20 screens)
+```
+Build order: 98-116 (19 screens, build by tool: mood → meditation → breathing → journal)
+```
+
+#### Phase 17 — Notifications (4 screens)
+```
+Build order: 357-360 + Screen 443 (quick mood), Screen 444 (session reminder)
+```
+
+#### Phase 18 — Landing Animations (8 screens)
+```
+Build order: Screens 1-8 (splash + landing page sections)
+```
+
+#### Phase 19 — About/Careers (12 screens)
+```
+Build order: Screens 9-20
+```
+
+#### Phase 20 — Department Dashboards (18 screens)
+```
+Build order: Screens 382-409 (departments + employee dashboard)
+```
+
+#### Phase 21 — SEO (6 screens)
+```
+Build order: Screens 361-366
+```
+
+#### Phase 22 — Events (6 screens)
+```
+Build order: Screens 36-39 + 162-163
+```
+
+#### Phase 23 — Memberships (6 screens)
+```
+Build order: Screens 40 + 164-167
+```
+
+#### Phase 24 — NGO (already covered in admin, Phase 14)
+
+#### Phase 25 — In-Session AI Monitoring (no new screens — backend + AI processing only)
+
+---
+
 ## Route Structure
 
 ```

@@ -159,7 +159,7 @@ export interface PayoutRequest {
   id: string;
   userId: string;
   amount: number;
-  currency: string;
+  currency: SupportedCurrency;
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'rejected';
   payoutAccountId: string;
   gatewayTransferId?: string;
@@ -181,5 +181,5 @@ export interface EarningsSummary {
   sessionCount: number;
   averagePerSession: number;
   commissionRate: number;
-  currency: string;
+  currency: SupportedCurrency;
 }

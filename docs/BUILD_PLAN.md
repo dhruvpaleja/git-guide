@@ -1106,6 +1106,10 @@ STEP 4 — ONE-CLICK Integration Engine:
     - Support PostgreSQL, MySQL, MSSQL source databases
     - Scheduled sync (hourly/daily) with conflict resolution
     - Ideal for educational institutions with centralized databases
+    - SECURITY: Read-only database credentials ONLY (never write access)
+    - SECURITY: TLS/SSL encrypted connections mandatory
+    - SECURITY: IP whitelisting for database access
+    - SECURITY: All synced data logged in audit trail
 
 STEP 5 — Awareness session booking:
   - Corporates can book group wellness sessions

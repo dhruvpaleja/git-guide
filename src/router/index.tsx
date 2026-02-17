@@ -9,6 +9,7 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { MainLayout, AuthLayout, DashboardLayout } from '@/layouts';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import ProtectedRoute from './ProtectedRoute';
 
 // ---------------------------------------------------------------------------
@@ -21,16 +22,8 @@ const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 // ---------------------------------------------------------------------------
 // Loading fallback shown while a lazy page chunk is being fetched.
 // ---------------------------------------------------------------------------
-function PageLoader() {
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white" />
-    </div>
-  );
-}
-
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
-  return <Suspense fallback={<PageLoader />}>{children}</Suspense>;
+  return <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>;
 }
 
 // ---------------------------------------------------------------------------

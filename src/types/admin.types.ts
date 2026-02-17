@@ -3,6 +3,8 @@
  * Head office, employee tracking, revenue, corporate wellness
  */
 
+import type { UserRole } from './auth.types';
+
 export interface AdminDashboardStats {
   totalUsers: number;
   activeUsers: number;
@@ -20,7 +22,7 @@ export interface AdminDashboardStats {
 export interface EmployeeTracker {
   id: string;
   userId: string;
-  role: 'therapist' | 'astrologer' | 'moderator' | 'support';
+  role: UserRole;
   name: string;
   totalSessions: number;
   completedSessions: number;

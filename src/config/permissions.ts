@@ -33,6 +33,13 @@ const ADMIN_PERMISSIONS: Permission[] = [
   { id: 'access_admin_panel', name: 'Access Admin Panel', description: 'Can access admin panel', resource: 'admin', action: 'access' },
 ];
 
+const ASTROLOGER_ADDITIONAL_PERMISSIONS: Permission[] = [
+  { id: 'view_charts', name: 'View Charts', description: 'Can view kundali charts', resource: 'astrology', action: 'read' },
+  { id: 'write_predictions', name: 'Write Predictions', description: 'Can write predictions', resource: 'astrology', action: 'create' },
+  { id: 'vote_predictions', name: 'Vote on Predictions', description: 'Can vote on predictions', resource: 'astrology', action: 'vote' },
+  { id: 'view_client_birth_data', name: 'View Birth Data', description: 'Can view client birth data', resource: 'client_data', action: 'read' },
+];
+
 const MODERATOR_PERMISSIONS: Permission[] = [
   { id: 'moderate_community', name: 'Moderate Community', description: 'Can moderate community content', resource: 'community', action: 'moderate' },
   { id: 'moderate_comments', name: 'Moderate Comments', description: 'Can moderate comments', resource: 'comments', action: 'moderate' },
@@ -42,6 +49,7 @@ const MODERATOR_PERMISSIONS: Permission[] = [
 export const DEFAULT_PERMISSIONS: Record<UserRole, Permission[]> = {
   user: USER_PERMISSIONS,
   therapist: [...USER_PERMISSIONS, ...THERAPIST_ADDITIONAL_PERMISSIONS],
+  astrologer: [...USER_PERMISSIONS, ...ASTROLOGER_ADDITIONAL_PERMISSIONS],
   admin: ADMIN_PERMISSIONS,
   moderator: MODERATOR_PERMISSIONS,
 };

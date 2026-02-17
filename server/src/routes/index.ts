@@ -1,14 +1,42 @@
 import { Router } from 'express';
 import healthRoutes from './health.js';
+import authRoutes from './auth.js';
+import userRoutes from './users.js';
+import therapyRoutes from './therapy.js';
+import astrologyRoutes from './astrology.js';
+import aiRoutes from './ai.js';
+import healthToolsRoutes from './health-tools.js';
+import courseRoutes from './courses.js';
+import blogRoutes from './blog.js';
+import communityRoutes from './community.js';
+import shopRoutes from './shop.js';
+import paymentRoutes from './payments.js';
+import eventRoutes from './events.js';
+import adminRoutes from './admin.js';
+import corporateRoutes from './corporate.js';
+import careerRoutes from './careers.js';
+import notificationRoutes from './notifications.js';
+import ngoRoutes from './ngo.js';
 
 const router = Router();
 
 router.use(healthRoutes);
-
-// Add feature routes here as they are built:
-// router.use('/auth', authRoutes);
-// router.use('/users', userRoutes);
-// router.use('/blog', blogRoutes);
-// router.use('/courses', courseRoutes);
+router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
+router.use('/therapy', therapyRoutes);
+router.use('/astrology', astrologyRoutes);
+router.use('/ai', aiRoutes);
+router.use('/health-tools', healthToolsRoutes);
+router.use('/courses', courseRoutes);
+router.use('/blog', blogRoutes);
+router.use('/community', communityRoutes);
+router.use('/shop', shopRoutes);
+router.use('/payments', paymentRoutes);
+router.use('/events', eventRoutes);
+router.use('/admin', adminRoutes);
+router.use('/corporate', corporateRoutes);
+router.use('/careers', careerRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/ngo', ngoRoutes);
 
 export default router;

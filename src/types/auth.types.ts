@@ -22,7 +22,7 @@ export interface AuthResponse extends AuthToken {
   user: User;
 }
 
-export type UserRole = 'user' | 'therapist' | 'admin' | 'moderator';
+export type UserRole = 'user' | 'therapist' | 'astrologer' | 'admin' | 'moderator';
 
 export interface User {
   id: string;

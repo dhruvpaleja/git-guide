@@ -16,7 +16,7 @@ export interface RouteConfig {
 }
 
 export const ROUTE_CONFIG: Record<string, RouteConfig> = {
-  // Public routes
+  // ── Public routes ──────────────────────────────────────────────────────
   HOME: {
     path: '/',
     name: 'Home',
@@ -30,12 +30,30 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     isPublic: true,
     showInNavigation: true,
   },
+  CAREERS: {
+    path: '/careers',
+    name: 'Careers',
+    isPublic: true,
+    showInNavigation: false,
+  },
+  CAREER_DETAIL: {
+    path: '/careers/:id',
+    name: 'Job Detail',
+    isPublic: true,
+    showInNavigation: false,
+  },
   BLOG: {
     path: '/blog',
     name: 'Blog',
     isPublic: true,
     showInNavigation: true,
     icon: 'book',
+  },
+  BLOG_POST: {
+    path: '/blog/:slug',
+    name: 'Blog Post',
+    isPublic: true,
+    showInNavigation: false,
   },
   COURSES: {
     path: '/courses',
@@ -44,9 +62,28 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     showInNavigation: true,
     icon: 'graduation-cap',
   },
+  COURSE_DETAIL: {
+    path: '/courses/:id',
+    name: 'Course Detail',
+    isPublic: true,
+    showInNavigation: false,
+  },
+  SHOP: {
+    path: '/shop',
+    name: 'Soul Shop',
+    isPublic: true,
+    showInNavigation: true,
+    icon: 'shopping-bag',
+  },
+  SHOP_PRODUCT: {
+    path: '/shop/:id',
+    name: 'Product',
+    isPublic: true,
+    showInNavigation: false,
+  },
   COMMUNITY: {
     path: '/community',
-    name: 'Community',
+    name: 'Soul Circle',
     isPublic: true,
     showInNavigation: true,
     icon: 'users',
@@ -57,8 +94,34 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     isPublic: true,
     showInNavigation: false,
   },
+  EVENTS: {
+    path: '/events',
+    name: 'Soul Events',
+    isPublic: true,
+    showInNavigation: true,
+    icon: 'calendar',
+  },
+  EVENT_DETAIL: {
+    path: '/events/:slug',
+    name: 'Event Detail',
+    isPublic: true,
+    showInNavigation: false,
+  },
+  MEMBERSHIPS: {
+    path: '/memberships',
+    name: 'Memberships',
+    isPublic: true,
+    showInNavigation: true,
+    icon: 'crown',
+  },
+  NGO_PARTNERSHIPS: {
+    path: '/ngo',
+    name: 'NGO Partnerships',
+    isPublic: true,
+    showInNavigation: false,
+  },
 
-  // Auth routes
+  // ── Auth routes ────────────────────────────────────────────────────────
   LOGIN: {
     path: '/login',
     name: 'Login',
@@ -72,73 +135,124 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     showInNavigation: false,
   },
 
-  // Protected routes - User
+  // ── Onboarding ─────────────────────────────────────────────────────────
+  ONBOARDING: {
+    path: '/onboarding',
+    name: 'Onboarding',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user', 'therapist', 'astrologer', 'admin', 'moderator'],
+  },
+
+  // ── User Dashboard ─────────────────────────────────────────────────────
   DASHBOARD: {
     path: '/dashboard',
     name: 'Dashboard',
     isPublic: false,
     showInNavigation: true,
     icon: 'layout-grid',
-    requiredRole: ['user', 'therapist', 'admin'],
+    requiredRole: ['user', 'therapist', 'astrologer', 'admin', 'moderator'],
+  },
+  DASHBOARD_SESSIONS: {
+    path: '/dashboard/sessions',
+    name: 'My Sessions',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_BOOK_SESSION: {
+    path: '/dashboard/book',
+    name: 'Book Session',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_HEALTH: {
+    path: '/dashboard/health',
+    name: 'Health Tools',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_MEDITATE: {
+    path: '/dashboard/meditate',
+    name: 'Meditation',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_JOURNAL: {
+    path: '/dashboard/journal',
+    name: 'Journal',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_MOOD: {
+    path: '/dashboard/mood',
+    name: 'Mood Tracker',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_COURSES: {
+    path: '/dashboard/courses',
+    name: 'My Courses',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_COMMUNITY: {
+    path: '/dashboard/community',
+    name: 'Soul Circle',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_SHOP: {
+    path: '/dashboard/shop',
+    name: 'Soul Shop',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_AI: {
+    path: '/dashboard/ai',
+    name: 'AI Assistant',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_REPORTS: {
+    path: '/dashboard/reports',
+    name: 'My Reports',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
+  },
+  DASHBOARD_SETTINGS: {
+    path: '/dashboard/settings',
+    name: 'Settings',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user', 'therapist', 'astrologer', 'admin', 'moderator'],
+  },
+  DASHBOARD_COMPLAINTS: {
+    path: '/dashboard/complaints',
+    name: 'Complaints',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['user'],
   },
   USER_PROFILE: {
     path: '/profile',
     name: 'Profile',
     isPublic: false,
-    showInNavigation: true,
-    icon: 'user',
-    requiredRole: ['user', 'therapist', 'admin'],
+    showInNavigation: false,
+    requiredRole: ['user', 'therapist', 'astrologer', 'admin', 'moderator'],
   },
 
-  // Health tools
-  HEALTH_TOOLS: {
-    path: '/health-tools',
-    name: 'Health Tools',
-    isPublic: false,
-    showInNavigation: true,
-    icon: 'heart',
-    requiredRole: ['user', 'therapist', 'admin'],
-  },
-  MOOD_TRACKER: {
-    path: '/health-tools/mood',
-    name: 'Mood Tracker',
-    isPublic: false,
-    showInNavigation: false,
-    requiredRole: ['user', 'therapist', 'admin'],
-  },
-  MEDITATION: {
-    path: '/health-tools/meditation',
-    name: 'Meditation',
-    isPublic: false,
-    showInNavigation: false,
-    requiredRole: ['user', 'therapist', 'admin'],
-  },
-  JOURNAL: {
-    path: '/health-tools/journal',
-    name: 'Journal',
-    isPublic: false,
-    showInNavigation: false,
-    requiredRole: ['user', 'therapist', 'admin'],
-  },
-
-  // Therapy routes
-  THERAPY_SESSIONS: {
-    path: '/therapy',
-    name: 'Therapy Sessions',
-    isPublic: false,
-    showInNavigation: true,
-    icon: 'calendar',
-    requiredRole: ['user', 'therapist', 'admin'],
-  },
-  FIND_THERAPIST: {
-    path: '/therapy/find',
-    name: 'Find Therapist',
-    isPublic: false,
-    showInNavigation: false,
-    requiredRole: ['user'],
-  },
-
-  // Therapist routes
+  // ── Therapist Dashboard ────────────────────────────────────────────────
   THERAPIST_DASHBOARD: {
     path: '/therapist',
     name: 'Therapist Dashboard',
@@ -146,40 +260,219 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     showInNavigation: false,
     requiredRole: ['therapist', 'admin'],
   },
-  THERAPIST_PROFILE: {
-    path: '/therapist/profile',
-    name: 'Therapist Profile',
+  THERAPIST_CLIENTS: {
+    path: '/therapist/clients',
+    name: 'Clients',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['therapist', 'admin'],
+  },
+  THERAPIST_CLIENT_DETAIL: {
+    path: '/therapist/clients/:id',
+    name: 'Client Detail',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['therapist', 'admin'],
+  },
+  THERAPIST_SESSIONS: {
+    path: '/therapist/sessions',
+    name: 'Sessions',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['therapist', 'admin'],
+  },
+  THERAPIST_REVENUE: {
+    path: '/therapist/revenue',
+    name: 'Revenue',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['therapist', 'admin'],
+  },
+  THERAPIST_REVIEWS: {
+    path: '/therapist/reviews',
+    name: 'Reviews',
     isPublic: false,
     showInNavigation: false,
     requiredRole: ['therapist', 'admin'],
   },
 
-  // Admin routes
-  ADMIN: {
+  // ── Astrologer Dashboard ───────────────────────────────────────────────
+  ASTROLOGER_DASHBOARD: {
+    path: '/astrologer',
+    name: 'Astrologer Dashboard',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['astrologer', 'admin'],
+  },
+  ASTROLOGER_ANALYSES: {
+    path: '/astrologer/analyses',
+    name: 'Pending Analyses',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['astrologer', 'admin'],
+  },
+  ASTROLOGER_CLIENTS: {
+    path: '/astrologer/clients',
+    name: 'Client Charts',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['astrologer', 'admin'],
+  },
+  ASTROLOGER_SESSIONS: {
+    path: '/astrologer/sessions',
+    name: 'Direct Consultations',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['astrologer', 'admin'],
+  },
+
+  // ── Admin Dashboard ────────────────────────────────────────────────────
+  ADMIN_DASHBOARD: {
     path: '/admin',
-    name: 'Admin Panel',
+    name: 'Admin Dashboard',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_USERS: {
+    path: '/admin/users',
+    name: 'User Management',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_THERAPISTS: {
+    path: '/admin/therapists',
+    name: 'Therapist Management',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_ASTROLOGERS: {
+    path: '/admin/astrologers',
+    name: 'Astrologer Management',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_REVENUE: {
+    path: '/admin/revenue',
+    name: 'Revenue Reports',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_COMPLAINTS: {
+    path: '/admin/complaints',
+    name: 'Complaints',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_EMERGENCY: {
+    path: '/admin/emergency',
+    name: 'Emergency Flags',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_BLOG: {
+    path: '/admin/blog',
+    name: 'Blog Moderation',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_COURSES: {
+    path: '/admin/courses',
+    name: 'Course Moderation',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_SHOP: {
+    path: '/admin/shop',
+    name: 'Shop Management',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_EMPLOYEES: {
+    path: '/admin/employees',
+    name: 'Employee Tracker',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_SETTINGS: {
+    path: '/admin/settings',
+    name: 'Platform Settings',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_DEPARTMENTS: {
+    path: '/admin/departments',
+    name: 'Departments',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_HEAD_OFFICE: {
+    path: '/admin/head-office',
+    name: 'Head Office',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+  ADMIN_HIRING: {
+    path: '/admin/hiring',
+    name: 'Hiring Management',
     isPublic: false,
     showInNavigation: false,
     requiredRole: ['admin'],
   },
 
-  // Course routes
-  COURSE_DETAIL: {
-    path: '/courses/:id',
-    name: 'Course',
-    isPublic: true,
-    showInNavigation: false,
-  },
-  MY_COURSES: {
-    path: '/my-courses',
-    name: 'My Courses',
+  // ── Employee Dashboard (internal staff) ─────────────────────────────
+  EMPLOYEE_DASHBOARD: {
+    path: '/employee',
+    name: 'Employee Dashboard',
     isPublic: false,
-    showInNavigation: true,
-    icon: 'book-open',
-    requiredRole: ['user', 'therapist', 'admin'],
+    showInNavigation: false,
+    requiredRole: ['therapist', 'astrologer', 'moderator', 'admin'],
+  },
+  EMPLOYEE_TARGETS: {
+    path: '/employee/targets',
+    name: 'My Targets',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['therapist', 'astrologer', 'moderator', 'admin'],
+  },
+  EMPLOYEE_TASKS: {
+    path: '/employee/tasks',
+    name: 'My Tasks',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['therapist', 'astrologer', 'moderator', 'admin'],
+  },
+  EMPLOYEE_TEAM: {
+    path: '/employee/team',
+    name: 'My Team',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['therapist', 'astrologer', 'moderator', 'admin'],
   },
 
-  // 404
+  // ── Corporate ──────────────────────────────────────────────────────────
+  CORPORATE_DASHBOARD: {
+    path: '/corporate',
+    name: 'Corporate Dashboard',
+    isPublic: false,
+    showInNavigation: false,
+    requiredRole: ['admin'],
+  },
+
+  // ── 404 ────────────────────────────────────────────────────────────────
   NOT_FOUND: {
     path: '/404',
     name: 'Not Found',

@@ -391,7 +391,7 @@ a phase are deferred to "MVP+1" (first post-launch iteration).
 - GPT-4o integration for responses
 - System prompt: empathetic wellness assistant, never diagnoses, always suggests professional help for serious issues
 - Conversation memory: last 20 messages per session
-- Crisis keyword detection: list of 50+ keywords/phrases (suicide, self-harm, end my life, etc.)
+- Crisis keyword detection: list of 50+ keywords/phrases — defined in `server/src/config/crisis-keywords.ts` (to be created in Phase 6). Examples: "suicide", "kill myself", "end my life", "self-harm", "want to die", "no reason to live", "overdose", "cut myself", "jump off", "hang myself", "not worth living", "better off dead", "can't go on", "give up on life", "hurt myself"
 - Emergency flag: if crisis detected → immediate notification to admin + show crisis helpline numbers
 - Conversation history stored permanently (per data retention policy)
 - POST /api/v1/ai/chat — send message, get response (SSE streaming)
@@ -990,7 +990,7 @@ Month 3 (traction):
 | Domain (soulyatri.com) | ₹100/month | Already owned |
 | **Total** | **₹8,100 - ₹18,100** | |
 
-**Break-even**: Month 1 (if ₹12K revenue > ₹8-18K cost — tight but achievable)
+**Break-even**: Month 1 at lower cost range (₹12K revenue vs ₹8K cost = ₹4K profit). At upper cost range (₹18K), Month 1 is a ₹6K loss — break-even shifts to Month 2 when revenue scales to ₹36K.
 
 ---
 
@@ -1132,7 +1132,7 @@ WEEK 10: Launch Prep
   Soft launch to beta users
 ```
 
-**Total estimated dev days**: ~52 days (using AI agents, ~30% faster = ~36 effective days)
+**Total estimated dev days**: ~52 days of work spread across 10 calendar weeks. Using AI agents reduces implementation time by ~30% (52 × 0.7 ≈ 36 days of actual coding effort), but calendar time remains 10 weeks due to testing, integration, and iteration between phases.
 
 ---
 

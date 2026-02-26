@@ -91,17 +91,55 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* Text balance for headings */
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
-/* Text balance for headings */
-.text-balance {
-  text-wrap: balance;
+/* Splash Screen - Circle Expand Animation */
+@keyframes circle-expand {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
 }
 
-50% {
-  opacity: 0.5;
-  transform: scale(1.05);
+.animate-circle-expand {
+  animation: circle-expand 4s ease-out infinite;
 }
+
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-2500 {
+  animation-delay: 2.5s;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
 }
 
 @keyframes fade-in-up {

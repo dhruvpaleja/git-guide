@@ -1,15 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import SplashScreen from '@/pages/SplashScreen';
-import LandingPage from '@/pages/sections/landing_page/LandingPage';
+import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import AppRouter from './router';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<SplashScreen />} />
-        <Route path="/home" element={<LandingPage />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

@@ -57,47 +57,45 @@ export default function WellnessSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-[1440px] mx-auto">
-        {/* Title - Figma: text-32px, centered */}
+      <div className="relative z-10 max-w-[1440px] mx-auto px-6 md:px-12">
+        {/* Title */}
         <div
-          className={`text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-          style={{ paddingTop: '230px', transitionDelay: '0.2s' }}
+          className={`text-center pt-[120px] md:pt-[230px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+          style={{ transitionDelay: '0.2s' }}
         >
-          <h2 className="text-[32px] font-semibold text-white tracking-[-0.32px] text-center">
+          <h2 className="text-3xl md:text-[32px] font-semibold text-white tracking-[-0.32px] text-center px-4">
             Wellness Feels Fragmented
           </h2>
         </div>
 
-        {/* Description - Figma: text-14px, w-541, centered, leading-30 */}
+        {/* Description */}
         <div
           className={`text-center mt-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
           style={{ transitionDelay: '0.3s' }}
         >
-          <p className="text-[14px] font-normal text-white leading-[30px] tracking-[-0.14px] mx-auto" style={{ width: '541px' }}>
-            Mental health services are expensive, scarce and stigmatized.<br />
-            Many prefer culturally familiar modalities (astrology, spiritual healers)<br />
+          <p className="text-sm md:text-[14px] font-normal text-white/80 leading-[26px] md:leading-[30px] tracking-[-0.14px] max-w-xl mx-auto px-4">
+            Mental health services are expensive, scarce and stigmatized. <br className="hidden md:block" />
+            Many prefer culturally familiar modalities (astrology, spiritual healers) <br className="hidden md:block" />
             but those services are fragmented, unregulated and often lack measurable outcomes.
           </p>
         </div>
 
-        {/* Model Image - Figma: w-540, h-685, rounded-bl-172 */}
+        {/* Model Image Container */}
         <div
-          className={`flex justify-center mt-12 transition-all duration-[1200ms] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          className={`flex justify-center mt-12 px-4 transition-all duration-[1200ms] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           style={{ transitionDelay: '0.4s' }}
         >
           <div
-            className="relative overflow-hidden"
+            className="relative overflow-hidden w-full max-w-[540px] aspect-[4/5] object-cover"
             style={{
-              width: '540px',
-              height: '685px',
-              borderRadius: '0 0 0 172px',
+              borderRadius: '0 0 0 120px',
             }}
           >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10 pointer-events-none" />
             <img
               src="/images/model-image.png"
               alt="Wellness"
-              className="absolute max-w-none"
-              style={{ width: '138.89%', height: '109.2%', left: '-12.9%', top: '-9.05%' }}
+              className="absolute w-full h-full object-cover scale-110 object-top"
             />
           </div>
         </div>

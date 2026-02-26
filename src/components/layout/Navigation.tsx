@@ -35,23 +35,21 @@ export default function Navigation() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-black/80 backdrop-blur-xl' : 'bg-transparent'
+      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[95%] max-w-[800px] ${isScrolled ? 'top-2' : 'top-6'
         }`}
     >
-      {/* Logo - Figma: 60x50 at top:60 */}
-      <div className="flex justify-center pt-[20px]">
-        <a href="#home">
+      <div className="glass rounded-full px-6 py-3 flex items-center justify-between shadow-2xl border border-white/10">
+        {/* Logo */}
+        <a href="#home" className="shrink-0 transition-transform duration-300 hover:scale-105">
           <img
             src="/images/main-logo.png"
             alt="Soul Yatri"
-            className="w-[60px] h-[50px] object-contain"
+            className="w-[45px] h-[38px] object-contain"
           />
         </a>
-      </div>
 
-      {/* Nav - Figma: 676px wide, h-60, top:160, text-14px */}
-      <div className="flex justify-center pt-[30px] pb-[15px]">
-        <nav className="hidden md:flex items-center gap-0 h-[60px] rounded-[25px]" style={{ width: '676px' }}>
+        {/* Nav Links */}
+        <nav className="hidden md:flex items-center justify-center gap-1 flex-1 px-4">
           {navItems.map((item) => {
             const isActive =
               (item.label === 'Home' && activeSection === 'home') ||
@@ -60,11 +58,10 @@ export default function Navigation() {
               <a
                 key={item.label}
                 href={item.href}
-                className={`flex items-center justify-center h-full text-[14px] tracking-[-0.14px] transition-all duration-300 whitespace-nowrap ${isActive
-                    ? 'text-white font-semibold'
-                    : 'text-white/50 font-normal hover:text-white/70'
+                className={`px-4 py-2 rounded-full text-[13px] tracking-[-0.14px] transition-all duration-300 whitespace-nowrap ${isActive
+                  ? 'text-white font-semibold bg-white/10'
+                  : 'text-white/60 font-normal hover:text-white hover:bg-white/5'
                   }`}
-                style={{ flex: 1 }}
               >
                 {item.label}
               </a>
@@ -73,28 +70,38 @@ export default function Navigation() {
         </nav>
 
         {/* Mobile toggle */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden p-2 text-zinc-400 hover:text-white transition-colors"
-        >
-          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        <div className="md:hidden flex items-center">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 text-zinc-400 hover:text-white transition-colors"
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu dropdown */}
       {isMobileMenuOpen && (
-        <nav className="md:hidden bg-black/95 backdrop-blur-xl border-t border-white/5 px-4 py-3">
-          {navItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-2.5 text-sm text-zinc-400 hover:text-white transition-colors"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <div className="absolute top-full left-0 right-0 mt-2 p-2">
+          <nav className="glass-dark rounded-2xl border border-white/10 p-2 flex flex-col gap-1 shadow-2xl">
+            {navItems.map((item) => {
+              const isActive =
+                (item.label === 'Home' && activeSection === 'home') ||
+                item.href === `#${activeSection}`;
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-4 py-3 rounded-xl text-sm transition-colors ${isActive ? 'bg-white/10 text-white font-semibold' : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                    }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+          </nav>
+        </div>
       )}
     </header>
   );

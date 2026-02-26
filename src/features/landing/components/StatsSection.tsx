@@ -33,20 +33,20 @@ export default function StatsSection() {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-[1440px] mx-auto px-[82px]">
-        {/* Title - Figma: text-32px */}
+      <div className="relative z-10 max-w-[1440px] mx-auto px-6 md:px-12 lg:px-[82px]">
+        {/* Title */}
         <div className="text-center mb-2">
           <h2
-            className={`text-[32px] font-semibold text-white tracking-[-0.32px] leading-[100px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            className={`text-3xl md:text-[32px] font-semibold text-white tracking-[-0.32px] leading-tight md:leading-[100px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
           >
             Soul Yatri Family
           </h2>
         </div>
-        {/* Subtitle - Figma: text-16px, white/50 */}
-        <div className="text-center mb-8">
+        {/* Subtitle */}
+        <div className="text-center mb-12">
           <p
-            className={`text-[16px] font-normal text-white/50 tracking-[-0.16px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            className={`text-sm md:text-[16px] font-normal text-white/50 tracking-[-0.16px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             style={{ transitionDelay: '0.1s' }}
           >
@@ -54,29 +54,31 @@ export default function StatsSection() {
           </p>
         </div>
 
-        {/* Stats row - Figma: 3 columns, each w-300, text-24px, separated by orange lines */}
+        {/* Stats grid relative to screen width */}
         <div
-          className={`flex items-start justify-center mt-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          className={`grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 mt-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
           style={{ transitionDelay: '0.2s' }}
         >
           {stats.map((stat, i) => (
-            <div key={stat.action} className="flex items-start">
-              <div className="text-center" style={{ width: '300px' }}>
-                <h3 className="text-[24px] font-semibold text-white tracking-[-0.24px] mb-2">
+            <div key={stat.action} className="flex flex-col md:flex-row items-center justify-between">
+              <div className="text-center md:w-[280px] lg:w-[300px] mx-auto">
+                <h3 className="text-xl lg:text-[24px] font-semibold text-white tracking-[-0.24px] mb-2">
                   {stat.title}
                 </h3>
-                <p className="text-[16px] font-normal text-white opacity-50 leading-[30px] tracking-[-0.16px] mb-4">
+                <p className="text-sm lg:text-[16px] font-normal text-white opacity-50 leading-[26px] lg:leading-[30px] tracking-[-0.16px] mb-4">
                   {stat.subtitle}
                 </p>
-                <a href="#" className="text-[16px] font-normal text-white/50 text-center tracking-[-0.16px] hover:text-white/70 transition-colors">
+                <a href="#" className="text-sm lg:text-[16px] font-normal text-white/50 text-center tracking-[-0.16px] hover:text-white/70 transition-colors">
                   {stat.action}
                 </a>
               </div>
+
+              {/* Divider on Desktop Only */}
               {i < stats.length - 1 && (
-                <div className="flex items-center justify-center h-[125px] w-0 mt-2">
+                <div className="hidden md:flex items-center justify-center w-8 lg:w-[125px]">
                   <div className="-rotate-90">
-                    <img src="/images/orange-line.svg" alt="" className="block w-[125px] h-0" style={{ borderTop: '3px solid transparent' }} />
+                    <img src="/images/orange-line.svg" alt="" className="block w-20 lg:w-[125px] h-0" style={{ borderTop: '3px solid transparent' }} />
                   </div>
                 </div>
               )}

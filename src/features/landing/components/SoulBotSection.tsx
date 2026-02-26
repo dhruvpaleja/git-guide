@@ -45,100 +45,82 @@ export default function SoulBotSection() {
           </div>
         </div>
 
-        <div className="max-w-[1440px] mx-auto relative h-full">
-          {/* Welcome text - Figma: text-32px at top:80 */}
-          <div className="text-center" style={{ paddingTop: '80px' }}>
-            <h3 className="text-[32px] font-semibold text-white tracking-[-0.32px] mb-3" style={{ width: '420px', margin: '0 auto' }}>
+        <div className="max-w-[1440px] mx-auto relative h-full flex flex-col justify-between py-12 md:py-20 px-4 md:px-[82px] z-10">
+          {/* Welcome text */}
+          <div className="text-center pt-8 md:pt-10">
+            <h3 className="text-2xl md:text-[32px] font-semibold text-white tracking-[-0.32px] mb-3 md:w-[420px] mx-auto">
               Welcome Dhruv Bhai!
             </h3>
-            <p className="text-[16px] font-normal text-white/50 tracking-[-0.16px]" style={{ width: '420px', margin: '0 auto' }}>
+            <p className="text-sm md:text-[16px] font-normal text-white/70 tracking-[-0.16px] md:w-[420px] mx-auto">
               Main hoon yahan — thoda batao, kya ho raha hai?
             </p>
           </div>
 
-          {/* CTA buttons - Figma: h-60 each, rounded-25, top:240 */}
-          <div className="flex justify-center gap-[8px] flex-wrap" style={{ paddingTop: '60px' }}>
-            {/* CTA 1 - Figma: w-204 */}
-            <div className="flex items-center h-[60px] rounded-[25px] border border-white/20 cursor-pointer hover:border-white/40 transition-colors" style={{ width: '204px' }}>
-              <div className="w-[50px] h-[50px] bg-white rounded-[22px] flex items-center justify-center flex-shrink-0 ml-[5px] overflow-hidden">
-                <div className="relative w-[18px] h-[25px]">
-                  <img src="/images/icon-breathe.png" alt="" className="absolute max-w-none" style={{ width: '152%', height: '111%', left: '-26%', top: '-6%' }} />
-                </div>
+          {/* CTA buttons */}
+          <div className="flex justify-center gap-4 flex-wrap pt-8 pb-4">
+            {/* CTA 1 */}
+            <div className="flex items-center h-[60px] rounded-[25px] border border-white/20 cursor-pointer hover:bg-white/5 transition-colors w-full sm:w-auto px-2 pr-6">
+              <div className="w-[50px] h-[50px] bg-white/10 backdrop-blur-sm rounded-[22px] flex items-center justify-center flex-shrink-0">
+                <img src="/images/icon-breathe.png" alt="Breathe" className="w-[20px] h-auto object-contain drop-shadow" />
               </div>
-              <span className="text-[16px] font-normal text-white text-center tracking-[-0.16px] flex-1">Help me breathe</span>
+              <span className="text-[14px] md:text-[16px] font-medium text-white text-center ml-3">Help me breathe</span>
             </div>
 
-            {/* CTA 2 - Figma: w-228 */}
-            <div className="flex items-center h-[60px] rounded-[25px] border border-white/20 cursor-pointer hover:border-white/40 transition-colors" style={{ width: '228px' }}>
-              <div className="w-[50px] h-[50px] bg-white rounded-[22px] flex items-center justify-center flex-shrink-0 ml-[6px] overflow-hidden">
-                <div className="relative w-[21px] h-[25px]">
-                  <img src="/images/icon-anxious.png" alt="" className="absolute max-w-none" style={{ width: '131%', height: '111%', left: '-15%', top: '-11%' }} />
-                </div>
+            {/* CTA 2 */}
+            <div className="flex items-center h-[60px] rounded-[25px] border border-white/20 cursor-pointer hover:bg-white/5 transition-colors w-full sm:w-auto px-2 pr-6">
+              <div className="w-[50px] h-[50px] bg-white/10 backdrop-blur-sm rounded-[22px] flex items-center justify-center flex-shrink-0">
+                <img src="/images/icon-anxious.png" alt="Anxious" className="w-[22px] h-auto object-contain drop-shadow" />
               </div>
-              <span className="text-[16px] font-normal text-white text-center tracking-[-0.32px] flex-1">I am Feeling Anxious</span>
+              <span className="text-[14px] md:text-[16px] font-medium text-white text-center ml-3">I am Feeling Anxious</span>
             </div>
 
-            {/* CTA 3 - Figma: w-305, bg-#080808 */}
-            <div className="flex items-center h-[60px] rounded-[25px] border border-white/20 bg-[#080808] cursor-pointer hover:border-white/40 transition-colors" style={{ width: '305px' }}>
-              <div className="w-[50px] h-[50px] bg-white rounded-[22px] flex items-center justify-center flex-shrink-0 ml-[5px] overflow-hidden">
-                <div className="relative w-[18px] h-[25px]">
-                  <img src="/images/icon-sad.png" alt="" className="absolute max-w-none rounded-b-[5px]" style={{ width: '148%', height: '105%', left: '-22%', top: '-5%' }} />
-                </div>
+            {/* CTA 3 */}
+            <div className="flex items-center h-[60px] rounded-[25px] border border-white/20 bg-[#111] cursor-pointer hover:bg-white/10 transition-colors w-full md:w-auto px-2 pr-6 col-span-full sm:col-span-1">
+              <div className="w-[50px] h-[50px] bg-white/10 backdrop-blur-sm rounded-[22px] flex items-center justify-center flex-shrink-0">
+                <img src="/images/icon-sad.png" alt="Sad" className="w-[20px] h-auto object-contain drop-shadow" />
               </div>
-              <span className="text-[16px] font-normal text-white text-center tracking-[-0.16px] flex-1">Mein Udas Hu Bat Karo Mujhse</span>
+              <span className="text-[14px] md:text-[16px] font-medium text-white text-center ml-3">Mein Udas Hu Bat Karo Mujhse</span>
             </div>
           </div>
 
-          {/* Tabs + Voice Chat - Figma: top:450 */}
-          <div className="flex items-center justify-between px-[82px]" style={{ paddingTop: '60px' }}>
-            <div className="flex items-center gap-0">
-              <div className="flex items-center justify-center h-[60px] text-[16px] font-semibold text-white text-center tracking-[-0.16px]" style={{ width: '82px' }}>
+          {/* Tabs + Voice Chat */}
+          <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-6 md:gap-0 pt-8 border-t border-white/10 md:border-none mt-4 md:mt-0">
+            <div className="flex items-center gap-6 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 hide-scrollbar justify-center md:justify-start">
+              <div className="text-[14px] md:text-[16px] font-semibold text-white whitespace-nowrap cursor-pointer hover:text-white/80">
                 New Chats
               </div>
-              <div className="flex items-center justify-center h-[60px] text-[16px] font-normal text-white/50 text-center tracking-[-0.16px]" style={{ width: '91px' }}>
+              <div className="text-[14px] md:text-[16px] font-normal text-white/50 whitespace-nowrap cursor-pointer hover:text-white">
                 Chat History
               </div>
-              <div className="flex items-center justify-center h-[60px] text-[16px] font-normal text-white/50 text-center tracking-[-0.16px]" style={{ width: '34px' }}>
+              <div className="text-[14px] md:text-[16px] font-normal text-white/50 whitespace-nowrap cursor-pointer hover:text-white">
                 Help
               </div>
             </div>
 
-            {/* Voice Chat - Figma: w-166, h-60, bg-#080808 */}
-            <div className="flex items-center h-[60px] rounded-[25px] border border-white/20 bg-[#080808] cursor-pointer hover:border-white/40 transition-colors" style={{ width: '166px' }}>
-              <div className="w-[50px] h-[50px] bg-white rounded-[22px] flex items-center justify-center flex-shrink-0 ml-[5px] overflow-hidden">
-                <div className="relative w-[17px] h-[25px]">
-                  <img src="/images/icon-mic.png" alt="" className="absolute max-w-none" style={{ width: '147%', height: '100%', left: '-24%', top: '0' }} />
-                </div>
+            {/* Voice Chat */}
+            <div className="flex items-center h-[60px] rounded-[25px] border border-white/20 bg-[#111] cursor-pointer hover:bg-white/10 transition-colors px-2 pr-6 w-full md:w-auto justify-center md:justify-start">
+              <div className="w-[50px] h-[50px] bg-white/10 rounded-[22px] flex items-center justify-center flex-shrink-0">
+                <img src="/images/icon-mic.png" alt="Voice" className="w-[18px] h-auto object-contain drop-shadow" />
               </div>
-              <span className="text-[16px] font-semibold text-white text-center tracking-[-0.16px] flex-1">Voice Chat</span>
+              <span className="text-[15px] md:text-[16px] font-semibold text-white ml-3">Voice Chat</span>
             </div>
           </div>
 
-          {/* Chat space - Figma: h-200, w-1276, rounded-25, bg-#080808, border white/10 */}
-          <div className="px-[82px]" style={{ paddingTop: '20px' }}>
-            <div
-              className="relative rounded-[25px] bg-[#080808] border border-white/10"
-              style={{ height: '200px', width: '1276px', maxWidth: '100%' }}
-            >
-              {/* Robot - Figma: w-80, h-95 */}
-              <div className="absolute flex items-center justify-center" style={{ left: '50px', top: '52px', width: '80px', height: '95px' }}>
-                <div className="-scale-y-100 rotate-180">
-                  <div className="relative" style={{ width: '80px', height: '95px' }}>
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      <img
-                        src="/images/robot.png"
-                        alt="SoulBot"
-                        className="absolute max-w-none"
-                        style={{ width: '133.33%', height: '114.16%', left: '-16.8%', top: '-7.53%' }}
-                      />
-                    </div>
-                  </div>
-                </div>
+          {/* Chat space */}
+          <div className="pt-6 w-full">
+            <div className="relative rounded-[25px] bg-[#111] border border-white/10 min-h-[140px] md:min-h-[200px] w-full flex items-center p-6 md:px-12 flex-col md:flex-row gap-6 md:gap-8">
+              {/* Robot icon */}
+              <div className="w-[60px] md:w-[80px] h-[70px] md:h-[95px] flex-shrink-0 relative">
+                <img
+                  src="/images/robot.png"
+                  alt="SoulBot"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              {/* Chat text - Figma: text-16px, white/50 */}
-              <div className="absolute flex items-center" style={{ left: '180px', top: '0', bottom: '0', right: '50px' }}>
-                <p className="text-[16px] font-normal text-white/50 tracking-[-0.16px]">
-                  {`Mein tumhara dost hu. Mujhse share karo jo tumhare dil mein haii... `}
+              {/* Chat text */}
+              <div className="flex-1">
+                <p className="text-[14px] md:text-[16px] font-normal text-white/70 tracking-[-0.16px] text-center md:text-left leading-relaxed">
+                  {`Mein tumhara dost hu. Mujhse share karo jo tumhare dil mein haii...`}
                 </p>
               </div>
             </div>

@@ -54,36 +54,36 @@ export default function CorporateSection() {
           />
 
           {/* Overlay cards */}
-          <div className="absolute top-6 left-6 right-6 flex gap-3 flex-wrap">
+          <div className="absolute top-[5%] md:top-6 left-[5%] md:left-6 right-[5%] md:right-6 flex flex-col md:flex-row gap-3 overflow-y-auto max-h-[90%] md:overflow-visible">
             {/* Topic */}
             <div
-              className="rounded-[30px] border border-white/60 backdrop-blur-sm flex flex-col items-center justify-center px-5 py-4"
-              style={{ width: '200px', background: 'rgba(255,255,255,0.15)' }}
+              className="rounded-[20px] md:rounded-[30px] border border-white/60 backdrop-blur-md flex flex-col items-center justify-center px-4 md:px-5 py-3 md:py-4 shrink-0 w-full md:w-[200px]"
+              style={{ background: 'rgba(255,255,255,0.25)' }}
             >
-              <h4 className="text-[16px] font-semibold text-black mb-1">Topic</h4>
-              <p className="text-[12px] text-black/80 text-center leading-snug">
+              <h4 className="text-sm md:text-[16px] font-semibold text-black mb-1">Topic</h4>
+              <p className="text-[11px] md:text-[12px] text-black/90 text-center leading-snug">
                 Leadership Mindfulness Training
               </p>
             </div>
 
             {/* Problem */}
             <div
-              className="rounded-[30px] border border-white/60 backdrop-blur-sm flex flex-col items-center justify-center px-5 py-4"
-              style={{ width: '280px', background: 'rgba(255,255,255,0.15)' }}
+              className="rounded-[20px] md:rounded-[30px] border border-white/60 backdrop-blur-md flex flex-col items-center justify-center px-4 md:px-5 py-3 md:py-4 shrink-0 w-full md:w-[280px]"
+              style={{ background: 'rgba(255,255,255,0.25)' }}
             >
-              <h4 className="text-[16px] font-semibold text-black mb-1">Problem</h4>
-              <p className="text-[12px] text-black/80 text-center leading-[1.6]">
+              <h4 className="text-sm md:text-[16px] font-semibold text-black mb-1">Problem</h4>
+              <p className="text-[11px] md:text-[12px] text-black/90 text-center leading-[1.6]">
                 Workplace pressure drives leader burnout and reactive decisions, impacting teams.
               </p>
             </div>
 
             {/* Solution */}
             <div
-              className="rounded-[30px] border border-white/60 backdrop-blur-sm flex flex-col items-center justify-center px-5 py-4 flex-1"
-              style={{ minWidth: '300px', background: 'rgba(255,255,255,0.15)' }}
+              className="rounded-[20px] md:rounded-[30px] border border-white/60 backdrop-blur-md flex flex-col items-center justify-center px-4 md:px-5 py-3 md:py-4 flex-1 md:min-w-[300px]"
+              style={{ background: 'rgba(255,255,255,0.25)' }}
             >
-              <h4 className="text-[16px] font-semibold text-black mb-1">Solution</h4>
-              <p className="text-[12px] text-black/80 text-center leading-[1.6]">
+              <h4 className="text-sm md:text-[16px] font-semibold text-black mb-1">Solution</h4>
+              <p className="text-[11px] md:text-[12px] text-black/90 text-center leading-[1.6]">
                 Soul Yatri's Leadership Mindfulness Training helps leaders build clarity and emotional intelligence through a 4–8 week program.
               </p>
             </div>

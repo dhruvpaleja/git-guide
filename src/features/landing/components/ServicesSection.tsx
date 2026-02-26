@@ -42,23 +42,19 @@ export default function ServicesSection() {
           </p>
         </div>
 
-        {/* Cards - Figma: Therapist 350x450, others 310x410, rounded-25 */}
-        <div className="flex gap-[18px] overflow-x-auto pb-4 hide-scrollbar items-end justify-start">
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-4 pt-4 px-4 items-stretch">
           {services.map((service, i) => {
-            const w = service.featured ? 350 : 310;
-            const h = service.featured ? 450 : 410;
             return (
               <div
                 key={service.title}
-                className={`flex-shrink-0 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                  }`}
+                className={`transition-all duration-700 w-full h-full flex ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                  } ${service.featured ? 'lg:-translate-y-4' : ''}`}
                 style={{ transitionDelay: `${0.15 + i * 0.08}s` }}
               >
                 <div
-                  className="relative overflow-hidden rounded-[25px] group cursor-pointer bg-white"
+                  className="relative overflow-hidden rounded-[25px] group cursor-pointer bg-white w-full h-[400px] md:h-[450px] shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col"
                   style={{
-                    width: `${w}px`,
-                    height: `${h}px`,
                     boxShadow: service.featured ? '0px 30px 60px 0px rgba(0,0,0,0.25)' : 'none',
                   }}
                 >
@@ -71,42 +67,22 @@ export default function ServicesSection() {
                     />
                   </div>
 
-                  {/* Gradient overlays (3 layers like Figma) */}
-                  <div
-                    className="absolute left-0 right-0 rounded-b-[25px] pointer-events-none"
-                    style={{
-                      bottom: 0,
-                      height: service.featured ? '240px' : '215px',
-                    }}
-                  >
-                    <img src="/images/gradient-overlay.png" alt="" className="absolute inset-0 w-full h-full object-cover rounded-b-[25px]" />
-                  </div>
-                  <div
-                    className="absolute left-0 right-0 rounded-b-[25px] pointer-events-none"
-                    style={{
-                      bottom: 0,
-                      height: service.featured ? '240px' : '215px',
-                    }}
-                  >
-                    <img src="/images/gradient-overlay.png" alt="" className="absolute inset-0 w-full h-full object-cover rounded-b-[25px]" />
-                  </div>
+                  {/* Gradient overlays with CSS instead of images for better scaling */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
 
-                  {/* Title/Desc - Figma: text-24px title, text-14px desc */}
-                  <div className="absolute left-[15px] right-[15px]" style={{ bottom: service.featured ? '80px' : '75px' }}>
-                    <h3 className="text-[24px] font-semibold text-white text-center tracking-[-0.24px] mb-1">
+                  {/* Content Container (Pushed to bottom) */}
+                  <div className="relative z-10 flex flex-col justify-end h-full p-5 lg:p-6 text-white pb-20">
+                    <h3 className="text-xl md:text-[24px] font-semibold text-center tracking-[-0.24px] mb-2 drop-shadow-md">
                       {service.title}
                     </h3>
-                    <p className="text-[14px] font-normal text-white text-center leading-[30px] tracking-[-0.14px]">
+                    <p className="text-sm md:text-[14px] font-normal text-center leading-relaxed tracking-[-0.14px] text-white/90 drop-shadow-sm">
                       {service.description}
                     </p>
                   </div>
 
-                  {/* CTA - Figma: h-60, rounded-22, bg-white, text-16px */}
-                  <div
-                    className="absolute left-[15px] bottom-[15px]"
-                    style={{ width: service.featured ? '320px' : '280px' }}
-                  >
-                    <button className="w-full h-[60px] bg-white rounded-[22px] text-[16px] font-semibold text-black text-center tracking-[-0.16px] leading-[30px] transition-all duration-300 hover:bg-zinc-100">
+                  {/* CTA Button pinned to bottom */}
+                  <div className="absolute left-6 right-6 bottom-6">
+                    <button className="w-full h-[50px] md:h-[60px] bg-white rounded-[22px] text-sm md:text-[16px] font-semibold text-black text-center tracking-[-0.16px] transition-all duration-300 hover:bg-zinc-100 hover:scale-[1.02] shadow-sm">
                       {service.buttonText}
                     </button>
                   </div>

@@ -1,12 +1,12 @@
-import HeroSection from '@/sections/HeroSection';
-import StatsSection from '@/sections/StatsSection';
-import WellnessSection from '@/sections/WellnessSection';
-import ServicesSection from '@/sections/ServicesSection';
-import HowItWorksSection from '@/sections/HowItWorksSection';
-import SoulBotSection from '@/sections/SoulBotSection';
-import CorporateSection from '@/sections/CorporateSection';
-import FAQSection from '@/sections/FAQSection';
-import CTASection from '@/sections/CTASection';
+import HeroSection from '@/features/landing/components/HeroSection';
+import StatsSection from '@/features/landing/components/StatsSection';
+import WellnessSection from '@/features/landing/components/WellnessSection';
+import ServicesSection from '@/features/landing/components/ServicesSection';
+import HowItWorksSection from '@/features/landing/components/HowItWorksSection';
+import SoulBotSection from '@/features/landing/components/SoulBotSection';
+import CorporateSection from '@/features/landing/components/CorporateSection';
+import FAQSection from '@/features/landing/components/FAQSection';
+import CTASection from '@/features/landing/components/CTASection';
 
 export default function LandingPage() {
   return (

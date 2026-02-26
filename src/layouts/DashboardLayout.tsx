@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Navigation from '@/sections/Navigation';
+import Navigation from '@/components/layout/Navigation';
 
 export default function DashboardLayout() {
   return (

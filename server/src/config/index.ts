@@ -10,6 +10,6 @@ export const config = {
     origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   },
   api: {
-    prefix: '/api',
+    prefix: '/api/v1',
   },
 } as const;

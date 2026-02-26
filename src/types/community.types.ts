@@ -64,3 +64,51 @@ export interface CommunityCategory {
   threadsCount: number;
   postsCount: number;
 }
+
+// ── ML-Based Content Moderation ──────────────────────────────────────────
+
+/** AI auto-flagging system for community content at scale */
+export interface ContentModerationResult {
+  id: string;
+  contentId: string;
+  contentType: 'thread' | 'post' | 'comment' | 'profile-bio';
+  /** NLP analysis */
+  toxicityScore: number; // 0-1
+  selfHarmScore: number; // 0-1
+  hateSpeechScore: number; // 0-1
+  spamScore: number; // 0-1
+  sexualContentScore: number; // 0-1
+  violenceScore: number; // 0-1
+  /** Overall decision */
+  autoDecision: 'approve' | 'flag-for-review' | 'auto-remove';
+  confidence: number; // 0-1
+  /** If flagged, which rules triggered */
+  triggeredRules: ModerationRule[];
+  /** Human review (if flagged) */
+  humanReviewStatus: 'pending' | 'reviewed' | 'not-needed';
+  humanReviewedBy?: string;
+  humanDecision?: 'approve' | 'remove' | 'warn-user' | 'ban-user';
+  reviewedAt?: Date;
+  analyzedAt: Date;
+}
+
+export interface ModerationRule {
+  rule: string;
+  category: 'toxicity' | 'self-harm' | 'hate-speech' | 'spam' | 'sexual' | 'violence' | 'misinformation' | 'personal-info';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  matchedText?: string;
+}
+
+export interface ContentReport {
+  id: string;
+  reporterId: string;
+  contentId: string;
+  contentType: 'thread' | 'post' | 'comment';
+  reason: 'spam' | 'harassment' | 'self-harm' | 'hate-speech' | 'misinformation' | 'inappropriate' | 'other';
+  description?: string;
+  status: 'pending' | 'reviewed' | 'action-taken' | 'dismissed';
+  reviewedBy?: string;
+  actionTaken?: 'removed' | 'warned' | 'banned' | 'no-action';
+  reportedAt: Date;
+  reviewedAt?: Date;
+}

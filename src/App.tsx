@@ -1,12 +1,15 @@
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import AppRouter from './router';
+import SmoothScrollProvider from './components/layout/SmoothScrollProvider';
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <AppRouter />
+        <SmoothScrollProvider>
+          <AppRouter />
+        </SmoothScrollProvider>
       </AuthProvider>
     </ThemeProvider>
   );

@@ -1,18 +1,87 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
+  const container = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
+  useGSAP(() => {
+    let mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1024px)", () => {
+      // Desktop: Full pinning and scale out
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top top",
+          end: "+=120%", // Slightly reduced scrub distance for better feel
+          pin: true,
+          scrub: 1,
+        }
+      });
+
+      tl.to(imageRef.current, {
+        scale: 1.5,
+        y: 100, // Move down slightly to stay centered while scaling
+        opacity: 0,
+        ease: "power2.inOut",
+      }, 0);
+
+      tl.to(textRef.current, {
+        opacity: 0,
+        y: -50,
+        ease: "power2.in",
+      }, 0);
+    });
+
+    mm.add("(min-width: 768px) and (max-width: 1023px)", () => {
+      // Tablet: Parallax only, no pinning to avoid swipe-trap
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        }
+      });
+
+      tl.to(imageRef.current, {
+        y: 200,
+        opacity: 0,
+        ease: "none",
+      }, 0);
+
+      tl.to(textRef.current, {
+        y: -100,
+        opacity: 0,
+        ease: "none",
+      }, 0);
+    });
+
+    // Mobile (<768px): No GSAP scroll animation needed. We let normal document scrolling take over.
+    // Framer motion handles the entrance.
+
+    return () => mm.revert(); // Cleanup
+  }, { scope: container });
+
   return (
     <section
       id="home"
+      ref={container}
       className="relative overflow-hidden bg-black"
-      style={{ height: '900px' }}
+      style={{ height: '100vh', minHeight: '900px' }}
     >
       {/* Grey Ellipse - Figma: size-500, top:-250, centered */}
       <div
@@ -30,80 +99,97 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Hero image container - updated for responsiveness and clarity */}
+      {/* Hero image container - pinned by GSAP */}
       <div
-        className={`absolute inset-0 flex items-center justify-center transition-all duration-[1500ms] ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        className={`absolute inset-0 flex items-end justify-center pointer-events-none transition-all duration-[1500ms] ${isVisible ? 'opacity-100' : 'opacity-0 scale-95'
           }`}
-        style={{ transitionDelay: '0.2s' }}
+        style={{ transitionDelay: '0.2s', paddingBottom: '0' }}
       >
-        <div className="relative w-full max-w-[800px] aspect-square md:w-[700px] md:h-[700px] mx-auto mt-20 md:mt-[140px]">
-          {/* Suttle background glow behind image instead of blurring the image itself */}
-          <div className="absolute inset-0 bg-white/5 rounded-full blur-3xl" />
-          <div
-            className="relative w-full h-full rounded-b-full overflow-hidden flex justify-center items-end"
+        <div className="relative w-full h-[600px] md:h-[800px] flex items-end justify-center mt-20 md:mt-0">
+          {/* Subtle background glow behind image instead of blurring the image itself */}
+          <div className="absolute inset-0 bg-orange-500/10 rounded-full blur-[100px] w-[500px] h-[500px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+
+          {/* Monk image with bottom fade mask */}
+          <img
+            ref={imageRef}
+            src="/images/hero-monk.png"
+            alt="Soul Yatri Hero"
+            className="relative z-10 w-auto h-full max-h-[85vh] object-contain object-bottom pointer-events-auto origin-bottom"
             style={{
-              borderRadius: '0 0 50% 50%',
+              maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)',
             }}
-          >
-            <img
-              src="/images/hero-image.png"
-              alt="Soul Yatri Hero"
-              className="relative w-[120%] max-w-none object-cover sm:w-[146%]"
-              style={{ objectPosition: 'center bottom' }}
-            />
-          </div>
+          />
         </div>
       </div>
 
-      {/* Content - max 1440px centered */}
-      <div className="relative z-10 max-w-[1440px] mx-auto h-full flex flex-col justify-end pb-32 px-6 md:px-12 lg:block lg:pb-0 lg:px-0">
-        {/* Title "Your Journey Begins" */}
+      {/* Text Content */}
+      <div ref={textRef} className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-6 md:px-12 pointer-events-none flex flex-col justify-start lg:justify-center lg:block pt-32 sm:pt-40 lg:pt-0 pb-72 sm:pb-0">
+
+        {/* Title "Your Journey Begins." */}
         <div
-          className={`lg:absolute transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          style={{
-            top: '390px',
-            left: '6.67%',
-            transitionDelay: '0.4s',
-          }}
+          className={`transition-all duration-700 lg:absolute lg:top-[390px] lg:left-[6.67%] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ transitionDelay: '0.4s' }}
         >
-          <h1
-            className="text-4xl md:text-5xl lg:text-[65px] font-semibold text-white lg:leading-[100px] tracking-[-0.65px] text-center lg:text-left mb-6 lg:mb-0"
+          <motion.h1
+            className="text-4xl sm:text-5xl lg:text-[72px] font-medium text-white lg:leading-[1.2] tracking-[-0.02em] text-center lg:text-left drop-shadow-md"
+            variants={{
+              hidden: { opacity: 1 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.05, delayChildren: 0.6 }
+              }
+            }}
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
           >
-            Your Journey<br className="hidden lg:block" />
-            <span className="lg:hidden"> </span>
-            Begins
-          </h1>
+            {"Your ".split("").map((char, i) => (
+              <motion.span key={`w1-${i}`} variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>{char}</motion.span>
+            ))}
+            <br className="hidden lg:block" />
+
+            {"Journey Begins.".split("").map((char, i) => (
+              <motion.span key={`w2-${i}`} variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>{char}</motion.span>
+            ))}
+            <motion.span
+              animate={{ opacity: [1, 0] }}
+              transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+              className="inline-block w-[2px] h-[70px] bg-white/70 align-middle ml-1 -translate-y-2 hidden lg:inline-block"
+            />
+            <motion.span
+              animate={{ opacity: [1, 0] }}
+              transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+              className="inline-block w-[2px] h-[36px] bg-white/70 align-middle ml-1 -translate-y-1 lg:hidden"
+            />
+          </motion.h1>
         </div>
 
-        {/* Content Right Side (Description + CTA) */}
+        {/* Content Right Side (Description) */}
         <div
-          className={`lg:absolute flex flex-col items-center lg:items-end transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          style={{
-            top: '340px',
-            right: '6.67%',
-            transitionDelay: '0.5s',
-          }}
+          className={`flex flex-col items-center lg:items-end transition-all duration-700 lg:absolute lg:top-[340px] lg:right-[6.67%] z-30 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ transitionDelay: '0.5s' }}
         >
-          <p
-            className="text-sm md:text-base font-normal text-white/50 text-center lg:text-right leading-[30px] tracking-[-0.16px] max-w-sm mx-auto lg:mx-0 lg:w-[320px] mb-8 lg:mb-8"
-          >
+          <p className="text-sm sm:text-[15px] font-normal text-white/50 text-center lg:text-right leading-[26px] sm:leading-[30px] tracking-[-0.01em] max-w-sm sm:max-w-md mx-auto lg:mx-0 lg:w-[350px] mb-6 sm:mb-8 drop-shadow-sm px-4 lg:px-0">
             A Tech-enabled Mental wellbeing platform <br className="hidden lg:block" />
-            blending modern Psychology, Therapy & <br className="hidden lg:block" />
-            Traditional Indian Astrology.
+            blending modern Psychology, Coaching & <br className="hidden lg:block" />
+            Traditional Indian wisdom.
           </p>
+        </div>
 
-          <button
-            className="h-[60px] w-[200px] rounded-[25px] text-[14px] font-semibold text-white tracking-[-0.14px] text-center transition-all duration-300 hover:scale-105 hover:bg-white/10 hover:border-white/40 border border-white/20 bg-black/40 backdrop-blur-sm"
-          >
-            Start Your Healing
+        {/* CTA Button Centered over the Monk at bottom */}
+        <div
+          className={`absolute bottom-32 sm:bottom-20 lg:bottom-[15%] left-1/2 -translate-x-1/2 z-50 transition-all duration-[1000ms] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          style={{ transitionDelay: '1.2s' }}
+        >
+          <button className="h-[52px] sm:h-[56px] px-8 sm:px-10 rounded-[28px] text-[13px] sm:text-[14px] font-medium text-white/90 tracking-[0.02em] text-center transition-all duration-300 hover:scale-105 border border-white/10 bg-[#311d17]/60 hover:bg-[#311d17]/90 backdrop-blur-xl pointer-events-auto shadow-[0_0_20px_rgba(49,29,23,0.5)]">
+            Start Your Journey
           </button>
         </div>
+
       </div>
 
       {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none z-10" />
     </section>
   );
 }

@@ -18,7 +18,7 @@ description: Project restructure plan for Soul Yatri - enterprise-grade 2000+ pa
 | `asset_2.png` | `images/wellness-silhouette.png` |
 | `asset_3.jpg` | `images/service-breathwork.jpg` |
 | `asset_4.jpg` | `images/service-therapist.jpg` |
-| `asset_5.jpg` | `images/service-counsellor.jpg` |
+| `asset_5.jpg` | `images/service-counsellor.jpg` |e
 | `asset_6.jpg` | `images/service-healer.jpg` |
 | `asset_7.jpg` | `images/feature-guided-plan.jpg` |
 | `asset_8.jpg` | `images/feature-1on1-sessions.jpg` |

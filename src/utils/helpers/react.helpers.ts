@@ -2,7 +2,7 @@
  * React Helper Functions
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Check if component is mounted

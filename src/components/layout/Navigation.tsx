@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const navItems = [
-  { label: 'Home', href: '#home' },
-  { label: 'About Soul Yatri', href: '#about' },
-  { label: 'Business', href: '#business' },
-  { label: 'Blogs', href: '#blog' },
-  { label: 'Login', href: '#login' },
-  { label: 'Signup', href: '#signup' },
+  { label: 'Home', href: '#home', isRoute: false },
+  { label: 'About Soul Yatri', href: '#about', isRoute: false },
+  { label: 'Business', href: '#business', isRoute: false },
+  { label: 'Blogs', href: '#blog', isRoute: false },
+  { label: 'Login', href: '/login', isRoute: true },
+  { label: 'Signup', href: '/signup', isRoute: true },
 ];
 
 export default function Navigation() {
@@ -54,6 +55,18 @@ export default function Navigation() {
             const isActive =
               (item.label === 'Home' && activeSection === 'home') ||
               item.href === `#${activeSection}`;
+            if (item.isRoute) {
+              return (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className="px-4 py-2 rounded-full text-[13px] tracking-[-0.14px] transition-all duration-300 whitespace-nowrap text-white/60 font-normal hover:text-white hover:bg-white/5"
+                >
+                  {item.label}
+                </Link>
+              );
+            }
+
             return (
               <a
                 key={item.label}
@@ -88,6 +101,19 @@ export default function Navigation() {
               const isActive =
                 (item.label === 'Home' && activeSection === 'home') ||
                 item.href === `#${activeSection}`;
+              if (item.isRoute) {
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block px-4 py-3 rounded-xl text-sm transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
+                  >
+                    {item.label}
+                  </Link>
+                );
+              }
+
               return (
                 <a
                   key={item.label}

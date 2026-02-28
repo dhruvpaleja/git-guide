@@ -13,7 +13,7 @@ This guide will help you get up and running with the Soul Yatri enterprise codeb
 ### 1. Clone Repository
 ```bash
 git clone https://github.com/dhruvpaleja/soul-yatri-website.git
-cd soul-yatri-website/app
+cd soul-yatri-website
 ```
 
 ### 2. Install Dependencies
@@ -28,7 +28,7 @@ cp .env.example .env.local
 
 Edit `.env.local` with your configuration:
 ```env
-VITE_API_URL=http://localhost:3000/api
+VITE_API_URL=http://localhost:3000/api/v1
 VITE_ENABLE_ANALYTICS=false
 VITE_SENTRY_DSN=
 ```
@@ -169,9 +169,10 @@ npm run type-check
 
 ### Running Tests
 ```bash
-npm test            # Run all tests
-npm test --watch    # Run tests in watch mode
-npm test --coverage # Generate coverage report
+# No test script is configured yet in package.json
+# Use type/lint checks as quality gate for now:
+npm run type-check
+npm run lint:check
 ```
 
 ### Writing Tests

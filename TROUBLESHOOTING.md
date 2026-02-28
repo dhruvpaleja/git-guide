@@ -201,10 +201,10 @@ Network error
 **Solution**:
 ```bash
 # Check API URL in .env.local
-VITE_API_URL=http://localhost:3000/api
+VITE_API_URL=http://localhost:3000/api/v1
 
 # Verify backend is running
-curl http://localhost:3000/api/health
+curl http://localhost:3000/api/v1/health
 
 # Check network in DevTools (F12)
 # Look for failed requests and status codes

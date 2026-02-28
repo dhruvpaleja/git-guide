@@ -62,23 +62,44 @@ class ApiService {
       try {
         const response = await fetch(`${this.baseUrl}${endpoint}`, {
           method,
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
+            ...(localStorage.getItem('auth_token')
+              ? { Authorization: `Bearer ${localStorage.getItem('auth_token')}` }
+              : {}),
             ...mergedConfig.headers,
           },
           body: data ? JSON.stringify(data) : undefined,
           signal: mergedConfig.cancelToken,
         });
 
+        const result = await response.json();
+
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          return {
+            success: false,
+            error: {
+              code: result?.error?.code || `HTTP_${response.status}`,
+              message: result?.error?.message || `HTTP ${response.status}: ${response.statusText}`,
+              details: result?.error?.details,
+            },
+            timestamp: result?.timestamp || new Date().toISOString(),
+          };
         }
 
-        const result = await response.json();
+        if (result?.success === true) {
+          return {
+            success: true,
+            data: result.data as T,
+            timestamp: result.timestamp || new Date().toISOString(),
+          };
+        }
+
         return {
           success: true,
-          data: result,
-          timestamp: new Date().toISOString(),
+          data: result as T,
+          timestamp: result?.timestamp || new Date().toISOString(),
         };
       } catch (error) {
         lastError = error instanceof Error ? error : new Error('Unknown error');

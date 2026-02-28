@@ -16,8 +16,9 @@
 
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { MainLayout } from '@/layouts';
+import { DashboardLayout, MainLayout } from '@/layouts';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import ProtectedRoute from './ProtectedRoute';
 
 // ---------------------------------------------------------------------------
 // Lazy-loaded pages
@@ -25,6 +26,11 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 const SplashScreen = lazy(() => import('@/pages/SplashScreen'));
 const LandingPage = lazy(() => import('@/pages/LandingPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
+
+// Auth Pages (Phase 1 MVP)
+const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
+const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
+const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 
 // ---------------------------------------------------------------------------
 // Suspense wrapper for lazy pages
@@ -45,6 +51,44 @@ const router = createBrowserRouter([
         <SplashScreen />
       </Lazy>
     ),
+  },
+
+  // Auth pages
+  {
+    path: '/login',
+    element: (
+      <Lazy>
+        <LoginPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/signup',
+    element: (
+      <Lazy>
+        <SignupPage />
+      </Lazy>
+    ),
+  },
+
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: '/dashboard',
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <Lazy>
+                <DashboardPage />
+              </Lazy>
+            ),
+          },
+        ],
+      },
+    ],
   },
 
   // Public pages with nav + footer

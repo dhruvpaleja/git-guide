@@ -35,6 +35,7 @@ const BlogsPage = lazy(() => import('@/pages/BlogsPage'));
 const BlogPostPage = lazy(() => import('@/pages/BlogPostPage'));
 const CoursesPage = lazy(() => import('@/pages/CoursesPage'));
 const StudentCounsellingPage = lazy(() => import('@/pages/StudentCounsellingPage'));
+const WorkshopDemoPage = lazy(() => import('@/pages/WorkshopDemoPage'));
 
 // Auth Pages (Phase 1 MVP)
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
@@ -189,6 +190,14 @@ const router = createBrowserRouter([
         element: (
           <Lazy>
             <StudentCounsellingPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'business/workshop-demo',
+        element: (
+          <Lazy>
+            <WorkshopDemoPage />
           </Lazy>
         ),
       },

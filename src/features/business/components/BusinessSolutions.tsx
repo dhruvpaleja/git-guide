@@ -26,6 +26,7 @@ const solutionsData = [
         description: 'Workshops & Trainings deliver live, expert-driven sessions on managing stress, reducing anxiety, and strengthening mental fitness. Designed for teams, these programs enhance workplace well-being and performance.',
         imagePath: '/images/feature-sessions.png',
         imagePosition: 'left' as const,
+        linkTo: '/business/workshop-demo',
     }
 ];
 

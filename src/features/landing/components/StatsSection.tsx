@@ -236,9 +236,9 @@ export default function StatsSection() {
         </div>
 
         {/* Stats Row — 3 cards with 2 golden separators */}
-        <div className="flex flex-col md:flex-row items-center justify-center">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-0">
           {/* Card 1 */}
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex justify-center w-full">
             <StatCard stat={stats[0]} isVisible={isVisible} delay={0.2} />
           </div>
 

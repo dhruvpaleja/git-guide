@@ -24,6 +24,9 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 // ---------------------------------------------------------------------------
 const SplashScreen = lazy(() => import('@/pages/SplashScreen'));
 const LandingPage = lazy(() => import('@/pages/LandingPage'));
+const AboutPage = lazy(() => import('@/pages/AboutPage'));
+const BusinessPage = lazy(() => import('@/pages/BusinessPage'));
+const CorporatePage = lazy(() => import('@/pages/CorporatePage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 // ---------------------------------------------------------------------------
@@ -56,6 +59,30 @@ const router = createBrowserRouter([
         element: (
           <Lazy>
             <LandingPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'about',
+        element: (
+          <Lazy>
+            <AboutPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'business',
+        element: (
+          <Lazy>
+            <BusinessPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'business/corporate',
+        element: (
+          <Lazy>
+            <CorporatePage />
           </Lazy>
         ),
       },

@@ -7,13 +7,13 @@ interface CourseCardProps {
 
 export default function CourseCard({ course, highlighted = false }: CourseCardProps) {
   return (
-    <div className="mx-auto w-full max-w-[395px]">
+    <div className="mx-auto w-full">
       <article
-        className={`relative aspect-[395/500] overflow-hidden rounded-[22px] border border-black/20 sm:rounded-[25px] ${
-          highlighted ? 'shadow-[0_30px_60px_rgba(0,0,0,0.3)]' : ''
+        className={`group relative aspect-[395/500] overflow-hidden rounded-[22px] border border-black/20 transition-all duration-300 sm:rounded-[25px] ${
+          highlighted ? 'shadow-[0_30px_60px_rgba(0,0,0,0.3)]' : 'hover:shadow-[0_10px_40px_rgba(0,0,0,0.1)]'
         }`}
       >
-        <img src={course.image} alt={course.title} className="h-full w-full object-cover" />
+        <img src={course.image} alt={course.title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
 
         <img
           src="/images/courses/card-gradient.png"
@@ -42,10 +42,10 @@ export default function CourseCard({ course, highlighted = false }: CourseCardPr
 
       <button
         type="button"
-        className={`mx-auto mt-5 h-[52px] w-full max-w-[220px] rounded-[22px] border text-[14px] font-semibold tracking-[-0.14px] transition-colors sm:mt-[30px] sm:h-[60px] sm:rounded-[25px] sm:text-[16px] sm:tracking-[-0.16px] ${
+        className={`mx-auto mt-5 h-[52px] w-full max-w-[220px] rounded-[22px] border text-[14px] font-semibold tracking-[-0.14px] transition-all duration-300 sm:mt-[30px] sm:h-[60px] sm:rounded-[25px] sm:text-[16px] sm:tracking-[-0.16px] ${
           highlighted
-            ? 'border-white bg-[#080808] text-white shadow-[0_10px_60px_rgba(0,0,0,0.3)] hover:bg-black'
-            : 'border-black/20 bg-white text-black hover:bg-black/5'
+            ? 'border-white bg-[#080808] text-white shadow-[0_10px_60px_rgba(0,0,0,0.3)] hover:bg-black hover:shadow-[0_15px_80px_rgba(0,0,0,0.4)]'
+            : 'border-black/20 bg-white text-black hover:bg-black/5 hover:shadow-[0_5px_20px_rgba(0,0,0,0.1)]'
         }`}
       >
         Enroll Now

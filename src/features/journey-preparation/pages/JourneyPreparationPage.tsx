@@ -16,7 +16,7 @@ interface JourneyPreparationPageProps {
 
 export default function JourneyPreparationPage({
   onComplete,
-  autoAdvanceDelay = 5000, // 5 seconds to view unblur animations + static content
+  autoAdvanceDelay = 5600, // lets users feel the full immersive sequence before dashboard
 }: JourneyPreparationPageProps) {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
@@ -47,13 +47,23 @@ export default function JourneyPreparationPage({
 
   return (
     <div
-      className={`w-screen h-screen bg-white relative overflow-hidden transition-opacity duration-500 ${
+      className={`w-screen h-screen bg-white relative overflow-hidden transition-opacity duration-500 animate-immersive-scene-in ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
       onClick={handleSkip}
     >
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0)_0%,rgba(0,0,0,0.03)_100%)]" />
+
       {/* Mandala Background - static, no animation */}
       <MandalaBackground />
+
+      {/* Ambient center glow for meditative depth */}
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+        <div className="w-[760px] h-[760px] rounded-full animate-ambient-breathe bg-[radial-gradient(circle,rgba(255,255,255,0.5)_0%,rgba(255,255,255,0.25)_32%,rgba(255,255,255,0)_70%)]" />
+      </div>
+
+      {/* Subtle grain layer for cinematic texture */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.06] animate-grain-shift bg-[linear-gradient(0deg,transparent_24%,rgba(0,0,0,0.09)_25%,rgba(0,0,0,0.09)_26%,transparent_27%,transparent_74%,rgba(0,0,0,0.09)_75%,rgba(0,0,0,0.09)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(0,0,0,0.08)_25%,rgba(0,0,0,0.08)_26%,transparent_27%,transparent_74%,rgba(0,0,0,0.08)_75%,rgba(0,0,0,0.08)_76%,transparent_77%,transparent)] [background-size:4px_4px]" />
 
       {/* Journey Stage Cards - exact Figma positioning */}
       <div className="relative w-full h-full pointer-events-none">
@@ -82,7 +92,7 @@ export default function JourneyPreparationPage({
               key={i}
               className="w-2 h-2 rounded-full bg-black"
               style={{
-                animation: `pulse ${1.4 + i * 0.2}s ease-in-out infinite`,
+                animation: `pulse-soft ${1.4 + i * 0.2}s ease-in-out infinite`,
                 animationDelay: `${i * 0.2}s`,
               }}
             />

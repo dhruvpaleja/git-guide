@@ -39,7 +39,7 @@ export default function JourneyCard({
       gradient: 'linear-gradient(104.9699877734434deg, rgb(255, 255, 255) 50.116%, rgb(249, 249, 249) 100%)',
       borderColor: 'rgba(0,0,0,0.3)',
       opacity: 0.4,
-      animationDelay: '0.8s',
+      animationDelay: '1.1s',
     },
     bottom: {
       left: '1050px',
@@ -51,25 +51,30 @@ export default function JourneyCard({
       gradient: 'linear-gradient(104.67779760411315deg, rgb(255, 255, 255) 50.116%, rgb(249, 249, 249) 100%)',
       borderColor: 'rgba(0,0,0,0.2)',
       opacity: 0.3,
-      animationDelay: '1.6s',
+      animationDelay: '2.3s',
     },
   };
 
   const data = positionData[position];
   const shouldUnblur = position !== 'top'; // Cards 2 & 3 unblur
+  const floatAnimation =
+    position === 'middle'
+      ? 'card-float-slower 8s ease-in-out 0.5s infinite'
+      : 'card-float-slow 6.5s ease-in-out 0.35s infinite';
+  const combinedAnimation = shouldUnblur
+    ? `unblur-in 1.2s ease-out ${data.animationDelay} forwards, ${floatAnimation}`
+    : floatAnimation;
 
   return (
     <div
-      className={`absolute transition-all duration-1200 ${
-        blurred && shouldUnblur ? 'animate-unblur-in' : ''
-      }`}
+      className="absolute transition-all duration-1200 will-change-transform"
       style={{
         left: data.left,
         top: data.top,
         width: data.width,
         height: data.height,
         filter: blurred && shouldUnblur ? 'blur(4px)' : 'blur(0px)',
-        animationDelay: data.animationDelay,
+        animation: combinedAnimation,
       }}
     >
       {/* Card background with gradient and border */}

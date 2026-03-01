@@ -8,12 +8,13 @@ export default function MandalaBackground() {
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Main mandala - large left layer at position from Figma */}
       <div
-        className="absolute"
+        className="absolute animate-mandala-breathe"
         style={{
           left: '-304px',
           top: '-436px',
           width: '1024px',
           height: '1845.999px',
+          animationDuration: '16s',
         }}
       >
         <img
@@ -26,13 +27,14 @@ export default function MandalaBackground() {
 
       {/* Secondary mandala - right layer, mirrored (scaleX -1) */}
       <div
-        className="absolute"
+        className="absolute animate-mandala-breathe"
         style={{
           left: '720px',
           top: '-436px',
           width: '1024px',
           height: '1845.999px',
           transform: 'scaleX(-1)',
+          animationDuration: '20s',
         }}
       >
         <img
@@ -45,13 +47,14 @@ export default function MandalaBackground() {
 
       {/* Mini mandala - centered bottom, with specific border radius */}
       <div
-        className="absolute overflow-hidden"
+        className="absolute overflow-hidden animate-mandala-breathe"
         style={{
           left: '627px',
           top: '435px',
           width: '94.637px',
           height: '184.389px',
           borderRadius: '506px 457px 0 0 / 506px 457px 0 0',
+          animationDuration: '12s',
         }}
       >
         <img

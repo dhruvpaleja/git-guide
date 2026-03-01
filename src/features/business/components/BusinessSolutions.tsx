@@ -17,7 +17,7 @@ const solutionsData = [
         description: 'By providing students with accessible digital counselling subscriptions and expert 1:1 sessions, universities can ensure mental health resources are always within reach. Offering confidential counsellor support, Student Wellness strengthens emotional well-being across college communities.',
         imagePath: '/images/service-counsellor-figma.png',
         imagePosition: 'right' as const,
-        linkTo: '/student-counselling',
+        linkTo: '/business/student-counselling-demo',
     },
     {
         title: 'Workshops & Trainings',

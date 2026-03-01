@@ -26,6 +26,7 @@ const EMPTY_PARTNER: PartnerData = {
 };
 
 export default function OnboardingAstrologyPage({ onBack, onSubmit }: OnboardingAstrologyPageProps) {
+    const [gender, setGender] = useState<'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY' | ''>('');
     const [birthDate, setBirthDate] = useState('');
     const [birthTime, setBirthTime] = useState('');
     const [birthTimeAmPm, setBirthTimeAmPm] = useState<'AM' | 'PM'>('AM');
@@ -278,6 +279,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
         if (newErrors.length > 0) return;
 
         onSubmit({
+            gender: gender || undefined,
             birthDate,
             birthTime: dontKnowTime ? roughTime : birthTime,
             birthTimeAmPm: dontKnowTime ? 'N/A' : birthTimeAmPm,
@@ -337,6 +339,37 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                 )}
 
                                 <form onSubmit={handleSubmit} className="space-y-6">
+
+                                    {/* GENDER */}
+                                    <div>
+                                        <label className="block text-[13px] sm:text-[14px] text-black/60 tracking-[-0.01em] mb-3 font-medium">
+                                            Gender <span className="font-semibold text-black/40">(Optional)</span>
+                                        </label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {[
+                                                { value: 'MALE', label: 'Male' },
+                                                { value: 'FEMALE', label: 'Female' },
+                                                { value: 'NON_BINARY', label: 'Non-Binary' },
+                                                { value: 'PREFER_NOT_TO_SAY', label: 'Prefer not to say' },
+                                            ].map((option) => {
+                                                const selected = gender === option.value;
+                                                return (
+                                                    <button
+                                                        key={option.value}
+                                                        type="button"
+                                                        onClick={() => setGender(option.value as typeof gender)}
+                                                        className={`px-4 py-3 rounded-[12px] border text-[12px] font-medium transition-all duration-200 ${
+                                                            selected
+                                                                ? 'bg-black text-white border-black'
+                                                                : 'bg-white text-black/60 border-black/10 hover:border-black/20'
+                                                        }`}
+                                                    >
+                                                        {option.label}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
 
                                     {/* BIRTH DATE */}
                                     <div>

@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import OnboardingCreateAccountPage from '@/features/onboarding/screens/OnboardingCreateAccountPage';
 import OnboardingSignupPage from '@/features/onboarding/screens/OnboardingSignupPage';
 import OnboardingAstrologyPage from '@/features/onboarding/screens/OnboardingAstrologyPage';
 import OnboardingPartnerDetailsPage from '@/features/onboarding/screens/OnboardingPartnerDetailsPage';
+import apiService from '@/services/api.service';
 
 export default function SignupPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -12,6 +14,14 @@ export default function SignupPage() {
 
     // Store astrology data to pass partner initial data forward
     const [astrologyData, setAstrologyData] = useState<any>(null);
+
+    const persistAstrologyProfile = async (payload: Record<string, unknown>) => {
+        const response = await apiService.post('/users/astrology-profile', payload);
+
+        if (!response.success) {
+            toast.error(response.error?.message || 'Could not save astrology profile. Continuing anyway.');
+        }
+    };
 
     if (step === 'account') {
         return (
@@ -34,7 +44,9 @@ export default function SignupPage() {
                     if (data?.wantMatchmaking) {
                         setSearchParams({ step: 'partner-details' });
                     } else {
-                        navigate('/journey-preparation');
+                        void persistAstrologyProfile(data || {}).finally(() => {
+                            navigate('/journey-preparation');
+                        });
                     }
                 }}
             />
@@ -47,8 +59,16 @@ export default function SignupPage() {
                 onBack={() => {
                     setSearchParams({ step: 'astrology' });
                 }}
-                onSubmit={() => {
-                    navigate('/journey-preparation');
+                onSubmit={(partnerData) => {
+                    const merged = {
+                        ...(astrologyData || {}),
+                        partners: partnerData ? [partnerData] : (astrologyData?.partners || []),
+                        wantMatchmaking: true,
+                    };
+
+                    void persistAstrologyProfile(merged).finally(() => {
+                        navigate('/journey-preparation');
+                    });
                 }}
                 initialData={astrologyData?.partner || null}
             />

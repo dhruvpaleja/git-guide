@@ -15,7 +15,7 @@
  */
 
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Navigate, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { DashboardLayout, MainLayout } from '@/layouts';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ProtectedRoute from './ProtectedRoute.tsx';
@@ -42,6 +42,7 @@ const StudentCounsellingDemoPage = lazy(() => import('@/pages/StudentCounselling
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
+const PersonalizationPage = lazy(() => import('@/features/dashboard/pages/PersonalizationPage'));
 
 // Journey Preparation Page - shown after login before dashboard
 const JourneyPreparationPage = lazy(() =>
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: '/personalize',
+        element: <Navigate to="/dashboard/personalization?s=4" replace />,
+      },
+      {
         path: '/dashboard',
         element: <DashboardLayout />,
         children: [
@@ -107,6 +112,14 @@ const router = createBrowserRouter([
             element: (
               <Lazy>
                 <DashboardPage />
+              </Lazy>
+            ),
+          },
+          {
+            path: 'personalization',
+            element: (
+              <Lazy>
+                <PersonalizationPage />
               </Lazy>
             ),
           },

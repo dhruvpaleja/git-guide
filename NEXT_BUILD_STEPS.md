@@ -1,8 +1,73 @@
 # SOUL YATRI - NEXT BUILD STEPS (Ultra-Detailed AI Agent Guide)
 
-> **CURRENT STATE**: Auth (Phase 1) is DONE. Landing, About, Business, Blogs pages have UI. Dashboard is a shell.
+> **CURRENT STATE**: Auth (Phase 1) is DONE. Landing, About, Business, Blogs pages have UI. Dashboard is a shell. Backend infrastructure is PRODUCTION-GRADE.
 > **NEXT**: Phase 2 (User Onboarding) -> Phase 3 (Dashboard) -> Phase 16 (Health Tools) -> Phase 4 (Therapy Booking)
 > **RULE**: Only build what's in MVP Phases 1-8, 13-14, 16-17, 25. Nothing else.
+
+---
+
+## BACKEND INFRASTRUCTURE (COMPLETED — DO NOT REBUILD)
+
+The following production-grade infrastructure is already in place. AI agents MUST use these utilities instead of rolling their own.
+
+### Core Libraries (server/src/lib/)
+| File | What it does | Usage |
+|------|-------------|-------|
+| `errors.ts` | `AppError` class with 30+ `ErrorCode` constants + factory methods (`AppError.badRequest()`, `.unauthorized()`, `.notFound()`, `.conflict()`, `.internal()`, etc.) | Throw `AppError.notFound('User')` in controllers/services |
+| `response.ts` | `sendSuccess(res, data, status?, meta?)`, `sendError(res, status, code, msg)`, `parsePagination(query)`, `buildPaginationMeta(page, limit, total)` | Use in controllers: `sendSuccess(res, user, 201)` |
+| `logger.ts` | Structured Winston logger (JSON in prod, colorized in dev). `createRequestLogger(requestId)`, `morganStream` | `logger.info('event', { key: value })` |
+| `async-handler.ts` | `asyncHandler(fn)` — wraps async route handlers, auto-forwards errors | `router.get('/foo', asyncHandler(async (req, res) => { ... }))` |
+| `prisma.ts` | `prisma` (PrismaClient singleton) + `checkDatabaseHealth()` | Import `prisma` for all DB operations |
+
+### Middleware (server/src/middleware/)
+| File | Exports | Usage |
+|------|---------|-------|
+| `request-context.ts` | `requestContext` — correlation IDs, timing, IP hashing | Already wired in index.ts |
+| `auth.middleware.ts` | `requireAuth`, `AuthenticatedRequest` | `router.get('/me', requireAuth, handler)` |
+| `rbac.middleware.ts` | `requireRole('ADMIN', 'SUPER_ADMIN')`, `requireOwnership('userId')` | After `requireAuth` |
+| `security.middleware.ts` | `authLimiter` (5/15min), `apiLimiter` (100/15min), `strictLimiter` (3/15min), `sensitiveOpsLimiter` (10/hr), `uploadLimiter` (20/hr), `aiLimiter` (30/15min) | Apply per-route |
+| `error.ts` | `errorHandler`, `notFound` — auto-normalizes Zod, Prisma, JWT errors | Already wired in index.ts |
+
+### Infrastructure Services (server/src/services/)
+| File | What it does | Status |
+|------|-------------|--------|
+| `email.service.ts` | `emailService.send(opts)`, `emailService.sendTemplate(to, template)` — 7 templates (WELCOME, PASSWORD_RESET, SESSION_CONFIRMATION, SESSION_REMINDER, SESSION_SUMMARY, PAYMENT_RECEIPT, CRISIS_ALERT) | Console fallback, swap to Resend |
+| `storage.service.ts` | `storageService.upload(opts)`, `.delete(key)`, `.getSignedUrl(key)` — validates MIME types per folder | Memory fallback, swap to S3/R2 |
+| `cache.service.ts` | `cacheService.get/set/del/has/flush/keys` + `cacheAside(key, ttl, fetcher)` helper | Memory fallback, swap to Redis |
+| `queue.service.ts` | `queueService.enqueue(queue, data, opts)`, `.register(queue, handler)`, `.schedule(queue, data, interval)` — 7 queue types | Sync fallback, swap to BullMQ |
+| `tokens.service.ts` | JWT token generation + verification | Fully implemented |
+| `ai-event-logger.service.ts` | Audit logging to Prisma AuditLog table | Fully implemented |
+
+### Config (server/src/config/index.ts)
+All service configs in one place: `jwt`, `cookie`, `rateLimit`, `bodyLimit`, `database`, `email`, `storage`, `cache`, `queue`, `payment` (Razorpay), `video` (Daily.co), `ai` (OpenAI), `logging`, `security`.
+
+### Prisma Schema (server/prisma/schema.prisma)
+**12 models**: User, RefreshToken, AuditLog, UserProfile, TherapistProfile, TherapistAvailability, Session, MoodEntry, JournalEntry, MeditationLog, Payment, Notification
+**9 enums**: Role, AuditCategory, SessionStatus, PaymentStatus, NotificationType, Gender, TherapyHistory, TherapistApproach
+
+### Server Entry (server/src/index.ts)
+- Helmet with HSTS in production
+- CORS with exposed rate-limit headers
+- Request context (correlation IDs) on every request
+- Body size limits (10kb JSON/urlencoded)
+- Graceful shutdown (SIGTERM/SIGINT, 30s timeout, DB disconnect)
+- Uncaught exception + unhandled rejection handlers
+- Trust proxy for load balancers
+
+### PATTERN FOR NEW CONTROLLERS
+```typescript
+import { asyncHandler } from '../lib/async-handler.js';
+import { sendSuccess } from '../lib/response.js';
+import { AppError } from '../lib/errors.js';
+import { prisma } from '../lib/prisma.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+
+export const getProfile = asyncHandler(async (req: AuthenticatedRequest, res) => {
+  const user = await prisma.user.findUnique({ where: { id: req.auth!.userId } });
+  if (!user) throw AppError.notFound('User');
+  sendSuccess(res, user);
+});
+```
 
 ---
 

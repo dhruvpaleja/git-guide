@@ -77,46 +77,10 @@ const router = createBrowserRouter([
       </Lazy>
     ),
   },
-  {
-    path: '/contact',
-    element: (
-      <Lazy>
-        <ContactPage />
-      </Lazy>
-    ),
-  },
-  {
-    path: '/careers',
-    element: (
-      <Lazy>
-        <CareerPage />
-      </Lazy>
-    ),
-  },
-  {
-    path: '/blogs',
-    element: (
-      <Lazy>
-        <BlogsPage />
-      </Lazy>
-    ),
-  },
-  {
-    path: '/blog',
-    element: (
-      <Lazy>
-        <BlogsPage />
-      </Lazy>
-    ),
-  },
-  {
-    path: '/courses',
-    element: (
-      <Lazy>
-        <CoursesPage />
-      </Lazy>
-    ),
-  },
+
+
+
+
 
   {
     element: <ProtectedRoute />,
@@ -171,6 +135,46 @@ const router = createBrowserRouter([
         element: (
           <Lazy>
             <CorporatePage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'blogs',
+        element: (
+          <Lazy>
+            <BlogsPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'careers',
+        element: (
+          <Lazy>
+            <CareerPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'courses',
+        element: (
+          <Lazy>
+            <CoursesPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'contact',
+        element: (
+          <Lazy>
+            <ContactPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'blog',
+        element: (
+          <Lazy>
+            <BlogsPage />
           </Lazy>
         ),
       },

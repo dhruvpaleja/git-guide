@@ -41,7 +41,7 @@ export default function Navigation() {
     }
 
     if (!foundTheme) {
-      foundTheme = (location.pathname.includes('/about') || location.pathname.includes('/business')) ? 'light' : 'dark';
+      foundTheme = (location.pathname.includes('/about') || location.pathname.includes('/business') || location.pathname.includes('/blog') || location.pathname.includes('/contact') || location.pathname.includes('/careers') || location.pathname.includes('/courses')) ? 'light' : 'dark';
     }
 
     setTheme(foundTheme);

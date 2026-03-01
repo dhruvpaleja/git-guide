@@ -1,0 +1,153 @@
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Changes to be committed:
+	modified:   .env.example
+	modified:   .env.local
+	modified:   README_DEVELOPER.md
+	modified:   SETUP.md
+	modified:   TROUBLESHOOTING.md
+	modified:   dist/index.html
+	modified:   package-lock.json
+	modified:   package.json
+	new file:   public/images/blogs/blogs-author-icon-dark.png
+	new file:   public/images/blogs/blogs-author-icon-light.png
+	new file:   public/images/blogs/blogs-card-01.jpg
+	new file:   public/images/blogs/blogs-card-02.jpg
+	new file:   public/images/blogs/blogs-card-03.jpg
+	new file:   public/images/blogs/blogs-card-04.jpg
+	new file:   public/images/blogs/blogs-card-05.jpg
+	new file:   public/images/blogs/blogs-card-06.jpg
+	new file:   public/images/blogs/blogs-card-07.jpg
+	new file:   public/images/blogs/blogs-card-08.jpg
+	new file:   public/images/blogs/blogs-card-09.jpg
+	new file:   public/images/blogs/blogs-card-10.jpg
+	new file:   public/images/blogs/blogs-card-11.png
+	new file:   public/images/blogs/blogs-card-12.jpg
+	new file:   public/images/blogs/blogs-card-13.jpg
+	new file:   public/images/blogs/blogs-card-14.jpg
+	new file:   public/images/blogs/blogs-card-15.jpg
+	new file:   public/images/blogs/blogs-divider-line.svg
+	new file:   public/images/blogs/blogs-footer-logo.png
+	new file:   public/images/blogs/blogs-grey-ellipse.svg
+	new file:   public/images/blogs/blogs-header-logo.png
+	new file:   public/images/blogs/blogs-header-vline.svg
+	new file:   public/images/blogs/blogs-search-icon.png
+	new file:   public/images/blogs/blogs-social-facebook.png
+	new file:   public/images/blogs/blogs-social-instagram.png
+	new file:   public/images/blogs/blogs-social-linkedin.png
+	new file:   public/images/blogs/blogs-social-twitter.png
+	new file:   public/images/careers/career-collage-01.jpg
+	new file:   public/images/careers/career-collage-02.jpg
+	new file:   public/images/careers/career-collage-03.jpg
+	new file:   public/images/careers/career-collage-04.jpg
+	new file:   public/images/careers/career-collage-05.jpg
+	new file:   public/images/careers/career-collage-06.jpg
+	new file:   public/images/careers/career-collage-07.jpg
+	new file:   public/images/careers/career-collage-08.jpg
+	new file:   public/images/careers/career-collage-09.jpg
+	new file:   public/images/careers/career-collage-10.jpg
+	new file:   public/images/careers/career-team-member.png
+	new file:   public/images/contact/contact-back-button.svg
+	new file:   public/images/contact/contact-flag-icon.png
+	new file:   public/images/contact/contact-footer-logo.png
+	new file:   public/images/contact/contact-mail-icon.png
+	new file:   public/images/contact/contact-main-logo.png
+	new file:   public/images/contact/contact-phone-icon.png
+	new file:   public/images/contact/contact-social-facebook.png
+	new file:   public/images/contact/contact-social-instagram.png
+	new file:   public/images/contact/contact-social-linkedin.png
+	new file:   public/images/contact/contact-social-twitter.png
+	new file:   public/images/courses/back-button.png
+	new file:   public/images/courses/back-button.svg
+	new file:   public/images/courses/bg-grey-ellipse.png
+	new file:   public/images/courses/card-gradient.png
+	new file:   public/images/courses/course-anxiety-1.jpg
+	new file:   public/images/courses/course-anxiety-2.jpg
+	new file:   public/images/courses/course-anxiety-3.jpg
+	new file:   public/images/courses/course-career-1.jpg
+	new file:   public/images/courses/course-career-2.jpg
+	new file:   public/images/courses/course-career-3.jpg
+	new file:   public/images/courses/course-relationship-1.jpg
+	new file:   public/images/courses/course-relationship-2.jpg
+	new file:   public/images/courses/course-relationship-3.jpg
+	new file:   public/images/courses/course-sleep-1.jpg
+	new file:   public/images/courses/course-sleep-2.jpg
+	new file:   public/images/courses/course-sleep-3.jpg
+	new file:   public/images/courses/footer-line-top.png
+	new file:   public/images/courses/footer-logo.png
+	new file:   public/images/courses/header-divider.png
+	new file:   public/images/courses/header-logo.png
+	new file:   public/images/courses/search-icon.png
+	new file:   public/images/courses/social-facebook.png
+	new file:   public/images/courses/social-instagram.png
+	new file:   public/images/courses/social-linkedin.png
+	new file:   public/images/courses/social-twitter.png
+	new file:   public/images/courses/star.png
+	new file:   repo_url.txt
+	new file:   repo_url_utf8.txt
+	modified:   server/.env.example
+	new file:   server/.gitignore
+	modified:   server/package-lock.json
+	modified:   server/package.json
+	new file:   server/prisma.config.ts
+	new file:   server/prisma/migrations/20260228143218_init/migration.sql
+	new file:   server/prisma/migrations/migration_lock.toml
+	new file:   server/prisma/schema.prisma
+	modified:   server/src/config/index.ts
+	new file:   server/src/controllers/auth.controller.ts
+	modified:   server/src/index.ts
+	new file:   server/src/lib/prisma.ts
+	new file:   server/src/middleware/auth.middleware.ts
+	new file:   server/src/middleware/security.middleware.ts
+	modified:   server/src/routes/auth.ts
+	new file:   server/src/services/ai-event-logger.service.ts
+	new file:   server/src/services/tokens.service.ts
+	new file:   server/src/validators/auth.validator.ts
+	modified:   server/tsconfig.json
+	modified:   src/components/layout/Footer.tsx
+	modified:   src/constants/app.constants.ts
+	modified:   src/context/AuthContext.tsx
+	new file:   src/features/auth/components/LoginForm.tsx
+	new file:   src/features/auth/components/SignupForm.tsx
+	new file:   src/features/courses/components/CourseCard.tsx
+	new file:   src/features/courses/constants/courses.data.ts
+	new file:   src/features/courses/index.ts
+	new file:   src/features/courses/pages/CoursesProgramsPage.tsx
+	modified:   src/features/landing/components/CTASection.tsx
+	modified:   src/features/landing/components/CorporateSection.tsx
+	modified:   src/features/landing/components/HeroSection.tsx
+	modified:   src/features/landing/components/SoulBotSection.tsx
+	new file:   src/pages/BlogsPage.tsx
+	new file:   src/pages/CareerPage.tsx
+	new file:   src/pages/ContactPage.tsx
+	new file:   src/pages/CoursesPage.tsx
+	new file:   src/pages/DashboardPage.tsx
+	new file:   src/pages/auth/LoginPage.tsx
+	new file:   src/pages/auth/SignupPage.tsx
+	modified:   src/router/index.tsx
+	modified:   src/services/api.service.ts
+	modified:   src/utils/helpers/react.helpers.ts
+	modified:   tsconfig.app.json
+	modified:   tsconfig.json
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+	both modified:   src/components/layout/Navigation.tsx
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	branch_diff.txt
+	branch_files.txt
+	conflict_status.txt
+	git_log.txt
+	lint_output.txt
+	server/build_out.txt
+	status.txt
+	tc_output.txt
+

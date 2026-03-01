@@ -1,5 +1,4 @@
-import { ArrowLeft, BriefcaseBusiness, Search, IndianRupee, UserRound } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { BriefcaseBusiness, Search, IndianRupee, UserRound } from 'lucide-react';
 
 const collageImages = [
   '/images/careers/career-collage-01.jpg',
@@ -144,17 +143,7 @@ function JobCard({ job }: { job: Job }) {
 export default function CareerPage() {
   return (
     <div className="w-full bg-[#f3f3f3] font-['Manrope',sans-serif] text-black">
-      <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 pt-8 sm:px-10 lg:px-[82px] lg:pt-[60px]">
-        <div className="grid grid-cols-3 items-center">
-          <p className="text-[14px] font-semibold tracking-[-0.16px]">SOUL YATRI CAREER</p>
-          <img src="/images/main-logo.png" alt="Soul Yatri" className="mx-auto h-[50px] w-[60px] object-contain" />
-          <Link to="/home" className="justify-self-end text-[14px] tracking-[-0.16px] text-black/50 hover:text-black/70">Home</Link>
-        </div>
-
-        <Link to="/home" className="mt-7 inline-flex h-[30px] w-[30px] items-center justify-center rounded-full border border-black/50" aria-label="Back to home">
-          <ArrowLeft size={14} />
-        </Link>
-
+      <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 pt-[120px] sm:px-10 lg:px-[82px]">
         <div className="mt-6 text-center">
           <h1 className="text-[32px] font-semibold tracking-[-0.32px]">Soul Yatri Career</h1>
           <p className="mt-4 text-[16px] tracking-[-0.16px] text-black/50">Join a mission-led team creating accessible mental wellness for everyone.</p>
@@ -261,39 +250,6 @@ export default function CareerPage() {
           ))}
         </div>
 
-        <div className="mt-10 border-t border-white/20 pt-16">
-          <div className="flex flex-col justify-between gap-10 lg:flex-row lg:gap-8">
-            <div className="max-w-[655px]">
-              <img src="/images/soul-yatri-logo.png" alt="Soul Yatri" className="h-[42px] w-[201px] object-contain" />
-              <p className="mt-9 text-[14px] leading-[30px] tracking-[-0.14px] text-white/50">Soul Yatri blends modern psychology with cultural wisdom to offer compassionate, science-backed and culturally-sensitive mental well-being. We help you understand what&apos;s happening inside and give you practical steps—whether you prefer a therapist, a healer, or both.</p>
-              <div className="mt-9 flex flex-wrap gap-[20px]">
-                <input className="h-[60px] w-[340px] rounded-[25px] border border-white/20 bg-[#080808] px-[31px] text-[14px] font-semibold tracking-[-0.14px] text-white placeholder:text-white/50 focus:outline-none" placeholder="Enter Email Address" />
-                <button type="button" className="h-[60px] w-[240px] rounded-[25px] bg-white text-[14px] font-semibold text-black">Book A Therapist</button>
-              </div>
-            </div>
-
-            <div className="space-y-4 text-right text-[14px] tracking-[-0.14px]">
-              <a href="#overview" className="block">Overview</a>
-              <Link to="/careers" className="block font-semibold">Careers</Link>
-              <Link to="/blogs" className="block">Blog</Link>
-              <a href="#b2b" className="block">B2B</a>
-              <a href="#terms" className="block">Terms & Conditions</a>
-              <a href="#privacy" className="block">Privacy Policy</a>
-              <Link to="/contact" className="block">Contact</Link>
-            </div>
-          </div>
-
-          <div className="mt-16 flex flex-col items-start justify-between gap-6 text-[14px] tracking-[-0.14px] lg:flex-row lg:items-center">
-            <p className="text-white">© 2025 Soul Yatri Pvt. Ltd. | All Rights Reserved</p>
-            <div className="flex items-center gap-4">
-              <span>Follow Our Journey:</span>
-              <img src="/images/insta-link.png" alt="Instagram" className="h-[20px] w-[20px]" />
-              <img src="/images/facebook-link.png" alt="Facebook" className="h-[20px] w-[20px]" />
-              <img src="/images/linkedin-link.png" alt="LinkedIn" className="h-[20px] w-[20px]" />
-              <img src="/images/twitter-link.png" alt="Twitter" className="h-[20px] w-[20px]" />
-            </div>
-          </div>
-        </div>
       </section>
     </div>
   );

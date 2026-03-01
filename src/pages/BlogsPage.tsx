@@ -1,5 +1,4 @@
 import { Search } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 type BlogPost = {
   title: string;
@@ -167,22 +166,11 @@ export default function BlogsPage() {
   ] as const;
 
   return (
-    <div className="w-full bg-white text-black">
-      <section className="relative mx-auto w-full max-w-[1440px] overflow-hidden px-6 pb-20 pt-[60px] sm:px-10 lg:px-[77px]">
+    <>
+      <section className="relative mx-auto w-full max-w-[1440px] overflow-hidden px-6 pb-20 pt-[140px] sm:px-10 lg:px-[77px]">
         <img src="/images/blogs/blogs-grey-ellipse.svg" alt="" className="pointer-events-none absolute left-0 top-[25px] w-full max-w-none" />
 
-        <img src="/images/blogs/blogs-header-logo.png" alt="Soul Yatri" className="relative z-10 mx-auto h-[51px] w-[60px] object-contain" />
-
-        <nav className="relative z-10 mx-auto mt-10 flex h-[60px] w-full max-w-[726px] items-center justify-center gap-6 rounded-[25px] text-[14px] tracking-[-0.14px] sm:gap-10">
-          <Link to="/home" className="text-black/50">Home</Link>
-          <a href="#" className="text-black/50">About Soul Yatri</a>
-          <span className="font-semibold text-black">Blogs</span>
-          <a href="#" className="text-black/50">Business</a>
-          <Link to="/login" className="text-black/50">Login</Link>
-          <Link to="/signup" className="text-black/50">Create Account</Link>
-        </nav>
-
-        <div className="relative z-10 mt-16 text-center">
+        <div className="relative z-10 text-center">
           <h1 className="text-[32px] font-semibold tracking-[-0.32px]">The Journey Within</h1>
           <p className="mt-2 text-[24px] tracking-[-0.24px] text-black/50">Our Blog</p>
         </div>
@@ -223,47 +211,6 @@ export default function BlogsPage() {
           ))}
         </div>
       </section>
-
-      <footer className="mx-auto w-full max-w-[1440px] rounded-t-[50px] bg-black px-6 pb-9 pt-20 text-white sm:px-10 lg:px-[77px]">
-        <div className="border-t border-white/20 pt-20">
-          <div className="flex flex-col justify-between gap-10 lg:flex-row lg:gap-8">
-            <div className="max-w-[699px]">
-              <div className="mb-6 flex items-center gap-6 text-[14px]">
-                <img src="/images/blogs/blogs-footer-logo.png" alt="Soul Yatri" className="h-[42px] w-[200px] object-contain" />
-                <span className="hidden h-[19px] w-px bg-white/30 sm:block" />
-                <Link to="/login" className="hidden sm:block">Login</Link>
-                <Link to="/signup" className="hidden sm:block">Create Account</Link>
-              </div>
-              <p className="text-[14px] leading-[30px] tracking-[-0.14px] text-white/50">Soul Yatri blends modern psychology with cultural wisdom to offer compassionate, science-backed and culturally-sensitive mental well-being. We help you understand what&apos;s happening inside and give you practical steps—whether you prefer a therapist, a healer, or both.</p>
-              <div className="mt-8 flex flex-wrap gap-[20px]">
-                <input className="h-[60px] w-[340px] rounded-[25px] border border-white/20 bg-[#080808] px-[31px] text-[16px] tracking-[-0.16px] text-white placeholder:text-white/50 focus:outline-none" placeholder="Enter Email Address" />
-                <button type="button" className="h-[60px] w-[220px] rounded-[25px] bg-white text-[16px] font-semibold text-black">Book A Therapist</button>
-              </div>
-            </div>
-
-            <div className="space-y-4 text-right text-[14px] tracking-[-0.14px]">
-              <a href="#overview" className="block">Overview</a>
-              <Link to="/careers" className="block">Careers</Link>
-              <Link to="/blogs" className="block font-semibold">Blog</Link>
-              <a href="#b2b" className="block">B2B</a>
-              <a href="#terms" className="block">Terms & Conditions</a>
-              <a href="#privacy" className="block">Privacy Policy</a>
-              <Link to="/contact" className="block">Contact</Link>
-            </div>
-          </div>
-
-          <div className="mt-16 flex flex-col items-start justify-between gap-6 text-[14px] tracking-[-0.14px] lg:flex-row lg:items-center">
-            <p>© 2025 Soul Yatri Pvt. Ltd. | All Rights Reserved</p>
-            <div className="flex items-center gap-4">
-              <span>Follow Our Journey:</span>
-              <img src="/images/blogs/blogs-social-instagram.png" alt="Instagram" className="h-[20px] w-[20px]" />
-              <img src="/images/blogs/blogs-social-facebook.png" alt="Facebook" className="h-[20px] w-[20px]" />
-              <img src="/images/blogs/blogs-social-linkedin.png" alt="LinkedIn" className="h-[20px] w-[20px]" />
-              <img src="/images/blogs/blogs-social-twitter.png" alt="Twitter" className="h-[20px] w-[20px]" />
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </>
   );
 }

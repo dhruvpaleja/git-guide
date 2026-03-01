@@ -1,0 +1,200 @@
+
+> soul-yatri@0.0.0 lint
+> eslint . --fix
+
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\server\src\index.ts
+  39:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\layout\Navigation.tsx
+  51:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\layout\Navigation.tsx:51:5
+  49 |   useEffect(() => {
+  50 |     window.addEventListener('scroll', handleScroll, { passive: true });
+> 51 |     handleScroll();
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  52 |     return () => window.removeEventListener('scroll', handleScroll);
+  53 |   }, [handleScroll]);
+  54 |  react-hooks/set-state-in-effect
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\ui\badge.tsx
+  46:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\ui\button-group.tsx
+  82:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\ui\button.tsx
+  62:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\ui\form.tsx
+  159:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\ui\navigation-menu.tsx
+  167:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\ui\sidebar.tsx
+  611:26  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\ui\sidebar.tsx:611:26
+  609 |   // Random width between 50 to 90%.
+  610 |   const width = React.useMemo(() => {
+> 611 |     return `${Math.floor(Math.random() * 40) + 50}%`
+      |                          ^^^^^^^^^^^^^ Cannot call impure function
+  612 |   }, [])
+  613 |
+  614 |   return (  react-hooks/purity
+  725:3   warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-refresh/only-export-components
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\components\ui\toggle.tsx
+  45:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\context\AuthContext.tsx
+  67:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\context\ThemeContext.tsx
+  26:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\context\ThemeContext.tsx:26:7
+  24 |     const stored = localStorage.getItem('theme') as Theme | null;
+  25 |     if (stored) {
+> 26 |       setThemeState(stored);
+     |       ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  27 |     }
+  28 |   }, []);
+  29 |                                                                                                       react-hooks/set-state-in-effect
+  32:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\context\ThemeContext.tsx:32:5
+  30 |   useEffect(() => {
+  31 |     const dark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+> 32 |     setIsDark(dark);
+     |     ^^^^^^^^^ Avoid calling setState() directly within an effect
+  33 |     
+  34 |     if (dark) {
+  35 |       document.documentElement.classList.add('dark');  react-hooks/set-state-in-effect
+  53:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-refresh/only-export-components
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\features\business\components\BusinessSolutions.tsx
+  43:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\hooks\advanced.hooks.ts
+   36:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\hooks\advanced.hooks.ts:36:7
+  34 |   useEffect(() => {
+  35 |     if (immediate) {
+> 36 |       execute();
+     |       ^^^^^^^ Avoid calling setState() directly within an effect
+  37 |     }
+  38 |   }, [execute, immediate]);
+  39 |  react-hooks/set-state-in-effect
+  113:10  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\hooks\advanced.hooks.ts:113:10
+  111 |   }, [value]);
+  112 |
+> 113 |   return ref.current;
+      |          ^^^^^^^^^^^ Cannot access ref value during render
+  114 | }
+  115 |
+  116 | /**                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/refs
+  156:32  warning  The ref value 'ref.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'ref.current' to a variable inside the effect, and use that variable in the cleanup function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/exhaustive-deps
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\hooks\responsive.hooks.ts
+   66:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\hooks\responsive.hooks.ts:66:7
+  64 |     const media = window.matchMedia(query);
+  65 |     if (media.matches !== matches) {
+> 66 |       setMatches(media.matches);
+     |       ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  67 |     }
+  68 |
+  69 |     const listener = () => setMatches(media.matches);  react-hooks/set-state-in-effect
+  252:32  warning  The ref value 'ref.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'ref.current' to a variable inside the effect, and use that variable in the cleanup function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\main.tsx
+  6:12  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\middleware\api.middleware.ts
+  45:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\services\analytics.service.ts
+  63:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\utils\helpers\collection.helpers.ts
+  16:38  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  30:22  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  32:29  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  61:40  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  72:40  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  83:35  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  94:35  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  97:21  error    Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\utils\helpers\react.helpers.ts
+   5:10  error  'useCallback' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  20:10  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\utils\helpers\react.helpers.ts:20:10
+  18 |   }, []);
+  19 |
+> 20 |   return isMounted.current;
+     |          ^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+  21 | };
+  22 |
+  23 | /**  react-hooks/refs
+  50:10  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\utils\helpers\react.helpers.ts:50:10
+  48 |   }, [value]);
+  49 |
+> 50 |   return ref.current;
+     |          ^^^^^^^^^^^ Cannot access ref value during render
+  51 | };
+  52 |                    react-hooks/refs
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\app\src\utils\testing.utils.ts
+  50:20  error  Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
+
+Γ£û 35 problems (13 errors, 22 warnings)
+

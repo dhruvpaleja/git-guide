@@ -5,6 +5,8 @@ export interface CourseItem {
   rating: string;
   price: string;
   image: string;
+  category?: string;
+  searchContent?: string;
 }
 
 export interface CourseSection {
@@ -27,6 +29,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.5',
         price: '₹599',
         image: '/images/courses/course-anxiety-1.jpg',
+        category: 'Anxiety',
+        searchContent: 'anxiety understanding mental health stress calm mindfulness',
       },
       {
         title: 'Mastering Daily Anxiety Triggers.',
@@ -35,6 +39,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.3',
         price: '₹599',
         image: '/images/courses/course-anxiety-2.jpg',
+        category: 'Anxiety',
+        searchContent: 'anxiety triggers daily stress management coping techniques',
       },
       {
         title: 'Breathwork & Grounding for Rapid Calm.',
@@ -43,6 +49,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.7',
         price: '₹599',
         image: '/images/courses/course-anxiety-3.jpg',
+        category: 'Anxiety',
+        searchContent: 'breathwork grounding calm relaxation breathing meditation',
       },
     ],
   },
@@ -57,6 +65,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.3',
         price: '₹599',
         image: '/images/courses/course-relationship-1.jpg',
+        category: 'Relationship',
+        searchContent: 'relationship healthy foundations love connection trust communication',
       },
       {
         title: 'Communication Skills for Stronger Bonds.',
@@ -65,6 +75,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.6',
         price: '₹599',
         image: '/images/courses/course-relationship-2.jpg',
+        category: 'Relationship',
+        searchContent: 'communication skills relationship bonds connection listening empathy',
       },
       {
         title: 'Understand Toxic Patterns.',
@@ -73,6 +85,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.6',
         price: '₹599',
         image: '/images/courses/course-relationship-3.jpg',
+        category: 'Relationship',
+        searchContent: 'toxic patterns relationship boundaries red flags unhealthy',
       },
     ],
   },
@@ -87,6 +101,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.6',
         price: '₹599',
         image: '/images/courses/course-career-1.jpg',
+        category: 'Career',
+        searchContent: 'career clarity path purpose goals professional development',
       },
       {
         title: 'Mindset Training for Professional Success.',
@@ -95,6 +111,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.6',
         price: '₹599',
         image: '/images/courses/course-career-2.jpg',
+        category: 'Career',
+        searchContent: 'mindset training professional success growth development achievement',
       },
       {
         title: 'Communication & Leadership Skills for Growth.',
@@ -103,6 +121,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.4',
         price: '₹599',
         image: '/images/courses/course-career-3.jpg',
+        category: 'Career',
+        searchContent: 'communication leadership skills growth management team building',
       },
     ],
   },
@@ -117,6 +137,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.4',
         price: '₹499',
         image: '/images/courses/course-sleep-1.jpg',
+        category: 'Sleep',
+        searchContent: 'sleep science rest recovery health circadian rhythm',
       },
       {
         title: 'Managing Insomnia & Overthinking at Night.',
@@ -125,6 +147,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.6',
         price: '₹599',
         image: '/images/courses/course-sleep-2.jpg',
+        category: 'Sleep',
+        searchContent: 'insomnia overthinking night sleep disorder anxiety relaxation',
       },
       {
         title: 'Lifestyle Habits for Better Sleep.',
@@ -133,6 +157,8 @@ export const courseSections: CourseSection[] = [
         rating: '4.4',
         price: '₹699',
         image: '/images/courses/course-sleep-3.jpg',
+        category: 'Sleep',
+        searchContent: 'lifestyle habits sleep quality routine wellness health',
       },
     ],
   },

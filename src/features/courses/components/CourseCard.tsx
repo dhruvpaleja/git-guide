@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { CourseItem } from '../constants/courses.data';
 
 interface CourseCardProps {
@@ -6,14 +7,32 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course, highlighted = false }: CourseCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div className="mx-auto w-full">
+    <div 
+      className="mx-auto w-full group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <article
-        className={`group relative aspect-[395/500] overflow-hidden rounded-[22px] border border-black/20 transition-all duration-300 sm:rounded-[25px] ${
-          highlighted ? 'shadow-[0_30px_60px_rgba(0,0,0,0.3)]' : 'hover:shadow-[0_10px_40px_rgba(0,0,0,0.1)]'
+        className={`relative aspect-[395/500] overflow-hidden rounded-[22px] border border-black/20 transition-all duration-500 ease-out sm:rounded-[25px] ${
+          highlighted 
+            ? 'shadow-[0_30px_60px_rgba(0,0,0,0.3)]' 
+            : 'hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]'
         }`}
+        style={{
+          transform: isHovered ? 'translateY(-8px)' : 'translateY(0)',
+        }}
       >
-        <img src={course.image} alt={course.title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+        <img 
+          src={course.image} 
+          alt={course.title} 
+          className="h-full w-full object-cover transition-transform duration-700 ease-out"
+          style={{
+            transform: isHovered ? 'scale(1.08)' : 'scale(1)',
+          }}
+        />
 
         <img
           src="/images/courses/card-gradient.png"
@@ -22,20 +41,41 @@ export default function CourseCard({ course, highlighted = false }: CourseCardPr
           className="pointer-events-none absolute bottom-0 left-0 h-[54%] w-full rounded-b-[22px] sm:rounded-b-[25px]"
         />
 
-        <div className="absolute left-[7.6%] top-[6%] flex h-[6%] min-h-[26px] w-[15.2%] min-w-[58px] items-center justify-center gap-1 rounded-[22px] border border-black/20 bg-white text-[13px] font-semibold tracking-[-0.13px] text-black sm:text-[14px] sm:tracking-[-0.14px]">
+        <div className="absolute left-[7.6%] top-[6%] flex h-[6%] min-h-[26px] w-[15.2%] min-w-[58px] items-center justify-center gap-1 rounded-[22px] border border-black/20 bg-white/95 backdrop-blur-sm text-[13px] font-semibold tracking-[-0.13px] text-black transition-all duration-300 sm:text-[14px] sm:tracking-[-0.14px]"
+          style={{
+            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+          }}
+        >
           <img src="/images/courses/star.png" alt="" aria-hidden className="h-[13px] w-[13px] sm:h-[14px] sm:w-[14px]" />
           <span>{course.rating}</span>
         </div>
 
-        <h3 className="absolute left-[7.6%] top-[67.2%] w-[84.8%] text-[20px] font-semibold leading-[1.25] tracking-[-0.2px] text-white sm:text-[24px] sm:leading-[30px] sm:tracking-[-0.24px]">
+        <h3 className="absolute left-[7.6%] top-[67.2%] w-[84.8%] text-[20px] font-semibold leading-[1.25] tracking-[-0.2px] text-white sm:text-[24px] sm:leading-[30px] sm:tracking-[-0.24px] transition-all duration-300"
+          style={{
+            transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+          }}
+        >
           {course.title}
         </h3>
 
-        <p className="absolute left-[7.6%] top-[82.2%] text-[14px] tracking-[-0.14px] text-white sm:text-[16px] sm:tracking-[-0.16px]">{course.lessons}</p>
-        <p className="absolute left-[7.6%] top-[89.2%] text-[14px] tracking-[-0.14px] text-white sm:text-[16px] sm:tracking-[-0.16px]">{course.duration}</p>
+        <p className="absolute left-[7.6%] top-[82.2%] text-[14px] tracking-[-0.14px] text-white/90 transition-opacity duration-300 sm:text-[16px] sm:tracking-[-0.16px]"
+          style={{
+            opacity: isHovered ? 1 : 0.85,
+          }}
+        >{course.lessons}</p>
+        <p className="absolute left-[7.6%] top-[89.2%] text-[14px] tracking-[-0.14px] text-white/90 transition-opacity duration-300 sm:text-[16px] sm:tracking-[-0.16px]"
+          style={{
+            opacity: isHovered ? 1 : 0.85,
+          }}
+        >{course.duration}</p>
 
-        <div className="absolute left-[51.9%] top-[82.2%] h-[12%] min-h-[56px] w-[40.5%] min-w-[152px] rounded-[22px] border border-white/50 px-3 text-white sm:px-[15px]">
-          <p className="text-[10px] leading-[26px] tracking-[-0.1px] sm:leading-[30px]">Course Fees</p>
+        <div className="absolute left-[51.9%] top-[82.2%] h-[12%] min-h-[56px] w-[40.5%] min-w-[152px] rounded-[22px] border border-white/50 bg-white/10 backdrop-blur-sm px-3 text-white transition-all duration-300 sm:px-[15px]"
+          style={{
+            transform: isHovered ? 'scale(1.03)' : 'scale(1)',
+            backgroundColor: isHovered ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          <p className="text-[10px] leading-[26px] tracking-[-0.1px] text-white/80 sm:leading-[30px]">Course Fees</p>
           <p className="-mt-1 text-right text-[22px] font-semibold leading-[28px] tracking-[-0.22px] sm:text-[24px] sm:leading-[30px] sm:tracking-[-0.24px]">{course.price}</p>
         </div>
       </article>
@@ -44,8 +84,8 @@ export default function CourseCard({ course, highlighted = false }: CourseCardPr
         type="button"
         className={`mx-auto mt-5 h-[52px] w-full max-w-[220px] rounded-[22px] border text-[14px] font-semibold tracking-[-0.14px] transition-all duration-300 sm:mt-[30px] sm:h-[60px] sm:rounded-[25px] sm:text-[16px] sm:tracking-[-0.16px] ${
           highlighted
-            ? 'border-white bg-[#080808] text-white shadow-[0_10px_60px_rgba(0,0,0,0.3)] hover:bg-black hover:shadow-[0_15px_80px_rgba(0,0,0,0.4)]'
-            : 'border-black/20 bg-white text-black hover:bg-black/5 hover:shadow-[0_5px_20px_rgba(0,0,0,0.1)]'
+            ? 'border-white bg-[#080808] text-white shadow-[0_10px_60px_rgba(0,0,0,0.3)] hover:bg-black hover:shadow-[0_15px_80px_rgba(0,0,0,0.4)] hover:scale-[1.02]'
+            : 'border-black/20 bg-white text-black hover:bg-black/5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:border-black/30 hover:scale-[1.02]'
         }`}
       >
         Enroll Now

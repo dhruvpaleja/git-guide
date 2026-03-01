@@ -17,7 +17,7 @@ export default function WellnessSection() {
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    let mm = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
     // Desktop & Tablet (>= 768px): Full scrub animation
     mm.add("(min-width: 768px)", () => {

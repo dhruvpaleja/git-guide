@@ -18,7 +18,7 @@ export default function HeroSection() {
   }, []);
 
   useGSAP(() => {
-    let mm = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
     mm.add("(min-width: 1024px)", () => {
       // Desktop: Full pinning and scale out

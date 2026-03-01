@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import zxcvbn from 'zxcvbn';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +16,21 @@ const signupSchema = z.object({
 });
 
 type SignupFormValues = z.infer<typeof signupSchema>;
+
+function getPasswordStrength(password: string): number {
+    if (!password) return 0;
+
+    let score = 0;
+
+    if (password.length >= 8) score += 1;
+    if (password.length >= 12) score += 1;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1;
+    if (/\d/.test(password)) score += 1;
+    if (/[^A-Za-z0-9]/.test(password)) score += 1;
+
+    // Clamp to UI scale (0-4)
+    return Math.min(4, score);
+}
 
 export default function SignupForm() {
     const { signup, isLoading } = useAuth();
@@ -41,8 +55,9 @@ export default function SignupForm() {
             setPasswordStrength(0);
             return;
         }
-        const result = zxcvbn(pwd);
-        setPasswordStrength(result.score);
+
+        const score = getPasswordStrength(pwd);
+        setPasswordStrength(score);
     };
 
     const getStrengthBarColor = () => {
@@ -70,7 +85,8 @@ export default function SignupForm() {
 
     const onSubmit = async (data: SignupFormValues) => {
         // Re-verify strength to prevent submission hooks bypass
-        if (zxcvbn(data.password).score < 2) {
+        const score = getPasswordStrength(data.password);
+        if (score < 2) {
             setServerError('Password is too weak. Please use a stronger password.');
             return;
         }

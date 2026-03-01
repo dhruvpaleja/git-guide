@@ -34,9 +34,9 @@ export default function SoulBotSection() {
 
       {/* Black chat panel - Figma: h-820, w-1440, bg-black */}
       <div
-        className={`bg-black relative overflow-hidden transition-all duration-[1000ms] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        className={`bg-black relative overflow-hidden transition-all ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
-        style={{ height: '820px', transitionDelay: '0.2s' }}
+        style={{ height: '820px', transitionDuration: '1000ms', transitionDelay: '0.2s' }}
       >
         {/* Grey blur circle - Figma: size-400, top:-200 */}
         <div className="absolute pointer-events-none" style={{ width: '400px', height: '400px', left: '33.33%', top: '-200px' }}>

@@ -209,3 +209,44 @@
 .animate-on-scroll.visible {
   opacity: 1;
 }
+
+/* Mandala rotation animation */
+@keyframes mandala-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-mandala-rotate {
+  animation: mandala-rotate 120s linear infinite;
+}
+
+/* Journey card fade-in animation */
+@keyframes journey-card-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-journey-card {
+  animation: journey-card-fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Journey card blur effect */
+.journey-card-blur {
+  transition: blur 0.3s ease-in-out;
+}
+
+/* Delay classes for staggered animation */
+.delay-journey-1 { animation-delay: 0.5s; }
+.delay-journey-2 { animation-delay: 2s; }
+.delay-journey-3 { animation-delay: 3.5s; }
+

@@ -43,6 +43,11 @@ const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 
+// Journey Preparation Page - shown after login before dashboard
+const JourneyPreparationPage = lazy(() =>
+  import('@/features/journey-preparation/pages/JourneyPreparationPage')
+);
+
 // ---------------------------------------------------------------------------
 // Suspense wrapper for lazy pages
 // ---------------------------------------------------------------------------
@@ -85,6 +90,14 @@ const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     children: [
+      {
+        path: '/journey-preparation',
+        element: (
+          <Lazy>
+            <JourneyPreparationPage />
+          </Lazy>
+        ),
+      },
       {
         path: '/dashboard',
         element: <DashboardLayout />,

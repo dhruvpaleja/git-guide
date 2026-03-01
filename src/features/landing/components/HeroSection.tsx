@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Link } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -181,9 +182,9 @@ export default function HeroSection() {
           className={`absolute bottom-32 sm:bottom-20 lg:bottom-[15%] left-1/2 -translate-x-1/2 z-50 transition-all duration-[1000ms] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           style={{ transitionDelay: '1.2s' }}
         >
-          <button className="h-[52px] sm:h-[56px] px-8 sm:px-10 rounded-[28px] text-[13px] sm:text-[14px] font-medium text-white/90 tracking-[0.02em] text-center transition-all duration-300 hover:scale-105 border border-white/10 bg-[#311d17]/60 hover:bg-[#311d17]/90 backdrop-blur-xl pointer-events-auto shadow-[0_0_20px_rgba(49,29,23,0.5)]">
+          <Link to="/contact" className="h-[52px] sm:h-[56px] px-8 sm:px-10 rounded-[28px] text-[13px] sm:text-[14px] font-medium text-white/90 tracking-[0.02em] text-center transition-all duration-300 hover:scale-105 border border-white/10 bg-[#311d17]/60 hover:bg-[#311d17]/90 backdrop-blur-xl pointer-events-auto shadow-[0_0_20px_rgba(49,29,23,0.5)] inline-flex items-center justify-center">
             Start Your Journey
-          </button>
+          </Link>
         </div>
 
       </div>

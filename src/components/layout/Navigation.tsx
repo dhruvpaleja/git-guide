@@ -6,7 +6,8 @@ const navItems = [
   { label: 'Home', href: '#home', isRoute: false },
   { label: 'About Soul Yatri', href: '#about', isRoute: false },
   { label: 'Business', href: '#business', isRoute: false },
-  { label: 'Blogs', href: '#blog', isRoute: false },
+  { label: 'Blogs', href: '/blogs', isRoute: true },
+  { label: 'Contact', href: '/contact', isRoute: true },
   { label: 'Login', href: '/login', isRoute: true },
   { label: 'Signup', href: '/signup', isRoute: true },
 ];

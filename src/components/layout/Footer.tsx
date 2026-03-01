@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const footerLinks = [
   { label: 'Overview', href: '#overview' },
-  { label: 'Careers', href: '#careers' },
-  { label: 'Blog', href: '#blog' },
+  { label: 'Careers', href: '/careers', isRoute: true },
+  { label: 'Blog', href: '/blogs', isRoute: true },
   { label: 'B2B', href: '#b2b' },
   { label: 'Terms & Conditions', href: '#terms' },
   { label: 'Privacy Policy', href: '#privacy' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Contact', href: '/contact', isRoute: true },
 ];
 
 export default function Footer() {
@@ -24,15 +25,25 @@ export default function Footer() {
             className="h-[28px] w-auto object-contain"
           />
           <div className="flex flex-col items-end gap-1.5">
-            {footerLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="text-[12px] text-white/70 hover:text-white transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+            {footerLinks.map((link) =>
+              link.isRoute ? (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="text-[12px] text-white/70 hover:text-white transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="text-[12px] text-white/70 hover:text-white transition-colors"
+                >
+                  {link.label}
+                </a>
+              )
+            )}
           </div>
         </div>
 

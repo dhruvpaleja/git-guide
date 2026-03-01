@@ -26,6 +26,10 @@ import ProtectedRoute from './ProtectedRoute';
 const SplashScreen = lazy(() => import('@/pages/SplashScreen'));
 const LandingPage = lazy(() => import('@/pages/LandingPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
+const ContactPage = lazy(() => import('@/pages/ContactPage'));
+const CareerPage = lazy(() => import('@/pages/CareerPage'));
+const BlogsPage = lazy(() => import('@/pages/BlogsPage'));
+const CoursesPage = lazy(() => import('@/pages/CoursesPage'));
 
 // Auth Pages (Phase 1 MVP)
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
@@ -67,6 +71,46 @@ const router = createBrowserRouter([
     element: (
       <Lazy>
         <SignupPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/contact',
+    element: (
+      <Lazy>
+        <ContactPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/careers',
+    element: (
+      <Lazy>
+        <CareerPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/blogs',
+    element: (
+      <Lazy>
+        <BlogsPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/blog',
+    element: (
+      <Lazy>
+        <BlogsPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/courses',
+    element: (
+      <Lazy>
+        <CoursesPage />
       </Lazy>
     ),
   },

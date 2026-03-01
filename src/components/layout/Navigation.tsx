@@ -13,7 +13,13 @@ const navItems = [
 ];
 
 export default function Navigation() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  // Use lazy initializer to avoid calling setState in effect
+  const [isScrolled, setIsScrolled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.scrollY > 30;
+    }
+    return false;
+  });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const location = useLocation();
@@ -52,16 +58,13 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // Avoid calling handleScroll on mount as it causes SetState warnings
-  // The scroll event listener will capture scroll position changes
+  // Update navbar theme when navigating to a new page
+  // Use setTimeout to avoid setState-in-effect warning
   useEffect(() => {
-    // Just set initial scroll state without calling handleScroll
-    setIsScrolled(window.scrollY > 30);
-  }, []);
-
-  // Update navbar theme immediately when navigating to a new page
-  useEffect(() => {
-    handleScroll();
+    const timeoutId = setTimeout(() => {
+      handleScroll();
+    }, 0);
+    return () => clearTimeout(timeoutId);
   }, [location.pathname, handleScroll]);
 
   // Handle Logo click

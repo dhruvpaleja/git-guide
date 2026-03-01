@@ -82,7 +82,7 @@ export default function HeroSection() {
       id="home"
       ref={container}
       className="relative overflow-hidden bg-black"
-      style={{ height: '100vh', minHeight: '900px' }}
+      style={{ height: '100dvh' }}
     >
       {/* Grey Ellipse - Figma: size-500, top:-250, centered */}
       <div
@@ -106,7 +106,7 @@ export default function HeroSection() {
           }`}
         style={{ transitionDuration: '1500ms', transitionDelay: '0.2s', paddingBottom: '0' }}
       >
-        <div className="relative w-full h-[600px] md:h-[800px] flex items-end justify-center mt-20 md:mt-0">
+        <div className="relative w-full h-[500px] md:h-[700px] flex items-end justify-center mt-16 md:mt-0">
           {/* Subtle background glow behind image instead of blurring the image itself */}
           <div className="absolute inset-0 bg-orange-500/10 rounded-full blur-[100px] w-[500px] h-[500px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
@@ -115,7 +115,7 @@ export default function HeroSection() {
             ref={imageRef}
             src="/images/hero-monk.png"
             alt="Soul Yatri Hero"
-            className="relative z-10 w-auto h-full max-h-[85vh] object-contain object-bottom pointer-events-auto origin-bottom"
+            className="relative z-10 w-auto h-full max-h-[75dvh] object-contain object-bottom pointer-events-auto origin-bottom"
             style={{
               maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)',
@@ -125,7 +125,7 @@ export default function HeroSection() {
       </div>
 
       {/* Text Content */}
-      <div ref={textRef} className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-6 md:px-12 pointer-events-none flex flex-col justify-start lg:justify-center lg:block pt-32 sm:pt-40 lg:pt-0 pb-72 sm:pb-0">
+      <div ref={textRef} className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-6 md:px-12 pointer-events-none flex flex-col justify-start lg:justify-center lg:block pt-24 sm:pt-28 lg:pt-0 pb-48 sm:pb-0">
 
         {/* Title "Your Journey Begins." */}
         <div
@@ -133,7 +133,7 @@ export default function HeroSection() {
           style={{ transitionDelay: '0.4s' }}
         >
           <motion.h1
-            className="text-4xl sm:text-5xl lg:text-[72px] font-medium text-white lg:leading-[1.2] tracking-[-0.02em] text-center lg:text-left drop-shadow-md"
+            className="text-3xl sm:text-4xl lg:text-[60px] font-medium text-white lg:leading-[1.2] tracking-[-0.02em] text-center lg:text-left drop-shadow-md"
             variants={{
               hidden: { opacity: 1 },
               visible: {
@@ -155,12 +155,12 @@ export default function HeroSection() {
             <motion.span
               animate={{ opacity: [1, 0] }}
               transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-              className="inline-block w-[2px] h-[70px] bg-white/70 align-middle ml-1 -translate-y-2 hidden lg:inline-block"
+              className="inline-block w-[2px] h-[56px] bg-white/70 align-middle ml-1 -translate-y-2 hidden lg:inline-block"
             />
             <motion.span
               animate={{ opacity: [1, 0] }}
               transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-              className="inline-block w-[2px] h-[36px] bg-white/70 align-middle ml-1 -translate-y-1 lg:hidden"
+              className="inline-block w-[2px] h-[28px] bg-white/70 align-middle ml-1 -translate-y-1 lg:hidden"
             />
           </motion.h1>
         </div>
@@ -170,7 +170,7 @@ export default function HeroSection() {
           className={`flex flex-col items-center lg:items-end transition-all duration-700 lg:absolute lg:top-[340px] lg:right-[6.67%] z-30 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           style={{ transitionDelay: '0.5s' }}
         >
-          <p className="text-sm sm:text-[15px] font-normal text-white/50 text-center lg:text-right leading-[26px] sm:leading-[30px] tracking-[-0.01em] max-w-sm sm:max-w-md mx-auto lg:mx-0 lg:w-[350px] mb-6 sm:mb-8 drop-shadow-sm px-4 lg:px-0">
+          <p className="text-xs sm:text-[13px] font-normal text-white/50 text-center lg:text-right leading-[22px] sm:leading-[26px] tracking-[-0.01em] max-w-sm sm:max-w-md mx-auto lg:mx-0 lg:w-[350px] mb-4 sm:mb-6 drop-shadow-sm px-4 lg:px-0">
             A Tech-enabled Mental wellbeing platform <br className="hidden lg:block" />
             blending modern Psychology, Coaching & <br className="hidden lg:block" />
             Traditional Indian wisdom.
@@ -179,7 +179,7 @@ export default function HeroSection() {
 
         {/* CTA Button Centered over the Monk at bottom */}
         <div
-          className={`absolute bottom-32 sm:bottom-20 lg:bottom-[15%] left-1/2 -translate-x-1/2 z-50 transition-all ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          className={`absolute bottom-24 sm:bottom-16 lg:bottom-[12%] left-1/2 -translate-x-1/2 z-50 transition-all ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           style={{ transitionDuration: '1000ms', transitionDelay: '1.2s' }}
         >
           <Link to="/contact" className="h-[52px] sm:h-[56px] px-8 sm:px-10 rounded-[28px] text-[13px] sm:text-[14px] font-medium text-white/90 tracking-[0.02em] text-center transition-all duration-300 hover:scale-105 border border-white/10 bg-[#311d17]/60 hover:bg-[#311d17]/90 backdrop-blur-xl pointer-events-auto shadow-[0_0_20px_rgba(49,29,23,0.5)] inline-flex items-center justify-center">

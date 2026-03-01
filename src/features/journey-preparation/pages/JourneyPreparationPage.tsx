@@ -1,8 +1,7 @@
 /**
  * Journey Preparation Page
- * Loading screen shown when user completes login flow
- * Displays journey stages: Preparing, Centering, Awakening
- * Features rotating mandala background for immersive experience
+ * Pixel-perfect meditation-style loading screen matching Figma design
+ * Displays static cards with unblur animation effect
  */
 
 import { useEffect, useState } from 'react';
@@ -17,7 +16,7 @@ interface JourneyPreparationPageProps {
 
 export default function JourneyPreparationPage({
   onComplete,
-  autoAdvanceDelay = 6000, // 6 seconds before auto-advancing
+  autoAdvanceDelay = 5000, // 5 seconds to view unblur animations + static content
 }: JourneyPreparationPageProps) {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
@@ -26,7 +25,7 @@ export default function JourneyPreparationPage({
     // Auto-navigate to dashboard after delay
     const timer = setTimeout(() => {
       setIsVisible(false);
-      
+
       // Small delay for fade-out animation before navigation
       setTimeout(() => {
         onComplete?.();
@@ -53,38 +52,20 @@ export default function JourneyPreparationPage({
       }`}
       onClick={handleSkip}
     >
-      {/* Mandala Background with rotating effect */}
+      {/* Mandala Background - static, no animation */}
       <MandalaBackground />
 
-      {/* Journey Stage Cards */}
+      {/* Journey Stage Cards - exact Figma positioning */}
       <div className="relative w-full h-full pointer-events-none">
-        {/* Stage 1: Preparing Your Journey - appears first, fully visible */}
-        <JourneyCard
-          text="Preparing Your Journey"
-          position="top"
-          animationDelay="0s"
-          blurred={false}
-          opacity={1}
-        />
+          {/* Card 1: Preparing Your Journey - Fully visible, no blur */}
+          <JourneyCard text="Preparing Your Journey" position="top" blurred={false} />
 
-        {/* Stage 2: Centering Your Soul - appears second, subtle blur, 40% opacity */}
-        <JourneyCard
-          text="Centering Your Soul"
-          position="middle"
-          animationDelay="1.5s"
-          blurred={true}
-          opacity={0.4}
-        />
+          {/* Card 2: Centering Your Soul - Starts blurred, animates to unblur */}
+          <JourneyCard text="Centering Your Soul" position="middle" blurred={true} />
 
-        {/* Stage 3: Awakening Soul - appears third, more blur, 30% opacity */}
-        <JourneyCard
-          text="Awakening Soul"
-          position="bottom"
-          animationDelay="3s"
-          blurred={true}
-          opacity={0.3}
-        />
-      </div>
+          {/* Card 3: Awakening Soul - Starts blurred, animates to unblur */}
+          <JourneyCard text="Awakening Soul" position="bottom" blurred={true} />
+        </div>
 
       {/* Skip indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-auto cursor-pointer">

@@ -240,9 +240,18 @@
   animation: journey-card-fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Journey card blur effect */
-.journey-card-blur {
-  transition: blur 0.3s ease-in-out;
+/* Card unblur animation - transitions from blur to sharp */
+@keyframes unblur-in {
+  0% {
+    filter: blur(4px);
+  }
+  100% {
+    filter: blur(0px);
+  }
+}
+
+.animate-unblur-in {
+  animation: unblur-in 1.2s ease-out forwards;
 }
 
 /* Delay classes for staggered animation */

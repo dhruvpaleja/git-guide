@@ -30,12 +30,12 @@ export default function StudentCounsellingCard({
         >
             {/* Card Container with border */}
             <div
-                className="relative w-full h-[450px] rounded-[30px] overflow-hidden border border-white/20 bg-black/40 backdrop-blur-sm transition-all duration-500 ease-out"
+                className="relative w-[280px] sm:w-[320px] md:w-[360px] h-[320px] sm:h-[340px] md:h-[360px] rounded-2xl md:rounded-3xl overflow-hidden border border-white/20 bg-black/40 backdrop-blur-sm transition-all duration-500 ease-out"
                 style={{
-                    transform: isHovered ? 'scale(1.05) translateY(-10px)' : 'scale(1) translateY(0)',
+                    transform: isHovered ? 'scale(1.03) translateY(-8px)' : 'scale(1) translateY(0)',
                     boxShadow: isHovered
-                        ? '0px 20px 60px rgba(24,162,184,0.3)'
-                        : '0px 10px 40px rgba(255,255,255,0.1)',
+                        ? '0px 15px 40px rgba(24,162,184,0.25)'
+                        : '0px 8px 30px rgba(255,255,255,0.1)',
                 }}
             >
                 {/* Image Container */}
@@ -60,22 +60,22 @@ export default function StudentCounsellingCard({
                 </div>
 
                 {/* Content Section */}
-                <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-10">
+                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5 md:p-6">
                     {/* Title */}
-                    <h3 className="text-white font-semibold text-[18px] md:text-[20px] text-center mb-6 leading-[1.3] tracking-[-0.18px]">
+                    <h3 className="text-white font-semibold text-sm sm:text-base md:text-lg text-center mb-3 md:mb-4 leading-[1.3] tracking-tight">
                         {title}
                     </h3>
 
                     {/* Learn More Button */}
                     <button
-                        className="w-full bg-white hover:bg-white/90 text-black font-semibold text-[16px] py-4 rounded-[30px] transition-all duration-300 flex items-center justify-center gap-2 group/button"
+                        className="w-full bg-white hover:bg-white/90 text-black font-semibold text-xs sm:text-sm md:text-base py-2.5 sm:py-3 md:py-3.5 rounded-full transition-all duration-300 flex items-center justify-center gap-1.5 md:gap-2 group/button"
                         style={{
                             transform: isHovered ? 'scale(1.02)' : 'scale(1)',
                         }}
                     >
                         Learn More
                         <ChevronRight
-                            size={18}
+                            size={16}
                             className="transition-transform duration-300 group-hover/button:translate-x-1"
                         />
                     </button>

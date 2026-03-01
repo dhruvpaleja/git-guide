@@ -31,73 +31,101 @@ const workshopCards = [
 
 export default function WorkshopCardsGrid() {
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
 
     useEffect(() => {
-        // Trigger animations on mount
         const timer = setTimeout(() => setIsLoaded(true), 100);
         return () => clearTimeout(timer);
     }, []);
 
+    // Duplicate cards for infinite scroll effect
+    const duplicatedCards = [...workshopCards, ...workshopCards, ...workshopCards];
+
     return (
-        <section className="w-full bg-black py-24 md:py-32">
-            <div className="max-w-7xl mx-auto px-6 md:px-8">
+        <section className="w-full bg-black py-12 md:py-16 lg:py-20">
+            <div className="w-full">
                 {/* Section Title with fade-in animation */}
                 <div
-                    className={`text-center mb-16 md:mb-24 transition-all duration-700 ${
+                    className={`text-center mb-8 md:mb-12 px-4 transition-all duration-700 ${
                         isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                     }`}
                 >
-                    <h2 className="text-white font-semibold text-[32px] md:text-[40px] tracking-[-0.32px] leading-[1.2]">
+                    <h2 className="text-white font-semibold text-xl md:text-2xl lg:text-3xl tracking-tight leading-[1.2]">
                         Soul Yatri Offers For Corporate Wellness
                     </h2>
                 </div>
 
-                {/* Cards Grid - Responsive layout */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 xl:gap-10">
-                    {workshopCards.map((card, index) => (
-                        <div
-                            key={index}
-                            className={`transition-all duration-700 ${
-                                isLoaded
-                                    ? 'opacity-100 translate-y-0'
-                                    : 'opacity-0 translate-y-8'
-                            }`}
-                            style={{
-                                transitionDelay: `${(index + 1) * 100}ms`,
-                            }}
-                        >
-                            <WorkshopCard
-                                title={card.title}
-                                imagePath={card.imagePath}
-                                gradientOverlayPath={card.gradientOverlayPath}
-                                index={index}
-                            />
-                        </div>
-                    ))}
+                {/* Auto-scrolling Carousel Container */}
+                <div className="relative overflow-hidden">
+                    {/* Gradient Overlays for fade effect */}
+                    <div className="absolute left-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
+                    <div className="absolute right-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+
+                    {/* Scrolling Cards */}
+                    <div
+                        className={`flex gap-4 md:gap-6 ${
+                            isPaused ? '' : 'animate-scroll'
+                        }`}
+                        onMouseEnter={() => setIsPaused(true)}
+                        onMouseLeave={() => setIsPaused(false)}
+                        style={{
+                            width: 'max-content',
+                        }}
+                    >
+                        {duplicatedCards.map((card, index) => (
+                            <div
+                                key={`${card.title}-${index}`}
+                                className={`flex-shrink-0 transition-opacity duration-700 ${
+                                    isLoaded ? 'opacity-100' : 'opacity-0'
+                                }`}
+                                style={{
+                                    transitionDelay: `${Math.min(index, 5) * 100}ms`,
+                                }}
+                            >
+                                <WorkshopCard
+                                    title={card.title}
+                                    imagePath={card.imagePath}
+                                    gradientOverlayPath={card.gradientOverlayPath}
+                                    index={index}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                {/* Navigation Dots with fade-in animation */}
+                {/* Scroll Indicator Text */}
                 <div
-                    className={`flex justify-center gap-2 mt-16 md:mt-24 transition-all duration-700 ${
+                    className={`text-center mt-8 md:mt-12 px-4 transition-all duration-700 ${
                         isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0'
                     }`}
                     style={{
-                        transitionDelay: `${(workshopCards.length + 1) * 100}ms`,
+                        transitionDelay: '600ms',
                     }}
                 >
-                    {[...Array(5)].map((_, i) => (
-                        <button
-                            key={i}
-                            className={`h-2 rounded-full transition-all duration-300 ${
-                                i === 0
-                                    ? 'w-8 bg-white hover:bg-white/80'
-                                    : 'w-2 bg-white/30 hover:bg-white/50'
-                            }`}
-                            aria-label={`Go to card ${i + 1}`}
-                        />
-                    ))}
+                    <p className="text-white/40 text-xs md:text-sm">
+                        Hover over cards to pause • Auto-scrolling carousel
+                    </p>
                 </div>
             </div>
+
+            <style>{`
+                @keyframes scroll {
+                    0% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-33.333%);
+                    }
+                }
+                
+                .animate-scroll {
+                    animation: scroll 40s linear infinite;
+                }
+                
+                .animate-scroll:hover {
+                    animation-play-state: paused;
+                }
+            `}</style>
         </section>
     );
 }

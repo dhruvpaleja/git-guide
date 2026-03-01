@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Star } from 'lucide-react';
 import type { CourseItem } from '../constants/courses.data';
 
 interface CourseCardProps {
@@ -47,7 +48,7 @@ export default function CourseCard({ course, highlighted = false }: CourseCardPr
             transform: isHovered ? 'scale(1.05)' : 'scale(1)',
           }}
         >
-          <img src="/images/courses/star.png" alt="" aria-hidden className="h-[11px] w-[11px] sm:h-[13px] sm:w-[13px] md:h-[14px] md:w-[14px]" />
+          <Star className="h-[11px] w-[11px] fill-yellow-400 text-yellow-400 sm:h-[13px] sm:w-[13px] md:h-[14px] md:w-[14px]" />
           <span>{course.rating}</span>
         </div>
 

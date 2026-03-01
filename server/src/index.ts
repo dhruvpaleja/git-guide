@@ -3,17 +3,37 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import { createServer } from 'http';
 
 import { config } from './config/index.js';
 import { errorHandler, notFound } from './middleware/error.js';
+import { requestContext } from './middleware/request-context.js';
+import { apiLimiter } from './middleware/security.middleware.js';
+import { logger, morganStream } from './lib/logger.js';
+import { prisma } from './lib/prisma.js';
 import routes from './routes/index.js';
 
 const app = express();
 
 // ---------------------------------------------------------------------------
-// Middleware
+// Trust Proxy (required behind load balancer/reverse proxy for rate limiting)
 // ---------------------------------------------------------------------------
-app.use(helmet());
+if (config.security.trustProxy) {
+  app.set('trust proxy', 1);
+}
+
+// ---------------------------------------------------------------------------
+// Security Headers
+// ---------------------------------------------------------------------------
+app.use(helmet({
+  contentSecurityPolicy: config.isProduction ? undefined : false, // Disable CSP in dev for HMR
+  crossOriginEmbedderPolicy: false, // Allow loading cross-origin resources
+  hsts: config.isProduction ? { maxAge: 31536000, includeSubDomains: true, preload: true } : false,
+}));
+
+// ---------------------------------------------------------------------------
+// CORS
+// ---------------------------------------------------------------------------
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -32,16 +52,39 @@ app.use(
 
       callback(new Error('Not allowed by CORS'));
     },
-    credentials: true,
+    credentials: config.cors.credentials,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+    exposedHeaders: ['X-Request-ID', 'RateLimit-Limit', 'RateLimit-Remaining', 'RateLimit-Reset'],
+    maxAge: 86400, // 24 hours preflight cache
   }),
 );
-app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-if (!config.isProduction) {
+// ---------------------------------------------------------------------------
+// Request Context — Correlation IDs, timing, logging (MUST be before other middleware)
+// ---------------------------------------------------------------------------
+app.use(requestContext);
+
+// ---------------------------------------------------------------------------
+// Body Parsing with size limits
+// ---------------------------------------------------------------------------
+app.use(cookieParser());
+app.use(express.json({ limit: config.bodyLimit.json }));
+app.use(express.urlencoded({ extended: true, limit: config.bodyLimit.urlencoded }));
+
+// ---------------------------------------------------------------------------
+// HTTP Request Logging
+// ---------------------------------------------------------------------------
+if (config.isProduction) {
+  app.use(morgan('combined', { stream: morganStream }));
+} else {
   app.use(morgan('dev'));
 }
+
+// ---------------------------------------------------------------------------
+// Global API Rate Limiter
+// ---------------------------------------------------------------------------
+app.use(config.api.prefix, apiLimiter);
 
 // ---------------------------------------------------------------------------
 // Routes
@@ -56,12 +99,62 @@ app.use(notFound);
 app.use(errorHandler);
 
 // ---------------------------------------------------------------------------
-// Start
+// HTTP Server + Graceful Shutdown
 // ---------------------------------------------------------------------------
-app.listen(config.port, () => {
-  if (config.nodeEnv !== 'production') {
-    console.warn(`Server running on port ${config.port} [${config.nodeEnv}]`);
-  }
+const server = createServer(app);
+
+server.listen(config.port, () => {
+  logger.info('server_started', {
+    port: config.port,
+    env: config.nodeEnv,
+    version: config.api.version,
+    pid: process.pid,
+  });
+});
+
+// Graceful shutdown handler
+let isShuttingDown = false;
+
+async function gracefulShutdown(signal: string) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
+  logger.info('shutdown_initiated', { signal });
+
+  // Stop accepting new connections
+  server.close(async () => {
+    logger.info('http_server_closed');
+
+    try {
+      // Disconnect database
+      await prisma.$disconnect();
+      logger.info('database_disconnected');
+    } catch (err) {
+      logger.error('shutdown_error', { error: err instanceof Error ? err.message : String(err) });
+    }
+
+    logger.info('shutdown_complete');
+    process.exit(0);
+  });
+
+  // Force shutdown after 30 seconds
+  setTimeout(() => {
+    logger.error('forced_shutdown', { reason: 'Graceful shutdown timed out after 30s' });
+    process.exit(1);
+  }, 30_000).unref();
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Catch unhandled errors
+process.on('uncaughtException', (error) => {
+  logger.error('uncaught_exception', { error: error.message, stack: error.stack });
+  gracefulShutdown('uncaughtException');
+});
+
+process.on('unhandledRejection', (reason) => {
+  logger.error('unhandled_rejection', { reason: reason instanceof Error ? reason.message : String(reason) });
 });
 
 export default app;

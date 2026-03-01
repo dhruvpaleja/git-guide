@@ -6,9 +6,10 @@ datasource db {
   provider = "postgresql"
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // ENUMS
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
 enum Role {
   USER
   THERAPIST
@@ -26,9 +27,59 @@ enum AuditCategory {
   SESSION_ACTION
 }
 
-// ---------------------------------------------------------------------------
-// MODELS
-// ---------------------------------------------------------------------------
+enum SessionStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum NotificationType {
+  SESSION_REMINDER
+  SESSION_CONFIRMED
+  SESSION_CANCELLED
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  MOOD_REMINDER
+  ACHIEVEMENT
+  SYSTEM
+  CRISIS_ALERT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  PREFER_NOT_TO_SAY
+}
+
+enum TherapyHistory {
+  NEVER
+  CURRENTLY
+  PAST
+  CONSIDERING
+}
+
+enum TherapistApproach {
+  CBT
+  HOLISTIC
+  MIXED
+}
+
+// ===========================================================================
+// CORE MODELS
+// ===========================================================================
+
 model User {
   id              String         @id @default(uuid())
   email           String         @unique
@@ -38,7 +89,7 @@ model User {
   role            Role           @default(USER)
   avatarUrl       String?
   isVerified      Boolean        @default(false)
-  
+
   // Security & AI Tracking
   lastLoginAt     DateTime?
   failedAttempts  Int            @default(0)
@@ -47,8 +98,17 @@ model User {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 
-  refreshTokens   RefreshToken[]
-  auditLogs       AuditLog[]
+  // Relations
+  refreshTokens     RefreshToken[]
+  auditLogs         AuditLog[]
+  profile           UserProfile?
+  therapistProfile  TherapistProfile?
+  sessions          Session[]          @relation("UserSessions")
+  moodEntries       MoodEntry[]
+  journalEntries    JournalEntry[]
+  meditationLogs    MeditationLog[]
+  payments          Payment[]
+  notifications     Notification[]
 
   @@index([email])
 }
@@ -58,13 +118,13 @@ model RefreshToken {
   tokenHash       String   @unique
   userId          String
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
   // Advanced Hijack & AI Tracking Data
   userAgent       String?
   ipHash          String?
   familyId        String   // For token rotation logic to identify token families
   isRevoked       Boolean  @default(false)
-  
+
   expiresAt       DateTime
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -77,21 +137,307 @@ model RefreshToken {
 // AI Datastore foundation
 model AuditLog {
   id              String        @id @default(uuid())
-  userId          String?       // Optional in case of anonymous actions (e.g. failed unauthed login)
+  userId          String?       // Optional in case of anonymous actions
   user            User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
-  
+
   category        AuditCategory
   action          String        // e.g., "LOGIN_FAILED", "TOKEN_REUSED", "PASSWORD_CHANGED"
-  
-  // JSON field containing all metadata needed for later AI data analysis / LLM training
-  metadata        Json?         
-  
+
+  // JSON field containing all metadata for AI data analysis
+  metadata        Json?
+
   ipHash          String?
   userAgent       String?
-  
+
   createdAt       DateTime      @default(now())
 
   @@index([userId])
   @@index([category])
   @@index([createdAt])
+}
+
+// ===========================================================================
+// USER PROFILE & ONBOARDING
+// ===========================================================================
+
+model UserProfile {
+  id                  String          @id @default(uuid())
+  userId              String          @unique
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Step 1: Date of Birth
+  dateOfBirth         DateTime?
+
+  // Step 2: Gender
+  gender              Gender?
+
+  // Step 3: Location
+  city                String?
+  state               String?
+  country             String?         @default("India")
+
+  // Step 4: Struggles (what brings you here)
+  struggles           String[]        // ["anxiety","depression","relationships","stress","grief","anger","self-esteem","trauma","addiction","other"]
+
+  // Step 5: Therapy history
+  therapyHistory      TherapyHistory?
+
+  // Step 6: Goals
+  goals               String[]        // ["reduce-anxiety","better-sleep","relationships","self-discovery","career","spiritual-growth","trauma-healing","confidence"]
+
+  // Step 7: Therapist preferences
+  therapistGenderPref String?         // "male", "female", "no-preference"
+  therapistLanguages  String[]        // ["english","hindi","marathi","tamil","telugu","bengali","kannada","malayalam","gujarati"]
+  therapistApproach   TherapistApproach?
+
+  // Step 8: Interests
+  interests           String[]        // ["meditation","yoga","journaling","breathing","astrology","community"]
+
+  // Step 9: Emergency contact
+  emergencyName       String?
+  emergencyPhone      String?
+  emergencyRelation   String?
+
+  // Onboarding tracking
+  onboardingStep      Int             @default(0)   // 0-10
+  onboardingComplete  Boolean         @default(false)
+
+  // Astrology data (from existing astrology step)
+  birthTime           String?
+  birthPlace          String?
+  zodiacSign          String?
+
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+}
+
+// ===========================================================================
+// THERAPIST SYSTEM
+// ===========================================================================
+
+model TherapistProfile {
+  id                String          @id @default(uuid())
+  userId            String          @unique
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Professional info
+  specializations   String[]        // ["anxiety","depression","relationships","trauma","addiction","grief","stress","self-esteem","couples","family"]
+  approach          TherapistApproach @default(MIXED)
+  languages         String[]        // ["english","hindi","marathi","tamil"]
+  qualifications    String[]        // ["M.Phil Clinical Psychology","RCI Licensed","CBT Certified"]
+  experience        Int             // years of practice
+  bio               String
+  photoUrl          String?
+
+  // Pricing
+  pricePerSession   Int             // in INR (e.g., 1500)
+  currency          String          @default("INR")
+
+  // Ratings
+  rating            Float           @default(0)
+  totalReviews      Int             @default(0)
+  totalSessions     Int             @default(0)
+
+  // Status
+  isVerified        Boolean         @default(false)
+  isAvailable       Boolean         @default(true)
+  verifiedAt        DateTime?
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relations
+  availabilities    TherapistAvailability[]
+  sessions          Session[]
+
+  @@index([isVerified, isAvailable])
+  @@index([rating])
+}
+
+model TherapistAvailability {
+  id              String           @id @default(uuid())
+  therapistId     String
+  therapist       TherapistProfile @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+
+  dayOfWeek       Int              // 0=Sunday, 6=Saturday
+  startTime       String           // "09:00" (24hr format)
+  endTime         String           // "17:00"
+  slotDuration    Int              @default(50) // minutes per slot
+  breakAfterSlot  Int              @default(10) // break minutes after each slot
+
+  isActive        Boolean          @default(true)
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([therapistId])
+  @@index([dayOfWeek])
+}
+
+// ===========================================================================
+// SESSION & BOOKING
+// ===========================================================================
+
+model Session {
+  id              String           @id @default(uuid())
+  userId          String
+  user            User             @relation("UserSessions", fields: [userId], references: [id])
+  therapistId     String
+  therapist       TherapistProfile @relation(fields: [therapistId], references: [id])
+
+  // Scheduling
+  scheduledAt     DateTime
+  duration        Int              @default(50) // minutes
+  status          SessionStatus    @default(SCHEDULED)
+
+  // Cancellation
+  cancelledBy     String?          // userId of who cancelled
+  cancelReason    String?
+  cancelledAt     DateTime?
+
+  // Session details
+  notes           String?          // Therapist notes (encrypted at rest)
+  summary         String?          // AI-generated session summary
+  userRating      Int?             // 1-5 post-session rating
+  userFeedback    String?
+
+  // Video
+  roomUrl         String?          // Daily.co room URL
+  roomName        String?
+
+  // Payment
+  paymentId       String?          @unique
+  payment         Payment?         @relation(fields: [paymentId], references: [id])
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([therapistId])
+  @@index([scheduledAt])
+  @@index([status])
+}
+
+// ===========================================================================
+// HEALTH TOOLS
+// ===========================================================================
+
+model MoodEntry {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  score           Int      // 1-10
+  note            String?  // optional text note
+  tags            String[] // ["anxious","calm","happy","sad","stressed","energetic","tired","hopeful","irritable","peaceful"]
+
+  createdAt       DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId])
+}
+
+model JournalEntry {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title           String?
+  content         String   // The journal text (encrypted at rest in production)
+  mood            Int?     // Optional mood at time of writing (1-10)
+  tags            String[] // User-defined tags
+  isPrivate       Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([userId])
+}
+
+model MeditationLog {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  duration        Int      // seconds
+  type            String   // "guided", "unguided", "breathing", "body-scan", "loving-kindness"
+  trackName       String?  // name of guided track if applicable
+  completed       Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId])
+}
+
+// ===========================================================================
+// PAYMENTS
+// ===========================================================================
+
+model Payment {
+  id                  String        @id @default(uuid())
+  userId              String
+  user                User          @relation(fields: [userId], references: [id])
+
+  // Razorpay fields
+  razorpayOrderId     String?       @unique
+  razorpayPaymentId   String?       @unique
+  razorpaySignature   String?
+
+  // Amount
+  amount              Int           // in smallest currency unit (paise for INR)
+  currency            String        @default("INR")
+  status              PaymentStatus @default(PENDING)
+
+  // Description
+  description         String?       // "Therapy session with Dr. Singh"
+  type                String        // "session", "subscription", "shop"
+
+  // Refund
+  refundAmount        Int?
+  refundReason        String?
+  refundedAt          DateTime?
+
+  // Metadata
+  metadata            Json?         // Additional payment context
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  // Relations
+  session             Session?
+
+  @@index([userId])
+  @@index([status])
+  @@index([razorpayOrderId])
+}
+
+// ===========================================================================
+// NOTIFICATIONS
+// ===========================================================================
+
+model Notification {
+  id              String           @id @default(uuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type            NotificationType
+  title           String
+  body            String
+  data            Json?            // Additional context (e.g., sessionId, paymentId)
+
+  isRead          Boolean          @default(false)
+  readAt          DateTime?
+
+  // Delivery
+  channel         String           @default("in_app") // "in_app", "email", "push", "sms"
+  sentAt          DateTime?
+  deliveredAt     DateTime?
+
+  createdAt       DateTime         @default(now())
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+  @@index([type])
 }

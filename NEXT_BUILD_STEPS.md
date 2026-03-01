@@ -69,913 +69,1293 @@ export const getProfile = asyncHandler(async (req: AuthenticatedRequest, res) =>
 });
 ```
 
----
+### PATTERN FOR NEW VALIDATORS
+```typescript
+import { z } from 'zod';
+import type { Request, Response, NextFunction } from 'express';
 
-## PHASE 2: USER ONBOARDING FLOW (10-Step Wizard)
+export const mySchema = z.object({ name: z.string().min(1) });
 
-### WHAT EXISTS NOW
-- `src/features/onboarding/screens/OnboardingSignupPage.tsx` - Welcome screen with 5 journey steps (DONE)
-- `src/features/onboarding/screens/OnboardingCreateAccountPage.tsx` - Account creation form (DONE)
-- `src/features/onboarding/screens/OnboardingAstrologyPage.tsx` - Astrology intake (DONE)
-- `src/features/onboarding/screens/OnboardingPartnerDetailsPage.tsx` - Partner details (DONE)
-- `src/pages/auth/SignupPage.tsx` - Multi-step router (handles steps: initial, account, astrology, partner-details)
-- Auth API working: POST `/api/v1/auth/register` creates user, returns JWT
-
-### WHAT NEEDS TO BE BUILT
-After account creation, user needs a 10-step onboarding wizard collecting: name, DOB, gender, location, struggles, therapy history, goals, therapist preferences, interests, emergency contact.
-
-Currently after signup the user goes to astrology page then journey-preparation then dashboard. We need to ADD the onboarding steps between account creation and dashboard.
-
----
-
-### TASK 2.1: Backend - Onboarding API Endpoints
-
-**Files to modify:**
-- `server/prisma/schema.prisma` - Add UserProfile + OnboardingProgress models
-- `server/src/routes/users.ts` - Implement onboarding endpoints
-- NEW: `server/src/controllers/users.controller.ts`
-- NEW: `server/src/validators/users.validator.ts`
-
-**PROMPT FOR AI AGENT:**
+export function requestBodyValidator(schema: z.ZodSchema) {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    schema.parse(req.body);
+    next();
+  };
+}
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Implement user onboarding backend API
 
-CONTEXT:
-- Express + TypeScript backend at server/src/
-- Prisma ORM with PostgreSQL, schema at server/prisma/schema.prisma
-- Existing models: User, RefreshToken, AuditLog (read schema.prisma first)
-- Auth middleware at server/src/middleware/auth.middleware.ts exports `requireAuth`
-- Existing pattern: see server/src/controllers/auth.controller.ts for controller pattern
-- Existing pattern: see server/src/validators/auth.validator.ts for Zod validator pattern
-- Route file already exists: server/src/routes/users.ts (has stub endpoints returning 501)
+### PATTERN FOR NEW FRONTEND PAGES (Dark Theme)
+```
+Background: bg-black or bg-[#0a0a0a]
+Text: text-white (headings), text-white/50 (subtitles), text-white/30 (muted)
+Cards: bg-white/[0.02] border border-white/8 rounded-xl
+Inputs: bg-white/5 border border-white/10 rounded-xl text-white px-4 py-3 focus:border-white/30
+Buttons: bg-white text-black rounded-full h-[52px] font-semibold (primary); text-white/50 (secondary)
+Selected chips: bg-white text-black; Unselected: bg-white/[0.03] border border-white/10 text-white/60
+Full viewport: h-[100dvh] — no scroll on single-step pages
+```
 
-STEP 1: Add Prisma models to server/prisma/schema.prisma:
+---
 
-model UserProfile {
-  id              String   @id @default(uuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  dateOfBirth     DateTime?
-  gender          String?    // "male", "female", "non-binary", "prefer-not-to-say"
-  city            String?
-  state           String?
-  country         String?
-  struggles       String[] // Array: ["anxiety", "depression", "relationships", "stress", "grief", "anger", "self-esteem", "trauma", "addiction", "other"]
-  therapyHistory  String?  // "never", "currently", "past", "considering"
-  goals           String[] // Array: ["reduce-anxiety", "better-sleep", "relationships", "self-discovery", "career", "spiritual-growth", "trauma-healing", "confidence"]
-  therapistPreferences Json?  // { gender: string, language: string[], approach: string }
-  interests       String[] // Array: ["meditation", "yoga", "journaling", "breathing", "astrology", "community"]
-  emergencyName   String?
-  emergencyPhone  String?
-  emergencyRelation String?
-  onboardingStep  Int      @default(0) // 0-10, tracks progress
-  onboardingComplete Boolean @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+## PHASE 2: USER ONBOARDING (10-Step Wizard)
+
+**What it is:** After signup, a 10-step wizard collects user preferences to feed into therapist matching + dashboard personalization.
+**Frontend URL:** `/signup?step=onboarding` with `&s=1` through `&s=10`
+**Backend API:** `POST /api/v1/users/onboarding` + `GET /api/v1/users/onboarding`
+**Existing stub routes (server/src/routes/users.ts):** `POST /onboarding` (501), `GET /profile` (501), `GET /dashboard` (501)
+
+---
+
+### TASK 2.1.1: Create Onboarding Validators
+
+**Files to READ first:** `server/src/validators/auth.validator.ts` (copy pattern)
+**Files to CREATE:** `server/src/validators/users.validator.ts`
+**Test after:** `cd "d:/soul-yatri-website/server" && ./node_modules/.bin/tsc --noEmit`
+
+#### CONTEXT FOR AI AGENT
+```
+PROJECT: d:\soul-yatri-website\server
+TYPE: ES modules — ALL imports use .js extension
+
+READ server/src/validators/auth.validator.ts first to see the exact pattern.
+
+CREATE server/src/validators/users.validator.ts:
+
+import { z } from 'zod';
+import type { Request, Response, NextFunction } from 'express';
+
+// Step-specific data schemas
+const stepSchemas = {
+  1: z.object({ dateOfBirth: z.string().optional() }),
+  2: z.object({ gender: z.enum(['MALE', 'FEMALE', 'NON_BINARY', 'PREFER_NOT_TO_SAY']) }),
+  3: z.object({ city: z.string().min(1), state: z.string().optional(), country: z.string().optional() }),
+  4: z.object({ struggles: z.array(z.string()).min(1).max(10) }),
+  5: z.object({ therapyHistory: z.enum(['NEVER', 'CURRENTLY', 'PAST', 'CONSIDERING']) }),
+  6: z.object({ goals: z.array(z.string()).min(1).max(8) }),
+  7: z.object({
+    therapistGenderPref: z.string().optional(),
+    therapistLanguages: z.array(z.string()).optional(),
+    therapistApproach: z.enum(['CBT', 'HOLISTIC', 'MIXED']).optional(),
+  }),
+  8: z.object({ interests: z.array(z.string()).min(1).max(6) }),
+  9: z.object({
+    emergencyName: z.string().min(1),
+    emergencyPhone: z.string().min(10).max(15),
+    emergencyRelation: z.string().min(1),
+  }),
+  10: z.object({}),
+};
+
+export const onboardingStepSchema = z.object({
+  step: z.number().int().min(1).max(10),
+  data: z.record(z.unknown()),
+}).refine(
+  (val) => {
+    const schema = stepSchemas[val.step as keyof typeof stepSchemas];
+    if (!schema) return false;
+    return schema.safeParse(val.data).success;
+  },
+  { message: 'Invalid data for this onboarding step' }
+);
+
+// Re-export the validator middleware pattern
+export function requestBodyValidator(schema: z.ZodSchema) {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    schema.parse(req.body);
+    next();
+  };
+}
+```
+
+---
+
+### TASK 2.1.2: Create Onboarding Controller
+
+**Files to READ first:** `server/src/controllers/auth.controller.ts`, `server/src/lib/async-handler.ts`, `server/src/lib/response.ts`, `server/src/lib/errors.ts`, `server/prisma/schema.prisma` (UserProfile model)
+**Files to CREATE:** `server/src/controllers/users.controller.ts`
+**Depends on:** 2.1.1
+**Test after:** `cd "d:/soul-yatri-website/server" && ./node_modules/.bin/tsc --noEmit`
+
+#### CONTEXT FOR AI AGENT
+```
+PROJECT: d:\soul-yatri-website\server (ES modules, .js imports)
+
+CREATE server/src/controllers/users.controller.ts:
+
+import { asyncHandler } from '../lib/async-handler.js';
+import { sendSuccess } from '../lib/response.js';
+import { AppError } from '../lib/errors.js';
+import { prisma } from '../lib/prisma.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+
+// --- POST /onboarding ---
+export const submitOnboardingStep = asyncHandler(async (req, res) => {
+  const { userId } = (req as AuthenticatedRequest).auth!;
+  const { step, data } = req.body as { step: number; data: Record<string, unknown> };
+
+  const mapped = mapStepData(step, data);
+
+  await prisma.userProfile.upsert({
+    where: { userId },
+    create: { userId, ...mapped, onboardingStep: step, ...(step === 10 ? { onboardingComplete: true } : {}) },
+    update: { ...mapped, onboardingStep: step, ...(step === 10 ? { onboardingComplete: true } : {}) },
+  });
+
+  sendSuccess(res, { step, onboardingComplete: step === 10 });
+});
+
+// --- GET /onboarding ---
+export const getOnboardingProgress = asyncHandler(async (req, res) => {
+  const { userId } = (req as AuthenticatedRequest).auth!;
+  const profile = await prisma.userProfile.findUnique({ where: { userId } });
+
+  if (!profile) {
+    sendSuccess(res, { step: 0, data: {}, isComplete: false });
+    return;
+  }
+
+  sendSuccess(res, { step: profile.onboardingStep, isComplete: profile.onboardingComplete, data: profile });
+});
+
+// --- GET /profile ---
+export const getProfile = asyncHandler(async (req, res) => {
+  const { userId } = (req as AuthenticatedRequest).auth!;
+  const user = await prisma.user.findUnique({ where: { id: userId }, include: { profile: true } });
+  if (!user) throw AppError.notFound('User');
+  sendSuccess(res, user);
+});
+
+// --- GET /dashboard ---
+export const getDashboard = asyncHandler(async (req, res) => {
+  const { userId } = (req as AuthenticatedRequest).auth!;
+  const user = await prisma.user.findUnique({ where: { id: userId }, include: { profile: true } });
+  if (!user) throw AppError.notFound('User');
+
+  const [moodCount, journalCount, meditationCount, sessionCount] = await Promise.all([
+    prisma.moodEntry.count({ where: { userId } }),
+    prisma.journalEntry.count({ where: { userId } }),
+    prisma.meditationLog.count({ where: { userId } }),
+    prisma.session.count({ where: { userId, status: 'COMPLETED' } }),
+  ]);
+
+  const daysSinceJoin = Math.floor((Date.now() - user.createdAt.getTime()) / 86400000);
+
+  sendSuccess(res, {
+    user: { id: user.id, name: user.name, email: user.email, avatarUrl: user.avatarUrl, onboardingComplete: user.profile?.onboardingComplete ?? false },
+    stats: { sessionsCompleted: sessionCount, moodEntries: moodCount, journalEntries: journalCount, meditationSessions: meditationCount, daysActive: daysSinceJoin },
+    quickActions: [
+      { id: 'book-session', label: 'Book Session', icon: 'calendar', route: '/therapy/find' },
+      { id: 'mood-check', label: 'Mood Check-in', icon: 'smile', route: '/health-tools/mood' },
+      { id: 'meditate', label: 'Meditate', icon: 'brain', route: '/health-tools/meditation' },
+      { id: 'journal', label: 'Journal', icon: 'book-open', route: '/health-tools/journal' },
+    ],
+    upcomingSession: null,
+  });
+});
+
+function mapStepData(step: number, data: Record<string, unknown>) {
+  switch (step) {
+    case 1: return { dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth as string) : undefined };
+    case 2: return { gender: data.gender as string };
+    case 3: return { city: data.city as string, state: data.state as string | undefined, country: data.country as string | undefined };
+    case 4: return { struggles: data.struggles as string[] };
+    case 5: return { therapyHistory: data.therapyHistory as string };
+    case 6: return { goals: data.goals as string[] };
+    case 7: return { therapistGenderPref: data.therapistGenderPref as string | undefined, therapistLanguages: (data.therapistLanguages || []) as string[], therapistApproach: data.therapistApproach as string | undefined };
+    case 8: return { interests: data.interests as string[] };
+    case 9: return { emergencyName: data.emergencyName as string, emergencyPhone: data.emergencyPhone as string, emergencyRelation: data.emergencyRelation as string };
+    case 10: return { onboardingComplete: true };
+    default: return {};
+  }
+}
+```
+
+---
+
+### TASK 2.1.3: Wire User Routes
+
+**Files to READ first:** `server/src/routes/users.ts`, `server/src/routes/auth.ts` (for pattern)
+**Files to MODIFY:** `server/src/routes/users.ts`
+**Depends on:** 2.1.1, 2.1.2
+**Test after:** `cd "d:/soul-yatri-website/server" && ./node_modules/.bin/tsc --noEmit`
+
+#### CONTEXT FOR AI AGENT
+```
+READ server/src/routes/users.ts — it has stub routes returning 501.
+
+REPLACE with real handlers:
+
+import { Router } from 'express';
+import { requireAuth } from '../middleware/auth.middleware.js';
+import { requestBodyValidator } from '../validators/users.validator.js';
+import { onboardingStepSchema } from '../validators/users.validator.js';
+import { submitOnboardingStep, getOnboardingProgress, getProfile, getDashboard } from '../controllers/users.controller.js';
+
+const router = Router();
+
+router.post('/onboarding', requireAuth, requestBodyValidator(onboardingStepSchema), submitOnboardingStep);
+router.get('/onboarding', requireAuth, getOnboardingProgress);
+router.get('/profile', requireAuth, getProfile);
+router.get('/dashboard', requireAuth, getDashboard);
+
+// Keep remaining stubs
+router.put('/profile', requireAuth, (_req, res) => res.status(501).json({ success: false, error: { code: 'SRV_005', message: 'Not implemented' } }));
+router.get('/export-my-data', requireAuth, (_req, res) => res.status(501).json({ success: false, error: { code: 'SRV_005', message: 'Not implemented' } }));
+router.delete('/delete-account', requireAuth, (_req, res) => res.status(501).json({ success: false, error: { code: 'SRV_005', message: 'Not implemented' } }));
+
+export default router;
+```
+
+---
+
+### TASK 2.2.1: Create Onboarding Wizard Page
+
+**Files to READ first:** `src/features/onboarding/screens/OnboardingSignupPage.tsx` (styling), `src/pages/auth/SignupPage.tsx` (routing), `src/services/api.service.ts` (API calls), `src/context/AuthContext.tsx`
+**Files to CREATE:** `src/features/onboarding/screens/OnboardingWizardPage.tsx`
+**Test after:** `cd "d:/soul-yatri-website" && npx vite build`
+
+#### CONTEXT FOR AI AGENT
+```
+PROJECT: d:\soul-yatri-website (React 19 + TypeScript + Tailwind + framer-motion)
+
+CREATE src/features/onboarding/screens/OnboardingWizardPage.tsx
+
+This is the MAIN CONTAINER for the 10-step onboarding wizard.
+It reads the step number from URL (?step=onboarding&s=1), manages state, calls API.
+
+Steps 1-10:
+1=DOB, 2=Gender, 3=Location, 4=Struggles, 5=TherapyHistory,
+6=Goals, 7=TherapistPrefs, 8=Interests, 9=EmergencyContact, 10=Confirmation
+
+BEHAVIOR:
+- On mount: GET /api/v1/users/onboarding → if step > 0, resume from that step
+- On each step submit: POST /api/v1/users/onboarding { step, data }
+- After step 10: navigate to '/journey-preparation'
+
+FOR NOW: Render placeholder text for each step (e.g. "Step 1: DOB").
+Step components will be created in tasks 2.3.x and 2.4.x and wired in task 2.5.1.
+
+KEY CODE:
+import { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import Navigation from '@/components/layout/Navigation';
+
+export default function OnboardingWizardPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const currentStep = parseInt(searchParams.get('s') || '1', 10);
+  const [stepData, setStepData] = useState<Record<number, Record<string, unknown>>>({});
+  const [loading, setLoading] = useState(false);
+
+  // Resume from saved progress
+  useEffect(() => {
+    fetch('/api/v1/users/onboarding', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+      .then(r => r.json())
+      .then(res => {
+        if (res.success && res.data.step > 0 && currentStep === 1) {
+          setSearchParams({ step: 'onboarding', s: String(res.data.step) });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const submitStep = async (step: number, data: Record<string, unknown>) => {
+    setLoading(true);
+    try {
+      await fetch('/api/v1/users/onboarding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+        body: JSON.stringify({ step, data }),
+      });
+      setStepData(prev => ({ ...prev, [step]: data }));
+      if (step === 10) navigate('/journey-preparation');
+      else setSearchParams({ step: 'onboarding', s: String(step + 1) });
+    } finally { setLoading(false); }
+  };
+
+  const goBack = () => {
+    if (currentStep > 1) setSearchParams({ step: 'onboarding', s: String(currentStep - 1) });
+  };
+
+  const skipStep = () => {
+    setSearchParams({ step: 'onboarding', s: String(currentStep + 1) });
+  };
+
+  return (
+    <div className="relative h-[100dvh] bg-black overflow-hidden flex flex-col">
+      <Navigation />
+      <div className="px-6 pt-20">
+        <div className="h-1 bg-white/10 rounded-full max-w-md mx-auto">
+          <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${(currentStep / 10) * 100}%` }} />
+        </div>
+        <p className="text-center text-white/30 text-[11px] mt-2 tracking-wider">STEP {currentStep} OF 10</p>
+      </div>
+      <AnimatePresence mode="wait">
+        <motion.div key={currentStep} initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: 0.25 }} className="flex-1 flex flex-col justify-center px-4">
+          <div className="text-white text-center">Step {currentStep} placeholder</div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
+```
+
+---
+
+### TASK 2.2.2: Add Wizard to SignupPage Router
+
+**Files to READ first:** `src/pages/auth/SignupPage.tsx`, `src/features/onboarding/screens/OnboardingCreateAccountPage.tsx`
+**Files to MODIFY:** `src/pages/auth/SignupPage.tsx`, `src/features/onboarding/screens/OnboardingCreateAccountPage.tsx`
+**Depends on:** 2.2.1
+**Test after:** `cd "d:/soul-yatri-website" && npx vite build`
+
+#### CONTEXT FOR AI AGENT
+```
+1. READ src/pages/auth/SignupPage.tsx — it switches on searchParam "step":
+   initial → OnboardingSignupPage, account → OnboardingCreateAccountPage, etc.
+
+   ADD new case: 'onboarding' → OnboardingWizardPage
+   Import: import OnboardingWizardPage from '@/features/onboarding/screens/OnboardingWizardPage';
+
+2. READ src/features/onboarding/screens/OnboardingCreateAccountPage.tsx
+   Find where it navigates after successful account creation.
+   Change that navigation from 'astrology' to 'onboarding&s=1':
+   navigate('/signup?step=onboarding&s=1')
+```
+
+---
+
+### TASK 2.3.1: Create StepDOB (Step 1 — Optional)
+
+**Files to CREATE:** `src/features/onboarding/components/steps/StepDOB.tsx`
+**Test after:** `cd "d:/soul-yatri-website" && npx vite build`
+
+#### CONTEXT FOR AI AGENT
+```
+PROJECT: d:\soul-yatri-website (React 19 + TypeScript + Tailwind)
+
+PROPS INTERFACE (use for ALL step components):
+interface StepProps {
+  value: unknown;
+  onChange: (value: unknown) => void;
+  onNext: () => void;
+  onBack?: () => void;
+  onSkip?: () => void;
 }
 
-Also add to the existing User model:
-  profile UserProfile?
+COMPONENT: Step 1 — Date of Birth (OPTIONAL)
 
-STEP 2: Run `npx prisma migrate dev --name add-user-profile` to create migration.
+LAYOUT:
+<div className="text-center max-w-sm mx-auto">
+  <h2 className="text-[28px] sm:text-[32px] font-semibold text-white">When were you born?</h2>
+  <p className="text-[14px] text-white/50 mt-2">This helps us personalize your journey</p>
+  <div className="mt-8 flex gap-3 justify-center">
+    {/* Day select */}
+    <select className="bg-white/5 border border-white/10 rounded-xl text-white px-3 py-3 text-[14px] appearance-none">
+      <option value="">Day</option>
+      {Array.from({length:31},(_,i)=> <option key={i+1} value={i+1}>{i+1}</option>)}
+    </select>
+    {/* Month select */} (Jan-Dec)
+    {/* Year select */} (2010 down to 1940)
+  </div>
+  <div className="mt-10 flex flex-col items-center gap-3">
+    <button onClick={onNext} className="bg-white text-black rounded-full h-[52px] w-[200px] font-semibold text-[15px]">Continue</button>
+    {onSkip && <button onClick={onSkip} className="text-white/30 text-sm">Skip for now</button>}
+  </div>
+</div>
 
-STEP 3: Create server/src/validators/users.validator.ts with Zod schemas:
-- onboardingStepSchema: validates step number (1-10) and step-specific data
-- Each step has its own shape:
-  - Step 1: { dateOfBirth: string (ISO date) } (optional)
-  - Step 2: { gender: string } (required, enum)
-  - Step 3: { city: string, state?: string, country?: string } (city required)
-  - Step 4: { struggles: string[] } (at least 1 required)
-  - Step 5: { therapyHistory: string } (required, enum)
-  - Step 6: { goals: string[] } (at least 1 required)
-  - Step 7: { therapistPreferences: { gender?: string, language?: string[], approach?: string } }
-  - Step 8: { interests: string[] } (at least 1 required)
-  - Step 9: { emergencyName: string, emergencyPhone: string, emergencyRelation: string } (all required)
-  - Step 10: {} (confirmation step, no data)
-
-STEP 4: Create server/src/controllers/users.controller.ts:
-- POST /onboarding handler:
-  - Requires auth (use requireAuth middleware)
-  - Accepts { step: number, data: object }
-  - Upserts UserProfile for the authenticated user
-  - Updates only the fields for that step
-  - Updates onboardingStep to max(current, submitted step)
-  - If step === 10, set onboardingComplete = true
-  - Returns { success: true, data: { step, onboardingComplete } }
-
-- GET /onboarding handler:
-  - Requires auth
-  - Returns current onboarding progress: { step: number, data: object, isComplete: boolean }
-  - If no profile exists, returns { step: 0, data: {}, isComplete: false }
-
-STEP 5: Update server/src/routes/users.ts:
-- Replace the stub POST /onboarding with the real controller
-- Replace the stub GET /profile with a handler that returns user + profile
-- Keep other stubs as 501
-
-IMPORTANT:
-- Follow the EXACT pattern from auth.controller.ts (response format: { success: true, data: {...} })
-- Use the requestBodyValidator middleware pattern from auth.validator.ts
-- Import requireAuth from '../middleware/auth.middleware.js'
-- All route imports use .js extension (ES modules)
-- Run `npx prisma generate` after schema changes
-- Test: `curl -X POST http://localhost:3000/api/v1/users/onboarding -H "Authorization: Bearer <token>" -H "Content-Type: application/json" -d '{"step": 1, "data": {"dateOfBirth": "1995-06-15"}}'`
+When day+month+year selected, construct "YYYY-MM-DD" string and call onChange.
+Continue always enabled (since optional). Export default StepDOB.
 ```
 
 ---
 
-### TASK 2.2: Frontend - Onboarding Step Components (Steps 1-5)
+### TASK 2.3.2: Create StepGender (Step 2 — Required)
 
-**Files to create/modify:**
-- `src/features/onboarding/screens/OnboardingWizardPage.tsx` - NEW: Main wizard container
-- `src/features/onboarding/components/steps/StepDOB.tsx` - NEW
-- `src/features/onboarding/components/steps/StepGender.tsx` - NEW
-- `src/features/onboarding/components/steps/StepLocation.tsx` - NEW
-- `src/features/onboarding/components/steps/StepStruggles.tsx` - NEW
-- `src/features/onboarding/components/steps/StepTherapyHistory.tsx` - NEW
-- `src/pages/auth/SignupPage.tsx` - Add new step routing
+**Files to CREATE:** `src/features/onboarding/components/steps/StepGender.tsx`
 
-**PROMPT FOR AI AGENT:**
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Build onboarding wizard steps 1-5 (frontend)
+Same StepProps interface. Step 2 — Gender (REQUIRED).
 
-CONTEXT:
-- React 19 + TypeScript + Vite frontend
-- Tailwind CSS for styling (dark theme - bg-black, text-white)
-- Design matches OnboardingSignupPage.tsx (read it first for style reference)
-- The app uses react-router-dom v7, routes defined in src/router/index.tsx
-- API service at src/services/api.service.ts (has get/post/put/delete methods)
-- Auth context at src/context/AuthContext.tsx (provides user, isAuthenticated)
-- framer-motion available for animations
-- Radix UI components in src/components/ui/ (button, input, select, checkbox, radio, calendar, progress)
-- lucide-react for icons
+4 selectable cards in 2x2 grid (max-w-xs mx-auto grid grid-cols-2 gap-3):
+- MALE → "Male" (icon: User from lucide-react)
+- FEMALE → "Female" (icon: User)
+- NON_BINARY → "Non-Binary" (icon: Users)
+- PREFER_NOT_TO_SAY → "Prefer not to say" (icon: HelpCircle)
 
-DESIGN REQUIREMENTS:
-- Each step fills 100dvh, no scrolling
-- Dark background (bg-black) with subtle ambient gradient blobs (see OnboardingSignupPage.tsx for pattern)
-- Include Navigation component at top
-- Progress bar at top showing step X of 10
-- Animated transitions between steps (framer-motion slide left/right)
-- "Skip" button for optional steps (steps 1, 7, 8)
-- "Back" button on all steps except step 1
-- "Continue" button at bottom, disabled until valid input
-- Mobile-first, responsive
+Each card: h-[90px] rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-all
+Unselected: bg-white/[0.02] border border-white/10 text-white/60
+Selected: bg-white text-black border-white
+Hover: border-white/20
 
-STEP 1: Create src/features/onboarding/screens/OnboardingWizardPage.tsx
-- This is the main wizard container
-- URL: /signup?step=onboarding&s=1 (through s=10)
-- Reads `s` query param to know which sub-step
-- Manages shared state for all step data using useState
-- Renders the correct step component based on `s`
-- Has progress bar: `<div className="h-1 bg-white/10 rounded-full"><div className="h-full bg-white rounded-full transition-all" style={{ width: `${(step/10)*100}%` }} /></div>`
-- Wraps step content in AnimatePresence + motion.div for slide transitions
-- On each step submit: calls POST /api/v1/users/onboarding with { step, data }
-- On final step: navigates to /journey-preparation
-- Auto-loads progress on mount: GET /api/v1/users/onboarding (resume capability)
+Bottom: Back button (text-white/50 text-sm) + Continue (disabled until value selected).
+Continue disabled state: opacity-40 cursor-not-allowed
 
-STEP 2: Create src/features/onboarding/components/steps/StepDOB.tsx
-- Step 1: Date of Birth (OPTIONAL - can skip)
-- Shows a clean date picker (use the calendar from src/components/ui/calendar.tsx or react-day-picker)
-- Or 3 dropdowns: Day, Month, Year (1940-2010 range)
-- Title: "When were you born?"
-- Subtitle: "This helps us personalize your wellness journey"
-- Skip button available
-- Props: { value: string | null, onChange: (date: string) => void, onNext: () => void, onSkip: () => void }
-
-STEP 3: Create src/features/onboarding/components/steps/StepGender.tsx
-- Step 2: Gender (REQUIRED)
-- 4 large selectable cards in a 2x2 grid:
-  - Male (icon: User)
-  - Female (icon: User)
-  - Non-Binary (icon: Users)
-  - Prefer not to say (icon: HelpCircle)
-- Selected card has white border, subtle glow
-- Title: "How do you identify?"
-- Props: { value: string | null, onChange: (gender: string) => void, onNext: () => void, onBack: () => void }
-
-STEP 4: Create src/features/onboarding/components/steps/StepLocation.tsx
-- Step 3: Location (REQUIRED - city at minimum)
-- City text input (required)
-- State text input (optional)
-- Country text input (optional, default "India")
-- "Detect my location" button that uses browser geolocation API or ipapi.co fallback
-- Title: "Where are you based?"
-- Props: { value: { city, state, country }, onChange: (loc) => void, onNext: () => void, onBack: () => void }
-
-STEP 5: Create src/features/onboarding/components/steps/StepStruggles.tsx
-- Step 4: What are you struggling with? (REQUIRED - pick at least 1)
-- Grid of selectable chips/cards (multi-select):
-  - Anxiety (icon: Zap)
-  - Depression (icon: CloudRain)
-  - Relationships (icon: Heart)
-  - Stress (icon: Flame)
-  - Grief (icon: Cloud)
-  - Anger (icon: Angry - or AlertTriangle)
-  - Self-esteem (icon: Star)
-  - Trauma (icon: Shield)
-  - Addiction (icon: Lock)
-  - Other (icon: MoreHorizontal)
-- Selected chips have white bg with black text, unselected have border-white/10
-- Title: "What brings you here?"
-- Subtitle: "Select all that apply"
-- Props: { value: string[], onChange: (items: string[]) => void, onNext: () => void, onBack: () => void }
-
-STEP 6: Create src/features/onboarding/components/steps/StepTherapyHistory.tsx
-- Step 5: Therapy History (REQUIRED)
-- 4 large selectable cards (single select, vertical stack):
-  - "Never tried therapy" (icon: Sparkles)
-  - "Currently in therapy" (icon: HeartPulse)
-  - "Had therapy in the past" (icon: Clock)
-  - "Considering it for the first time" (icon: Lightbulb)
-- Title: "What's your experience with therapy?"
-- Props: { value: string | null, onChange: (v: string) => void, onNext: () => void, onBack: () => void }
-
-STEP 7: Update src/pages/auth/SignupPage.tsx
-- Add case for step=onboarding that renders OnboardingWizardPage
-- After account creation (step=account success), navigate to step=onboarding&s=1 instead of step=astrology
-- Keep astrology step accessible but move it to AFTER onboarding (step=astrology comes after step=onboarding&s=10)
-
-IMPORTANT STYLING RULES:
-- All backgrounds: bg-black
-- All text: text-white (headings), text-white/50 (subtitles), text-white/40 (descriptions)
-- Cards/chips: border border-white/10, hover:border-white/20, selected: bg-white text-black
-- Buttons: Continue = bg-white text-black rounded-full h-[52px] w-[200px]; Back = text-white/50 text-sm; Skip = text-white/30 text-sm
-- Animations: framer-motion, enter from right (x: 50 -> 0), exit to left (x: 0 -> -50)
-- Font sizes: Title text-[28px] sm:text-[32px] font-semibold; Subtitle text-[14px] text-white/50
-- Spacing: gap-4 for grids, mt-8 between sections
+value type: string | null. onChange called with 'MALE'|'FEMALE'|'NON_BINARY'|'PREFER_NOT_TO_SAY'.
 ```
 
 ---
 
-### TASK 2.3: Frontend - Onboarding Step Components (Steps 6-10)
+### TASK 2.3.3: Create StepLocation (Step 3 — Required)
 
-**PROMPT FOR AI AGENT:**
+**Files to CREATE:** `src/features/onboarding/components/steps/StepLocation.tsx`
+
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Build onboarding wizard steps 6-10 (frontend)
+Step 3 — Location (city required).
+value type: { city: string; state?: string; country?: string } | null
 
-CONTEXT:
-- Steps 1-5 already built (read them in src/features/onboarding/components/steps/ for pattern)
-- Same styling, same props pattern, same animation pattern
-- OnboardingWizardPage.tsx already handles routing and API calls
+3 text inputs stacked (max-w-sm mx-auto space-y-3):
+- City (required): <input type="text" placeholder="City" className="w-full bg-white/5 border border-white/10 rounded-xl text-white px-4 py-3 text-[14px] placeholder:text-white/20 focus:border-white/30 focus:outline-none" />
+- State (optional): same styling, placeholder "State"
+- Country (optional): same styling, placeholder "Country", default value "India"
 
-STEP 1: Create src/features/onboarding/components/steps/StepGoals.tsx
-- Step 6: What are your goals? (REQUIRED - pick at least 1)
-- Grid of selectable chips (multi-select), same pattern as StepStruggles:
-  - Reduce Anxiety (icon: Wind)
-  - Better Sleep (icon: Moon)
-  - Improve Relationships (icon: Heart)
-  - Self-Discovery (icon: Compass)
-  - Career Growth (icon: Briefcase)
-  - Spiritual Growth (icon: Sparkles)
-  - Trauma Healing (icon: Shield)
-  - Build Confidence (icon: Star)
-- Title: "What do you hope to achieve?"
-- Subtitle: "Select all that apply"
+Continue enabled when city.length > 0.
+Back + Continue buttons.
+```
 
-STEP 2: Create src/features/onboarding/components/steps/StepTherapistPreferences.tsx
-- Step 7: Therapist Preferences (OPTIONAL - can skip)
-- Three sections:
-  1. Preferred therapist gender: 3 horizontal cards (Male, Female, No Preference)
-  2. Preferred languages: Multi-select chips (English, Hindi, Marathi, Tamil, Telugu, Bengali, Kannada, Malayalam, Gujarati)
-  3. Preferred approach: Single-select cards:
-     - "Talk Therapy (CBT)" - icon: MessageCircle
-     - "Holistic / Indian Wisdom" - icon: Sparkles
-     - "Mixed Approach" - icon: Shuffle
-     - "No Preference" - icon: HelpCircle
-- Title: "Any preferences for your therapist?"
-- Skip button available
+---
 
-STEP 3: Create src/features/onboarding/components/steps/StepInterests.tsx
-- Step 8: Interests (OPTIONAL - can skip)
-- Grid of selectable chips (multi-select):
-  - Meditation (icon: Brain)
-  - Yoga (icon: Flower)
-  - Journaling (icon: BookOpen)
-  - Breathing Exercises (icon: Wind)
-  - Astrology (icon: Star)
-  - Community Support (icon: Users)
-- Title: "What interests you?"
-- Subtitle: "We'll personalize your dashboard based on this"
-- Skip button available
+### TASK 2.3.4: Create StepStruggles (Step 4 — Required, multi-select)
 
-STEP 4: Create src/features/onboarding/components/steps/StepEmergencyContact.tsx
-- Step 9: Emergency Contact (REQUIRED)
-- Three text inputs:
-  - Contact Name (required) - text input with User icon
-  - Phone Number (required) - tel input with Phone icon, validate 10-digit Indian number
-  - Relationship (required) - select dropdown: Parent, Spouse, Sibling, Friend, Other
-- Title: "Emergency Contact"
-- Subtitle: "Someone we can reach in case of a crisis. This information is kept strictly confidential."
-- Small note at bottom: "We take your safety seriously. This is only used in genuine emergencies."
+**Files to CREATE:** `src/features/onboarding/components/steps/StepStruggles.tsx`
 
-STEP 5: Create src/features/onboarding/components/steps/StepConfirmation.tsx
-- Step 10: All Done! (CONFIRMATION)
-- Big checkmark icon or celebration animation (use framer-motion scale animation)
-- Title: "You're all set!"
-- Subtitle: "Your personalized healing journey is ready."
-- Summary of what they selected (2-3 bullet points):
-  - "We matched you based on: [struggles list]"
-  - "Your goals: [goals list]"
-  - "Preferred approach: [preference]"
-- Big "Enter Dashboard" button (same style as Start Now button)
-- On click: POST onboarding step 10, then navigate to /journey-preparation
+#### CONTEXT FOR AI AGENT
+```
+Step 4 — Struggles (at least 1 required). value type: string[]
 
-IMPORTANT:
-- Each component is self-contained with its own props
-- Follow EXACT same styling as steps 1-5 (read those files first)
-- All steps receive { value, onChange, onNext, onBack, onSkip? } props
-- framer-motion AnimatePresence wrapping handled by parent OnboardingWizardPage
+Title: "What brings you here?" / Subtitle: "Select all that apply"
+
+Grid of selectable chips (max-w-lg mx-auto grid grid-cols-2 sm:grid-cols-3 gap-2):
+OPTIONS = [
+  { value: 'anxiety', label: 'Anxiety' },
+  { value: 'depression', label: 'Depression' },
+  { value: 'relationships', label: 'Relationships' },
+  { value: 'stress', label: 'Stress' },
+  { value: 'grief', label: 'Grief' },
+  { value: 'anger', label: 'Anger' },
+  { value: 'self-esteem', label: 'Self-Esteem' },
+  { value: 'trauma', label: 'Trauma' },
+  { value: 'addiction', label: 'Addiction' },
+  { value: 'other', label: 'Other' },
+]
+
+Each chip: px-4 py-3 rounded-xl text-center text-[14px] cursor-pointer transition-all
+Unselected: bg-white/[0.03] border border-white/10 text-white/60 hover:border-white/20
+Selected: bg-white text-black border-white font-medium
+
+Click toggles (add/remove from array).
+Continue enabled when value.length >= 1.
+Back + Continue buttons.
+```
+
+---
+
+### TASK 2.3.5: Create StepTherapyHistory (Step 5 — Required)
+
+**Files to CREATE:** `src/features/onboarding/components/steps/StepTherapyHistory.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+Step 5 — Therapy History (single select, required). value type: string | null
+
+4 vertical cards (max-w-sm mx-auto space-y-3):
+OPTIONS = [
+  { value: 'NEVER', label: 'Never tried therapy', icon: 'Sparkles' },
+  { value: 'CURRENTLY', label: 'Currently in therapy', icon: 'HeartPulse' },
+  { value: 'PAST', label: 'Had therapy in the past', icon: 'Clock' },
+  { value: 'CONSIDERING', label: 'Considering for the first time', icon: 'Lightbulb' },
+]
+
+Each card: px-4 py-4 rounded-xl flex items-center gap-3 cursor-pointer transition-all
+Unselected: bg-white/[0.02] border border-white/10 text-white/60
+Selected: bg-white text-black border-white
+Icon on left (24x24), label text-[15px].
+Continue enabled when value selected. Back + Continue.
+```
+
+---
+
+### TASK 2.4.1: Create StepGoals (Step 6 — Required, multi-select)
+
+**Files to CREATE:** `src/features/onboarding/components/steps/StepGoals.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+EXACT same pattern as StepStruggles (task 2.3.4) but with different options:
+Title: "What do you hope to achieve?"
+
+OPTIONS = [
+  { value: 'reduce-anxiety', label: 'Reduce Anxiety' },
+  { value: 'better-sleep', label: 'Better Sleep' },
+  { value: 'relationships', label: 'Improve Relationships' },
+  { value: 'self-discovery', label: 'Self-Discovery' },
+  { value: 'career', label: 'Career Growth' },
+  { value: 'spiritual-growth', label: 'Spiritual Growth' },
+  { value: 'trauma-healing', label: 'Trauma Healing' },
+  { value: 'confidence', label: 'Build Confidence' },
+]
+
+Same styling, same multi-select behavior. At least 1 required.
+```
+
+---
+
+### TASK 2.4.2: Create StepTherapistPrefs (Step 7 — Optional)
+
+**Files to CREATE:** `src/features/onboarding/components/steps/StepTherapistPrefs.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+Step 7 — Therapist Preferences (OPTIONAL, has Skip button).
+value type: { therapistGenderPref?: string; therapistLanguages?: string[]; therapistApproach?: string } | null
+
+3 sections stacked:
+
+Section 1: "Preferred gender" — 3 horizontal cards:
+  'male' → Male, 'female' → Female, 'no-preference' → No Preference
+
+Section 2: "Languages" — multi-select chips:
+  english, hindi, marathi, tamil, telugu, bengali, kannada, malayalam, gujarati
+
+Section 3: "Preferred approach" — 3 cards:
+  'CBT' → Talk Therapy (CBT), 'HOLISTIC' → Holistic / Indian Wisdom, 'MIXED' → Mixed Approach
+
+Has Skip + Back + Continue buttons. All sections optional.
+```
+
+---
+
+### TASK 2.4.3: Create StepInterests (Step 8 — Optional)
+
+**Files to CREATE:** `src/features/onboarding/components/steps/StepInterests.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+Same as StepStruggles pattern (multi-select chips) but OPTIONAL (has Skip button).
+Title: "What interests you?" / Subtitle: "We'll personalize your dashboard"
+
+OPTIONS = [
+  { value: 'meditation', label: 'Meditation' },
+  { value: 'yoga', label: 'Yoga' },
+  { value: 'journaling', label: 'Journaling' },
+  { value: 'breathing', label: 'Breathing Exercises' },
+  { value: 'astrology', label: 'Astrology' },
+  { value: 'community', label: 'Community Support' },
+]
+
+Skip + Back + Continue. At least 1 required IF not skipping.
+```
+
+---
+
+### TASK 2.4.4: Create StepEmergencyContact (Step 9 — Required)
+
+**Files to CREATE:** `src/features/onboarding/components/steps/StepEmergencyContact.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+Step 9 — Emergency Contact (all 3 fields required).
+value type: { emergencyName: string; emergencyPhone: string; emergencyRelation: string } | null
+
+Title: "Emergency Contact"
+Subtitle: "Someone we can reach in case of crisis. Strictly confidential."
+
+3 inputs stacked (max-w-sm mx-auto space-y-3):
+- Name: text input, placeholder "Contact Name"
+- Phone: tel input, placeholder "Phone Number (10 digits)"
+- Relationship: <select> with options: Parent, Spouse, Sibling, Friend, Other
+
+Same input styling as StepLocation.
+Small muted note at bottom: "Only used in genuine emergencies" (text-[11px] text-white/20)
+Continue enabled when all 3 filled (name.length > 0, phone.length >= 10, relation selected).
+Back + Continue.
+```
+
+---
+
+### TASK 2.4.5: Create StepConfirmation (Step 10)
+
+**Files to CREATE:** `src/features/onboarding/components/steps/StepConfirmation.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+Step 10 — Confirmation (no data to collect).
+
+Layout:
+- Animated checkmark: framer-motion circle that scales from 0 to 1 with a spring
+  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }}>
+    <CheckCircle className="w-16 h-16 text-green-400" />
+  </motion.div>
+- Title: "You're all set!" (text-[32px] font-semibold text-white mt-6)
+- Subtitle: "Your personalized healing journey is ready" (text-[14px] text-white/50 mt-2)
+- Button: "Enter Dashboard" (bg-white text-black rounded-full h-[56px] w-[240px] font-semibold mt-10)
+- On click: call onNext() which will POST step 10 and navigate to /journey-preparation
+
+No Back button on this step. Import CheckCircle from lucide-react.
+```
+
+---
+
+### TASK 2.5.1: Wire All Steps into OnboardingWizardPage
+
+**Files to READ first:** `src/features/onboarding/screens/OnboardingWizardPage.tsx`, ALL step files in `src/features/onboarding/components/steps/`
+**Files to MODIFY:** `src/features/onboarding/screens/OnboardingWizardPage.tsx`
+**Depends on:** 2.3.1-2.3.5, 2.4.1-2.4.5
+**Test after:** `cd "d:/soul-yatri-website" && npx vite build`
+
+#### CONTEXT FOR AI AGENT
+```
+Replace the placeholder text in OnboardingWizardPage.tsx with actual step components.
+
+Import all 10 step components:
+import StepDOB from '../components/steps/StepDOB';
+import StepGender from '../components/steps/StepGender';
+import StepLocation from '../components/steps/StepLocation';
+import StepStruggles from '../components/steps/StepStruggles';
+import StepTherapyHistory from '../components/steps/StepTherapyHistory';
+import StepGoals from '../components/steps/StepGoals';
+import StepTherapistPrefs from '../components/steps/StepTherapistPrefs';
+import StepInterests from '../components/steps/StepInterests';
+import StepEmergencyContact from '../components/steps/StepEmergencyContact';
+import StepConfirmation from '../components/steps/StepConfirmation';
+
+In renderStep(step), return the matching component with props:
+value={stepData[step]}, onChange={(val) => setStepData(prev => ({...prev, [step]: val}))},
+onNext={() => submitStep(step, stepData[step] || {})},
+onBack={step > 1 ? goBack : undefined},
+onSkip={[1,7,8].includes(step) ? skipStep : undefined}
+
+Step 10 gets onNext={() => submitStep(10, {})} only.
 ```
 
 ---
 
 ## PHASE 3: USER DASHBOARD
 
-### WHAT EXISTS NOW
-- `src/pages/DashboardPage.tsx` - Shell with "Welcome to Soul Yatri" text
-- `src/components/layout/DashboardLayout.tsx` - Layout wrapper with sidebar placeholder
-- Route: `/dashboard` (protected, requires auth)
-
-### WHAT NEEDS TO BE BUILT
-A personalized dashboard with: welcome banner, next appointment card, quick actions, healing progress, recent activity, mood graph.
+**What it is:** Real personalized dashboard replacing the shell page.
+**Frontend URL:** `/dashboard`
+**Backend API:** `GET /api/v1/users/dashboard` (already implemented in task 2.1.2 getDashboard)
 
 ---
 
-### TASK 3.1: Backend - Dashboard API
+### TASK 3.1.1: Create WelcomeBanner Component
 
-**PROMPT FOR AI AGENT:**
+**Files to CREATE:** `src/features/dashboard/components/WelcomeBanner.tsx`
+**Test after:** `cd "d:/soul-yatri-website" && npx vite build`
+
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Implement dashboard API endpoint
+Props: { userName: string; avatarUrl?: string | null }
 
-CONTEXT:
-- Express + TypeScript backend at server/src/
-- Prisma ORM, schema at server/prisma/schema.prisma
-- Auth middleware: requireAuth from server/src/middleware/auth.middleware.ts
-- User model has profile relation (added in Phase 2)
-- Route file: server/src/routes/users.ts (has GET /dashboard stub returning 501)
+Greeting based on time of day:
+const hour = new Date().getHours();
+const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
-STEP 1: Create server/src/controllers/dashboard.controller.ts:
+LAYOUT:
+<div className="flex items-center justify-between">
+  <div>
+    <h1 className="text-[24px] sm:text-[28px] font-semibold text-white">{greeting}, {userName.split(' ')[0]}</h1>
+    <p className="text-[13px] text-white/40 mt-1">{randomQuote}</p>
+  </div>
+  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white text-[14px] font-semibold">
+    {avatarUrl ? <img src={avatarUrl} className="w-full h-full rounded-full object-cover" /> : userName[0].toUpperCase()}
+  </div>
+</div>
 
-GET /users/dashboard handler:
-- Requires auth
-- Fetches user with profile from DB
-- Returns dashboard data:
-  {
-    success: true,
-    data: {
-      user: { name, avatarUrl, onboardingComplete },
-      stats: {
-        sessionsCompleted: 0,  // placeholder for now
-        moodStreak: 0,         // placeholder
-        daysActive: calculateDaysSince(user.createdAt),
-        goalsProgress: 0       // placeholder
-      },
-      quickActions: [
-        { id: "book-session", label: "Book Session", icon: "calendar", route: "/therapy/book" },
-        { id: "ai-assistant", label: "AI Assistant", icon: "bot", route: "/ai-chat" },
-        { id: "mood-check", label: "Mood Check-in", icon: "smile", route: "/health-tools/mood" },
-        { id: "meditate", label: "Meditate", icon: "brain", route: "/health-tools/meditation" }
-      ],
-      upcomingSession: null,  // placeholder, will be real data after Phase 4
-      recentActivity: []      // placeholder
-    }
-  }
-
-STEP 2: Update server/src/routes/users.ts:
-- Replace GET /dashboard stub with real controller
-- Add requireAuth middleware
-
-Follow exact patterns from auth.controller.ts for response format.
+randomQuote: Pick from array of 10 motivational quotes.
 ```
 
 ---
 
-### TASK 3.2: Frontend - Dashboard UI
+### TASK 3.1.2: Create StatsCards Component
 
-**PROMPT FOR AI AGENT:**
+**Files to CREATE:** `src/features/dashboard/components/StatsCards.tsx`
+
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Build the full user dashboard UI
+Props: { stats: { sessionsCompleted: number; moodEntries: number; journalEntries: number; meditationSessions: number; daysActive: number } }
 
-CONTEXT:
-- React 19 + TypeScript + Tailwind CSS
-- Dashboard route: /dashboard (protected)
-- Layout: src/components/layout/DashboardLayout.tsx wraps the page
-- API: GET /api/v1/users/dashboard (returns user, stats, quickActions, upcomingSession, recentActivity)
-- Auth context: src/context/AuthContext.tsx (provides user object)
-- Radix UI components in src/components/ui/
-- recharts available for charts
-- lucide-react for icons
-- framer-motion for animations
+LAYOUT: grid grid-cols-2 lg:grid-cols-4 gap-3
 
-DESIGN: Dark theme dashboard (bg-[#0a0a0a])
+4 cards, each:
+<div className="bg-white/[0.02] border border-white/8 rounded-xl p-4">
+  <div className="flex items-center gap-2 text-white/40">
+    <Icon className="w-4 h-4" />
+    <span className="text-[11px] tracking-wider uppercase">{label}</span>
+  </div>
+  <div className="text-[24px] font-semibold text-white mt-2">{value}</div>
+</div>
 
-STEP 1: Create src/features/dashboard/components/WelcomeBanner.tsx
-- Greeting: "Good [morning/afternoon/evening], [firstName]"
-- Subtitle: Motivational quote or tip (rotate from array of 10 quotes)
-- Right side: small avatar circle (initials if no avatar)
-- Subtle gradient background (dark, not flashy)
+Cards:
+1. icon=Calendar, label="Sessions", value=stats.sessionsCompleted
+2. icon=SmilePlus, label="Mood Logs", value=stats.moodEntries
+3. icon=BookOpen, label="Journal", value=stats.journalEntries
+4. icon=Activity, label="Days Active", value=stats.daysActive
 
-STEP 2: Create src/features/dashboard/components/StatsCards.tsx
-- 4 stat cards in a row (grid-cols-2 on mobile, grid-cols-4 on desktop):
-  - Sessions Completed (icon: Calendar, value: number)
-  - Mood Streak (icon: Flame, value: "X days")
-  - Days Active (icon: Activity, value: number)
-  - Goals Progress (icon: Target, value: "X%")
-- Each card: rounded-xl, border border-white/10, bg-white/[0.02], p-4
-- Number in text-[24px] font-semibold, label in text-[12px] text-white/50
-
-STEP 3: Create src/features/dashboard/components/QuickActions.tsx
-- 4 action buttons in a row (grid):
-  - Book Session, AI Assistant, Mood Check-in, Meditate
-- Each: rounded-xl card with icon + label, clickable (navigate to route)
-- Hover: scale-[1.02], border glow
-- On click: navigate to the route from API data
-
-STEP 4: Create src/features/dashboard/components/UpcomingSession.tsx
-- If null: show "No upcoming sessions" with "Book your first session" button
-- If has data: show therapist name, date/time, "Join" button (if within 5 min of start)
-- Card style: slightly different border color (subtle blue/green accent)
-
-STEP 5: Create src/features/dashboard/components/MoodChart.tsx
-- Use recharts LineChart
-- X-axis: last 7 days (Mon-Sun)
-- Y-axis: mood 1-10
-- If no data: show empty state "Start tracking your mood"
-- Placeholder data for now (will be real after Phase 16)
-
-STEP 6: Update src/pages/DashboardPage.tsx
-- Remove the placeholder "Welcome" text
-- Layout: single column on mobile, 2-column grid on desktop
-  - Full width: WelcomeBanner
-  - Full width: StatsCards
-  - Full width: QuickActions
-  - Left column (60%): UpcomingSession + MoodChart
-  - Right column (40%): RecentActivity (placeholder list)
-- Fetch data from GET /api/v1/users/dashboard on mount
-- Loading state: skeleton cards while fetching
-- Error state: "Failed to load dashboard" with retry button
-
-STEP 7: Update src/components/layout/DashboardLayout.tsx
-- Add left sidebar (hidden on mobile, shown on lg+):
-  - Logo at top
-  - Nav items: Dashboard (active), Health Tools, Sessions, AI Assistant, Profile, Settings
-  - Each item: icon + label, rounded-lg hover state
-  - Bottom: Logout button
-- Mobile: bottom tab bar with 5 icons (Dashboard, Health, Sessions, AI, Profile)
-- Main content area: flex-1 with px-6 py-8
-
-STYLING:
-- Background: bg-[#0a0a0a] (slightly lighter than pure black)
-- Cards: bg-white/[0.02] border border-white/8 rounded-xl
-- Sidebar: bg-black/50 border-r border-white/8 w-[240px]
-- Active nav item: bg-white/10 text-white
-- Inactive nav item: text-white/40 hover:text-white/70
+Import icons from lucide-react.
 ```
 
 ---
 
-## PHASE 16: HEALTH TOOLS (Mood Tracker, Meditation, Breathing, Journal)
+### TASK 3.1.3: Create QuickActions Component
 
-### TASK 16.1: Backend - Health Tools API
+**Files to CREATE:** `src/features/dashboard/components/QuickActions.tsx`
 
-**PROMPT FOR AI AGENT:**
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Implement health tools backend (mood tracker, meditation, breathing, journal)
+Props: { actions: { id: string; label: string; icon: string; route: string }[] }
 
-CONTEXT:
-- Express + TypeScript backend at server/src/
-- Prisma ORM at server/prisma/schema.prisma
-- Auth middleware: requireAuth
-- Route file exists: server/src/routes/health-tools.ts (stubs returning 501)
+LAYOUT: grid grid-cols-2 sm:grid-cols-4 gap-3
 
-STEP 1: Add Prisma models to server/prisma/schema.prisma:
+Each action:
+<Link to={action.route} className="bg-white/[0.02] border border-white/8 rounded-xl p-4 flex flex-col items-center gap-2 hover:bg-white/[0.05] hover:border-white/15 transition-all group">
+  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+    <IconComponent className="w-5 h-5 text-white/60 group-hover:text-white transition-colors" />
+  </div>
+  <span className="text-[13px] text-white/60 group-hover:text-white transition-colors">{action.label}</span>
+</Link>
 
-model MoodEntry {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  score     Int      // 1-10
-  note      String?  // optional text note
-  tags      String[] // ["anxious", "calm", "happy", "sad", "stressed", "energetic", "tired"]
-  createdAt DateTime @default(now())
-  @@index([userId, createdAt])
+Map icon string to lucide-react component:
+'calendar' → Calendar, 'smile' → SmilePlus, 'brain' → Brain, 'book-open' → BookOpen
+
+Import { Link } from 'react-router-dom'.
+```
+
+---
+
+### TASK 3.1.4: Create UpcomingSession Component
+
+**Files to CREATE:** `src/features/dashboard/components/UpcomingSession.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+Props: { session: { id: string; therapistName: string; therapistPhoto?: string; scheduledAt: string; duration: number } | null }
+
+If null (no upcoming session):
+<div className="bg-white/[0.02] border border-white/8 rounded-xl p-6 text-center">
+  <Calendar className="w-8 h-8 text-white/20 mx-auto" />
+  <p className="text-white/40 text-[14px] mt-3">No upcoming sessions</p>
+  <Link to="/therapy/find" className="inline-block mt-4 text-[13px] text-white/60 border border-white/10 rounded-full px-5 py-2 hover:bg-white/5">Book a session</Link>
+</div>
+
+If has session:
+<div className="bg-white/[0.02] border border-white/8 rounded-xl p-4 flex items-center gap-4">
+  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white font-semibold">
+    {therapistPhoto ? <img .../> : therapistName[0]}
+  </div>
+  <div className="flex-1">
+    <p className="text-white text-[15px] font-medium">{session.therapistName}</p>
+    <p className="text-white/40 text-[13px]">{formatted date + time} · {session.duration}min</p>
+  </div>
+  <Link to={`/session/${session.id}`} className="bg-white text-black rounded-full px-4 py-2 text-[13px] font-medium">Join</Link>
+</div>
+```
+
+---
+
+### TASK 3.1.5: Assemble DashboardPage
+
+**Files to READ first:** `src/pages/DashboardPage.tsx` (current shell)
+**Files to MODIFY:** `src/pages/DashboardPage.tsx`
+**Depends on:** 3.1.1, 3.1.2, 3.1.3, 3.1.4
+**Test after:** `cd "d:/soul-yatri-website" && npx vite build`
+
+#### CONTEXT FOR AI AGENT
+```
+REPLACE the shell DashboardPage with a real dashboard.
+
+READ src/pages/DashboardPage.tsx first.
+
+REWRITE it:
+
+import { useState, useEffect } from 'react';
+import WelcomeBanner from '@/features/dashboard/components/WelcomeBanner';
+import StatsCards from '@/features/dashboard/components/StatsCards';
+import QuickActions from '@/features/dashboard/components/QuickActions';
+import UpcomingSession from '@/features/dashboard/components/UpcomingSession';
+
+export default function DashboardPage() {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/v1/users/dashboard', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+      .then(r => r.json())
+      .then(res => { if (res.success) setData(res.data); })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="p-6 space-y-4">{[1,2,3].map(i => <div key={i} className="h-20 bg-white/5 rounded-xl animate-pulse" />)}</div>;
+  if (!data) return <div className="p-6 text-white/40">Failed to load dashboard</div>;
+
+  return (
+    <div className="p-4 sm:p-6 space-y-6 max-w-5xl mx-auto">
+      <WelcomeBanner userName={data.user.name} avatarUrl={data.user.avatarUrl} />
+      <StatsCards stats={data.stats} />
+      <QuickActions actions={data.quickActions} />
+      <UpcomingSession session={data.upcomingSession} />
+    </div>
+  );
 }
-
-model JournalEntry {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title     String?
-  content   String   // the journal text
-  mood      Int?     // optional mood at time of writing
-  tags      String[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  @@index([userId, createdAt])
-}
-
-model MeditationLog {
-  id         String   @id @default(uuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  duration   Int      // seconds
-  type       String   // "guided", "unguided", "breathing"
-  trackName  String?  // name of guided track if applicable
-  completed  Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  @@index([userId, createdAt])
-}
-
-Add relations to User model:
-  moodEntries    MoodEntry[]
-  journalEntries JournalEntry[]
-  meditationLogs MeditationLog[]
-
-STEP 2: Run migration: npx prisma migrate dev --name add-health-tools
-
-STEP 3: Create server/src/controllers/health-tools.controller.ts with handlers:
-
-Mood:
-- POST /health-tools/mood : Create mood entry { score: 1-10, note?: string, tags?: string[] }
-- GET /health-tools/mood : Get mood entries (query: ?days=7 for last 7 days, default 30)
-  Returns: { entries: MoodEntry[], average: number, streak: number }
-
-Journal:
-- POST /health-tools/journal : Create entry { title?: string, content: string, mood?: number, tags?: string[] }
-- GET /health-tools/journal : Get entries (paginated: ?page=1&limit=10)
-- PUT /health-tools/journal/:id : Update entry (only if owner)
-
-Meditation:
-- POST /health-tools/meditation : Log session { duration: number, type: string, trackName?: string, completed: boolean }
-- GET /health-tools/meditation : Get logs (query: ?days=30)
-  Returns: { logs: MeditationLog[], totalMinutes: number, sessionsThisWeek: number }
-
-Breathing:
-- POST /health-tools/breathing : Log session (same as meditation with type="breathing")
-- GET /health-tools/breathing : Get logs
-
-STEP 4: Create server/src/validators/health-tools.validator.ts with Zod schemas for each endpoint.
-
-STEP 5: Update server/src/routes/health-tools.ts - replace stubs with real handlers.
-
-All endpoints require requireAuth middleware. Follow auth.controller.ts patterns.
 ```
 
 ---
 
-### TASK 16.2: Frontend - Mood Tracker
+## PHASE 16: HEALTH TOOLS
 
-**PROMPT FOR AI AGENT:**
+**What it is:** Mood tracker, meditation timer, breathing exercise, journal.
+**Frontend URLs:** `/health-tools/mood`, `/health-tools/meditation`, `/health-tools/breathing`, `/health-tools/journal`
+**Backend API:** `POST/GET /api/v1/health-tools/mood`, `POST/GET /api/v1/health-tools/journal`, etc.
+**Existing stubs:** All 9 endpoints in `server/src/routes/health-tools.ts` return 501.
+
+---
+
+### TASK 16.1.1: Create Health Tools Validators
+
+**Files to CREATE:** `server/src/validators/health-tools.validator.ts`
+**Test after:** `cd "d:/soul-yatri-website/server" && ./node_modules/.bin/tsc --noEmit`
+
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Build mood tracker UI
+Same pattern as users.validator.ts.
 
-CONTEXT:
-- React 19 + TypeScript + Tailwind (dark theme)
-- API: POST/GET /api/v1/health-tools/mood
-- recharts for charts
-- framer-motion for animations
-- lucide-react for icons
-- Dashboard layout wraps all health tools pages
+Schemas:
+export const createMoodSchema = z.object({
+  score: z.number().int().min(1).max(10),
+  note: z.string().max(500).optional(),
+  tags: z.array(z.string()).max(10).optional(),
+});
 
-STEP 1: Add route /health-tools/mood to src/router/index.tsx (protected, inside DashboardLayout)
+export const createJournalSchema = z.object({
+  title: z.string().max(200).optional(),
+  content: z.string().min(1).max(10000),
+  mood: z.number().int().min(1).max(10).optional(),
+  tags: z.array(z.string()).max(10).optional(),
+});
 
-STEP 2: Create src/features/health-tools/screens/MoodTrackerPage.tsx
-- Top: "How are you feeling?" with current date
-- Mood slider or 5 emoji faces (1=Awful, 3=Okay, 5=Great, 7=Good, 10=Amazing)
-  - Use large tappable circles with emoji + label
-  - Selected one scales up with glow
-- Optional note text area (max 500 chars)
-- Tag chips (multi-select): Anxious, Calm, Happy, Sad, Stressed, Energetic, Tired
-- "Log Mood" button
-- Below: Mood history chart (recharts AreaChart, last 7 days)
-- Below chart: List of recent entries with date, score, note preview
+export const updateJournalSchema = z.object({
+  title: z.string().max(200).optional(),
+  content: z.string().min(1).max(10000).optional(),
+  mood: z.number().int().min(1).max(10).optional(),
+  tags: z.array(z.string()).max(10).optional(),
+});
 
-STEP 3: Create src/features/health-tools/components/MoodSelector.tsx
-- Reusable mood selection component
-- 5 or 10 levels with emoji representation
-- Animated selection (framer-motion scale + color change)
+export const logMeditationSchema = z.object({
+  duration: z.number().int().min(1),
+  type: z.enum(['guided', 'unguided', 'breathing', 'body-scan', 'loving-kindness']),
+  trackName: z.string().optional(),
+  completed: z.boolean().default(true),
+});
 
-STEP 4: Create src/features/health-tools/components/MoodHistoryChart.tsx
-- recharts AreaChart with gradient fill
-- X-axis: dates, Y-axis: 1-10
-- Tooltip showing date + score + note
-- Empty state if no data
-
-STYLING: Same dark theme as dashboard. Cards with border-white/8, bg-white/[0.02].
+Re-export requestBodyValidator.
 ```
 
 ---
 
-### TASK 16.3: Frontend - Meditation Timer
+### TASK 16.1.2: Create Health Tools Controller
 
-**PROMPT FOR AI AGENT:**
+**Files to CREATE:** `server/src/controllers/health-tools.controller.ts`
+**Depends on:** 16.1.1
+**Test after:** `cd "d:/soul-yatri-website/server" && ./node_modules/.bin/tsc --noEmit`
+
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Build meditation timer UI
+Same import pattern as users.controller.ts.
+Also import: parsePagination, buildPaginationMeta from '../lib/response.js'
 
-CONTEXT:
-- Same tech stack as mood tracker
-- API: POST/GET /api/v1/health-tools/meditation
+Handlers:
+1. createMoodEntry — POST /mood: prisma.moodEntry.create, sendSuccess(res, entry, 201)
+2. getMoodEntries — GET /mood?days=30: prisma.moodEntry.findMany where createdAt >= daysAgo, calc average score, return { entries, average }
+3. createJournalEntry — POST /journal: prisma.journalEntry.create, sendSuccess 201
+4. getJournalEntries — GET /journal?page=1&limit=10: paginated with parsePagination, prisma.journalEntry.count + findMany, buildPaginationMeta
+5. updateJournalEntry — PUT /journal/:id: verify owner (where: { id, userId }), prisma.journalEntry.update
+6. logMeditationSession — POST /meditation: prisma.meditationLog.create, sendSuccess 201
+7. getMeditationLogs — GET /meditation?days=30: findMany, calc totalMinutes (sum duration/60), sessionsThisWeek
+8. logBreathingSession — POST /breathing: same as meditation but force type="breathing"
+9. getBreathingLogs — GET /breathing?days=30: same as meditation but filter type="breathing"
 
-STEP 1: Add route /health-tools/meditation to router (protected)
-
-STEP 2: Create src/features/health-tools/screens/MeditationPage.tsx
-- Selection screen: Choose duration (5, 10, 15, 20 min) as large cards
-- Selection screen: Choose type:
-  - "Unguided" (just timer + ambient sound)
-  - "Guided Track 1: Body Scan" (placeholder audio)
-  - "Guided Track 2: Loving Kindness" (placeholder)
-  - "Guided Track 3: Stress Relief" (placeholder)
-- Timer screen (shown after selection):
-  - Large circular timer (SVG circle with stroke-dasharray countdown)
-  - Time remaining in center: "04:32"
-  - Pause/Resume button
-  - Stop button (asks "Are you sure? Your progress will be saved")
-  - Subtle pulsing animation (breathing rhythm guide: 4s in, 7s hold, 8s out)
-- Completion screen:
-  - "Well done!" with duration
-  - Logs session to API
-  - "Done" button back to health tools
-
-STEP 3: Create src/features/health-tools/components/CircularTimer.tsx
-- SVG-based circular progress
-- Props: { duration: number, isRunning: boolean, onComplete: () => void }
-- Smooth countdown animation
-- Color changes as time progresses (white -> subtle gradient)
-
-STYLING: Full screen dark, minimal UI during meditation. Timer centered.
+Export all handlers.
 ```
 
 ---
 
-### TASK 16.4: Frontend - Breathing Exercise
+### TASK 16.1.3: Wire Health Tools Routes
 
-**PROMPT FOR AI AGENT:**
+**Files to READ first:** `server/src/routes/health-tools.ts`
+**Files to MODIFY:** `server/src/routes/health-tools.ts`
+**Depends on:** 16.1.1, 16.1.2
+
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Build box breathing exercise UI
+Replace all stubs. Import requireAuth, requestBodyValidator, all schemas, all controller handlers.
 
-STEP 1: Add route /health-tools/breathing to router
+router.post('/mood', requireAuth, requestBodyValidator(createMoodSchema), createMoodEntry);
+router.get('/mood', requireAuth, getMoodEntries);
+router.post('/journal', requireAuth, requestBodyValidator(createJournalSchema), createJournalEntry);
+router.get('/journal', requireAuth, getJournalEntries);
+router.put('/journal/:id', requireAuth, requestBodyValidator(updateJournalSchema), updateJournalEntry);
+router.post('/meditation', requireAuth, requestBodyValidator(logMeditationSchema), logMeditationSession);
+router.get('/meditation', requireAuth, getMeditationLogs);
+router.post('/breathing', requireAuth, requestBodyValidator(logMeditationSchema), logBreathingSession);
+router.get('/breathing', requireAuth, getBreathingLogs);
+```
 
-STEP 2: Create src/features/health-tools/screens/BreathingPage.tsx
-- Box breathing pattern: Inhale 4s -> Hold 4s -> Exhale 4s -> Hold 4s
-- Visual: Large circle that expands (inhale), holds (hold), contracts (exhale), holds (hold)
-- Text instruction changes: "Breathe In", "Hold", "Breathe Out", "Hold"
+---
+
+### TASK 16.2.1: Add Health Tools Routes to Frontend Router
+
+**Files to MODIFY:** `src/router/index.tsx`
+**Test after:** `npx vite build`
+
+#### CONTEXT FOR AI AGENT
+```
+READ src/router/index.tsx. Add these routes inside the protected/dashboard layout section:
+
+{ path: 'health-tools/mood', element: <MoodTrackerPage /> }
+{ path: 'health-tools/meditation', element: <MeditationPage /> }
+{ path: 'health-tools/breathing', element: <BreathingPage /> }
+{ path: 'health-tools/journal', element: <JournalPage /> }
+
+Import the page components (create stub exports if they don't exist yet).
+For now, create minimal stub pages that just render the page title.
+```
+
+---
+
+### TASK 16.2.2: Create MoodTrackerPage
+
+**Files to CREATE:** `src/features/health-tools/screens/MoodTrackerPage.tsx`
+**Test after:** `npx vite build`
+
+#### CONTEXT FOR AI AGENT
+```
+Full mood tracker page. Layout in dark theme.
+
+Sections:
+1. Title: "How are you feeling?" + today's date
+2. Mood selector: 5 large circles in a row (1=Awful, 3=Meh, 5=Okay, 7=Good, 10=Amazing)
+   - Each: w-14 h-14 rounded-full, selected scales up to w-16 h-16 with bg-white text-black
+3. Optional note: <textarea className="w-full bg-white/5 border border-white/10 rounded-xl text-white p-3 text-[14px] min-h-[80px] resize-none" placeholder="Add a note (optional)" />
+4. Tag chips (multi-select): Anxious, Calm, Happy, Sad, Stressed, Energetic, Tired
+5. "Log Mood" button → POST /api/v1/health-tools/mood
+6. Below: recharts AreaChart of last 7 days mood (GET /api/v1/health-tools/mood?days=7)
+7. Below chart: list of recent entries
+
+Use recharts: import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+Empty state for chart: "Start tracking to see your mood trends"
+```
+
+---
+
+### TASK 16.3.1: Create MeditationPage
+
+**Files to CREATE:** `src/features/health-tools/screens/MeditationPage.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+Two-phase page: Selection → Timer
+
+SELECTION PHASE:
+- Title: "Choose your meditation"
+- Duration cards (grid-cols-4 gap-3): 5, 10, 15, 20 minutes
+  Each: rounded-xl border border-white/10 text-center py-4, selected bg-white text-black
+- Type cards (grid-cols-1 gap-2):
+  "Unguided" — just timer
+  "Body Scan" — guided
+  "Loving Kindness" — guided
+- "Start" button
+
+TIMER PHASE:
+- Large SVG circular progress: <svg viewBox="0 0 120 120"> with <circle> for track and <circle> for progress
+  - Progress circle: stroke-dasharray/dashoffset based on remaining/total
+- Time in center: MM:SS (text-[40px] font-mono text-white)
+- Pause/Resume button + Stop button
+- Uses setInterval for countdown
+- On complete: POST /api/v1/health-tools/meditation → show "Well done!" → Done button back
+
+COMPLETION PHASE:
+- "Well done!" + duration logged
+- "Done" button
+```
+
+---
+
+### TASK 16.4.1: Create BreathingPage
+
+**Files to CREATE:** `src/features/health-tools/screens/BreathingPage.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+Box breathing: Inhale 4s → Hold 4s → Exhale 4s → Hold 4s
+
+SELECTION:
+- Duration options: 3 min, 5 min, 10 min (cards)
+- "Begin" button
+
+EXERCISE:
+- Large circle in center that scales with framer-motion:
+  Inhale: scale 0.6 → 1.0 over 4s
+  Hold: stay at 1.0 for 4s
+  Exhale: scale 1.0 → 0.6 over 4s
+  Hold: stay at 0.6 for 4s
+- Text instruction: "Breathe In" / "Hold" / "Breathe Out" / "Hold"
+  (text-[20px] text-white/70 mt-6)
 - Cycle counter: "Cycle 3 of 10"
-- Duration options: 3 min (5 cycles), 5 min (8 cycles), 10 min (15 cycles)
-- Completion: log to API, show stats
+- The circle: <motion.div animate={{ scale }} transition={{ duration: 4, ease: 'easeInOut' }} className="w-40 h-40 rounded-full border-2 border-white/20 bg-white/5" />
 
-STEP 3: Create src/features/health-tools/components/BreathingCircle.tsx
-- Animated circle using framer-motion
-- Scales between 0.6 (exhaled) and 1.0 (inhaled)
-- Smooth transitions matching breath timing
-- Subtle ring glow effect
-
-Reuse same dark theme. Full screen centered layout during exercise.
+COMPLETION:
+- Log session: POST /api/v1/health-tools/breathing
+- "Well done!" screen
 ```
 
 ---
 
-### TASK 16.5: Frontend - Journal
+### TASK 16.5.1: Create JournalPage
 
-**PROMPT FOR AI AGENT:**
+**Files to CREATE:** `src/features/health-tools/screens/JournalPage.tsx`
+
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Build journaling feature UI
+Two views: List and Write.
 
-STEP 1: Add route /health-tools/journal to router
+LIST VIEW (default):
+- Title: "My Journal" + "New Entry" button (Plus icon)
+- Fetch: GET /api/v1/health-tools/journal?page=1&limit=20
+- Each entry card: date, title (or first 50 chars), mood badge if present
+- Empty state: "Start writing. Your thoughts are private."
 
-STEP 2: Create src/features/health-tools/screens/JournalPage.tsx
-- Two views: List view (default) and Write view
-- List view:
-  - "My Journal" header with "New Entry" button (Plus icon)
-  - List of entries: date, title (or first 50 chars of content), mood badge
-  - Sorted by date descending
-  - Empty state: "Start writing. Your thoughts are private and encrypted."
-- Write view (/health-tools/journal/new or /health-tools/journal/:id):
-  - Title input (optional, placeholder: "Untitled")
-  - Large textarea for content (min-h-[300px])
-  - Optional mood selector at top (inline, compact version)
-  - Tag chips at bottom
-  - Auto-save indicator ("Saved" / "Saving...")
-  - Save button and Back button
+WRITE VIEW (new or edit):
+- Title input: <input type="text" placeholder="Title (optional)" className="w-full bg-transparent text-white text-[20px] font-medium border-none outline-none placeholder:text-white/20" />
+- Content: <textarea className="w-full bg-transparent text-white text-[15px] border-none outline-none min-h-[200px] resize-none leading-relaxed placeholder:text-white/20" placeholder="Write your thoughts..." />
+- Save button → POST or PUT
+- Back button → return to list
 
-STEP 3: Create src/features/health-tools/components/JournalEntryCard.tsx
-- Compact card for list view
-- Shows: date, title/preview, mood badge, tag chips
-- Click navigates to full entry
-
-STYLING: Same dark theme. Textarea should feel calm - no harsh borders.
+Toggle between views with state. Use useState<'list' | 'write'>('list').
 ```
 
 ---
 
-## PHASE 4: THERAPY BOOKING (After Phase 3 + 16)
+## PHASE 4: THERAPY BOOKING
 
-### TASK 4.1: Backend - Therapist & Booking Models + API
+**What it is:** Browse therapists, view profiles, book sessions.
+**Frontend URLs:** `/therapy/find`, `/therapy/therapist/:id`, `/therapy/sessions`
+**Existing stubs (server/src/routes/therapy.ts):** 18 endpoints, all 501.
 
-**PROMPT FOR AI AGENT:**
+---
+
+### TASK 4.1.1: Create Therapy Validators
+
+**Files to CREATE:** `server/src/validators/therapy.validator.ts`
+
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Implement therapy booking backend
+export const requestSessionSchema = z.object({
+  therapistId: z.string().uuid(),
+  scheduledAt: z.string().datetime(),
+});
 
-CONTEXT:
-- Prisma schema at server/prisma/schema.prisma (has User, UserProfile, RefreshToken, AuditLog, MoodEntry, JournalEntry, MeditationLog)
-- Route file: server/src/routes/therapy.ts (has extensive stubs)
-
-STEP 1: Add Prisma models:
-
-model TherapistProfile {
-  id              String   @id @default(uuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  specializations String[] // ["anxiety", "depression", "relationships", "trauma", "addiction"]
-  approach        String   // "cbt", "holistic", "mixed"
-  languages       String[] // ["english", "hindi", "marathi"]
-  experience      Int      // years
-  bio             String
-  photoUrl        String?
-  pricePerSession Int      // in INR (e.g., 1500)
-  rating          Float    @default(0)
-  totalReviews    Int      @default(0)
-  isVerified      Boolean  @default(false)
-  isAvailable     Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  availabilities  TherapistAvailability[]
-  sessions        Session[]
-}
-
-model TherapistAvailability {
-  id           String   @id @default(uuid())
-  therapistId  String
-  therapist    TherapistProfile @relation(fields: [therapistId], references: [id], onDelete: Cascade)
-  dayOfWeek    Int      // 0=Sunday, 6=Saturday
-  startTime    String   // "09:00"
-  endTime      String   // "17:00"
-  @@index([therapistId])
-}
-
-model Session {
-  id            String   @id @default(uuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id])
-  therapistId   String
-  therapist     TherapistProfile @relation(fields: [therapistId], references: [id])
-  scheduledAt   DateTime
-  duration      Int      @default(50) // minutes
-  status        SessionStatus @default(SCHEDULED)
-  cancelledBy   String?
-  cancelReason  String?
-  notes         String?
-  paymentId     String?
-  amountPaid    Int?     // in INR
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  @@index([userId])
-  @@index([therapistId])
-  @@index([scheduledAt])
-}
-
-enum SessionStatus {
-  SCHEDULED
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
-  NO_SHOW
-}
-
-Add to User model:
-  sessions       Session[]
-  therapistProfile TherapistProfile?
-
-STEP 2: Run migration.
-
-STEP 3: Create server/src/controllers/therapy.controller.ts:
-
-Therapist Listing:
-- GET /therapy/therapists: List therapists (query: ?specialization=anxiety&language=english&approach=cbt&page=1&limit=10)
-  - Only isVerified=true, isAvailable=true
-  - Sort by rating desc
-  - Include: name, photo, specializations, rating, price, experience, languages
-
-- GET /therapy/therapists/:id: Get therapist detail
-  - Full profile + availabilities for next 14 days
-  - Calculate available time slots based on TherapistAvailability minus existing Sessions
-
-Session Booking:
-- POST /therapy/request: Book a session
-  - Body: { therapistId, scheduledAt (ISO datetime) }
-  - Validate: slot is available (check TherapistAvailability for that day + no conflicting Session)
-  - Validate: scheduledAt is at least 24 hours in the future
-  - Create Session with status SCHEDULED
-  - Return session details
-
-- GET /therapy/sessions: Get user's sessions (past + upcoming)
-  - Query: ?status=SCHEDULED&page=1&limit=10
-  - Sort: upcoming first, then past
-
-- GET /therapy/sessions/:id: Get session detail
-
-- PUT /therapy/sessions/:id/cancel: Cancel session
-  - Only if status=SCHEDULED and scheduledAt > 24 hours from now
-  - Set status=CANCELLED, cancelledBy=userId
-
-STEP 4: Create validators and update routes. All endpoints require requireAuth.
+export const cancelSessionSchema = z.object({
+  reason: z.string().max(500).optional(),
+});
 ```
 
 ---
 
-### TASK 4.2: Frontend - Therapist Listing & Booking Flow
+### TASK 4.1.2: Create Therapy Controller
 
-**PROMPT FOR AI AGENT:**
+**Files to CREATE:** `server/src/controllers/therapy.controller.ts`
+
+#### CONTEXT FOR AI AGENT
 ```
-PROJECT: d:\soul-yatri-website
-TASK: Build therapist listing and booking UI
+Handlers:
+1. getTherapists — GET /therapists?specialization=anxiety&language=english&page=1&limit=10
+   - prisma.therapistProfile.findMany with filters (isVerified: true, isAvailable: true)
+   - Include user.name, user.avatarUrl
+   - Paginated
+   - Sort by rating desc
 
-CONTEXT:
-- React 19 + TypeScript + Tailwind (dark theme)
-- API: GET /api/v1/therapy/therapists, GET /api/v1/therapy/therapists/:id, POST /api/v1/therapy/request
-- Dashboard layout wraps these pages
-- Radix UI components available
-- lucide-react icons, framer-motion animations
+2. getTherapistById — GET /therapists/:id
+   - Full profile + include availabilities + user.name
+   - Calculate available slots for next 14 days:
+     For each day, get TherapistAvailability for that dayOfWeek,
+     generate time slots (startTime to endTime, slotDuration increments),
+     exclude slots that overlap with existing Sessions (status != CANCELLED)
 
-STEP 1: Add routes to router:
-- /therapy/find -> TherapistListingPage
-- /therapy/therapist/:id -> TherapistProfilePage
-- /therapy/sessions -> SessionsListPage
+3. requestSession — POST /request
+   - Validate therapistId exists and is available
+   - Validate scheduledAt is in the future (>24hrs)
+   - Validate no conflicting session at that time
+   - Create Session with status SCHEDULED
+   - sendSuccess(res, session, 201)
 
-STEP 2: Create src/features/therapy/screens/TherapistListingPage.tsx
-- Header: "Find Your Therapist"
-- Filter bar (horizontal scroll on mobile):
-  - Specialization dropdown (multi-select)
-  - Language dropdown (multi-select)
-  - Approach: CBT / Holistic / Mixed / All
-  - Price range slider
-- Therapist cards grid (2 cols desktop, 1 col mobile):
-  - Photo (circle avatar), Name, Specializations (chips), Rating (stars), Price, Experience
-  - "View Profile" button
-- Loading: skeleton cards
-- Empty: "No therapists match your criteria"
+4. getUserSessions — GET /sessions?status=SCHEDULED&page=1&limit=10
+   - prisma.session.findMany where userId, paginated
+   - Include therapist.user.name
+
+5. cancelSession — PUT /sessions/:id/cancel
+   - Verify session belongs to user
+   - Verify status is SCHEDULED and scheduledAt > 24hrs from now
+   - Update status to CANCELLED
+```
+
+---
+
+### TASK 4.1.3: Wire Therapy Routes
+
+**Files to MODIFY:** `server/src/routes/therapy.ts`
+**Depends on:** 4.1.1, 4.1.2
+
+#### CONTEXT FOR AI AGENT
+```
+Replace these stubs with real handlers:
+- GET /therapists → getTherapists
+- GET /therapists/:id → getTherapistById
+- POST /request → requireAuth, requestBodyValidator(requestSessionSchema), requestSession
+- GET /sessions → requireAuth, getUserSessions
+- PUT /sessions/:id/cancel → requireAuth, requestBodyValidator(cancelSessionSchema), cancelSession
+
+Keep other stubs (therapist dashboard endpoints) as 501 — those are for Phase 8.
+```
+
+---
+
+### TASK 4.2.1: Add Therapy Routes to Frontend Router
+
+**Files to MODIFY:** `src/router/index.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+Add routes:
+{ path: 'therapy/find', element: <TherapistListingPage /> }
+{ path: 'therapy/therapist/:id', element: <TherapistProfilePage /> }
+{ path: 'therapy/sessions', element: <SessionsListPage /> }
+
+Create stub page components initially.
+```
+
+---
+
+### TASK 4.2.2: Create TherapistListingPage
+
+**Files to CREATE:** `src/features/therapy/screens/TherapistListingPage.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+- Title: "Find Your Therapist"
+- Filter bar: Specialization multi-select, Language multi-select, Approach select
+- Therapist cards grid (1 col mobile, 2 col desktop)
+  Each card: photo circle + name + specializations chips + rating stars + price + "View Profile" link
+- Fetch: GET /api/v1/therapy/therapists?page=1&limit=10
+- Loading state: skeleton cards
 - Pagination at bottom
-
-STEP 3: Create src/features/therapy/screens/TherapistProfilePage.tsx
-- Top: Photo, Name, Rating, Reviews count, Price
-- Bio section
-- Specializations, Languages, Approach badges
-- "Available Slots" section:
-  - Date picker (next 14 days)
-  - Time slots grid for selected date
-  - Available slots: white border, clickable
-  - Booked slots: grayed out, not clickable
-- Selected slot highlighted
-- "Book Session - Rs.X" button at bottom (fixed on mobile)
-- On click: confirm dialog -> POST /therapy/request -> Success screen
-
-STEP 4: Create src/features/therapy/screens/SessionsListPage.tsx
-- Tabs: "Upcoming" | "Past"
-- Session cards: therapist name, date/time, status badge, duration
-- Upcoming: "Join" button (if within 5 min of start time), "Cancel" button
-- Past: "View Summary" button (placeholder for now)
-- Empty states for each tab
-
-STYLING: Dark theme, cards with subtle borders, therapist photos with ring border.
 ```
 
 ---
 
-## PHASE ORDER SUMMARY
+### TASK 4.2.3: Create TherapistProfilePage
 
-After the above 4 phases, continue with:
-1. **Phase 13**: Payment Gateway (Razorpay integration) - Add to booking flow
-2. **Phase 5**: Video Calling (Daily.co) - Add to session join
-3. **Phase 6**: AI Voice Assistant (GPT-4o chat)
-4. **Phase 7**: Astrologer System
-5. **Phase 8**: Therapist Dashboard
-6. **Phase 17**: Notifications
-7. **Phase 14**: Admin Dashboard (MVP subset)
-8. **Phase 25**: In-Session AI Monitoring
+**Files to CREATE:** `src/features/therapy/screens/TherapistProfilePage.tsx`
 
-Each phase follows the same pattern: Backend API first, then Frontend UI. Each task prompt is self-contained with all context needed.
+#### CONTEXT FOR AI AGENT
+```
+- Top: Photo, Name, Rating, Reviews, Price
+- Bio, Specializations, Languages badges
+- Available Slots section:
+  - Date picker: next 14 days as horizontal scrollable date chips
+  - Time slots grid for selected date
+  - Available: white border, clickable. Booked: grayed out.
+- "Book Session" button at bottom
+- On book: POST /api/v1/therapy/request → success modal
+```
+
+---
+
+### TASK 4.2.4: Create SessionsListPage
+
+**Files to CREATE:** `src/features/therapy/screens/SessionsListPage.tsx`
+
+#### CONTEXT FOR AI AGENT
+```
+- Tabs: "Upcoming" | "Past"
+- Fetch: GET /api/v1/therapy/sessions
+- Session cards: therapist name, date/time, status badge, duration
+- Upcoming: "Cancel" button
+- Past: rating display
+- Empty states
+```
+
+---
+
+## PHASE 13: PAYMENTS (Razorpay)
+
+### TASK 13.1.1: Install Razorpay SDK
+```
+cd "d:/soul-yatri-website/server" && npm install razorpay
+```
+
+### TASK 13.1.2: Create Payment Controller
+**Files to CREATE:** `server/src/controllers/payments.controller.ts`
+- createOrder: Create Razorpay order using config.payment.keyId/keySecret
+- verifyPayment: Verify Razorpay signature using crypto.createHmac
+- handleWebhook: Razorpay webhook verification + update Payment record
+- getPaymentHistory: User's past payments, paginated
+
+### TASK 13.1.3: Wire Payment Routes
+Replace stubs in `server/src/routes/payments.ts`
+
+### TASK 13.2.1: Create PaymentModal Frontend Component
+Integrate Razorpay checkout.js in therapy booking flow.
+
+---
+
+## PHASE 5: VIDEO CALLING (Daily.co)
+
+### TASK 5.1.1: Create Video Controller
+- createRoom: POST to Daily.co API to create room
+- getToken: Generate meeting token for user
+
+### TASK 5.1.2: Wire Video Routes (new route file or add to therapy routes)
+
+### TASK 5.2.1: Create VideoCallPage
+- Daily.co iframe or @daily-co/daily-js SDK
+- Shows when user clicks "Join" on upcoming session
+
+---
+
+## PHASE 17: NOTIFICATIONS
+
+### TASK 17.1.1: Create Notifications Controller
+- getNotifications: GET, paginated, filter by isRead
+- markAsRead: PUT /:id/read → update isRead = true, readAt = now
+- markAllRead: PUT /read-all
+
+### TASK 17.1.2: Wire Notification Routes
+Replace stubs in `server/src/routes/notifications.ts`
+
+### TASK 17.2.1: Create NotificationBell Component
+Add to Navigation: bell icon with unread count badge.
+Dropdown shows recent notifications.
+
+### TASK 17.2.2: Create NotificationsPage
+Full page list with all notifications, mark as read on click.
 
 ---
 
 ## RULES FOR ALL AI AGENTS
 
-1. **READ before WRITE** - Always read existing files before modifying them
-2. **Follow existing patterns** - Look at auth.controller.ts, OnboardingSignupPage.tsx for established patterns
-3. **Dark theme ONLY** - bg-black, text-white, border-white/10, NO light mode for internal pages
-4. **Mobile-first** - All UIs must work on 375px width screens
-5. **100dvh pages** - Onboarding steps should not require scrolling
-6. **API format** - Always return { success: true/false, data/error }
-7. **TypeScript strict** - No `any` types, no `@ts-ignore`
-8. **Test the build** - Run `npx vite build` (frontend) or `npx tsc --noEmit` (server) after changes
-9. **Don't build post-MVP** - Only Phases 1-8, 13-14, 16-17, 25
-10. **Commit after each task** - One commit per task with descriptive message
+1. **READ before WRITE** — Always read existing files before modifying
+2. **Follow existing patterns** — Use asyncHandler, sendSuccess, AppError from lib/
+3. **ES modules** — Server imports use `.js` extension always
+4. **Dark theme** — bg-black, text-white, border-white/10, NO light mode
+5. **Mobile-first** — All UIs work on 375px width
+6. **100dvh** — Onboarding steps don't scroll
+7. **API format** — `{ success: true/false, data/error, timestamp, requestId }`
+8. **TypeScript strict** — No `any` (except useState generic), no `@ts-ignore`
+9. **Test** — Run `npx tsc --noEmit` (server) or `npx vite build` (frontend) after EVERY task
+10. **Commit** — One commit per completed task: `git add -A && git commit -m "type(scope): description"`
+11. **Don't skip tasks** — Execute in exact numbered order
+12. **Don't add extras** — Only build what's specified, nothing more

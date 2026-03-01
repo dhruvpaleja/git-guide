@@ -32,7 +32,9 @@ const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const ContactPage = lazy(() => import('@/pages/ContactPage'));
 const CareerPage = lazy(() => import('@/pages/CareerPage'));
 const BlogsPage = lazy(() => import('@/pages/BlogsPage'));
+const BlogPostPage = lazy(() => import('@/pages/BlogPostPage'));
 const CoursesPage = lazy(() => import('@/pages/CoursesPage'));
+const StudentCounsellingPage = lazy(() => import('@/pages/StudentCounsellingPage'));
 
 // Auth Pages (Phase 1 MVP)
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
@@ -147,6 +149,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: 'blog/:id',
+        element: (
+          <Lazy>
+            <BlogPostPage />
+          </Lazy>
+        ),
+      },
+      {
         path: 'careers',
         element: (
           <Lazy>
@@ -175,6 +185,14 @@ const router = createBrowserRouter([
         element: (
           <Lazy>
             <BlogsPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: 'student-counselling',
+        element: (
+          <Lazy>
+            <StudentCounsellingPage />
           </Lazy>
         ),
       },

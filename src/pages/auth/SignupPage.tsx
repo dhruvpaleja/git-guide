@@ -34,7 +34,7 @@ export default function SignupPage() {
                     if (data?.wantMatchmaking) {
                         setSearchParams({ step: 'partner-details' });
                     } else {
-                        navigate('/dashboard');
+                        navigate('/journey-preparation');
                     }
                 }}
             />
@@ -48,7 +48,7 @@ export default function SignupPage() {
                     setSearchParams({ step: 'astrology' });
                 }}
                 onSubmit={() => {
-                    navigate('/dashboard');
+                    navigate('/journey-preparation');
                 }}
                 initialData={astrologyData?.partner || null}
             />

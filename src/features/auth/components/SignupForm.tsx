@@ -99,7 +99,7 @@ export default function SignupForm() {
         });
 
         if (result.success) {
-            navigate('/dashboard'); // Route based on MVP flow
+            navigate('/journey-preparation'); // Show loading screen before dashboard
         } else {
             setServerError(result.error || 'Registration failed. Please try again.');
         }

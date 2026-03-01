@@ -30,8 +30,8 @@ export default function LoginForm() {
         setServerError(null);
         const success = await login(data.email, data.password);
         if (success) {
-            // For MVP, route to dashboard or landing if dashboard not complete yet
-            navigate('/dashboard');
+            // Route through journey-preparation loading screen before dashboard
+            navigate('/journey-preparation');
         } else {
             setServerError('Invalid email or password. Please try again.');
         }

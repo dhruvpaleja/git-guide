@@ -19,7 +19,7 @@ export default function LoginPage() {
         try {
             const success = await login(email, password);
             if (success) {
-                navigate('/dashboard');
+                navigate('/journey-preparation');
             } else {
                 setError('Invalid email or password. Please try again.');
             }

@@ -59,6 +59,11 @@ export default function Navigation() {
     setIsScrolled(window.scrollY > 30);
   }, []);
 
+  // Update navbar theme immediately when navigating to a new page
+  useEffect(() => {
+    handleScroll();
+  }, [location.pathname, handleScroll]);
+
   // Handle Logo click
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();

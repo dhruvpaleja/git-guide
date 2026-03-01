@@ -16,27 +16,29 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Get initial theme from localStorage without causing render
+function getInitialTheme(): Theme {
+  if (typeof window === 'undefined') return 'dark';
+  const stored = localStorage.getItem('theme') as Theme | null;
+  return stored || 'dark';
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('dark');
-  const [isDark, setIsDark] = useState(true);
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
+
+  // Derive isDark from theme without needing setState in effect
+  const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   useEffect(() => {
-    const stored = localStorage.getItem('theme') as Theme | null;
-    if (stored) {
-      setThemeState(stored);
-    }
-  }, []);
+    // Apply theme to DOM and localStorage
+    localStorage.setItem('theme', theme);
 
-  useEffect(() => {
-    const dark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    setIsDark(dark);
-
-    if (dark) {
+    if (isDark) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [theme]);
+  }, [theme, isDark]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);

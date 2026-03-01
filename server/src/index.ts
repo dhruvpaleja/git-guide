@@ -59,7 +59,9 @@ app.use(errorHandler);
 // Start
 // ---------------------------------------------------------------------------
 app.listen(config.port, () => {
-  console.log(`Server running on port ${config.port} [${config.nodeEnv}]`);
+  if (config.nodeEnv !== 'production') {
+    console.warn(`Server running on port ${config.port} [${config.nodeEnv}]`);
+  }
 });
 
 export default app;

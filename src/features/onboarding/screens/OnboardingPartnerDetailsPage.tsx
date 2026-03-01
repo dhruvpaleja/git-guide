@@ -123,7 +123,14 @@ export default function OnboardingPartnerDetailsPage({ onBack, onSubmit, initial
         onSubmit(null);
     };
 
-    const InlineError = ({ message }: { message?: string }) => {
+// Move InlineError component outside of render function
+function InlineError({ message }: { message?: string }) {
+  return message ? (
+    <p className="mt-1 text-sm text-red-400">
+      {message}
+    </p>
+  ) : null;
+}
         if (!message) return null;
         return (
             <div className="flex items-center gap-1.5 mt-2">

@@ -49,9 +49,15 @@ export default function Navigation() {
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  // Avoid calling handleScroll on mount as it causes SetState warnings
+  // The scroll event listener will capture scroll position changes
+  useEffect(() => {
+    // Just set initial scroll state without calling handleScroll
+    setIsScrolled(window.scrollY > 30);
+  }, []);
 
   // Handle Logo click
   const handleLogoClick = (e: React.MouseEvent) => {

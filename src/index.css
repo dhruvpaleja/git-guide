@@ -31,11 +31,11 @@
   * {
     @apply border-border;
   }
-
+  
   html {
     scroll-behavior: smooth;
   }
-
+  
   body {
     @apply bg-black text-white antialiased;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -43,99 +43,60 @@
 }
 
 @layer utilities {
-
   /* Glow Effects */
   .glow-teal {
     background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.35) 0%, transparent 70%);
   }
-
+  
   .glow-cyan {
     background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
   }
-
+  
   /* Orange Gradient for Wellness Section */
   .gradient-orange {
     background: radial-gradient(circle at center, #FBBF24 0%, #F97316 50%, #EA580C 100%);
   }
-
+  
   /* Glassmorphism */
   .glass {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
-
+  
   .glass-dark {
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
-
+  
   /* Gradient Divider */
   .gradient-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
   }
-
+  
   /* Card Gradient Overlay */
   .card-gradient-overlay {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
   }
-
+  
   /* Hide scrollbar */
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
-  /* Text balance for headings */
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-/* Splash Screen - Circle Expand Animation */
-@keyframes circle-expand {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  100% {
-    transform: scale(3);
-    opacity: 0;
-  }
-}
-
-.animate-circle-expand {
-  animation: circle-expand 4s ease-out infinite;
-}
-
-.animation-delay-500 {
-  animation-delay: 0.5s;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-2500 {
-  animation-delay: 2.5s;
 }
 
 /* Animations */
 @keyframes pulse-glow {
-
-  0%,
-  100% {
+  0%, 100% {
     opacity: 0.3;
     transform: scale(1);
   }
-
   50% {
     opacity: 0.5;
     transform: scale(1.05);
@@ -147,7 +108,6 @@
     opacity: 0;
     transform: translateY(30px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -159,7 +119,6 @@
     opacity: 0;
     transform: scale(0.95);
   }
-
   to {
     opacity: 1;
     transform: scale(1);
@@ -171,7 +130,6 @@
     opacity: 0;
     transform: translateX(-30px);
   }
-
   to {
     opacity: 1;
     transform: translateX(0);
@@ -183,7 +141,6 @@
     opacity: 0;
     transform: translateX(30px);
   }
-
   to {
     opacity: 1;
     transform: translateX(0);
@@ -211,29 +168,12 @@
 }
 
 /* Stagger delays */
-.stagger-1 {
-  animation-delay: 0.1s;
-}
-
-.stagger-2 {
-  animation-delay: 0.2s;
-}
-
-.stagger-3 {
-  animation-delay: 0.3s;
-}
-
-.stagger-4 {
-  animation-delay: 0.4s;
-}
-
-.stagger-5 {
-  animation-delay: 0.5s;
-}
-
-.stagger-6 {
-  animation-delay: 0.6s;
-}
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
 
 /* Initial state for animations */
 .animate-on-scroll {

@@ -30,7 +30,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const dark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     setIsDark(dark);
-    
+
     if (dark) {
       document.documentElement.classList.add('dark');
     } else {

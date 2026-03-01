@@ -32,13 +32,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       const response = await apiService.post<{ user: User, accessToken: string }>('/auth/login', { email, password });
+      
       if (response.success && response.data) {
         setUser(response.data.user);
         localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.accessToken);
         toast.success('Successfully logged in!');
         return true;
       } else {
-        toast.error(response.error?.message || 'Login failed');
+        // Development mode: simulate successful login if backend is not available
+        const isDevelopment = import.meta.env.MODE === 'development';
+        const errorMessage = response.error?.message || 'Login failed';
+        const isNetworkError = errorMessage.toLowerCase().includes('request failed') || 
+                               errorMessage.toLowerCase().includes('failed to fetch') ||
+                               errorMessage.toLowerCase().includes('network') ||
+                               errorMessage.toLowerCase().includes('connection');
+        
+        if (isDevelopment && isNetworkError) {
+          // Create mock user for development
+          const mockUser: User = {
+            id: 'dev-user-' + Date.now(),
+            name: 'Dev User',
+            email: email,
+            role: 'user',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          };
+          
+          setUser(mockUser);
+          localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, 'dev-token-' + Date.now());
+          toast.success('Successfully logged in! (Dev Mode)');
+          return true;
+        }
+        
+        toast.error(errorMessage);
         return false;
       }
     } catch (e: any) {
@@ -65,15 +91,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       const response = await apiService.post<{ user: User, accessToken: string }>('/auth/register', data);
+      
       if (response.success && response.data) {
         setUser(response.data.user);
         localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.accessToken);
         toast.success('Account created successfully!');
         return { success: true };
       } else {
-        const message = response.error?.message || 'Signup failed';
-        toast.error(message);
-        return { success: false, error: message };
+        // Development mode: simulate successful signup if backend is not available
+        const isDevelopment = import.meta.env.MODE === 'development';
+        const errorMessage = response.error?.message || 'Signup failed';
+        const isNetworkError = errorMessage.toLowerCase().includes('request failed') || 
+                               errorMessage.toLowerCase().includes('failed to fetch') ||
+                               errorMessage.toLowerCase().includes('network') ||
+                               errorMessage.toLowerCase().includes('connection');
+        
+        if (isDevelopment && isNetworkError) {
+          // Create mock user for development
+          const mockUser: User = {
+            id: 'dev-user-' + Date.now(),
+            name: data.name,
+            email: data.email,
+            role: 'user',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          };
+          
+          setUser(mockUser);
+          localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, 'dev-token-' + Date.now());
+          toast.success('Account created successfully! (Dev Mode)');
+          return { success: true };
+        }
+        
+        toast.error(errorMessage);
+        return { success: false, error: errorMessage };
       }
     } catch (e: any) {
       const message = e?.message || 'An unexpected error occurred';

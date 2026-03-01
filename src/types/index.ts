@@ -3,23 +3,7 @@
  * Central location for all TypeScript interfaces and types
  */
 
-export * from './api.types';
-export * from './navigation.types';
-export * from './ui.types';
-export * from './common.types';
-export * from './auth.types';
-export * from './blog.types';
-export * from './course.types';
-export * from './community.types';
-export * from './health.types';
-export * from './therapy.types';
-export * from './dashboard.types';
-export * from './onboarding.types';
-export * from './astrology.types';
-export * from './ai.types';
-export * from './payment.types';
-export * from './admin.types';
-export * from './events.types';
-export * from './seo.types';
-export * from './notification.types';
-export * from './analytics.types';
+export type { ApiResponse, ApiError, PaginationParams, PaginatedResponse, RequestConfig } from './api.types';
+export type { NavItem, NavSection, NavigationState, BreadcrumbItem } from './navigation.types';
+export type { BaseComponentProps, ButtonProps, CardProps, ModalProps, FormInputProps, ThemeConfig } from './ui.types';
+export type { LoadingState, UserRole, User, BlogPost, Service, ServicePricing, ContactForm, SEOMeta } from './common.types';

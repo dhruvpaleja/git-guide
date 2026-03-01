@@ -1,49 +1,29 @@
-# Dependencies
-node_modules/
-*.pnp
-.pnp.js
-yarn.lock
-
-# Testing
-coverage/
-.nyc_output/
-
-# Production
-dist/
-build/
-out/
-
-# Misc
-.DS_Store
-.AppleDouble
-.LSOverride
-*.log
-*.logs
-*.swp
-*.swo
-*~
+node_modules
+dist
 .env
 .env.local
-.env.*.local
-.vscode/
-.idea/
-*.iml
-.sass-cache/
+*.log
+nul
 
-# Development
-.next/
-*.tsbuildinfo
-.turbo/
-.cache/
-.parcel-cache
-.eslintcache
+# Claude/AI temp files
+tmpclaude-*
+app/
+app.worktrees/
 
-# IDE
-.vscode
-.idea
-*.sublime-workspace
-*.sublime-project
-
-# OS
-Thumbs.db
-dist/
+# Debug/temp output files
+*.patch
+backup_diff.patch
+branches.txt
+build_output.txt
+status_conflict.txt
+branch_diff.txt
+branch_files.txt
+conflict_status.txt
+git_log.txt
+lint_output.txt
+merged_lint.txt
+repo_url.txt
+repo_url_utf8.txt
+status.txt
+tc_output.txt
+server/build_out.txt

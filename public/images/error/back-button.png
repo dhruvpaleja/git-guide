@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Back Button">
+<rect width="30" height="30" rx="15" fill="var(--fill-0, black)" fill-opacity="0.01"/>
+<path id="Arrow 24" d="M11.4697 15.5303C11.1768 15.2374 11.1768 14.7626 11.4697 14.4697L16.2426 9.6967C16.5355 9.40381 17.0104 9.40381 17.3033 9.6967C17.5962 9.98959 17.5962 10.4645 17.3033 10.7574L13.0607 15L17.3033 19.2426C17.5962 19.5355 17.5962 20.0104 17.3033 20.3033C17.0104 20.5962 16.5355 20.5962 16.2426 20.3033L11.4697 15.5303ZM12.0001 15V15.75H12V15V14.25H12.0001V15Z" fill="var(--stroke-0, white)"/>
+</g>
+</svg>

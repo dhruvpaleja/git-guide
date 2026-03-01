@@ -7,6 +7,7 @@ const navItems = [
   { label: 'About Soul Yatri', path: '/about' },
   { label: 'Business', path: '/business' },
   { label: 'Blogs', path: '/blogs' },
+  { label: 'Contact', path: '/contact' },
   { label: 'Login', path: '/login' },
   { label: 'Signup', path: '/signup' },
 ];

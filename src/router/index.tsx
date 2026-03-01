@@ -16,8 +16,9 @@
 
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { MainLayout } from '@/layouts';
+import { DashboardLayout, MainLayout } from '@/layouts';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import ProtectedRoute from './ProtectedRoute';
 
 // ---------------------------------------------------------------------------
 // Lazy-loaded pages
@@ -28,6 +29,15 @@ const AboutPage = lazy(() => import('@/pages/AboutPage'));
 const BusinessPage = lazy(() => import('@/pages/BusinessPage'));
 const CorporatePage = lazy(() => import('@/pages/CorporatePage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
+const ContactPage = lazy(() => import('@/pages/ContactPage'));
+const CareerPage = lazy(() => import('@/pages/CareerPage'));
+const BlogsPage = lazy(() => import('@/pages/BlogsPage'));
+const CoursesPage = lazy(() => import('@/pages/CoursesPage'));
+
+// Auth Pages (Phase 1 MVP)
+const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
+const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
+const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 
 // ---------------------------------------------------------------------------
 // Suspense wrapper for lazy pages
@@ -48,6 +58,84 @@ const router = createBrowserRouter([
         <SplashScreen />
       </Lazy>
     ),
+  },
+
+  // Auth pages
+  {
+    path: '/login',
+    element: (
+      <Lazy>
+        <LoginPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/signup',
+    element: (
+      <Lazy>
+        <SignupPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/contact',
+    element: (
+      <Lazy>
+        <ContactPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/careers',
+    element: (
+      <Lazy>
+        <CareerPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/blogs',
+    element: (
+      <Lazy>
+        <BlogsPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/blog',
+    element: (
+      <Lazy>
+        <BlogsPage />
+      </Lazy>
+    ),
+  },
+  {
+    path: '/courses',
+    element: (
+      <Lazy>
+        <CoursesPage />
+      </Lazy>
+    ),
+  },
+
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: '/dashboard',
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <Lazy>
+                <DashboardPage />
+              </Lazy>
+            ),
+          },
+        ],
+      },
+    ],
   },
 
   // Public pages with nav + footer

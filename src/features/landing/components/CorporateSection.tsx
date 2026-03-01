@@ -43,9 +43,9 @@ export default function CorporateSection() {
       {/* Corporate Image */}
       <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
         <div
-          className={`relative rounded-[30px] overflow-hidden transition-all duration-[1200ms] ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.97]'
+          className={`relative rounded-[30px] overflow-hidden transition-all ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.97]'
             }`}
-          style={{ transitionDelay: '0.2s', height: '500px' }}
+          style={{ transitionDuration: '1200ms', transitionDelay: '0.2s', height: '500px' }}
         >
           <img
             src="/images/corporate-figma.png"

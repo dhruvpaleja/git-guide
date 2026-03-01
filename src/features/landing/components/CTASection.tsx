@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function CTASection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -36,7 +37,8 @@ export default function CTASection() {
 
       {/* Content */}
       <div className="relative z-10 flex justify-center px-4">
-        <button
+        <Link
+          to="/contact"
           className={`group relative px-10 py-3.5 bg-white text-black font-medium text-sm rounded-full transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-white/20 active:scale-95 ${
             isVisible
               ? 'opacity-100 translate-y-0'
@@ -51,7 +53,7 @@ export default function CTASection() {
           <div className="absolute inset-0 rounded-full overflow-hidden">
             <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
           </div>
-        </button>
+        </Link>
       </div>
     </section>
   );

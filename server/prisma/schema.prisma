@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// ENUMS
+// ---------------------------------------------------------------------------
+enum Role {
+  USER
+  THERAPIST
+  ASTROLOGER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum AuditCategory {
+  AUTH_SUCCESS
+  AUTH_FAILURE
+  SECURITY_ALERT
+  ACCOUNT_CHANGE
+  PAYMENT
+  SESSION_ACTION
+}
+
+// ---------------------------------------------------------------------------
+// MODELS
+// ---------------------------------------------------------------------------
+model User {
+  id              String         @id @default(uuid())
+  email           String         @unique
+  passwordHash    String
+  name            String
+  phone           String?
+  role            Role           @default(USER)
+  avatarUrl       String?
+  isVerified      Boolean        @default(false)
+  
+  // Security & AI Tracking
+  lastLoginAt     DateTime?
+  failedAttempts  Int            @default(0)
+  lockedUntil     DateTime?
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  refreshTokens   RefreshToken[]
+  auditLogs       AuditLog[]
+
+  @@index([email])
+}
+
+model RefreshToken {
+  id              String   @id @default(uuid())
+  tokenHash       String   @unique
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Advanced Hijack & AI Tracking Data
+  userAgent       String?
+  ipHash          String?
+  familyId        String   // For token rotation logic to identify token families
+  isRevoked       Boolean  @default(false)
+  
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@index([familyId])
+}
+
+// AI Datastore foundation
+model AuditLog {
+  id              String        @id @default(uuid())
+  userId          String?       // Optional in case of anonymous actions (e.g. failed unauthed login)
+  user            User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  category        AuditCategory
+  action          String        // e.g., "LOGIN_FAILED", "TOKEN_REUSED", "PASSWORD_CHANGED"
+  
+  // JSON field containing all metadata needed for later AI data analysis / LLM training
+  metadata        Json?         
+  
+  ipHash          String?
+  userAgent       String?
+  
+  createdAt       DateTime      @default(now())
+
+  @@index([userId])
+  @@index([category])
+  @@index([createdAt])
+}

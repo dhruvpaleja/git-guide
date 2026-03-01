@@ -78,7 +78,7 @@ Start here based on your role:
 ### Step 1: Clone & Setup
 ```bash
 git clone https://github.com/dhruvpaleja/soul-yatri-website.git
-cd soul-yatri-website/app
+cd soul-yatri-website
 npm install
 cp .env.example .env.local
 npm run dev

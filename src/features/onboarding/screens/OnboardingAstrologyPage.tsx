@@ -367,11 +367,9 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                 </div>
                                             )}
                                         </div>
-                                    </div>
 
-                                    {/* BIRTH TIME (shown when birthDate filled) */}
-                                    {birthDate && (
-                                        <div>
+                                    {/* BIRTH TIME */}
+                                    <div>
                                             <div className="flex items-center justify-between mb-3">
                                                 <label className="block text-[13px] sm:text-[14px] text-black/60 tracking-[-0.01em] font-medium">
                                                     What's your birth time?{' '}
@@ -505,7 +503,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                 </div>
                                             )}
                                         </div>
-                                    )}
+                                    </div>
 
                                     {/* BIRTH CITY */}
                                     <div>

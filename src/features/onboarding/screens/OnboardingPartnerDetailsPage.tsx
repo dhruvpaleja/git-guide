@@ -123,14 +123,7 @@ export default function OnboardingPartnerDetailsPage({ onBack, onSubmit, initial
         onSubmit(null);
     };
 
-// Move InlineError component outside of render function
-function InlineError({ message }: { message?: string }) {
-  return message ? (
-    <p className="mt-1 text-sm text-red-400">
-      {message}
-    </p>
-  ) : null;
-}
+    function InlineError({ message }: { message?: string }) {
         if (!message) return null;
         return (
             <div className="flex items-center gap-1.5 mt-2">
@@ -138,7 +131,7 @@ function InlineError({ message }: { message?: string }) {
                 <p className="text-[11px] text-red-500 tracking-[-0.01em]">{message}</p>
             </div>
         );
-    };
+    }
 
     const inputErrorClass = (fieldName: keyof FieldErrors) =>
         fieldErrors[fieldName] ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : 'border-black/8 focus:border-black/20 focus:ring-black/10';
@@ -247,9 +240,8 @@ function InlineError({ message }: { message?: string }) {
                                         />
                                     </div>
 
-                                    {/* Partner Birth Time (conditional) */}
-                                    {partnerBirthDate && (
-                                        <div>
+                                    {/* Partner Birth Time */}
+                                    <div>
                                             <div className="flex items-center justify-between mb-3">
                                                 <label className="block text-[13px] sm:text-[14px] text-black/60
                                                                 tracking-[-0.01em] font-medium">
@@ -338,7 +330,6 @@ function InlineError({ message }: { message?: string }) {
                                                 </div>
                                             )}
                                         </div>
-                                    )}
 
                                     {/* Partner Birth City */}
                                     <div>

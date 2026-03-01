@@ -6,4 +6,5 @@
 export type { ApiResponse, ApiError, PaginationParams, PaginatedResponse, RequestConfig } from './api.types';
 export type { NavItem, NavSection, NavigationState, BreadcrumbItem } from './navigation.types';
 export type { BaseComponentProps, ButtonProps, CardProps, ModalProps, FormInputProps, ThemeConfig } from './ui.types';
-export type { LoadingState, UserRole, User, BlogPost, Service, ServicePricing, ContactForm, SEOMeta } from './common.types';
+export type { LoadingState, BlogPost, Service, ServicePricing, ContactForm, SEOMeta } from './common.types';
+export type { UserRole, User, Permission } from './auth.types';

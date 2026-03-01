@@ -1,5 +1,5 @@
 import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
+import { ThemeProvider } from './context/ThemeContext.tsx';
 import AppRouter from './router';
 import SmoothScrollProvider from './components/layout/SmoothScrollProvider';
 

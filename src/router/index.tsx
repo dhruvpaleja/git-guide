@@ -18,7 +18,7 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { DashboardLayout, MainLayout } from '@/layouts';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import ProtectedRoute from './ProtectedRoute';
+import ProtectedRoute from './ProtectedRoute.tsx';
 
 // ---------------------------------------------------------------------------
 // Lazy-loaded pages

@@ -51,25 +51,30 @@ export default function SoulConstellationMap() {
     return (
         <div
             onClick={() => navigate('/dashboard/constellation')}
-            className="relative w-full h-[320px] sm:h-[380px] bg-white/[0.015] backdrop-blur-sm border border-white/[0.05] rounded-2xl overflow-hidden flex items-center justify-center cursor-pointer group hover:bg-white/[0.03] hover:border-white/[0.08] transition-all duration-500"
+            className="relative w-full h-[320px] sm:h-[380px] lg:h-[420px] bg-[#070709] border border-white/[0.04] rounded-[20px] overflow-hidden flex items-center justify-center cursor-pointer group hover:border-white/[0.07] transition-all duration-700"
         >
-            {/* Ambient core glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] h-[50%] bg-purple-500/[0.06] blur-[80px] rounded-full pointer-events-none group-hover:bg-purple-500/[0.1] transition-all duration-1000" />
+            {/* ── Cinematic ambient glows ── */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-purple-900/[0.08] blur-[100px] rounded-full pointer-events-none group-hover:bg-purple-800/[0.12] transition-all duration-1000" />
+            <div className="absolute top-[20%] left-[15%] w-[25%] h-[25%] bg-amber-900/[0.06] blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-[15%] right-[10%] w-[20%] h-[20%] bg-teal-900/[0.04] blur-[70px] rounded-full pointer-events-none" />
+
+            {/* Fine grain texture overlay */}
+            <div className="absolute inset-0 opacity-[0.015] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")', backgroundSize: '128px' }} />
 
             {/* SVG Layer */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <defs>
                     <linearGradient id="wg-friction" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#d93025" stopOpacity="0.6" />
-                        <stop offset="100%" stopColor="#fca5a5" stopOpacity="0.05" />
+                        <stop offset="0%" stopColor="#d93025" stopOpacity="0.5" />
+                        <stop offset="100%" stopColor="#fca5a5" stopOpacity="0.03" />
                     </linearGradient>
                     <linearGradient id="wg-harmony" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#1e8e3e" stopOpacity="0.4" />
-                        <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.05" />
+                        <stop offset="0%" stopColor="#1e8e3e" stopOpacity="0.35" />
+                        <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.03" />
                     </linearGradient>
                     <linearGradient id="wg-evolving" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.5" />
-                        <stop offset="100%" stopColor="#c084fc" stopOpacity="0.05" />
+                        <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.4" />
+                        <stop offset="100%" stopColor="#c084fc" stopOpacity="0.03" />
                     </linearGradient>
                 </defs>
 
@@ -85,11 +90,11 @@ export default function SoulConstellationMap() {
                             d={`M ${src.px} ${src.py} Q ${mx} ${my} ${tgt.px} ${tgt.py}`}
                             fill="none"
                             stroke={connectionGrad(conn.type)}
-                            strokeWidth="0.35"
-                            style={{ filter: `drop-shadow(0 0 4px ${conn.type === 'friction' ? '#d9302540' : conn.type === 'harmony' ? '#1e8e3e40' : '#a78bfa40'})` }}
+                            strokeWidth="0.3"
+                            style={{ filter: `drop-shadow(0 0 6px ${conn.type === 'friction' ? '#d9302530' : conn.type === 'harmony' ? '#1e8e3e30' : '#a78bfa30'})` }}
                             initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 0.7 }}
-                            transition={{ duration: 2.5, delay: 0.3, ease: 'easeOut' }}
+                            animate={{ pathLength: 1, opacity: 0.6 }}
+                            transition={{ duration: 3, delay: 0.5, ease: 'easeOut' }}
                         />
                     );
                 })}
@@ -97,18 +102,19 @@ export default function SoulConstellationMap() {
 
             {/* Nodes */}
             {isLoading ? (
-                <Loader2 className="w-5 h-5 text-white/15 animate-spin" />
+                <Loader2 className="w-5 h-5 text-white/10 animate-spin" />
             ) : (
                 <div className="absolute inset-0 pointer-events-none">
                     {renderNodes.map((node, idx) => {
                         const catColor = CATEGORY_CONFIGS[node.category]?.color || '#555';
-                        const nodeSize = idx === 0 ? 60 : 36 + node.size * 5;
+                        const isCenter = idx === 0;
+                        const nodeSize = isCenter ? 64 : 36 + node.size * 5;
                         return (
                             <motion.div
                                 key={node.id}
-                                initial={{ opacity: 0, scale: 0.5 }}
+                                initial={{ opacity: 0, scale: 0.3 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.8, delay: idx * 0.06 }}
+                                transition={{ duration: 1, delay: 0.3 + idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
                                 className="absolute flex flex-col items-center"
                                 style={{
                                     left: `${node.px}%`,
@@ -116,38 +122,62 @@ export default function SoulConstellationMap() {
                                     transform: 'translate(-50%, -50%)',
                                 }}
                             >
-                                {/* Pulse ring — center node only */}
-                                {idx === 0 && (
+                                {/* Breathing pulse ring — center node */}
+                                {isCenter && (
                                     <motion.div
                                         className="absolute rounded-full"
                                         style={{
-                                            width: nodeSize * 1.5,
-                                            height: nodeSize * 1.5,
-                                            backgroundColor: `${catColor}10`,
+                                            width: nodeSize * 1.8,
+                                            height: nodeSize * 1.8,
+                                            backgroundColor: `${catColor}08`,
+                                            border: `1px solid ${catColor}08`,
                                         }}
-                                        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.05, 0.2] }}
-                                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                                        animate={{ scale: [1, 1.35, 1], opacity: [0.25, 0.05, 0.25] }}
+                                        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
                                     />
                                 )}
 
-                                {/* Core dot */}
+                                {/* Outer glow ring for all nodes */}
                                 <div
-                                    className="relative rounded-full border"
+                                    className="absolute rounded-full"
                                     style={{
-                                        width: nodeSize * 0.45,
-                                        height: nodeSize * 0.45,
-                                        backgroundColor: '#0a0a0a',
-                                        borderColor: `${catColor}30`,
-                                        boxShadow: `0 0 12px ${catColor}15`,
+                                        width: nodeSize * 0.7,
+                                        height: nodeSize * 0.7,
+                                        backgroundColor: `${catColor}06`,
+                                        filter: `blur(${isCenter ? 8 : 4}px)`,
                                     }}
                                 />
 
+                                {/* Core dot */}
+                                <div
+                                    className="relative rounded-full border transition-all duration-500 group-hover:scale-110"
+                                    style={{
+                                        width: nodeSize * 0.38,
+                                        height: nodeSize * 0.38,
+                                        backgroundColor: '#0a0a0c',
+                                        borderColor: `${catColor}25`,
+                                        boxShadow: `0 0 ${isCenter ? 20 : 10}px ${catColor}12, inset 0 0 ${isCenter ? 8 : 4}px ${catColor}08`,
+                                    }}
+                                >
+                                    {/* Inner bright core */}
+                                    <div
+                                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                                        style={{
+                                            width: '40%',
+                                            height: '40%',
+                                            backgroundColor: `${catColor}40`,
+                                            filter: 'blur(1px)',
+                                        }}
+                                    />
+                                </div>
+
                                 {/* Label */}
                                 <span
-                                    className="absolute text-white/35 whitespace-nowrap font-medium"
+                                    className="absolute text-white/30 whitespace-nowrap font-medium group-hover:text-white/50 transition-colors duration-500"
                                     style={{
-                                        fontSize: idx === 0 ? 10 : 8,
-                                        top: `calc(50% + ${nodeSize * 0.3}px)`,
+                                        fontSize: isCenter ? 11 : 9,
+                                        top: `calc(50% + ${nodeSize * 0.28}px)`,
+                                        letterSpacing: isCenter ? '0.02em' : '0',
                                     }}
                                 >
                                     {node.label}
@@ -158,35 +188,50 @@ export default function SoulConstellationMap() {
                 </div>
             )}
 
-            {/* Title */}
-            <div className="absolute top-5 left-6">
-                <h2 className="text-[15px] font-semibold text-white/70 tracking-tight">
-                    The Constellation
+            {/* Top left — Title + meta */}
+            <div className="absolute top-6 left-7">
+                <h2 className="text-[16px] font-semibold text-white/65 tracking-[-0.02em]">
+                    Your Constellation
                 </h2>
-                <p className="text-[11px] text-white/30 mt-0.5">
+                <p className="text-[11px] text-white/25 mt-1 font-medium">
                     {nodes.length > 0
-                        ? `${nodes.length} nodes · ${connections.length} connections`
+                        ? `${nodes.length} life dimensions · ${connections.length} connections`
                         : 'Mapping your emotional landscape'}
                 </p>
             </div>
 
-            {/* Open CTA */}
-            <div className="absolute top-5 right-6 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.03] text-[10px] text-white/25 group-hover:text-white/50 group-hover:bg-white/[0.06] transition-all border border-white/[0.04]">
-                Open
+            {/* Top right — Open CTA */}
+            <div className="absolute top-6 right-7 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] text-[11px] text-white/20 group-hover:text-white/50 group-hover:bg-white/[0.06] transition-all duration-500 border border-white/[0.03] font-medium">
+                Explore
                 <ArrowUpRight className="w-3 h-3" />
             </div>
 
-            {/* Legend */}
-            <div className="absolute bottom-5 right-6 flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e8e3e]/70" />
-                    <span className="text-[9px] text-white/25 uppercase tracking-wider">Harmony</span>
+            {/* Bottom — Legend */}
+            <div className="absolute bottom-6 left-7 right-7 flex items-center justify-between">
+                <div className="flex items-center gap-5">
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#1e8e3e]/60" />
+                        <span className="text-[9px] text-white/20 uppercase tracking-[0.06em] font-medium">Harmony</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#d93025]/60" />
+                        <span className="text-[9px] text-white/20 uppercase tracking-[0.06em] font-medium">Friction</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#a78bfa]/60" />
+                        <span className="text-[9px] text-white/20 uppercase tracking-[0.06em] font-medium">Evolving</span>
+                    </div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#d93025]/70" />
-                    <span className="text-[9px] text-white/25 uppercase tracking-wider">Friction</span>
-                </div>
+
+                <p className="text-[9px] text-white/12 font-medium tracking-wide">
+                    TAP TO EXPAND
+                </p>
             </div>
+
+            {/* Edge vignette for cinematic depth */}
+            <div className="absolute inset-0 pointer-events-none rounded-[24px]" style={{
+                background: 'radial-gradient(ellipse at center, transparent 50%, rgba(5,5,7,0.6) 100%)',
+            }} />
         </div>
     );
 }

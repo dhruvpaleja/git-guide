@@ -11,7 +11,7 @@ export default function DashboardLayout() {
   const closeMobileNav = useCallback(() => setMobileNavOpen(false), []);
 
   return (
-    <div className="min-h-screen bg-[#060608] text-white overflow-hidden flex relative selection:bg-accent/30 selection:text-accent font-['Manrope',sans-serif]">
+    <div className="min-h-screen bg-[#050507] text-white overflow-hidden flex relative selection:bg-amber-500/20 selection:text-amber-200 font-['Inter','Manrope',system-ui,sans-serif]">
       {/* Desktop Sidebar (hidden on mobile) */}
       <div className="hidden lg:block">
         <DashboardSidebar />
@@ -44,15 +44,15 @@ export default function DashboardLayout() {
 
       {/* Main App Canvas */}
       <div className="flex-1 flex flex-col lg:pl-[84px] h-screen overflow-y-auto hide-scrollbar relative z-0">
-        {/* Ambient background — very subtle, not distracting */}
+        {/* Ambient background — warm, cinematic, matching landing page */}
         <div className="fixed inset-0 pointer-events-none -z-10">
-          <div className="absolute top-[-15%] left-[-5%] w-[40%] h-[40%] bg-[rgba(15,30,50,0.4)] blur-[150px] rounded-full" />
-          <div className="absolute bottom-[-10%] right-[-5%] w-[30%] h-[30%] bg-[rgba(50,20,60,0.15)] blur-[150px] rounded-full" />
+          <div className="absolute top-[-20%] left-[5%] w-[50%] h-[50%] bg-orange-900/[0.06] blur-[180px] rounded-full" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[35%] h-[35%] bg-amber-900/[0.04] blur-[160px] rounded-full" />
         </div>
 
         <DashboardTopbar onMenuToggle={() => setMobileNavOpen((v) => !v)} />
 
-        <main className="flex-1 px-4 pb-12 pt-5 sm:px-8 sm:pt-6 relative w-full max-w-[1600px] mx-auto">
+        <main className="flex-1 px-5 pb-12 pt-6 sm:px-8 md:px-10 sm:pt-8 relative w-full max-w-[1400px] mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}

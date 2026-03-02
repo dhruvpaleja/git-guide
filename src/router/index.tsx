@@ -56,6 +56,7 @@ const SettingsPage = lazy(() => import('@/pages/dashboard/SettingsPage'));
 const ConstellationPage = lazy(() => import('@/features/constellation/pages/ConstellationPage'));
 const ConfessionalPage = lazy(() => import('@/pages/dashboard/ConfessionalPage'));
 const ConnectionsPage = lazy(() => import('@/pages/dashboard/ConnectionsPage'));
+const SessionsPage = lazy(() => import('@/pages/dashboard/SessionsPage'));
 
 // Journey Preparation Page - shown after login before dashboard
 const JourneyPreparationPage = lazy(() =>
@@ -158,7 +159,7 @@ const router = createBrowserRouter([
             element: <Lazy><JournalPage /></Lazy>,
           },
           {
-            path: 'meditation',
+            path: 'meditate',
             element: <Lazy><MeditationPage /></Lazy>,
           },
           {
@@ -184,6 +185,10 @@ const router = createBrowserRouter([
           {
             path: 'connections',
             element: <Lazy><ConnectionsPage /></Lazy>,
+          },
+          {
+            path: 'sessions',
+            element: <Lazy><SessionsPage /></Lazy>,
           },
         ],
       },

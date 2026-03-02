@@ -47,12 +47,12 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
             isFocused ? "z-50" : "z-10"
         )}>
             <div className={cn(
-                "relative w-full rounded-2xl border transition-all duration-700 overflow-hidden flex flex-col group",
+                "relative w-full rounded-[20px] border transition-all duration-700 overflow-hidden flex flex-col group",
                 isFocused
-                    ? "bg-[#060608]/95 border-white/[0.12] h-[260px] shadow-[0_0_80px_-20px_rgba(255,255,255,0.08)] ring-1 ring-white/[0.06] backdrop-blur-3xl"
-                    : "bg-white/[0.015] border-white/[0.05] h-[88px] hover:bg-white/[0.03] hover:border-white/[0.08] backdrop-blur-xl"
+                    ? "bg-[#050507]/95 border-white/[0.08] h-[240px] shadow-[0_0_80px_-20px_rgba(180,120,60,0.08)] ring-1 ring-white/[0.04] backdrop-blur-3xl"
+                    : "bg-white/[0.015] border-white/[0.04] h-[80px] hover:bg-white/[0.025] hover:border-white/[0.06] backdrop-blur-xl"
             )}>
-                {/* Ambient glow when focused */}
+                {/* Warm ambient glow when focused */}
                 <AnimatePresence>
                     {isFocused && (
                         <motion.div
@@ -60,15 +60,15 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.8 }}
-                            className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] h-24 bg-accent/8 blur-[50px] pointer-events-none rounded-full"
+                            className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[50%] h-20 bg-amber-500/[0.04] blur-[50px] pointer-events-none rounded-full"
                         />
                     )}
                 </AnimatePresence>
 
                 {submitted ? (
                     <div className="flex-1 flex items-center justify-center gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                        <span className="text-white/60 text-sm font-medium">Recorded. Your constellation updates.</span>
+                        <CheckCircle2 className="w-5 h-5 text-emerald-400/80" />
+                        <span className="text-white/50 text-[13px] font-medium">Recorded. Your constellation updates.</span>
                     </div>
                 ) : (
                     <textarea
@@ -78,8 +78,8 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
                         onChange={(e) => setText(e.target.value)}
                         placeholder={prompt}
                         className={cn(
-                            "flex-1 w-full bg-transparent resize-none p-5 sm:p-6 placeholder:text-white/20 focus:outline-none tracking-[-0.01em] hide-scrollbar font-medium transition-all duration-700 relative z-10",
-                            isFocused ? "text-lg sm:text-xl text-white/85 leading-relaxed" : "text-[15px] text-white/55"
+                            "flex-1 w-full bg-transparent resize-none p-5 sm:p-6 placeholder:text-white/18 focus:outline-none tracking-[-0.01em] hide-scrollbar font-medium transition-all duration-700 relative z-10",
+                            isFocused ? "text-[16px] sm:text-[18px] text-white/80 leading-relaxed" : "text-[14px] text-white/40"
                         )}
                     />
                 )}
@@ -88,21 +88,21 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
                 {!submitted && (
                     <div className="h-12 px-4 pb-3 w-full flex items-center justify-between mt-auto">
                         <button
-                            className="flex items-center gap-2 group/mic px-3 py-1.5 rounded-xl hover:bg-white/[0.04] transition-colors"
+                            className="flex items-center gap-2 group/mic px-2.5 py-1.5 rounded-xl hover:bg-white/[0.03] transition-colors"
                             title="Voice input"
                             type="button"
                         >
                             <div className={cn(
-                                "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300",
-                                isFocused ? "bg-accent/8 border border-accent/15" : "bg-white/[0.04] border border-white/[0.06]"
+                                "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300",
+                                isFocused ? "bg-amber-500/[0.06] border border-amber-500/10" : "bg-white/[0.03] border border-white/[0.04]"
                             )}>
                                 <Mic className={cn(
                                     "w-3.5 h-3.5 transition-colors",
-                                    isFocused ? "text-accent/70" : "text-white/35 group-hover/mic:text-white/60"
+                                    isFocused ? "text-amber-400/60" : "text-white/25 group-hover/mic:text-white/45"
                                 )} />
                             </div>
                             {isFocused && (
-                                <span className="text-xs font-medium text-white/35 group-hover/mic:text-white/60 transition-colors">
+                                <span className="text-[11px] font-medium text-white/25 group-hover/mic:text-white/45 transition-colors">
                                     Record
                                 </span>
                             )}
@@ -117,7 +117,7 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
                                     onClick={handleSubmit}
                                     disabled={isSubmitting}
                                     type="button"
-                                    className="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center hover:bg-white/90 transition-colors disabled:opacity-50"
+                                    className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:bg-white/90 transition-colors disabled:opacity-50"
                                 >
                                     {isSubmitting
                                         ? <Loader2 className="w-4 h-4 animate-spin" />

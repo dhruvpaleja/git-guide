@@ -108,14 +108,35 @@ export const getDashboard = asyncHandler(async (req: AuthenticatedRequest, res: 
     throw AppError.notFound('User');
   }
 
-  const [moodCount, journalCount, meditationCount, sessionCount] = await Promise.all([
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  const [moodCount, journalCount, meditationCount, sessionCount, recentMoodEntries, unreadNotifications] = await Promise.all([
     prisma.moodEntry.count({ where: { userId } }),
     prisma.journalEntry.count({ where: { userId } }),
     prisma.meditationLog.count({ where: { userId } }),
     prisma.session.count({ where: { userId, status: 'COMPLETED' } }),
+    prisma.moodEntry.findMany({
+      where: { userId, createdAt: { gte: sevenDaysAgo } },
+      orderBy: { createdAt: 'asc' },
+      select: { score: true, createdAt: true },
+    }),
+    prisma.notification.count({ where: { userId, isRead: false } }),
   ]);
 
-  const daysSinceJoin = Math.max(1, Math.floor((Date.now() - user.createdAt.getTime()) / 86400000));
+  // Build a 7-day trend array (null where no entry exists for that day)
+  const moodTrend: Array<{ date: string; score: number | null }> = [];
+  for (let i = 6; i >= 0; i--) {
+    const day = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+    const dayStr = day.toISOString().slice(0, 10);
+    const dayEntries = recentMoodEntries.filter(
+      (e: { score: number; createdAt: Date }) => e.createdAt.toISOString().slice(0, 10) === dayStr,
+    );
+    const avg =
+      dayEntries.length > 0
+        ? Math.round(dayEntries.reduce((s: number, e: { score: number; createdAt: Date }) => s + e.score, 0) / dayEntries.length)
+        : null;
+    moodTrend.push({ date: dayStr, score: avg });
+  }
 
   sendSuccess(res, {
     user: {
@@ -130,13 +151,14 @@ export const getDashboard = asyncHandler(async (req: AuthenticatedRequest, res: 
       moodEntries: moodCount,
       journalEntries: journalCount,
       meditationSessions: meditationCount,
-      daysActive: daysSinceJoin,
     },
+    moodTrend,
+    unreadNotifications,
     quickActions: [
       { id: 'book-session', label: 'Book Session', icon: 'calendar', route: '/therapy/find' },
-      { id: 'mood-check', label: 'Mood Check-in', icon: 'smile', route: '/health-tools/mood' },
-      { id: 'meditate', label: 'Meditate', icon: 'brain', route: '/health-tools/meditation' },
-      { id: 'journal', label: 'Journal', icon: 'book-open', route: '/health-tools/journal' },
+      { id: 'mood-check', label: 'Mood Check-in', icon: 'smile', route: '/dashboard/mood' },
+      { id: 'meditate', label: 'Meditate', icon: 'brain', route: '/dashboard/meditation' },
+      { id: 'journal', label: 'Journal', icon: 'book-open', route: '/dashboard/journal' },
     ],
     upcomingSession: null,
   });

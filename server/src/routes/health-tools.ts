@@ -1,46 +1,37 @@
 import { Router } from 'express';
-import type { Request, Response } from 'express';
+import { requireAuth } from '../middleware/auth.middleware.js';
+import { validate } from '../shared/middleware/validate.middleware.js';
+import {
+  moodEntrySchema,
+  journalEntrySchema,
+  meditationLogSchema,
+} from '../validators/health-tools.validator.js';
+import {
+  getMoodHistory,
+  recordMoodEntry,
+  getJournalEntries,
+  createJournalEntry,
+  updateJournalEntry,
+  getMeditationLogs,
+  logMeditationSession,
+} from '../controllers/health-tools.controller.js';
 
 const router = Router();
 
-// Mood
-router.get('/mood', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
+// All health-tools routes require auth
+router.use(requireAuth);
 
-router.post('/mood', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
+// Mood
+router.get('/mood', getMoodHistory);
+router.post('/mood', validate(moodEntrySchema), recordMoodEntry);
 
 // Journal
-router.get('/journal', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
-
-router.post('/journal', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
-
-router.put('/journal/:id', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
+router.get('/journal', getJournalEntries);
+router.post('/journal', validate(journalEntrySchema), createJournalEntry);
+router.put('/journal/:id', updateJournalEntry);
 
 // Meditation
-router.get('/meditation', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
-
-router.post('/meditation', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
-
-// Breathing
-router.get('/breathing', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
-
-router.post('/breathing', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
-});
+router.get('/meditation', getMeditationLogs);
+router.post('/meditation', validate(meditationLogSchema), logMeditationSession);
 
 export default router;

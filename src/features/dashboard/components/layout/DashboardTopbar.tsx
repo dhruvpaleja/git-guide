@@ -1,10 +1,14 @@
 import { Bell, Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import apiService from '@/services/api.service';
+import { Link } from 'react-router-dom';
 
 export default function DashboardTopbar() {
     const [greeting, setGreeting] = useState('Good Evening');
-    const userName = "Rohan"; // Will be fetched from Auth context
-    const hasNotification = true;
+    const { user } = useAuth();
+    const userName = user?.name ?? 'Friend';
+    const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -12,6 +16,19 @@ export default function DashboardTopbar() {
         else if (hour < 18) setGreeting('Good Afternoon');
         else setGreeting('Good Evening');
     }, []);
+
+    // Fetch unread notification count
+    useEffect(() => {
+        let cancelled = false;
+        apiService.get<{ unreadCount: number }>('/notifications').then((res) => {
+            if (!cancelled && res.success && res.data) {
+                setUnreadCount(res.data.unreadCount);
+            }
+        });
+        return () => { cancelled = true; };
+    }, []);
+
+    const firstInitial = userName.charAt(0).toUpperCase();
 
     return (
         <header className="h-[80px] w-full flex items-center justify-between px-8 bg-transparent z-40">
@@ -36,21 +53,28 @@ export default function DashboardTopbar() {
                 </div>
 
                 {/* Intelligence Bell */}
-                <button className="relative w-11 h-11 rounded-full bg-[#1a1a1a] border border-[#2b2b2b] flex items-center justify-center hover:bg-[#252525] transition-colors glass">
+                <Link
+                    to="/dashboard/notifications"
+                    className="relative w-11 h-11 rounded-full bg-[#1a1a1a] border border-[#2b2b2b] flex items-center justify-center hover:bg-[#252525] transition-colors glass"
+                >
                     <Bell className="w-5 h-5 text-white/80" />
-                    {hasNotification && (
+                    {unreadCount > 0 && (
                         <span className="absolute top-2 right-2.5 w-2 h-2 bg-accent rounded-full animate-pulse-glow" />
                     )}
-                </button>
+                </Link>
 
                 {/* Profile Pill */}
-                <button className="h-11 pl-1 pr-3 rounded-[50px] bg-[#1a1a1a] border border-[#2b2b2b] flex items-center gap-3 hover:bg-[#252525] transition-colors glass">
+                <Link
+                    to="/dashboard/profile"
+                    className="h-11 pl-1 pr-3 rounded-[50px] bg-[#1a1a1a] border border-[#2b2b2b] flex items-center gap-3 hover:bg-[#252525] transition-colors glass"
+                >
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-sm font-bold text-white shadow-inner">
-                        {userName.charAt(0)}
+                        {firstInitial}
                     </div>
                     <span className="text-sm font-medium text-white/90 mr-1">{userName}</span>
-                </button>
+                </Link>
             </div>
         </header>
     );
 }
+

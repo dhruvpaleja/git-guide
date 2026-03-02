@@ -45,6 +45,14 @@ const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 const PersonalizationPage = lazy(() => import('@/features/dashboard/pages/PersonalizationPage'));
 
+// Dashboard sub-pages
+const MoodPage = lazy(() => import('@/pages/dashboard/MoodPage'));
+const JournalPage = lazy(() => import('@/pages/dashboard/JournalPage'));
+const MeditationPage = lazy(() => import('@/pages/dashboard/MeditationPage'));
+const NotificationsPage = lazy(() => import('@/pages/dashboard/NotificationsPage'));
+const ProfilePage = lazy(() => import('@/pages/dashboard/ProfilePage'));
+const SettingsPage = lazy(() => import('@/pages/dashboard/SettingsPage'));
+
 // Journey Preparation Page - shown after login before dashboard
 const JourneyPreparationPage = lazy(() =>
   import('@/features/journey-preparation/pages/JourneyPreparationPage')
@@ -123,6 +131,30 @@ const router = createBrowserRouter([
                 <PersonalizationPage />
               </Lazy>
             ),
+          },
+          {
+            path: 'mood',
+            element: <Lazy><MoodPage /></Lazy>,
+          },
+          {
+            path: 'journal',
+            element: <Lazy><JournalPage /></Lazy>,
+          },
+          {
+            path: 'meditation',
+            element: <Lazy><MeditationPage /></Lazy>,
+          },
+          {
+            path: 'notifications',
+            element: <Lazy><NotificationsPage /></Lazy>,
+          },
+          {
+            path: 'profile',
+            element: <Lazy><ProfilePage /></Lazy>,
+          },
+          {
+            path: 'settings',
+            element: <Lazy><SettingsPage /></Lazy>,
           },
         ],
       },

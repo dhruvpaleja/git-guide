@@ -1,4 +1,4 @@
-# SOUL YATRI - NEXT BUILD STEPS (Ultra-Detailed AI Agent Guide)
+soul # SOUL YATRI - NEXT BUILD STEPS (Ultra-Detailed AI Agent Guide)
 
 > **CURRENT STATE**: Auth (Phase 1) is DONE. Landing, About, Business, Blogs pages have UI. Dashboard is a shell. Backend infrastructure is PRODUCTION-GRADE.
 > **NEXT**: Phase 2 (User Onboarding) -> Phase 3 (Dashboard) -> Phase 16 (Health Tools) -> Phase 4 (Therapy Booking)

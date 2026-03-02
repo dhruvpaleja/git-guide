@@ -43,6 +43,7 @@ const CourseDetailsPage = lazy(() => import('@/pages/CourseDetailsPage'));
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
+const PractitionerDashboard = lazy(() => import('@/pages/dashboard/PractitionerDashboard'));
 const PersonalizationPage = lazy(() => import('@/features/dashboard/pages/PersonalizationPage'));
 
 // Dashboard sub-pages
@@ -114,6 +115,19 @@ const router = createBrowserRouter([
       {
         path: '/personalize',
         element: <Navigate to="/dashboard/personalization?s=4" replace />,
+      },
+      {
+        element: <ProtectedRoute requiredRoles={['practitioner']} />,
+        children: [
+          {
+            path: '/practitioner',
+            element: (
+              <Lazy>
+                <PractitionerDashboard />
+              </Lazy>
+            ),
+          },
+        ],
       },
       {
         path: '/dashboard',

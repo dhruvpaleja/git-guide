@@ -8,6 +8,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isPractitioner, setIsPractitioner] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -17,9 +18,14 @@ export default function LoginPage() {
         setIsLoading(true);
 
         try {
-            const success = await login(email, password);
+            const role = isPractitioner ? 'practitioner' : 'user';
+            const { success, user } = await login(email, password, role);
             if (success) {
-                navigate('/journey-preparation');
+                if (user?.role === 'practitioner') {
+                    navigate('/practitioner');
+                } else {
+                    navigate('/journey-preparation');
+                }
             } else {
                 setError('Invalid email or password. Please try again.');
             }
@@ -44,18 +50,18 @@ export default function LoginPage() {
         <div className="relative min-h-screen bg-black overflow-hidden">
             {/* Background Decorative Elements */}
             <div className="absolute right-[-250px] sm:right-[-200px] top-[-150px] sm:top-[-100px] w-[400px] sm:w-[500px] lg:w-[600px] h-[400px] sm:h-[500px] lg:h-[600px] pointer-events-none opacity-50 sm:opacity-60">
-                <div 
+                <div
                     className="w-full h-full rounded-full"
-                    style={{ 
+                    style={{
                         background: 'radial-gradient(circle, rgba(255, 140, 0, 0.4) 0%, rgba(255, 69, 0, 0.2) 40%, transparent 70%)',
                         filter: 'blur(60px)'
                     }}
                 />
             </div>
             <div className="absolute left-[-250px] sm:left-[-200px] bottom-[-150px] sm:bottom-[-100px] w-[350px] sm:w-[450px] lg:w-[500px] h-[350px] sm:h-[450px] lg:h-[500px] pointer-events-none opacity-50 sm:opacity-60">
-                <div 
+                <div
                     className="w-full h-full rounded-full"
-                    style={{ 
+                    style={{
                         background: 'radial-gradient(circle, rgba(0, 191, 255, 0.4) 0%, rgba(30, 144, 255, 0.2) 40%, transparent 70%)',
                         filter: 'blur(60px)'
                     }}
@@ -105,8 +111,8 @@ export default function LoginPage() {
                                 <label htmlFor="password" className="text-white/50 text-[13px] sm:text-[14px] font-normal">
                                     Enter Password
                                 </label>
-                                <Link 
-                                    to="/forgot-password" 
+                                <Link
+                                    to="/forgot-password"
                                     className="text-white text-[9px] sm:text-[10px] hover:text-white/80 transition-colors"
                                 >
                                     Forgot Password
@@ -122,6 +128,34 @@ export default function LoginPage() {
                                 className="w-full h-[48px] sm:h-[52px] px-4 sm:px-5 bg-[#080808] border border-white/10 rounded-[18px] sm:rounded-[20px] text-white text-[13px] sm:text-[14px] placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors"
                                 disabled={isLoading}
                             />
+                        </div>
+
+                        {/* Practitioner Toggle */}
+                        <div className="flex items-center gap-3 pt-4 sm:pt-2 w-full justify-center">
+
+                            <button
+                                type="button"
+                                onClick={() => setIsPractitioner(!isPractitioner)}
+                                className="w-[70px] h-[36px] rounded-[20px] bg-[#2A2A2A] relative flex items-center px-1 shadow-inner cursor-pointer"
+                                aria-label="Toggle Practitioner Login"
+                            >
+                                <span
+                                    className={`w-[28px] h-[28px] bg-white rounded-full flex items-center justify-center shadow-md transform transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isPractitioner ? 'translate-x-[34px]' : 'translate-x-0'
+                                        }`}
+                                >
+                                    <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isPractitioner ? 'opacity-100' : 'opacity-0'}`}>
+                                        <img
+                                            src="/images/main-logo.png"
+                                            className="w-[20px] h-[20px] object-contain"
+                                            alt="Soul Yatri"
+                                        />
+                                    </div>
+                                </span>
+                            </button>
+
+                            <span className="text-white/80 text-[15px] font-medium tracking-wide">
+                                Practitioner
+                            </span>
                         </div>
 
                         {/* Login Button */}
@@ -141,8 +175,8 @@ export default function LoginPage() {
                     {/* Create Account Link */}
                     <div className="text-center text-[12px] sm:text-[13px] pt-0.5 sm:pt-1">
                         <span className="text-white/50">I Don't Have An Account </span>
-                        <Link 
-                            to="/signup" 
+                        <Link
+                            to="/signup"
                             className="text-white underline hover:text-white/80 transition-colors"
                         >
                             Create Account
@@ -162,9 +196,9 @@ export default function LoginPage() {
                                 className="w-[44px] sm:w-[48px] h-[44px] sm:h-[48px] bg-white rounded-[18px] sm:rounded-[20px] flex items-center justify-center hover:bg-white/90 transition-all hover:scale-105 active:scale-95"
                                 aria-label="Login with Google"
                             >
-                                <img 
-                                    src="/images/auth/google-icon.png" 
-                                    alt="Google" 
+                                <img
+                                    src="/images/auth/google-icon.png"
+                                    alt="Google"
                                     className="w-[18px] sm:w-[20px] h-[18px] sm:h-[20px] object-contain"
                                 />
                             </button>
@@ -176,9 +210,9 @@ export default function LoginPage() {
                                 className="w-[44px] sm:w-[48px] h-[44px] sm:h-[48px] bg-white rounded-[18px] sm:rounded-[20px] flex items-center justify-center hover:bg-white/90 transition-all hover:scale-105 active:scale-95"
                                 aria-label="Login with Apple"
                             >
-                                <img 
-                                    src="/images/auth/apple-icon.png" 
-                                    alt="Apple" 
+                                <img
+                                    src="/images/auth/apple-icon.png"
+                                    alt="Apple"
                                     className="w-[17px] sm:w-[18px] h-[17px] sm:h-[18px] object-contain"
                                 />
                             </button>

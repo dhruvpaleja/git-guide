@@ -14,7 +14,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string, role?: string) => Promise<{ success: boolean; user?: User }>;
   logout: () => Promise<void>;
   signup: (data: { name: string; email: string; password: string }) => Promise<{ success: boolean; error?: string }>;
 }
@@ -28,49 +28,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Note: in a full implementation, you'd fetch `/auth/me` on mount to re-hydrate the user
   // This satisfies the Phase 1 MVP requirements.
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string, requestedRole?: string) => {
     setIsLoading(true);
     try {
       const response = await apiService.post<{ user: User, accessToken: string }>('/auth/login', { email, password });
-      
+
       if (response.success && response.data) {
         setUser(response.data.user);
         localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.accessToken);
         toast.success('Successfully logged in!');
-        return true;
+        return { success: true, user: response.data.user };
       } else {
         // Development mode: simulate successful login if backend is not available
         const isDevelopment = import.meta.env.MODE === 'development';
         const errorMessage = response.error?.message || 'Login failed';
-        const isNetworkError = errorMessage.toLowerCase().includes('request failed') || 
-                               errorMessage.toLowerCase().includes('failed to fetch') ||
-                               errorMessage.toLowerCase().includes('network') ||
-                               errorMessage.toLowerCase().includes('connection');
-        
+        const isNetworkError = errorMessage.toLowerCase().includes('request failed') ||
+          errorMessage.toLowerCase().includes('failed to fetch') ||
+          errorMessage.toLowerCase().includes('network') ||
+          errorMessage.toLowerCase().includes('connection');
+
         if (isDevelopment && isNetworkError) {
           // Create mock user for development
           const mockUser: User = {
             id: 'dev-user-' + Date.now(),
-            name: 'Dev User',
+            name: requestedRole === 'practitioner' ? 'Swati Agarwal (Practitioner)' : 'Dev User',
             email: email,
-            role: 'user',
+            role: (requestedRole as any) || 'user',
             createdAt: new Date(),
             updatedAt: new Date(),
           };
-          
+
           setUser(mockUser);
           localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, 'dev-token-' + Date.now());
-          toast.success('Successfully logged in! (Dev Mode)');
-          return true;
+          toast.success(`Successfully logged in as ${requestedRole === 'practitioner' ? 'Practitioner' : 'User'} (Dev Mode)`);
+          return { success: true, user: mockUser };
         }
-        
+
         toast.error(errorMessage);
-        return false;
+        return { success: false };
       }
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : 'An unexpected error occurred';
       toast.error(errorMessage);
-      return false;
+      return { success: false };
     } finally {
       setIsLoading(false);
     }
@@ -92,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       const response = await apiService.post<{ user: User, accessToken: string }>('/auth/register', data);
-      
+
       if (response.success && response.data) {
         setUser(response.data.user);
         localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.accessToken);
@@ -102,11 +102,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Development mode: simulate successful signup if backend is not available
         const isDevelopment = import.meta.env.MODE === 'development';
         const errorMessage = response.error?.message || 'Signup failed';
-        const isNetworkError = errorMessage.toLowerCase().includes('request failed') || 
-                               errorMessage.toLowerCase().includes('failed to fetch') ||
-                               errorMessage.toLowerCase().includes('network') ||
-                               errorMessage.toLowerCase().includes('connection');
-        
+        const isNetworkError = errorMessage.toLowerCase().includes('request failed') ||
+          errorMessage.toLowerCase().includes('failed to fetch') ||
+          errorMessage.toLowerCase().includes('network') ||
+          errorMessage.toLowerCase().includes('connection');
+
         if (isDevelopment && isNetworkError) {
           // Create mock user for development
           const mockUser: User = {
@@ -117,13 +117,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             createdAt: new Date(),
             updatedAt: new Date(),
           };
-          
+
           setUser(mockUser);
           localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, 'dev-token-' + Date.now());
           toast.success('Account created successfully! (Dev Mode)');
           return { success: true };
         }
-        
+
         toast.error(errorMessage);
         return { success: false, error: errorMessage };
       }

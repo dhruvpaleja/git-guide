@@ -22,7 +22,7 @@ export interface AuthResponse extends AuthToken {
   user: User;
 }
 
-export type UserRole = 'user' | 'therapist' | 'astrologer' | 'admin' | 'moderator';
+export type UserRole = 'user' | 'therapist' | 'astrologer' | 'admin' | 'moderator' | 'practitioner';
 
 export interface User {
   id: string;
@@ -93,7 +93,7 @@ export interface ProfessionalOnboarding {
   trainingModulesRequired: string[];
   /** Overall */
   onboardingStatus: 'application-received' | 'documents-pending' | 'background-check'
-    | 'interview' | 'assessment' | 'trial' | 'training' | 'approved' | 'rejected';
+  | 'interview' | 'assessment' | 'trial' | 'training' | 'approved' | 'rejected';
   submittedAt: Date;
   approvedAt?: Date;
   rejectedAt?: Date;

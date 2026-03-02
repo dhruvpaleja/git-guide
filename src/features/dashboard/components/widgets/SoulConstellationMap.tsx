@@ -19,7 +19,7 @@ export default function SoulConstellationMap() {
                 setNodes(data.nodes);
                 setConnections(data.connections);
             })
-            .catch(() => {})
+            .catch(() => { })
             .finally(() => setIsLoading(false));
     }, []);
 
@@ -52,8 +52,11 @@ export default function SoulConstellationMap() {
     return (
         <div
             onClick={() => navigate('/dashboard/constellation')}
-            className="relative w-full h-[340px] sm:h-[420px] bg-[#0c0c0c]/40 border border-[#2b2b2b]/60 rounded-[24px] overflow-hidden flex items-center justify-center cursor-pointer group hover:border-white/15 transition-all"
+            className="relative w-full h-[340px] sm:h-[420px] bg-white/[0.02] backdrop-blur-xl border border-white/[0.05] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] rounded-[24px] overflow-hidden flex items-center justify-center cursor-pointer group hover:bg-white/[0.04] hover:border-white/[0.1] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),0_8px_30px_-10px_rgba(0,0,0,0.5)] transition-all duration-700 isolate"
         >
+            {/* Ambient core glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-purple-500/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-purple-500/20 group-hover:blur-[100px] transition-all duration-1000" />
+            <div className="absolute inset-0 bg-[#ffffff] opacity-[0.01] mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
 
             {/* SVG Layer */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -84,10 +87,11 @@ export default function SoulConstellationMap() {
                             d={`M ${src.px} ${src.py} Q ${mx} ${my} ${tgt.px} ${tgt.py}`}
                             fill="none"
                             stroke={connectionGrad(conn.type)}
-                            strokeWidth="0.3"
+                            strokeWidth="0.4"
+                            style={{ filter: `drop-shadow(0 0 6px ${conn.type === 'friction' ? '#d9302580' : conn.type === 'harmony' ? '#1e8e3e80' : '#a78bfa80'})` }}
                             initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 0.6 }}
-                            transition={{ duration: 2, delay: 0.3 }}
+                            animate={{ pathLength: 1, opacity: 0.8 }}
+                            transition={{ duration: 2.5, delay: 0.3, ease: 'easeOut' }}
                         />
                     );
                 })}
@@ -116,16 +120,16 @@ export default function SoulConstellationMap() {
                             >
                                 {/* Pulse ring — only for center node */}
                                 {idx === 0 && (
-                                  <motion.div
-                                    className="absolute rounded-full"
-                                    style={{
-                                        width: nodeSize * 1.6,
-                                        height: nodeSize * 1.6,
-                                        backgroundColor: `${catColor}15`,
-                                    }}
-                                    animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.08, 0.3] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                                  />
+                                    <motion.div
+                                        className="absolute rounded-full"
+                                        style={{
+                                            width: nodeSize * 1.6,
+                                            height: nodeSize * 1.6,
+                                            backgroundColor: `${catColor}15`,
+                                        }}
+                                        animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.08, 0.3] }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                                    />
                                 )}
 
                                 {/* Core dot */}

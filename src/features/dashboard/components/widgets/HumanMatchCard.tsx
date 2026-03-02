@@ -7,9 +7,9 @@ export default function HumanMatchCard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="relative w-full rounded-[24px] p-6 bg-[#0c0c0c] border border-[#2b2b2b]/60 overflow-hidden group hover:border-[#1e8e3e]/40 transition-colors"
+            className="relative w-full rounded-[20px] p-6 bg-white/10 dark:bg-white/[0.04] backdrop-blur-md border border-white/10 dark:border-white/[0.06] shadow-lg overflow-hidden group hover:bg-white/[0.14] dark:hover:bg-white/[0.06] transition-all isolate"
         >
-            {/* Subtle organic gradient matching the AI vibe */}
+            {/* Subtle organic gradient */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-[#1e8e3e]/5 rounded-full blur-[60px] pointer-events-none group-hover:bg-[#1e8e3e]/10 transition-colors duration-700" />
 
             <div className="flex items-start justify-between relative z-10">
@@ -18,12 +18,12 @@ export default function HumanMatchCard() {
                         <BrainCircuit className="w-5 h-5 text-[#1e8e3e]" />
                     </div>
                     <div>
-                        <h3 className="text-white/90 font-semibold tracking-tight">Constellation Match</h3>
+                        <h3 className="text-white font-semibold tracking-tight">Constellation Match</h3>
                         <p className="text-xs text-white/40 uppercase tracking-wider font-medium">Professional Guidance</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/60">
-                    <Sparkles className="w-3 h-3 text-accent animate-pulse-glow" />
+                    <Sparkles className="w-3 h-3 text-accent animate-pulse" />
                     <span>98% Synergy</span>
                 </div>
             </div>
@@ -33,13 +33,13 @@ export default function HumanMatchCard() {
                     You've mapped severe friction between the <span className="text-white font-medium">Tech Career</span> and <span className="text-white font-medium">Anxiety</span> nodes over the last 3 weeks.
                 </p>
                 <p className="text-white/50 text-[15px] leading-relaxed mt-3">
-                    We have found <span className="text-white font-medium">Dr. Aisha M.</span>, a clinical counselor who specializes precisely in high-functioning corporate panic. She personally transitioned out of a FAANG company before her practice.
+                    We have found <span className="text-white font-medium">Dr. Aisha M.</span>, a clinical counselor who specializes precisely in high-functioning corporate panic.
                 </p>
             </div>
 
-            <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-auto">
+            <div className="flex items-center justify-between border-t border-white/[0.08] pt-4 mt-auto">
                 <div className="flex -space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-gray-700 to-gray-600 border-2 border-[#0c0c0c] flex items-center justify-center overflow-hidden">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-gray-700 to-gray-600 border-2 border-black/40 flex items-center justify-center overflow-hidden">
                         <img src="https://i.pravatar.cc/100?img=5" alt="Dr. Aisha" className="w-full h-full object-cover opacity-70" />
                     </div>
                 </div>

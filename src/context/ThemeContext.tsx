@@ -1,61 +1,80 @@
-/**
- * Theme Context
- * Global theme state management
- */
+import { createContext, useContext, useEffect, useState } from 'react';
 
-import { createContext, useContext, useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
+type Theme = 'dark' | 'light' | 'system';
 
-type Theme = 'light' | 'dark' | 'system';
+interface ThemeProviderProps {
+  children: React.ReactNode;
+  defaultTheme?: Theme;
+  storageKey?: string;
+}
 
-interface ThemeContextType {
+interface ThemeProviderState {
   theme: Theme;
   setTheme: (theme: Theme) => void;
-  isDark: boolean;
+  actualTheme: 'dark' | 'light';
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const initialState: ThemeProviderState = {
+  theme: 'dark',
+  setTheme: () => null,
+  actualTheme: 'dark',
+};
 
-// Get initial theme from localStorage without causing render
-function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'dark';
-  const stored = localStorage.getItem('theme') as Theme | null;
-  return stored || 'dark';
-}
+const ThemeContext = createContext<ThemeProviderState>(initialState);
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
+export function ThemeProvider({
+  children,
+  defaultTheme = 'dark',
+  storageKey = 'soul-yatri-ui-theme',
+  ...props
+}: ThemeProviderProps) {
+  const [theme, setThemeState] = useState<Theme>(
+    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+  );
 
-  // Derive isDark from theme without needing setState in effect
-  const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const [actualTheme, setActualTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
-    // Apply theme to DOM and localStorage
-    localStorage.setItem('theme', theme);
+    const root = window.document.documentElement;
 
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    root.classList.remove('light', 'dark');
+
+    if (theme === 'system') {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+        .matches
+        ? 'dark'
+        : 'light';
+
+      root.classList.add(systemTheme);
+      setActualTheme(systemTheme);
+
+      // Update data-theme for Tailwind variables if any are bound this way
+      root.setAttribute('data-theme', systemTheme);
+      return;
     }
-  }, [theme, isDark]);
+
+    root.classList.add(theme);
+    root.setAttribute('data-theme', theme);
+    setActualTheme(theme);
+  }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
+    localStorage.setItem(storageKey, newTheme);
     setThemeState(newTheme);
-    localStorage.setItem('theme', newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, isDark }}>
+    <ThemeContext.Provider {...props} value={{ theme, setTheme, actualTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-export function useTheme() {
+export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
-  }
+
+  if (context === undefined)
+    throw new Error('useTheme must be used within a ThemeProvider');
+
   return context;
-}
+};

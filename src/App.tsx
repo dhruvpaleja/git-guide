@@ -1,11 +1,11 @@
 import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext.tsx';
+import { ThemeProvider } from './context/ThemeContext';
 import AppRouter from './router';
 import SmoothScrollProvider from './components/layout/SmoothScrollProvider';
 
 function App() {
   return (
-    <ThemeProvider>
+    <ThemeProvider defaultTheme="dark">
       <AuthProvider>
         <SmoothScrollProvider>
           <AppRouter />

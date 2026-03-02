@@ -2,8 +2,6 @@ import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     ChevronLeft,
-    Search,
-    Menu,
     Star,
     Clock,
     Monitor,
@@ -104,47 +102,31 @@ export default function CourseDetailsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white selection:bg-white/20 pb-20">
-
-            {/* HEADER SECTION */}
-            <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 px-6 py-4">
-                <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/5 transition-colors"
-                    >
-                        <ChevronLeft className="w-5 h-5" />
-                    </button>
-
-                    <div className="flex-1 max-w-xl relative hidden md:block">
-                        <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-white/50" />
-                        <input
-                            type="text"
-                            placeholder="Search for Courses..."
-                            className="w-full bg-[#1A1A1A] border-none rounded-full py-3 pl-12 pr-6 text-sm outline-none focus:ring-1 focus:ring-white/30 transition-all placeholder:text-white/40"
-                        />
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        <button className="flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors">
-                            <span>Categories</span>
-                            <Menu className="w-5 h-5" />
-                        </button>
-                    </div>
-                </div>
-            </header>
+        <div className="min-h-screen bg-black text-white selection:bg-white/20 pb-20 pt-28">
 
             {/* TOP NAVIGATION & PAGE TITLE */}
-            <div className="max-w-7xl mx-auto px-6 pt-10 pb-6">
-                <h1 className="text-3xl md:text-4xl font-semibold mb-6">{activeCourse.category} Courses</h1>
+            <div className="max-w-7xl mx-auto px-6 pb-6">
+                <div className="flex items-center gap-4 mb-8">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/5 transition-colors group"
+                    >
+                        <ChevronLeft className="w-5 h-5 text-white/70 group-hover:text-white" />
+                    </button>
+                    <span className="text-white/60 text-sm hidden md:block group-hover:text-white transition-colors cursor-pointer" onClick={() => navigate(-1)}>
+                        Back to Courses
+                    </span>
+                </div>
+
+                <h1 className="text-3xl md:text-5xl font-semibold mb-6 tracking-tight">{activeCourse.category} Courses</h1>
                 <div className="flex gap-6 text-sm">
                     <button
                         onClick={() => navigate('/courses')}
-                        className="text-white hover:text-white/80 transition-colors"
+                        className="text-white hover:text-white/80 transition-colors font-medium border-b border-white/30 pb-1"
                     >
                         Back To {activeCourse.category} Courses
                     </button>
-                    <button className="text-white/50 hover:text-white/80 transition-colors">
+                    <button className="text-white/50 hover:text-white/80 transition-colors border-b border-transparent pb-1">
                         Report
                     </button>
                 </div>

@@ -8,12 +8,12 @@ import { AppError } from '../lib/errors.js';
  * Handles community features and social interactions
  */
 
-export const listCommunityPosts = asyncHandler(async (req: Request, res: Response) => {
+export const listCommunityPosts = asyncHandler(async (_req: Request, res: Response) => {
   // TODO: Implement community post listing
   sendSuccess(res, { posts: [], total: 0 });
 });
 
-export const createCommunityPost = asyncHandler(async (req: Request, res: Response) => {
+export const createCommunityPost = asyncHandler(async (_req: Request, _res: Response) => {
   // TODO: Implement community post creation
   throw AppError.notImplemented('Create community post');
 });

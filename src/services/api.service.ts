@@ -51,6 +51,59 @@ class ApiService {
   }
 
   /**
+   * Upload file with multipart/form-data
+   */
+  async upload<T = unknown>(endpoint: string, formData: FormData, config?: RequestConfig): Promise<ApiResponse<T>> {
+    const mergedConfig = { ...this.defaultConfig, ...config };
+    const timeoutMs = mergedConfig.timeout ?? API_CONSTANTS.TIMEOUT;
+    const signal = mergedConfig.cancelToken ?? AbortSignal.timeout(timeoutMs);
+
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          ...(localStorage.getItem('auth_token')
+            ? { Authorization: `Bearer ${localStorage.getItem('auth_token')}` }
+            : {}),
+          ...mergedConfig.headers,
+          // Don't set Content-Type - browser will set it with boundary
+        },
+        body: formData,
+        signal,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        return {
+          success: false,
+          error: {
+            code: result?.error?.code || `HTTP_${response.status}`,
+            message: result?.error?.message || `HTTP ${response.status}: ${response.statusText}`,
+          },
+          timestamp: result?.timestamp || new Date().toISOString(),
+        };
+      }
+
+      return {
+        success: true,
+        data: result.data as T,
+        timestamp: result.timestamp || new Date().toISOString(),
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          code: 'UPLOAD_ERROR',
+          message: error instanceof Error ? error.message : 'Upload failed',
+        },
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
    * Generic request method with retry logic
    */
   private async request<T = unknown>(

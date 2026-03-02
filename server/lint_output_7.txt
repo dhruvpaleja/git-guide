@@ -1,0 +1,24 @@
+
+> soul-yatri-server@1.0.0 lint
+> eslint src/ --ext .ts
+
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\server\src\controllers\notifications.controller.ts
+  138:28  warning  Unexpected any. Specify a different type                                                               @typescript-eslint/no-explicit-any
+  138:33  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\server\src\controllers\payments.controller.ts
+  25:13  error  'paymentId' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\server\src\controllers\users.controller.ts
+  3:15  error  'Request' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\server\src\modules\auth\auth-audit.service.ts
+  23:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Kimi_Agent_Pixel-Perfect Website Build\server\src\services\ai-event-logger.service.ts
+  23:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 6 problems (2 errors, 4 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

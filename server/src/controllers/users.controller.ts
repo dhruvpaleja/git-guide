@@ -1,27 +1,32 @@
 import type { Response } from 'express';
-import { Gender, TherapistApproach, TherapyHistory } from '@prisma/client';
+// ...existing code...
+
+import sharp from 'sharp';
+import path from 'path';
+import fs from 'fs';
 
 import { asyncHandler } from '../lib/async-handler.js';
 import { sendSuccess } from '../lib/response.js';
 import { AppError } from '../lib/errors.js';
 import { prisma } from '../lib/prisma.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { deleteAvatarFile } from '../lib/upload.js';
 
 type OnboardingPayload = Record<string, unknown>;
 type OnboardingMapped = Partial<{
   dateOfBirth: Date;
   birthTime: string;
   birthPlace: string;
-  gender: Gender;
+  gender: 'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY';
   city: string;
   state: string;
   country: string;
   struggles: string[];
-  therapyHistory: TherapyHistory;
+  therapyHistory: 'NEVER' | 'CURRENTLY' | 'PAST' | 'CONSIDERING';
   goals: string[];
   therapistGenderPref: string;
   therapistLanguages: string[];
-  therapistApproach: TherapistApproach;
+  therapistApproach: 'CBT' | 'HOLISTIC' | 'MIXED';
   interests: string[];
   emergencyName: string;
   emergencyPhone: string;
@@ -35,11 +40,11 @@ type AstrologyPayload = {
   birthTimeAmPm?: 'AM' | 'PM' | 'N/A';
   birthCity?: string;
   unknownBirthTime?: boolean;
-  gender?: Gender;
+  gender?: 'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY';
 };
 
 export const submitOnboardingStep = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId } = req.auth!;
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
   const { step, data } = req.body as { step: number; data: OnboardingPayload };
 
   const mapped = mapStepData(step, data);
@@ -68,7 +73,7 @@ export const submitOnboardingStep = asyncHandler(async (req: AuthenticatedReques
 });
 
 export const getOnboardingProgress = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId } = req.auth!;
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
   const profile = await prisma.userProfile.findUnique({ where: { userId } });
 
   if (!profile) {
@@ -84,7 +89,7 @@ export const getOnboardingProgress = asyncHandler(async (req: AuthenticatedReque
 });
 
 export const getProfile = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId } = req.auth!;
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: { profile: true },
@@ -98,7 +103,7 @@ export const getProfile = asyncHandler(async (req: AuthenticatedRequest, res: Re
 });
 
 export const updateProfile = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId } = req.auth!;
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
   const { name, email, phone, avatarUrl } = req.body as {
     name?: string;
     email?: string;
@@ -136,7 +141,7 @@ export const updateProfile = asyncHandler(async (req: AuthenticatedRequest, res:
 });
 
 export const getSettings = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId } = req.auth!;
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
 
   // Upsert so we always return defaults for new users
   const settings = await prisma.userSettings.upsert({
@@ -159,7 +164,7 @@ export const getSettings = asyncHandler(async (req: AuthenticatedRequest, res: R
 });
 
 export const updateSettings = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId } = req.auth!;
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
   const data = req.body as Record<string, boolean>;
 
   const settings = await prisma.userSettings.upsert({
@@ -182,7 +187,7 @@ export const updateSettings = asyncHandler(async (req: AuthenticatedRequest, res
 });
 
 export const getDashboard = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId } = req.auth!;
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: { profile: true },
@@ -249,7 +254,7 @@ export const getDashboard = asyncHandler(async (req: AuthenticatedRequest, res: 
 });
 
 export const saveAstrologyProfile = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId } = req.auth!;
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
   const payload = req.body as AstrologyPayload;
 
   const existingProfile = await prisma.userProfile.findUnique({
@@ -323,7 +328,7 @@ function mapStepData(step: number, data: OnboardingPayload): OnboardingMapped {
       return { dateOfBirth: parsedDate };
     }
     case 2:
-      return { gender: data.gender as Gender };
+      return { gender: data.gender as 'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY' };
     case 3:
       return {
         city: getStringOrUndefined(data.city),
@@ -333,14 +338,14 @@ function mapStepData(step: number, data: OnboardingPayload): OnboardingMapped {
     case 4:
       return { struggles: asStringArray(data.struggles) };
     case 5:
-      return { therapyHistory: data.therapyHistory as TherapyHistory };
+      return { therapyHistory: data.therapyHistory as 'NEVER' | 'CURRENTLY' | 'PAST' | 'CONSIDERING' };
     case 6:
       return { goals: asStringArray(data.goals) };
     case 7:
       return {
         therapistGenderPref: getStringOrUndefined(data.therapistGenderPref),
         therapistLanguages: asStringArray(data.therapistLanguages),
-        therapistApproach: data.therapistApproach as TherapistApproach | undefined,
+        therapistApproach: data.therapistApproach as 'CBT' | 'HOLISTIC' | 'MIXED' | undefined,
       };
     case 8:
       return { interests: asStringArray(data.interests) };
@@ -368,3 +373,139 @@ function asStringArray(value: unknown): string[] {
 function getStringOrUndefined(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim().length > 0 ? value : undefined;
 }
+
+// ===========================================================================
+// AVATAR UPLOAD
+// ===========================================================================
+
+export const uploadAvatar = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
+
+  if (!req.file) {
+    throw AppError.badRequest('No file uploaded');
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    throw AppError.notFound('User');
+  }
+
+  // Delete old avatar file if exists
+  if (user.avatarUrl) {
+    deleteAvatarFile(user.avatarUrl);
+  }
+
+  // Process image with sharp (resize, optimize)
+  const uploadPath = req.file.path;
+  const filename = `avatar-${userId}-${Date.now()}.webp`;
+  const outputPath = path.join(process.cwd(), 'uploads', 'avatars', filename);
+
+  try {
+    await sharp(uploadPath)
+      .resize(256, 256, { fit: 'cover', position: 'center' })
+      .webp({ quality: 85 })
+      .toFile(outputPath);
+
+    // Delete original uploaded file
+    fs.unlinkSync(uploadPath);
+
+    // Update user avatar URL
+    const avatarUrl = `/uploads/avatars/${filename}`;
+    await prisma.user.update({
+      where: { id: userId },
+      data: { avatarUrl },
+    });
+
+    sendSuccess(res, { avatarUrl });
+  } catch {
+    // Clean up files on error
+    if (fs.existsSync(uploadPath)) fs.unlinkSync(uploadPath);
+    if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
+    throw AppError.internal('Failed to process avatar image');
+  }
+});
+
+// ===========================================================================
+// DATA EXPORT (GDPR / DPDPA / CCPA Compliance)
+// ===========================================================================
+
+export const exportUserData = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
+
+  // Fetch all user data
+  const [user, profile, settings, moodEntries, journalEntries, meditationLogs, sessions, notifications, payments] =
+    await Promise.all([
+      prisma.user.findUnique({ where: { id: userId } }),
+      prisma.userProfile.findUnique({ where: { userId } }),
+      prisma.userSettings.findUnique({ where: { userId } }),
+      prisma.moodEntry.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } }),
+      prisma.journalEntry.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } }),
+      prisma.meditationLog.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } }),
+      prisma.session.findMany({ where: { userId }, orderBy: { scheduledAt: 'desc' } }),
+      prisma.notification.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } }),
+      prisma.payment.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } }),
+    ]);
+
+  if (!user) {
+    throw AppError.notFound('User');
+  }
+
+  // Remove sensitive fields
+  const { passwordHash: _passwordHash, ...userSafe } = user;
+
+  const exportData = {
+    exportDate: new Date().toISOString(),
+    user: userSafe,
+    profile,
+    settings,
+    healthData: {
+      moodEntries,
+      journalEntries,
+      meditationLogs,
+    },
+    sessions,
+    notifications,
+    payments,
+  };
+
+  sendSuccess(res, exportData);
+});
+
+// ===========================================================================
+// DELETE ACCOUNT (GDPR Right to Erasure)
+// ===========================================================================
+
+export const deleteAccount = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const { userId } = req.auth as NonNullable<typeof req.auth>;
+  const { password } = req.body as { password?: string };
+
+  // Verify password before deletion
+  if (!password) {
+    throw AppError.badRequest('Password is required to delete account');
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    throw AppError.notFound('User');
+  }
+
+  const bcrypt = await import('bcrypt');
+  const isValid = await bcrypt.compare(password, user.passwordHash);
+  if (!isValid) {
+    throw AppError.unauthorized('Invalid password');
+  }
+
+  // Delete avatar file if exists
+  if (user.avatarUrl) {
+    deleteAvatarFile(user.avatarUrl);
+  }
+
+  // Soft delete: Set deletedAt timestamp (if you add this field to schema)
+  // Or hard delete: Cascade will handle related records
+  await prisma.user.delete({ where: { id: userId } });
+
+  sendSuccess(res, {
+    message: 'Account deleted successfully',
+    deletedAt: new Date().toISOString(),
+  });
+});

@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { config } from './config/index.js';
 import { errorHandler, notFound } from './middleware/error.js';
@@ -11,7 +13,11 @@ import { requestContext } from './middleware/request-context.js';
 import { apiLimiter } from './middleware/security.middleware.js';
 import { logger, morganStream } from './lib/logger.js';
 import { prisma } from './lib/prisma.js';
+import { websocketService } from './lib/websocket.js';
 import routes from './routes/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -87,6 +93,12 @@ if (config.isProduction) {
 app.use(config.api.prefix, apiLimiter);
 
 // ---------------------------------------------------------------------------
+// Static Files (Uploads)
+// ---------------------------------------------------------------------------
+const uploadsPath = path.join(process.cwd(), 'uploads');
+app.use('/uploads', express.static(uploadsPath));
+
+// ---------------------------------------------------------------------------
 // Routes
 // ---------------------------------------------------------------------------
 app.use(config.api.prefix, routes);
@@ -102,6 +114,9 @@ app.use(errorHandler);
 // HTTP Server + Graceful Shutdown
 // ---------------------------------------------------------------------------
 const server = createServer(app);
+
+// Initialize WebSocket server
+websocketService.initialize(server);
 
 server.listen(config.port, () => {
   logger.info('server_started', {
@@ -126,6 +141,10 @@ async function gracefulShutdown(signal: string) {
     logger.info('http_server_closed');
 
     try {
+      // Close WebSocket connections
+      await websocketService.shutdown();
+      logger.info('websocket_disconnected');
+
       // Disconnect database
       await prisma.$disconnect();
       logger.info('database_disconnected');

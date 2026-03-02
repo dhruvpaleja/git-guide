@@ -21,7 +21,7 @@ export const listUsers = asyncHandler(async (req: AuthenticatedRequest, res: Res
   sendSuccess(res, { users: [], total: 0 });
 });
 
-export const updateUserStatus = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+export const updateUserStatus = asyncHandler(async (_req: AuthenticatedRequest, _res: Response) => {
   // TODO: Verify admin role
   // TODO: Update user status
   throw AppError.notImplemented('Update user status');

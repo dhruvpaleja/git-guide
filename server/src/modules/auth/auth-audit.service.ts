@@ -20,7 +20,8 @@ interface LogEventOptions {
     userId?: string;
     category: AuditCategory;
     action: string;
-    metadata?: Record<string, any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    metadata?: any;
     ipHash?: string;
     userAgent?: string;
 }

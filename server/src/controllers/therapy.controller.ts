@@ -11,13 +11,13 @@ import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 export const listTherapySessions = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
-    
+    const { userId: _userId } = req.auth as NonNullable<typeof req.auth>;
+
     // TODO: Implement therapy session listing
     // - Fetch sessions from database
     // - Filter by userId and status
     // - Apply pagination
-    
+
     sendSuccess(res, {
       sessions: [],
       total: 0,
@@ -28,9 +28,9 @@ export const listTherapySessions = asyncHandler(
 );
 
 export const createTherapySession = asyncHandler(
-  async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
-    const payload = req.body;
+  async (req: AuthenticatedRequest, _res: Response) => {
+    const { userId: _userId } = req.auth as NonNullable<typeof req.auth>;
+    const _payload = req.body;
 
     // TODO: Implement therapy session creation
     // - Validate therapist availability
@@ -42,8 +42,8 @@ export const createTherapySession = asyncHandler(
 );
 
 export const getTherapySession = asyncHandler(
-  async (req: AuthenticatedRequest, res: Response) => {
-    const { sessionId } = req.params;
+  async (req: AuthenticatedRequest, _res: Response) => {
+    const { sessionId: _sessionId } = req.params;
 
     // TODO: Implement session retrieval
     throw AppError.notImplemented('Get therapy session');
@@ -51,8 +51,8 @@ export const getTherapySession = asyncHandler(
 );
 
 export const updateTherapySession = asyncHandler(
-  async (req: AuthenticatedRequest, res: Response) => {
-    const { sessionId } = req.params;
+  async (req: AuthenticatedRequest, _res: Response) => {
+    const { sessionId: _sessionId } = req.params;
 
     // TODO: Implement session update
     throw AppError.notImplemented('Update therapy session');

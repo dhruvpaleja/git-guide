@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { apiService } from '@/services/api.service';
@@ -14,9 +14,11 @@ import {
   BookOpen,
   Shield,
   Loader2,
+  Camera,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 const defaultStats = [
   { label: 'Meditation', key: 'meditationSessions', icon: Network, color: 'text-accent' },
@@ -28,6 +30,7 @@ const defaultStats = [
 export default function ProfilePage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState(user?.name ?? '');
   const [editEmail, setEditEmail] = useState(user?.email ?? '');
@@ -35,6 +38,8 @@ export default function ProfilePage() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [statsData, setStatsData] = useState<Record<string, number>>({});
   const [statsLoading, setStatsLoading] = useState(true);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatar ?? null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   // Load profile stats from dashboard endpoint
   useEffect(() => {
@@ -62,6 +67,7 @@ export default function ProfilePage() {
       });
       if (res.success) {
         setEditing(false);
+        toast.success('Profile updated');
       } else {
         setSaveError(res.error?.message ?? 'Failed to save profile');
       }
@@ -69,6 +75,51 @@ export default function ProfilePage() {
       setSaveError('Network error — could not save profile');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be less than 5MB');
+      return;
+    }
+
+    setUploadingAvatar(true);
+
+    try {
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      // Upload to server
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      const res = await apiService.upload('/users/avatar', formData);
+      if (res.success) {
+        toast.success('Avatar uploaded!');
+      } else {
+        toast.error('Upload failed');
+        setAvatarPreview(user?.avatar ?? null); // Revert preview
+      }
+    } catch {
+      toast.error('Upload failed');
+      setAvatarPreview(user?.avatar ?? null); // Revert preview
+    } finally {
+      setUploadingAvatar(false);
     }
   };
 
@@ -113,8 +164,33 @@ export default function ProfilePage() {
         {/* Avatar Banner */}
         <div className="relative h-24 bg-gradient-to-r from-accent/15 to-transparent">
           <div className="absolute -bottom-8 left-6">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-purple-500 flex items-center justify-center text-2xl font-bold text-white ring-2 ring-[#0c0c0c]">
-              {user?.name?.charAt(0).toUpperCase() ?? 'U'}
+            <div className="relative group">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-purple-500 flex items-center justify-center text-2xl font-bold text-white ring-2 ring-[#0c0c0c] overflow-hidden">
+                {avatarPreview ? (
+                  <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  user?.name?.charAt(0).toUpperCase() ?? 'U'
+                )}
+                {uploadingAvatar && (
+                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                    <Loader2 className="w-5 h-5 text-white animate-spin" />
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingAvatar}
+                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-accent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-accent/90 disabled:opacity-50"
+              >
+                <Camera className="w-3 h-3 text-white" />
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                className="hidden"
+              />
             </div>
           </div>
         </div>

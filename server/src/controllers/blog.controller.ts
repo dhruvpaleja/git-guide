@@ -13,7 +13,7 @@ export const listBlogPosts = asyncHandler(async (_req: Request, res: Response) =
   sendSuccess(res, { posts: [], total: 0 });
 });
 
-export const getBlogPost = asyncHandler(async (req: Request, res: Response) => {
+export const getBlogPost = asyncHandler(async (_req: Request, _res: Response) => {
   // TODO: Implement individual blog post retrieval
   throw AppError.notImplemented('Get blog post');
 });

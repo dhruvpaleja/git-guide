@@ -5,7 +5,7 @@
 import type { Response, NextFunction } from 'express';
 import type { Role } from '@prisma/client';
 import type { AuthenticatedRequest } from './auth.middleware.js';
-import { AppError, ErrorCode } from '../lib/errors.js';
+import { ErrorCode } from '../lib/errors.js';
 
 /**
  * Middleware factory that restricts access to specific roles.

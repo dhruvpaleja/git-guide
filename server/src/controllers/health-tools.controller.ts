@@ -13,7 +13,7 @@ import type { MoodEntryPayload, JournalEntryPayload, MeditationLogPayload } from
 
 export const getMoodHistory = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
     const { page, limit, skip } = parsePagination(req.query as Record<string, unknown>);
 
     const [entries, total] = await Promise.all([
@@ -42,7 +42,7 @@ export const getMoodHistory = asyncHandler(
 
 export const recordMoodEntry = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
     const payload = req.body as MoodEntryPayload;
 
     const entry = await prisma.moodEntry.create({
@@ -61,7 +61,7 @@ export const recordMoodEntry = asyncHandler(
 
 export const getJournalEntries = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
     const { page, limit, skip } = parsePagination(req.query as Record<string, unknown>);
 
     const [entries, total] = await Promise.all([
@@ -80,7 +80,7 @@ export const getJournalEntries = asyncHandler(
 
 export const createJournalEntry = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
     const payload = req.body as JournalEntryPayload;
 
     const entry = await prisma.journalEntry.create({
@@ -100,15 +100,16 @@ export const createJournalEntry = asyncHandler(
 
 export const updateJournalEntry = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
     const { id } = req.params;
     const payload = req.body as Partial<JournalEntryPayload>;
 
-    const existing = await prisma.journalEntry.findFirst({ where: { id, userId } });
+    const journalId = typeof id === 'string' ? id : Array.isArray(id) ? id[0] : '';
+    const existing = await prisma.journalEntry.findFirst({ where: { id: journalId, userId } });
     if (!existing) throw AppError.notFound('Journal entry');
 
     const entry = await prisma.journalEntry.update({
-      where: { id },
+      where: { id: journalId },
       data: {
         ...(payload.title !== undefined && { title: payload.title }),
         ...(payload.content !== undefined && { content: payload.content }),
@@ -124,7 +125,7 @@ export const updateJournalEntry = asyncHandler(
 
 export const getMeditationLogs = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
     const { page, limit, skip } = parsePagination(req.query as Record<string, unknown>);
 
     const [logs, total] = await Promise.all([
@@ -151,7 +152,7 @@ export const getMeditationLogs = asyncHandler(
 
 export const logMeditationSession = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
     const payload = req.body as MeditationLogPayload;
 
     const log = await prisma.meditationLog.create({

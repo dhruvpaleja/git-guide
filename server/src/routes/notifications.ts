@@ -15,7 +15,7 @@ router.use(requireAuth);
 router.get(
   '/',
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
     const { page, limit, skip } = parsePagination(req.query as Record<string, unknown>);
 
     const [notifications, total, unreadCount] = await Promise.all([
@@ -42,14 +42,14 @@ router.get(
 router.put(
   '/:id/read',
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
-    const { id } = req.params;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
+    const id = typeof req.params.id === 'string' ? req.params.id : Array.isArray(req.params.id) ? req.params.id[0] : '';
 
-    const notification = await prisma.notification.findFirst({ where: { id, userId } });
+    const notification = await prisma.notification.findFirst({ where: { id: id, userId } });
     if (!notification) throw AppError.notFound('Notification');
 
     const updated = await prisma.notification.update({
-      where: { id },
+      where: { id: id },
       data: { isRead: true, readAt: new Date() },
     });
 
@@ -61,7 +61,7 @@ router.put(
 router.put(
   '/read-all',
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
 
     await prisma.notification.updateMany({
       where: { userId, isRead: false },

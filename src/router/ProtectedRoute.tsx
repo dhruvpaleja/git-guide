@@ -8,6 +8,11 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ requiredRoles }: ProtectedRouteProps) {
+  // ── TEMP: Auth bypassed for UI testing ──
+  // TODO: RESTORE before production
+  return <Outlet />;
+
+  /* ORIGINAL AUTH LOGIC — RESTORE THIS:
   const { isAuthenticated, user, isLoading } = useAuth();
   const location = useLocation();
 
@@ -24,4 +29,5 @@ export default function ProtectedRoute({ requiredRoles }: ProtectedRouteProps) {
   }
 
   return <Outlet />;
+  */
 }

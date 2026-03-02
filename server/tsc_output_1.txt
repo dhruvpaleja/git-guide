@@ -1,0 +1,58 @@
+src/controllers/health-tools.controller.ts(21,18): error TS2552: Cannot find name 'userId'. Did you mean '_userId'?
+src/controllers/health-tools.controller.ts(26,41): error TS2552: Cannot find name 'userId'. Did you mean '_userId'?
+src/controllers/health-tools.controller.ts(50,9): error TS2552: Cannot find name 'userId'. Did you mean '_userId'?
+src/controllers/health-tools.controller.ts(51,16): error TS2552: Cannot find name 'payload'. Did you mean '_payload'?
+src/controllers/health-tools.controller.ts(52,15): error TS2552: Cannot find name 'payload'. Did you mean '_payload'?
+src/controllers/health-tools.controller.ts(53,15): error TS2552: Cannot find name 'payload'. Did you mean '_payload'?
+src/controllers/health-tools.controller.ts(54,13): error TS2552: Cannot find name 'payload'. Did you mean '_payload'?
+src/controllers/health-tools.controller.ts(54,55): error TS2552: Cannot find name 'payload'. Did you mean '_payload'?
+src/controllers/health-tools.controller.ts(69,18): error TS2552: Cannot find name 'userId'. Did you mean '_userId'?
+src/controllers/health-tools.controller.ts(74,44): error TS2552: Cannot find name 'userId'. Did you mean '_userId'?
+src/controllers/health-tools.controller.ts(88,9): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.
+src/controllers/health-tools.controller.ts(89,16): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(90,18): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(91,15): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(92,15): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(93,20): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(108,84): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.
+src/controllers/health-tools.controller.ts(114,13): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(114,53): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(115,13): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(115,57): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(116,13): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(116,51): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(117,13): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(117,51): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(118,13): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(118,61): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(133,18): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.
+src/controllers/health-tools.controller.ts(138,45): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.
+src/controllers/health-tools.controller.ts(160,9): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.
+src/controllers/health-tools.controller.ts(161,19): error TS2304: Cannot find name 'payload'.
+src/controllers/health-tools.controller.ts(162,15): error TS2304: Cannot find name 'payload'.
+src/controllers/placeholders.controller.ts(11,41): error TS2345: Argument of type '(req: Request, res: Response) => Promise<void>' is not assignable to parameter of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => Promise<...>'.
+  Types of parameters 'req' and 'req' are incompatible.
+    Type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>' is missing the following properties from type 'Request': cache, credentials, destination, integrity, and 14 more.
+src/controllers/placeholders.controller.ts(16,46): error TS2345: Argument of type '(req: Request, res: Response) => Promise<void>' is not assignable to parameter of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => Promise<...>'.
+  Types of parameters 'req' and 'req' are incompatible.
+    Type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>' is missing the following properties from type 'Request': cache, credentials, destination, integrity, and 14 more.
+src/controllers/placeholders.controller.ts(21,40): error TS2345: Argument of type '(req: Request, res: Response) => Promise<void>' is not assignable to parameter of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => Promise<...>'.
+  Types of parameters 'req' and 'req' are incompatible.
+    Type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>' is missing the following properties from type 'Request': cache, credentials, destination, integrity, and 14 more.
+src/controllers/placeholders.controller.ts(26,44): error TS2345: Argument of type '(req: Request, res: Response) => Promise<void>' is not assignable to parameter of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => Promise<...>'.
+  Types of parameters 'req' and 'req' are incompatible.
+    Type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>' is missing the following properties from type 'Request': cache, credentials, destination, integrity, and 14 more.
+src/controllers/placeholders.controller.ts(31,42): error TS2345: Argument of type '(req: Request, res: Response) => Promise<void>' is not assignable to parameter of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => Promise<...>'.
+  Types of parameters 'req' and 'req' are incompatible.
+    Type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>' is missing the following properties from type 'Request': cache, credentials, destination, integrity, and 14 more.
+src/controllers/placeholders.controller.ts(36,47): error TS2345: Argument of type '(req: Request, res: Response) => Promise<void>' is not assignable to parameter of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => Promise<...>'.
+  Types of parameters 'req' and 'req' are incompatible.
+    Type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>' is missing the following properties from type 'Request': cache, credentials, destination, integrity, and 14 more.
+src/controllers/placeholders.controller.ts(41,45): error TS2345: Argument of type '(req: Request, res: Response) => Promise<void>' is not assignable to parameter of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: NextFunction) => Promise<...>'.
+  Types of parameters 'req' and 'req' are incompatible.
+    Type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>' is missing the following properties from type 'Request': cache, credentials, destination, integrity, and 14 more.
+src/routes/notifications.ts(23,18): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.
+src/routes/notifications.ts(28,44): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.
+src/routes/notifications.ts(29,44): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.
+src/routes/notifications.ts(48,81): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.
+src/routes/notifications.ts(67,16): error TS18004: No value exists in scope for the shorthand property 'userId'. Either declare one or provide an initializer.

@@ -8,7 +8,6 @@ interface SoulSyncCardProps {
 
 export default function SoulSyncCard({ type = 'platonic' }: SoulSyncCardProps) {
 
-    // Dynamic styling based on the type of match
     const configs = {
         romantic: {
             color: "from-rose-500/20 to-purple-500/10",
@@ -37,7 +36,7 @@ export default function SoulSyncCard({ type = 'platonic' }: SoulSyncCardProps) {
             pillBg: "bg-amber-500/10",
             title: "Synergy Node",
             label: "Professional Match",
-            description: "You mapped 'Need an Editor' in your Work node 2 days ago. This user is a top-rated editor with matching communication styles (Mercury alignment).",
+            description: "You mapped 'Need an Editor' in your Work node 2 days ago. This user is a top-rated editor with matching communication styles.",
             actionText: "Connect Professionally",
         }
     };
@@ -49,7 +48,7 @@ export default function SoulSyncCard({ type = 'platonic' }: SoulSyncCardProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
-            className="relative w-full rounded-[24px] p-6 bg-[#0a0a0a] border border-[#2b2b2b]/60 overflow-hidden group hover:border-[#444]/60 transition-all"
+            className="relative w-full rounded-[20px] p-6 bg-white/10 dark:bg-white/[0.04] backdrop-blur-md border border-white/10 dark:border-white/[0.06] shadow-lg overflow-hidden group hover:bg-white/[0.14] dark:hover:bg-white/[0.06] transition-all isolate"
         >
             {/* Background glow */}
             <div className={cn("absolute inset-0 bg-gradient-to-br opacity-20 pointer-events-none transition-opacity duration-700 group-hover:opacity-40 blur-xl", c.color)} />
@@ -61,7 +60,7 @@ export default function SoulSyncCard({ type = 'platonic' }: SoulSyncCardProps) {
                             <Fingerprint className={cn("w-5 h-5", c.iconColor)} />
                         </div>
                         <div>
-                            <h3 className="text-white/90 font-semibold tracking-tight">{c.title}</h3>
+                            <h3 className="text-white font-semibold tracking-tight">{c.title}</h3>
                             <p className="text-xs text-white/40 uppercase tracking-wider font-medium">{c.label}</p>
                         </div>
                     </div>
@@ -78,10 +77,9 @@ export default function SoulSyncCard({ type = 'platonic' }: SoulSyncCardProps) {
                     </p>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-white/[0.06] pt-4 mt-auto">
+                <div className="flex items-center justify-between border-t border-white/[0.08] pt-4 mt-auto">
                     <div className="flex -space-x-3">
-                        {/* Mystery Avatar (blurred/darker for anon matches) */}
-                        <div className="w-10 h-10 rounded-full bg-[#111] border-2 border-[#1a1a1a] flex items-center justify-center overflow-hidden">
+                        <div className="w-10 h-10 rounded-full bg-black/50 border-2 border-black/40 flex items-center justify-center overflow-hidden">
                             <div className="w-full h-full bg-gradient-to-tr from-gray-800 to-gray-600 blur-[2px]" />
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import zxcvbn from 'zxcvbn'; // To evaluate password strength
+import { Request, Response, NextFunction } from 'express';
 
 const passwordStrengthSchema = z.string().superRefine((val, ctx) => {
     if (val.length < 8) {
@@ -34,11 +35,11 @@ export const loginSchema = z.object({
 });
 
 export const requestBodyValidator = (schema: z.AnyZodObject) => {
-    return (req: any, res: any, next: any) => {
+    return (req: Request, res: Response, next: NextFunction) => {
         try {
             schema.parse({ body: req.body });
             next();
-        } catch (error: any) {
+        } catch (error: unknown) {
             if (error instanceof z.ZodError) {
                 return res.status(400).json({
                     success: false,

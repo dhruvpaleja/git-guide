@@ -10,16 +10,16 @@ import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
  */
 
 export const startAIChat = asyncHandler(
-  async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+  async (req: AuthenticatedRequest, _res: Response) => {
+    const { userId: _userId } = req.auth as NonNullable<typeof req.auth>;
     // TODO: Initialize AI conversation session
     throw AppError.notImplemented('Start AI chat');
   },
 );
 
 export const sendAIMessage = asyncHandler(
-  async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+  async (req: AuthenticatedRequest, _res: Response) => {
+    const { userId: _userId } = req.auth as NonNullable<typeof req.auth>;
     // TODO: Process user message and return AI response
     throw AppError.notImplemented('Send AI message');
   },
@@ -27,7 +27,7 @@ export const sendAIMessage = asyncHandler(
 
 export const getAIRecommendations = asyncHandler(
   async (req: AuthenticatedRequest, res: Response) => {
-    const { userId } = req.auth!;
+    const { userId: _userId } = req.auth as NonNullable<typeof req.auth>;
     // TODO: Generate personalized AI recommendations
     sendSuccess(res, { recommendations: [] });
   },

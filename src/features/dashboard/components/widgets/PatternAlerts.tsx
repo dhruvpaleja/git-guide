@@ -59,13 +59,13 @@ export default function PatternAlerts() {
     const visibleAlerts = ALERTS.filter((a) => !dismissed.has(a.id));
 
     return (
-        <div className="w-full rounded-[24px] p-5 bg-[#0c0c0c] border border-[#2b2b2b]/60">
-            <div className="flex items-center justify-between mb-4">
+        <div className="w-full rounded-[20px] p-5 sm:p-6 bg-white/10 dark:bg-white/[0.04] backdrop-blur-md border border-white/10 dark:border-white/[0.06] shadow-lg">
+            <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-white/[0.05] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-white/5 dark:bg-white/[0.06] flex items-center justify-center">
                         <TrendingDown className="w-4 h-4 text-white/50" />
                     </div>
-                    <h3 className="text-white/90 font-semibold tracking-tight text-sm">System Intelligence</h3>
+                    <h3 className="text-white font-semibold tracking-tight text-sm">System Intelligence</h3>
                 </div>
                 {visibleAlerts.length > 0 && (
                     <div className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-500/10">
@@ -84,7 +84,7 @@ export default function PatternAlerts() {
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: idx * 0.08 }}
-                            className={cn('p-4 rounded-2xl bg-[#111]/80 border', config.border)}
+                            className={cn('p-4 rounded-2xl bg-black/30 dark:bg-black/40 border', config.border)}
                         >
                             <div className="flex items-start gap-2.5">
                                 <div className={cn('w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5', config.bg)}>
@@ -92,22 +92,22 @@ export default function PatternAlerts() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center justify-between gap-2 mb-1.5">
-                                        <span className={cn('text-[11px] font-semibold uppercase tracking-wider', config.color)}>
+                                        <span className={cn('text-[10px] font-bold uppercase tracking-[0.1em]', config.color)}>
                                             {alert.label}
                                         </span>
-                                        <div className="flex items-center gap-1 text-[10px] text-white/20">
-                                            <Clock className="w-2.5 h-2.5" />
+                                        <div className="flex items-center gap-1 text-[10px] font-medium text-white/30">
+                                            <Clock className="w-3 h-3 text-white/20" />
                                             {alert.time}
                                         </div>
                                     </div>
-                                    <p className="text-[13px] text-white/70 leading-relaxed">
+                                    <p className="text-[13px] text-white/80 leading-relaxed font-medium">
                                         {alert.highlight ? (
                                             <>
                                                 {alert.message.split(alert.highlight).map((part, i, arr) => (
                                                     <span key={i}>
                                                         {part}
                                                         {i < arr.length - 1 && (
-                                                            <span className="text-white font-medium">{alert.highlight}</span>
+                                                            <span className="text-white font-semibold">{alert.highlight}</span>
                                                         )}
                                                     </span>
                                                 ))}
@@ -119,13 +119,13 @@ export default function PatternAlerts() {
                                     <div className="mt-2.5 flex items-center justify-between">
                                         <button
                                             onClick={() => navigate(alert.actionRoute)}
-                                            className="text-[11px] text-white/30 hover:text-white/60 transition-colors underline underline-offset-2"
+                                            className="text-[11px] text-white/40 hover:text-white/70 transition-colors underline underline-offset-2"
                                         >
                                             {alert.actionText}
                                         </button>
                                         <button
                                             onClick={() => setDismissed((s) => new Set(s).add(alert.id))}
-                                            className="text-[10px] text-white/15 hover:text-white/40 transition-colors"
+                                            className="text-[10px] text-white/20 hover:text-white/50 transition-colors"
                                         >
                                             Dismiss
                                         </button>

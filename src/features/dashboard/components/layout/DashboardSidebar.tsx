@@ -56,41 +56,54 @@ export default function DashboardSidebar({ forceExpanded, onNavigate }: Dashboar
   return (
     <aside
       className={cn(
-        'fixed left-0 lg:left-4 top-0 lg:top-4 bottom-0 lg:bottom-4 bg-[#0c0c0c] border-r lg:border border-[#1a1a1a] lg:rounded-[24px] flex flex-col items-center py-8 z-50 transition-all duration-300 overflow-hidden',
+        // ── NavBar-grade floating glassmorphic panel ──
+        'fixed left-0 top-0 bottom-0 z-50 flex flex-col overflow-hidden transition-all duration-500 ease-out',
+        // Floating capsule on desktop, flush on mobile
+        'lg:left-3 lg:top-3 lg:bottom-3 lg:rounded-[20px]',
+        // Glassmorphism matching the main NavBar
+        'bg-white/10 backdrop-blur-md border-r lg:border border-white/10 shadow-2xl',
+        // Width behavior
         forceExpanded
-          ? 'w-[240px]'
-          : 'w-[60px] hover:w-[200px] group',
+          ? 'w-[260px]'
+          : 'w-[68px] hover:w-[220px] group',
       )}
     >
-      {/* Brand */}
+      {/* ─── Logo & Brand ─── */}
       <Link
         to="/dashboard"
         onClick={onNavigate}
-        className="flex-shrink-0 mb-6 flex items-center justify-center w-full px-4"
+        className="flex items-center gap-3 px-4 py-6 flex-shrink-0 transition-transform duration-300 hover:scale-[1.02]"
       >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-accent to-blue-500 flex-shrink-0" />
+        <img
+          src="/images/main-logo.png"
+          alt="Soul Yatri"
+          className="w-[38px] h-[33px] object-contain flex-shrink-0 ml-0.5"
+        />
         <span
           className={cn(
-            'ml-3 font-bold text-white whitespace-nowrap tracking-tight text-[15px] transition-opacity duration-300',
-            forceExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+            'font-bold text-white whitespace-nowrap tracking-tight text-[16px] transition-all duration-300',
+            forceExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0',
           )}
         >
           Soul Yatri
         </span>
       </Link>
 
-      {/* Nav Sections */}
-      <nav className="flex-1 w-full flex flex-col gap-1 px-2 overflow-y-auto hide-scrollbar">
+      {/* ─── Divider under logo ─── */}
+      <div className="mx-3 h-px bg-white/10 mb-2" />
+
+      {/* ─── Navigation ─── */}
+      <nav className="flex-1 w-full flex flex-col gap-0.5 px-2.5 overflow-y-auto hide-scrollbar pt-2">
         {navSections.map((section, sIdx) => (
           <div key={section.label}>
-            {/* Section label — only visible when expanded */}
+            {/* Section label */}
             <div
               className={cn(
-                'px-3 pt-5 pb-2 transition-opacity duration-300',
-                forceExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+                'px-3 pt-4 pb-2 transition-all duration-300',
+                forceExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 max-h-0 group-hover:max-h-10 overflow-hidden',
               )}
             >
-              <span className="text-[11px] uppercase tracking-wider text-white/25 font-semibold">
+              <span className="text-[10px] uppercase tracking-[0.14em] text-white/40 font-semibold">
                 {section.label}
               </span>
             </div>
@@ -103,48 +116,48 @@ export default function DashboardSidebar({ forceExpanded, onNavigate }: Dashboar
                   to={item.href}
                   onClick={onNavigate}
                   className={cn(
-                    'relative flex items-center w-full px-3 py-2.5 rounded-2xl transition-all duration-200 mb-0.5',
+                    // Same pill styling as NavBar active items
+                    'relative flex items-center w-full px-3 py-2.5 rounded-full transition-all duration-300 mb-[2px]',
                     active
-                      ? 'text-white'
-                      : 'text-white/40 hover:text-white hover:bg-white/5',
+                      ? 'text-white font-semibold bg-white/10'
+                      : 'text-white/70 font-normal hover:text-white hover:bg-white/5',
                   )}
                 >
+                  {/* Animated active indicator — accent bar on left */}
                   {active && (
                     <motion.div
-                      layoutId="active-pill"
-                      className="absolute inset-0 bg-white/[0.08] rounded-2xl -z-10 border border-white/[0.08]"
+                      layoutId="sidebar-active"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 bg-accent rounded-r-full"
                       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     />
                   )}
+
                   <item.icon
-                    className="w-[18px] h-[18px] flex-shrink-0 ml-0.5"
-                    strokeWidth={active ? 2.5 : 2}
+                    className="w-[18px] h-[18px] flex-shrink-0 ml-1"
+                    strokeWidth={active ? 2.5 : 1.8}
                   />
                   <span
                     className={cn(
-                      'ml-3 text-[13px] font-medium whitespace-nowrap transition-opacity duration-300',
-                      forceExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+                      'ml-3 text-[13px] tracking-[-0.14px] whitespace-nowrap transition-all duration-300',
+                      forceExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0',
                     )}
                   >
                     {item.label}
                   </span>
-                  {active && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-3.5 bg-accent rounded-r-full" />
-                  )}
                 </Link>
               );
             })}
 
-            {/* Divider between sections */}
+            {/* Section divider */}
             {sIdx < navSections.length - 1 && (
-              <div className="mx-3 my-1 h-px bg-white/[0.04]" />
+              <div className="mx-3 my-2 h-px bg-white/[0.08]" />
             )}
           </div>
         ))}
       </nav>
 
-      {/* Bottom Nav */}
-      <div className="mt-auto w-full flex flex-col gap-1 px-2 border-t border-white/[0.06] pt-3">
+      {/* ─── Bottom Actions ─── */}
+      <div className="mt-auto w-full flex flex-col gap-0.5 px-2.5 border-t border-white/10 pt-3 pb-4">
         {bottomItems.map((item) => {
           const active = isActive(item.href);
           return (
@@ -153,17 +166,17 @@ export default function DashboardSidebar({ forceExpanded, onNavigate }: Dashboar
               to={item.href}
               onClick={onNavigate}
               className={cn(
-                'flex items-center w-full p-2.5 rounded-2xl transition-all duration-200',
+                'flex items-center w-full px-3 py-2.5 rounded-full transition-all duration-300',
                 active
-                  ? 'text-white bg-white/[0.06]'
-                  : 'text-white/35 hover:text-white/70 hover:bg-white/5',
+                  ? 'text-white font-semibold bg-white/10'
+                  : 'text-white/70 hover:text-white hover:bg-white/5',
               )}
             >
-              <item.icon className="w-[18px] h-[18px] flex-shrink-0 ml-0.5" strokeWidth={2} />
+              <item.icon className="w-[18px] h-[18px] flex-shrink-0 ml-1" strokeWidth={active ? 2.5 : 1.8} />
               <span
                 className={cn(
-                  'ml-3 text-[13px] font-medium whitespace-nowrap transition-opacity duration-300',
-                  forceExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+                  'ml-3 text-[13px] tracking-[-0.14px] whitespace-nowrap transition-all duration-300',
+                  forceExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0',
                 )}
               >
                 {item.label}
@@ -171,7 +184,7 @@ export default function DashboardSidebar({ forceExpanded, onNavigate }: Dashboar
               {item.icon === Bell && (
                 <div
                   className={cn(
-                    'w-1.5 h-1.5 rounded-full bg-accent ml-auto flex-shrink-0 animate-pulse transition-opacity duration-300',
+                    'w-2 h-2 rounded-full bg-accent ml-auto flex-shrink-0 animate-pulse transition-all duration-300',
                     forceExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
                   )}
                 />

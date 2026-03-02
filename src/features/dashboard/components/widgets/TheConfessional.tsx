@@ -64,11 +64,26 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
             </AnimatePresence>
 
             <div className={cn(
-                "relative w-full rounded-[30px] border transition-all duration-500 overflow-hidden flex flex-col",
+                "relative w-full rounded-[32px] border transition-all duration-700 overflow-hidden flex flex-col group",
                 isFocused
-                    ? "bg-[#111] border-white/10 h-[250px]"
-                    : "bg-[#0c0c0c]/60 border-[#2b2b2b] h-[120px] hover:bg-[#111]"
+                    ? "bg-[#090909]/90 border-white/20 h-[300px] shadow-[0_0_100px_-20px_rgba(255,255,255,0.15)] ring-1 ring-white/10 backdrop-blur-3xl"
+                    : "bg-white/[0.02] border-white/5 h-[120px] hover:bg-white/[0.04] hover:border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-xl"
             )}>
+                {/* Immersive animated background glow inside the box when focused */}
+                <AnimatePresence>
+                    {isFocused && (
+                        <>
+                            <motion.div
+                                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }}
+                                className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none"
+                            />
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
+                                className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-full h-40 bg-accent/20 blur-[60px] pointer-events-none rounded-full"
+                            />
+                        </>
+                    )}
+                </AnimatePresence>
                 {submitted ? (
                     <div className="flex-1 flex items-center justify-center gap-3">
                         <CheckCircle2 className="w-6 h-6 text-accent" />
@@ -81,7 +96,10 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         placeholder={prompt}
-                        className="flex-1 w-full bg-transparent resize-none p-6 text-white/90 placeholder:text-white/30 focus:outline-none text-lg tracking-[-0.01em] leading-relaxed hide-scrollbar"
+                        className={cn(
+                            "flex-1 w-full bg-transparent resize-none p-6 sm:p-8 placeholder:text-white/20 focus:outline-none tracking-[-0.02em] hide-scrollbar font-medium transition-all duration-700 relative z-10",
+                            isFocused ? "text-2xl sm:text-3xl text-white/90 leading-tight" : "text-lg text-white/70"
+                        )}
                     />
                 )}
 
@@ -130,10 +148,6 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
                     </div>
                 )}
 
-                {/* Ambient Warm Glow at the bottom, mimicking the campfire effect */}
-                {isFocused && (
-                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-3/4 h-20 bg-accent/10 blur-[40px] pointer-events-none rounded-full" />
-                )}
             </div>
         </div>
     );

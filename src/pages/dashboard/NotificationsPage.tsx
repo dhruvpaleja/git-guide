@@ -1,9 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Loader2, CheckCheck, AlertTriangle, Sparkles, Users, Heart, Zap, Info } from 'lucide-react';
+import { Bell, Loader2, CheckCheck, AlertTriangle, Sparkles, Users, Heart, Zap, Info, Wifi, WifiOff } from 'lucide-react';
 import apiService from '@/services/api.service';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { websocketService } from '@/services/websocket.service';
 
 interface Notification {
   id: string;
@@ -42,6 +43,7 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isConnected, setIsConnected] = useState(false);
 
   const load = useCallback(async () => {
     setIsLoading(true);
@@ -54,6 +56,40 @@ export default function NotificationsPage() {
   }, []);
 
   useEffect(() => { void load(); }, [load]);
+
+  // Real-time WebSocket notifications
+  useEffect(() => {
+    const token = localStorage.getItem('token') || localStorage.getItem('auth_token');
+    if (!token) return;
+
+    // Connect to WebSocket
+    websocketService.connect(token);
+    setIsConnected(websocketService.isConnected());
+
+    // Listen for new notifications
+    const unsubscribe = websocketService.on('notification', (data) => {
+      const newNotif = data as Notification;
+      setNotifications((prev) => [newNotif, ...prev]);
+      setUnreadCount((prev) => prev + 1);
+      
+      // Show toast for new notification
+      toast(newNotif.title, {
+        description: newNotif.body,
+        icon: '🔔',
+        duration: 4000,
+      });
+    });
+
+    // Check connection status periodically
+    const interval = setInterval(() => {
+      setIsConnected(websocketService.isConnected());
+    }, 3000);
+
+    return () => {
+      unsubscribe();
+      clearInterval(interval);
+    };
+  }, []);
 
   const markAllRead = async () => {
     const res = await apiService.put('/notifications/read-all', {});
@@ -76,13 +112,38 @@ export default function NotificationsPage() {
           <div className="w-10 h-10 rounded-2xl bg-white/[0.05] flex items-center justify-center relative">
             <Bell className="w-5 h-5 text-white/50" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent text-[10px] font-bold text-white flex items-center justify-center">
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent text-[10px] font-bold text-white flex items-center justify-center"
+              >
                 {unreadCount}
-              </span>
+              </motion.span>
             )}
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-white tracking-tight">Notifications</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-semibold text-white tracking-tight">Notifications</h1>
+              {isConnected ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20"
+                >
+                  <Wifi className="w-2.5 h-2.5 text-green-400" />
+                  <span className="text-[9px] text-green-400 font-medium uppercase tracking-wider">Live</span>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 border border-white/10"
+                >
+                  <WifiOff className="w-2.5 h-2.5 text-white/30" />
+                  <span className="text-[9px] text-white/30 font-medium uppercase tracking-wider">Offline</span>
+                </motion.div>
+              )}
+            </div>
             <p className="text-sm text-white/35 mt-0.5">{unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}</p>
           </div>
         </div>

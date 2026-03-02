@@ -1,4 +1,21 @@
 services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: kimi
+      POSTGRES_PASSWORD: kimi_secret
+      POSTGRES_DB: kimi_app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kimi -d kimi_app"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   frontend:
     build:
       context: .
@@ -18,3 +35,12 @@ services:
       - PORT=3000
       - NODE_ENV=production
       - CORS_ORIGIN=http://localhost
+      - DATABASE_URL=postgresql://kimi:kimi_secret@db:5432/kimi_app?schema=public
+      - JWT_SECRET=change-me-in-production
+      - JWT_REFRESH_SECRET=change-me-refresh-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

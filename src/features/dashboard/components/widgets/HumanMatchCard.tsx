@@ -7,10 +7,10 @@ export default function HumanMatchCard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="relative w-full rounded-[30px] p-6 bg-[#0c0c0c] border border-[#2b2b2b]/80 overflow-hidden group hover:border-[#1e8e3e]/40 transition-colors"
+            className="relative w-full rounded-[24px] p-6 bg-[#0c0c0c] border border-[#2b2b2b]/60 overflow-hidden group hover:border-[#1e8e3e]/40 transition-colors"
         >
             {/* Subtle organic gradient matching the AI vibe */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#1e8e3e]/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-[#1e8e3e]/10 transition-colors duration-700" />
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#1e8e3e]/5 rounded-full blur-[60px] pointer-events-none group-hover:bg-[#1e8e3e]/10 transition-colors duration-700" />
 
             <div className="flex items-start justify-between relative z-10">
                 <div className="flex items-center gap-3">
@@ -28,7 +28,7 @@ export default function HumanMatchCard() {
                 </div>
             </div>
 
-            <div className="mt-6 mb-8">
+            <div className="mt-5 mb-6">
                 <p className="text-white/80 text-[15px] leading-relaxed">
                     You've mapped severe friction between the <span className="text-white font-medium">Tech Career</span> and <span className="text-white font-medium">Anxiety</span> nodes over the last 3 weeks.
                 </p>
@@ -40,7 +40,7 @@ export default function HumanMatchCard() {
             <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-auto">
                 <div className="flex -space-x-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-gray-700 to-gray-600 border-2 border-[#0c0c0c] flex items-center justify-center overflow-hidden">
-                        <img src="https://i.pravatar.cc/100?img=5" alt="Dr. Aisha" className="w-full h-full object-cover opacity-80 mix-blend-luminosity" />
+                        <img src="https://i.pravatar.cc/100?img=5" alt="Dr. Aisha" className="w-full h-full object-cover opacity-70" />
                     </div>
                 </div>
                 <button className="group/btn flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors">

@@ -60,6 +60,25 @@ export const astrologyProfileSchema = z.object({
     .optional(),
 });
 
+export const updateProfileSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  email: z.string().email().optional(),
+  phone: z.string().min(10).max(15).optional().nullable(),
+  avatarUrl: z.string().url().optional().nullable(),
+});
+
+export const updateSettingsSchema = z.object({
+  darkMode: z.boolean().optional(),
+  animations: z.boolean().optional(),
+  compactMode: z.boolean().optional(),
+  pushNotifs: z.boolean().optional(),
+  soundEffects: z.boolean().optional(),
+  patternAlerts: z.boolean().optional(),
+  profileVisible: z.boolean().optional(),
+  constellationPublic: z.boolean().optional(),
+  twoFactor: z.boolean().optional(),
+});
+
 export function requestBodyValidator(schema: z.ZodSchema) {
   return (req: Request, _res: Response, next: NextFunction) => {
     schema.parse(req.body);

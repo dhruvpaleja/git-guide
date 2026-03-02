@@ -1,8 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Plus, X, Loader2, Timer } from 'lucide-react';
+import { Brain, Plus, X, Loader2, Timer, Pause, Play, RotateCcw, Flame } from 'lucide-react';
 import apiService from '@/services/api.service';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface MeditationLog {
   id: string;
@@ -21,6 +22,95 @@ function formatSeconds(secs: number) {
   return m > 0 ? `${m}m ${s > 0 ? s + 's' : ''}` : `${s}s`;
 }
 
+/* ── Quick Timer ────────────────────────────────────────────── */
+function QuickTimer() {
+  const [preset, setPreset] = useState(5);
+  const [remaining, setRemaining] = useState(0);
+  const [running, setRunning] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const start = () => {
+    setRemaining(preset * 60);
+    setRunning(true);
+  };
+
+  const toggle = () => setRunning(r => !r);
+  const reset = () => { setRunning(false); setRemaining(0); };
+
+  useEffect(() => {
+    if (running && remaining > 0) {
+      intervalRef.current = setInterval(() => setRemaining(r => r - 1), 1000);
+    } else if (remaining <= 0 && running) {
+      setRunning(false);
+      toast.success('Meditation complete!');
+    }
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [running, remaining]);
+
+  const mm = String(Math.floor(remaining / 60)).padStart(2, '0');
+  const ss = String(remaining % 60).padStart(2, '0');
+  const progress = remaining > 0 ? 1 - remaining / (preset * 60) : 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-[24px] bg-[#0c0c0c] border border-[#2b2b2b]/60 p-6 mb-6"
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <Timer className="w-4 h-4 text-accent" />
+        <span className="text-sm font-semibold text-white/70">Quick Timer</span>
+      </div>
+
+      {remaining === 0 && !running ? (
+        <div className="flex items-center gap-3">
+          {[3, 5, 10, 15, 20].map(m => (
+            <button
+              key={m}
+              onClick={() => setPreset(m)}
+              className={cn(
+                'flex-1 py-2 rounded-xl text-sm font-medium transition-colors border',
+                preset === m
+                  ? 'bg-accent/10 text-accent border-accent/20'
+                  : 'bg-white/[0.05] text-white/50 border-white/[0.06] hover:bg-white/[0.07]',
+              )}
+            >
+              {m}m
+            </button>
+          ))}
+          <button
+            onClick={start}
+            className="px-5 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-colors"
+          >
+            Start
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <div className="text-3xl font-mono font-semibold text-white tracking-wider">{mm}:{ss}</div>
+            <div className="h-1 rounded-full bg-white/[0.06] mt-3 overflow-hidden">
+              <motion.div
+                className="h-full rounded-full bg-accent"
+                animate={{ width: `${progress * 100}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={toggle} className="w-10 h-10 rounded-xl bg-white/[0.06] flex items-center justify-center hover:bg-white/[0.1] transition-colors">
+              {running ? <Pause className="w-4 h-4 text-white/60" /> : <Play className="w-4 h-4 text-white/60" />}
+            </button>
+            <button onClick={reset} className="w-10 h-10 rounded-xl bg-white/[0.06] flex items-center justify-center hover:bg-white/[0.1] transition-colors">
+              <RotateCcw className="w-4 h-4 text-white/60" />
+            </button>
+          </div>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
 export default function MeditationPage() {
   const [showForm, setShowForm] = useState(false);
   const [duration, setDuration] = useState(10);
@@ -32,12 +122,17 @@ export default function MeditationPage() {
 
   const loadLogs = useCallback(async () => {
     setIsLoading(true);
-    const res = await apiService.get<{ logs: MeditationLog[]; totalMinutes: number }>('/health-tools/meditation');
-    if (res.success && res.data) {
-      setLogs(res.data.logs);
-      setTotalMinutes(res.data.totalMinutes);
+    try {
+      const res = await apiService.get<{ logs: MeditationLog[]; totalMinutes: number }>('/health-tools/meditation');
+      if (res.success && res.data) {
+        setLogs(res.data.logs);
+        setTotalMinutes(res.data.totalMinutes);
+      }
+    } catch {
+      toast.error('Failed to load meditation logs');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
   useEffect(() => { void loadLogs(); }, [loadLogs]);
@@ -45,37 +140,71 @@ export default function MeditationPage() {
   const handleSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const res = await apiService.post('/health-tools/meditation', {
+
+    // Optimistic: show it instantly
+    const optimistic: MeditationLog = {
+      id: `temp-${Date.now()}`,
       duration,
       type: type.toUpperCase() as 'GUIDED' | 'UNGUIDED' | 'BREATHWORK',
-    });
+      trackName: null,
+      completed: true,
+      createdAt: new Date().toISOString(),
+    };
+    setLogs((prev) => [optimistic, ...prev]);
+    setTotalMinutes((prev) => prev + duration);
+    toast.success('Meditation logged!');
+    const savedDuration = duration;
+    const savedType = type;
+    setShowForm(false);
     setIsSubmitting(false);
-    if (res.success) {
-      toast.success('Meditation logged!');
-      setShowForm(false);
-      void loadLogs();
-    } else {
-      toast.error('Failed to log meditation');
+
+    // Persist in background
+    try {
+      const res = await apiService.post('/health-tools/meditation', {
+        duration: savedDuration,
+        type: savedType.toUpperCase() as 'GUIDED' | 'UNGUIDED' | 'BREATHWORK',
+      });
+      if (res.success) {
+        void loadLogs();
+      }
+    } catch {
+      // entry already shown optimistically
     }
   };
 
   return (
     <div className="w-full pb-20">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-semibold text-white tracking-tight">Meditation</h1>
-          <p className="text-sm text-white/40 mt-1">
-            {isLoading ? '—' : `${totalMinutes} total minutes`} · Your stillness log
-          </p>
+      <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-white/[0.05] flex items-center justify-center">
+            <Brain className="w-5 h-5 text-white/50" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-white tracking-tight">Meditation</h1>
+            <p className="text-sm text-white/35 mt-0.5">
+              {isLoading ? '—' : `${totalMinutes} total minutes`} · Your stillness log
+            </p>
+          </div>
         </div>
-        <button
-          onClick={() => setShowForm(v => !v)}
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Log Session
-        </button>
-      </div>
+        <div className="flex items-center gap-3">
+          {logs.length > 0 && (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06]">
+              <Flame className="w-3.5 h-3.5 text-amber-400" />
+              <span className="text-xs text-white/50">{logs.length} sessions</span>
+            </div>
+          )}
+          <button
+            onClick={() => setShowForm(v => !v)}
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Log Session
+          </button>
+        </div>
+      </motion.div>
+
+      {/* Quick Timer */}
+      <QuickTimer />
 
       <AnimatePresence>
         {showForm && (
@@ -145,11 +274,17 @@ export default function MeditationPage() {
           <p className="text-white/40">No meditation sessions logged yet.</p>
         </div>
       ) : (
-        <div className="grid gap-3">
-          {logs.map(log => (
-            <div key={log.id} className="p-4 rounded-2xl bg-[#0c0c0c] border border-[#2b2b2b]/60 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-                <Timer className="w-5 h-5 text-accent" />
+        <div className="grid gap-4">
+          {logs.map((log, i) => (
+            <motion.div
+              key={log.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.03 }}
+              className="p-5 rounded-[20px] bg-[#0c0c0c] border border-[#2b2b2b]/60 flex items-center gap-4"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-white/[0.04] flex items-center justify-center shrink-0">
+                <Timer className="w-5 h-5 text-white/40" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
@@ -158,7 +293,7 @@ export default function MeditationPage() {
                 </div>
                 <p className="text-xs text-white/40 mt-0.5">{formatSeconds(log.duration)}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}

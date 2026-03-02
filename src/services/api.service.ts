@@ -1,10 +1,14 @@
 /**
  * API Service
- * Centralized API communication
+ * Centralized API communication with circuit-breaker for fast failure
  */
 
 import { API_CONSTANTS } from '@/constants';
 import type { ApiResponse, RequestConfig } from '@/types';
+
+/** Simple circuit-breaker: after a network failure, skip retries for a cooldown period. */
+let circuitOpenUntil = 0;
+const CIRCUIT_COOLDOWN = 10_000; // 10 s
 
 class ApiService {
   private baseUrl: string;
@@ -56,10 +60,24 @@ class ApiService {
     config?: RequestConfig
   ): Promise<ApiResponse<T>> {
     const mergedConfig = { ...this.defaultConfig, ...config };
+    const maxAttempts = mergedConfig.retries || 1;
     let lastError: Error | null = null;
 
-    for (let attempt = 0; attempt < (mergedConfig.retries || 1); attempt++) {
+    // Circuit-breaker: if the backend was recently unreachable, fail instantly.
+    if (Date.now() < circuitOpenUntil) {
+      return {
+        success: false,
+        error: { code: 'CIRCUIT_OPEN', message: 'Server unreachable — retrying shortly' },
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
+        // Build abort signal: prefer caller-provided, else use a timeout signal.
+        const timeoutMs = mergedConfig.timeout ?? API_CONSTANTS.TIMEOUT;
+        const signal = mergedConfig.cancelToken ?? AbortSignal.timeout(timeoutMs);
+
         const response = await fetch(`${this.baseUrl}${endpoint}`, {
           method,
           credentials: 'include',
@@ -71,8 +89,11 @@ class ApiService {
             ...mergedConfig.headers,
           },
           body: data ? JSON.stringify(data) : undefined,
-          signal: mergedConfig.cancelToken,
+          signal,
         });
+
+        // Successful network call — reset circuit-breaker.
+        circuitOpenUntil = 0;
 
         const result = await response.json();
 
@@ -104,7 +125,16 @@ class ApiService {
       } catch (error) {
         lastError = error instanceof Error ? error : new Error('Unknown error');
 
-        if (attempt < (mergedConfig.retries || 1) - 1) {
+        // If it's a network / timeout error, open the circuit-breaker.
+        if (
+          lastError.name === 'TypeError' ||
+          lastError.name === 'TimeoutError' ||
+          lastError.name === 'AbortError'
+        ) {
+          circuitOpenUntil = Date.now() + CIRCUIT_COOLDOWN;
+        }
+
+        if (attempt < maxAttempts - 1) {
           await new Promise(resolve => setTimeout(resolve, API_CONSTANTS.RETRY_DELAY));
         }
       }

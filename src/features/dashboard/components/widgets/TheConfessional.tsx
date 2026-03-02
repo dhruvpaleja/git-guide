@@ -66,7 +66,7 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
             <div className={cn(
                 "relative w-full rounded-[30px] border transition-all duration-500 overflow-hidden flex flex-col",
                 isFocused
-                    ? "bg-[#111] border-white/20 shadow-[0_0_50px_rgba(255,255,255,0.03)] h-[250px]"
+                    ? "bg-[#111] border-white/10 h-[250px]"
                     : "bg-[#0c0c0c]/60 border-[#2b2b2b] h-[120px] hover:bg-[#111]"
             )}>
                 {submitted ? (
@@ -132,7 +132,7 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
 
                 {/* Ambient Warm Glow at the bottom, mimicking the campfire effect */}
                 {isFocused && (
-                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-3/4 h-20 bg-accent/20 blur-[50px] pointer-events-none rounded-full" />
+                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-3/4 h-20 bg-accent/10 blur-[40px] pointer-events-none rounded-full" />
                 )}
             </div>
         </div>

@@ -97,6 +97,90 @@ export const getProfile = asyncHandler(async (req: AuthenticatedRequest, res: Re
   sendSuccess(res, user);
 });
 
+export const updateProfile = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const { userId } = req.auth!;
+  const { name, email, phone, avatarUrl } = req.body as {
+    name?: string;
+    email?: string;
+    phone?: string | null;
+    avatarUrl?: string | null;
+  };
+
+  // Check if email is being changed and already taken
+  if (email) {
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing && existing.id !== userId) {
+      throw AppError.conflict('Email is already in use');
+    }
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      ...(name !== undefined && { name }),
+      ...(email !== undefined && { email }),
+      ...(phone !== undefined && { phone }),
+      ...(avatarUrl !== undefined && { avatarUrl }),
+    },
+    include: { profile: true },
+  });
+
+  sendSuccess(res, {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    avatarUrl: user.avatarUrl,
+    role: user.role,
+  });
+});
+
+export const getSettings = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const { userId } = req.auth!;
+
+  // Upsert so we always return defaults for new users
+  const settings = await prisma.userSettings.upsert({
+    where: { userId },
+    create: { userId },
+    update: {},
+  });
+
+  sendSuccess(res, {
+    darkMode: settings.darkMode,
+    animations: settings.animations,
+    compactMode: settings.compactMode,
+    pushNotifs: settings.pushNotifs,
+    soundEffects: settings.soundEffects,
+    patternAlerts: settings.patternAlerts,
+    profileVisible: settings.profileVisible,
+    constellationPublic: settings.constellationPublic,
+    twoFactor: settings.twoFactor,
+  });
+});
+
+export const updateSettings = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const { userId } = req.auth!;
+  const data = req.body as Record<string, boolean>;
+
+  const settings = await prisma.userSettings.upsert({
+    where: { userId },
+    create: { userId, ...data },
+    update: data,
+  });
+
+  sendSuccess(res, {
+    darkMode: settings.darkMode,
+    animations: settings.animations,
+    compactMode: settings.compactMode,
+    pushNotifs: settings.pushNotifs,
+    soundEffects: settings.soundEffects,
+    patternAlerts: settings.patternAlerts,
+    profileVisible: settings.profileVisible,
+    constellationPublic: settings.constellationPublic,
+    twoFactor: settings.twoFactor,
+  });
+});
+
 export const getDashboard = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const { userId } = req.auth!;
   const user = await prisma.user.findUnique({

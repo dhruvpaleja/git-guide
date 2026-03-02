@@ -102,6 +102,7 @@ model User {
   refreshTokens     RefreshToken[]
   auditLogs         AuditLog[]
   profile           UserProfile?
+  settings          UserSettings?
   therapistProfile  TherapistProfile?
   sessions          Session[]          @relation("UserSessions")
   moodEntries       MoodEntry[]
@@ -209,6 +210,34 @@ model UserProfile {
 
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
+}
+
+// ===========================================================================
+// USER SETTINGS
+// ===========================================================================
+
+model UserSettings {
+  id                    String   @id @default(uuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Appearance
+  darkMode              Boolean  @default(true)
+  animations            Boolean  @default(true)
+  compactMode           Boolean  @default(false)
+
+  // Notifications
+  pushNotifs            Boolean  @default(true)
+  soundEffects          Boolean  @default(false)
+  patternAlerts         Boolean  @default(true)
+
+  // Privacy & Security
+  profileVisible        Boolean  @default(true)
+  constellationPublic   Boolean  @default(true)
+  twoFactor             Boolean  @default(false)
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }
 
 // ===========================================================================

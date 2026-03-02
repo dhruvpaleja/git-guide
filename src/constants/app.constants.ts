@@ -13,9 +13,9 @@ export const APP_CONSTANTS = {
 
 export const API_CONSTANTS = {
   BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1',
-  TIMEOUT: 30000,
-  RETRY_ATTEMPTS: 3,
-  RETRY_DELAY: 1000,
+  TIMEOUT: 8000,
+  RETRY_ATTEMPTS: 1,
+  RETRY_DELAY: 500,
 } as const;
 
 export const ROUTES = {

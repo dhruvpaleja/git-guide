@@ -127,8 +127,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         toast.error(errorMessage);
         return { success: false, error: errorMessage };
       }
-    } catch (e: any) {
-      const message = e?.message || 'An unexpected error occurred';
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'An unexpected error occurred';
       toast.error(message);
       return { success: false, error: message };
     } finally {

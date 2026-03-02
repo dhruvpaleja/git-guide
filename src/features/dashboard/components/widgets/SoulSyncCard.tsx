@@ -49,13 +49,10 @@ export default function SoulSyncCard({ type = 'platonic' }: SoulSyncCardProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
-            className="relative w-full rounded-[30px] p-6 bg-[#0a0a0a] border border-[#2b2b2b]/60 overflow-hidden group hover:border-[#444]/60 transition-all shadow-xl"
+            className="relative w-full rounded-[24px] p-6 bg-[#0a0a0a] border border-[#2b2b2b]/60 overflow-hidden group hover:border-[#444]/60 transition-all"
         >
-            {/* Background bioluminescent glow */}
-            <div className={cn("absolute inset-0 bg-gradient-to-br opacity-50 pointer-events-none transition-opacity duration-700 group-hover:opacity-80 blur-xl", c.color)} />
-
-            {/* Glass overlay to ensure text readability */}
-            <div className="absolute inset-0 bg-[#0a0a0a]/40 backdrop-blur-[2px] pointer-events-none" />
+            {/* Background glow */}
+            <div className={cn("absolute inset-0 bg-gradient-to-br opacity-20 pointer-events-none transition-opacity duration-700 group-hover:opacity-40 blur-xl", c.color)} />
 
             <div className="relative z-10 h-full flex flex-col">
                 <div className="flex items-start justify-between">
@@ -75,13 +72,13 @@ export default function SoulSyncCard({ type = 'platonic' }: SoulSyncCardProps) {
                     </div>
                 </div>
 
-                <div className="mt-6 mb-8">
+                <div className="mt-5 mb-6">
                     <p className="text-white/80 text-[15px] leading-relaxed">
                         {c.description}
                     </p>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-auto">
+                <div className="flex items-center justify-between border-t border-white/[0.06] pt-4 mt-auto">
                     <div className="flex -space-x-3">
                         {/* Mystery Avatar (blurred/darker for anon matches) */}
                         <div className="w-10 h-10 rounded-full bg-[#111] border-2 border-[#1a1a1a] flex items-center justify-center overflow-hidden">

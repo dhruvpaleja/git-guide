@@ -1,19 +1,21 @@
 import { Outlet } from 'react-router-dom';
-import Navigation from '@/components/layout/Navigation';
+import DashboardSidebar from '@/features/dashboard/components/layout/DashboardSidebar';
+import DashboardTopbar from '@/features/dashboard/components/layout/DashboardTopbar';
 
 export default function DashboardLayout() {
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      <Navigation />
-      <div className="flex">
-        <aside className="hidden lg:block w-64 border-r border-white/10 min-h-[calc(100vh-4rem)] p-4">
-          <nav className="space-y-2">
-            <p className="text-sm text-gray-400 uppercase tracking-wider mb-4">
-              Dashboard
-            </p>
-          </nav>
-        </aside>
-        <main className="flex-1 p-6">
+    <div className="min-h-screen bg-[#0a0a0a] text-white overflow-hidden flex relative selection:bg-accent/30 selection:text-accent font-['Manrope',sans-serif]">
+      {/* Fixed Intelligent Sidebar */}
+      <DashboardSidebar />
+
+      {/* Main App Canvas - offset for sidebar */}
+      <div className="flex-1 flex flex-col pl-[80px] h-screen overflow-y-auto hide-scrollbar relative z-0">
+        {/* Subtle dynamic background glow */}
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/5 via-background to-background pointer-events-none -z-10" />
+
+        <DashboardTopbar />
+
+        <main className="flex-1 p-6 relative w-full h-full max-w-[1800px] mx-auto overflow-hidden">
           <Outlet />
         </main>
       </div>

@@ -314,16 +314,16 @@ export default function SessionsPage() {
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key)}
                         className={`relative flex items-center gap-2 px-4 py-2.5 rounded-[10px] text-[12px] font-medium transition-all duration-300 ${activeTab === tab.key
-                                ? 'bg-white/[0.07] text-white/90 shadow-sm'
-                                : 'text-white/40 hover:text-white/60 hover:bg-white/[0.03]'
+                            ? 'bg-white/[0.07] text-white/90 shadow-sm'
+                            : 'text-white/40 hover:text-white/60 hover:bg-white/[0.03]'
                             }`}
                     >
                         <tab.icon className="w-3.5 h-3.5" />
                         {tab.label}
                         {tab.count !== undefined && (
                             <span className={`ml-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold ${activeTab === tab.key
-                                    ? 'bg-amber-500/15 text-amber-400'
-                                    : 'bg-white/[0.05] text-white/30'
+                                ? 'bg-amber-500/15 text-amber-400'
+                                : 'bg-white/[0.05] text-white/30'
                                 }`}>
                                 {tab.count}
                             </span>
@@ -400,9 +400,8 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
             {sessions.filter(s => s.status === 'starting-soon').map(session => {
                 const SessionIcon = sessionTypeIcons[session.sessionType];
                 return (
-                    <motion.div
+                    <div
                         key={session.id}
-                        variants={fadeUp}
                         className="relative rounded-[20px] p-6 bg-gradient-to-br from-emerald-900/[0.12] via-emerald-900/[0.06] to-transparent border border-emerald-500/[0.08] overflow-hidden group"
                     >
                         {/* Glow */}
@@ -461,7 +460,7 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                                 </button>
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
                 );
             })}
 
@@ -471,11 +470,9 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                     const SessionIcon = sessionTypeIcons[session.sessionType];
                     const statusStyle = getStatusStyle(session.status);
                     return (
-                        <motion.div
+                        <div
                             key={session.id}
-                            variants={fadeUp}
-                            whileHover={{ y: -2 }}
-                            className="rounded-[18px] p-5 bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.035] hover:border-white/[0.07] transition-all duration-400 group"
+                            className="rounded-[18px] p-5 bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.035] hover:border-white/[0.07] transition-all duration-400 group hover:-translate-y-0.5"
                         >
                             {/* Status */}
                             <div className="flex items-center justify-between mb-3.5">
@@ -522,13 +519,13 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                                     View Details
                                 </button>
                             </div>
-                        </motion.div>
+                        </div>
                     );
                 })}
             </div>
 
             {/* Book New CTA */}
-            <motion.div variants={fadeUp} className="mt-2">
+            <div className="mt-2">
                 <button
                     onClick={() => {
                         // This would be better with a prop callback or setActiveTab
@@ -541,7 +538,7 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                     </span>
                     <span className="text-[12px] font-medium">Book a New Session</span>
                 </button>
-            </motion.div>
+            </div>
         </div>
     );
 }
@@ -616,11 +613,9 @@ function FindTherapistPanel({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                 {therapists.map((therapist) => {
                     return (
-                        <motion.div
+                        <div
                             key={therapist.id}
-                            variants={fadeUp}
-                            whileHover={{ y: -2 }}
-                            className="relative rounded-[18px] p-5 bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.035] hover:border-white/[0.07] transition-all duration-400 group overflow-hidden"
+                            className="relative rounded-[18px] p-5 bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.035] hover:border-white/[0.07] transition-all duration-400 group overflow-hidden hover:-translate-y-0.5"
                         >
                             {/* Match Badge */}
                             {therapist.matchScore >= 90 && (
@@ -689,7 +684,7 @@ function FindTherapistPanel({
                                     <ArrowRight className="w-3 h-3" />
                                 </button>
                             </div>
-                        </motion.div>
+                        </div>
                     );
                 })}
             </div>
@@ -728,9 +723,8 @@ function HistoryPanel({ sessions }: { sessions: PastSession[] }) {
                 {sessions.map((session) => {
                     const SessionIcon = sessionTypeIcons[session.sessionType];
                     return (
-                        <motion.div
+                        <div
                             key={session.id}
-                            variants={fadeUp}
                             className="rounded-[16px] p-4 bg-white/[0.015] border border-white/[0.04] hover:bg-white/[0.03] hover:border-white/[0.06] transition-all group"
                         >
                             <div className="flex items-center gap-4">
@@ -778,13 +772,13 @@ function HistoryPanel({ sessions }: { sessions: PastSession[] }) {
                                     )}
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
                     );
                 })}
             </div>
 
             {/* Monthly Summary Card */}
-            <motion.div variants={fadeUp} className="mt-5 rounded-[18px] p-5 bg-gradient-to-br from-purple-900/10 to-blue-900/5 border border-purple-500/8 relative overflow-hidden">
+            <div className="mt-5 rounded-[18px] p-5 bg-gradient-to-br from-purple-900/10 to-blue-900/5 border border-purple-500/8 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/[0.04] blur-[60px] rounded-full pointer-events-none" />
                 <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-3">
@@ -806,7 +800,7 @@ function HistoryPanel({ sessions }: { sessions: PastSession[] }) {
                         </div>
                     </div>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 }

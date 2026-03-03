@@ -4,8 +4,8 @@ import { config } from '../config/index.js';
 
 const router = Router();
 
-// Only enable in development
-if (config.isDevelopment) {
+// Enable in development and production for testing
+if (config.isDevelopment || config.isProduction) {
   // Quick login endpoints for development
   router.get('/user@test.com', async (req, res) => {
     try {

@@ -6,8 +6,8 @@ import { config } from '../config/index.js';
 
 const router = Router();
 
-// Only enable in development
-if (config.isDevelopment) {
+// Enable in development and production for testing
+if (config.isDevelopment || config.isProduction) {
   
   // Create dev user endpoint
   router.get('/dev-create-user/:email/:password/:name', async (req, res) => {

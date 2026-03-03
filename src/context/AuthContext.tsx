@@ -36,9 +36,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       let response;
       if (isDevLogin) {
-        // Use dev login endpoints for test accounts
-        const devLoginUrl = `/api/v1/dev-login/${email}`;
-        response = await apiService.get<{ user: User, accessToken: string }>(devLoginUrl);
+        // Use test login endpoints for test accounts (no database dependency)
+        const testLoginUrl = `/api/test-login/${email}`;
+        response = await apiService.get<{ user: User, accessToken: string }>(testLoginUrl);
       } else {
         // Use normal login for real users
         response = await apiService.post<{ user: User, accessToken: string }>('/auth/login', { email, password });

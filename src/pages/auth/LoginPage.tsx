@@ -22,10 +22,20 @@ export default function LoginPage() {
         try {
             const { success, user } = await login(email, password);
             if (success) {
-                if (user?.role === 'practitioner') {
-                    navigate('/practitioner');
-                } else {
-                    navigate('/journey-preparation');
+                // Route based on user role
+                switch (user?.role) {
+                    case 'practitioner':
+                        navigate('/practitioner');
+                        break;
+                    case 'astrologer':
+                        navigate('/astrology');
+                        break;
+                    case 'admin':
+                        navigate('/admin');
+                        break;
+                    default:
+                        navigate('/journey-preparation');
+                        break;
                 }
             } else {
                 setError('Invalid email or password. Please try again.');

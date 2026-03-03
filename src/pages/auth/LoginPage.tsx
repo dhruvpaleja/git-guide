@@ -23,29 +23,21 @@ export default function LoginPage() {
         try {
             const { success, user } = await login(email, password);
             if (success) {
-                // Route based on user role
-                // If the user is a practitioner or astrologer and lacks profile data,
-                // send them back through onboarding. Otherwise go to their dashboard.
-                const needsOnboarding = (user?.role === 'practitioner' || user?.role === 'astrologer') &&
-                    !(user?.bio || user?.phoneNumber);
-                if (needsOnboarding) {
-                    const onboardingRole = user?.role === 'astrologer' ? 'astrologer' : 'therapist';
-                    navigate(`/practitioner-onboarding?step=1&role=${onboardingRole}`);
-                } else {
-                    switch (user?.role) {
-                        case 'practitioner':
-                            navigate('/practitioner');
-                            break;
-                        case 'astrologer':
-                            navigate('/astrology');
-                            break;
-                        case 'admin':
-                            navigate('/admin');
-                            break;
-                        default:
-                            navigate('/journey-preparation');
-                            break;
-                    }
+                // Route directly to the appropriate dashboard based on role
+                // Onboarding is only accessed via explicit links on login/signup pages
+                switch (user?.role) {
+                    case 'practitioner':
+                        navigate('/practitioner');
+                        break;
+                    case 'astrologer':
+                        navigate('/astrology');
+                        break;
+                    case 'admin':
+                        navigate('/admin');
+                        break;
+                    default:
+                        navigate('/journey-preparation');
+                        break;
                 }
             } else {
                 setError('Invalid email or password. Please try again.');

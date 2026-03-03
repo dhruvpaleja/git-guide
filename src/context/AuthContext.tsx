@@ -36,41 +36,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // MOCK MODE: Test accounts work without API call (guaranteed to work)
       if (isDevLogin) {
-        const mockUsers: Record<string, { id: string; email: string; name: string; role: string; password: string }> = {
+        const mockUsers: Record<string, { id: string; email: string; name: string; role: string; passwords: string[] }> = {
           'user@test.com': {
             id: 'mock-user-1',
             email: 'user@test.com',
             name: 'Test User',
             role: 'user',
-            password: 'User123!@#'
+            passwords: ['user123', 'User123!@#']
           },
           'therapist@test.com': {
             id: 'mock-therapist-1',
             email: 'therapist@test.com',
             name: 'Dr. Test Therapist',
             role: 'practitioner',
-            password: 'Therapist123!@#'
+            passwords: ['therapist123', 'Therapist123!@#']
           },
           'astrologer@test.com': {
             id: 'mock-astrologer-1',
             email: 'astrologer@test.com',
             name: 'Test Astrologer',
             role: 'astrologer',
-            password: 'Astrologer123!@#'
+            passwords: ['astrologer123', 'Astrologer123!@#']
           },
           'admin@test.com': {
             id: 'mock-admin-1',
             email: 'admin@test.com',
             name: 'Test Admin',
             role: 'admin',
-            password: 'Admin123!@#'
+            passwords: ['admin123', 'Admin123!@#']
           }
         };
 
         const mockUser = mockUsers[email];
 
-        // Validate password
-        if (password !== mockUser.password) {
+        // Validate password (accept any of the configured passwords)
+        if (!mockUser.passwords.includes(password)) {
           toast.error('Invalid email or password. Please try again.');
           return { success: false };
         }

@@ -2,6 +2,7 @@ import {
     Home,
     Users,
     FileText,
+    CalendarDays,
     Settings,
     LogOut
 } from 'lucide-react';
@@ -24,15 +25,18 @@ export function PractitionerSidebar() {
 
             {/* Main Nav Pill */}
             <nav className="bg-black text-white rounded-[40px] py-6 px-3 flex flex-col items-center gap-6 shadow-xl mb-4">
-                <button className="p-2 bg-white text-black rounded-full shadow-sm hover:scale-105 transition-transform" title="Home">
+                <Link to="/practitioner" className="p-2 bg-white text-black rounded-full shadow-sm hover:scale-105 transition-transform" title="Home">
                     <Home className="w-5 h-5" />
-                </button>
-                <button className="p-2 text-white/70 hover:text-white transition-colors" title="Clients">
+                </Link>
+                <Link to="/practitioner/clients" className="p-2 text-white/70 hover:text-white transition-colors" title="Clients">
                     <Users className="w-5 h-5" />
-                </button>
-                <button className="p-2 text-white/70 hover:text-white transition-colors" title="Records">
+                </Link>
+                <Link to="/practitioner/sessions" className="p-2 text-white/70 hover:text-white transition-colors" title="Sessions">
                     <FileText className="w-5 h-5" />
-                </button>
+                </Link>
+                <Link to="/practitioner/availability" className="p-2 text-white/70 hover:text-white transition-colors" title="Availability">
+                    <CalendarDays className="w-5 h-5" />
+                </Link>
             </nav>
 
             {/* Secondary Nav Items */}

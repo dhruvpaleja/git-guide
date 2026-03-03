@@ -1,4 +1,5 @@
 import { UserRound, MessageSquare, MoreVertical } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface SessionRecordProps {
     name: string;
@@ -60,7 +61,7 @@ export function WeeklySessionsWidget() {
         <div className="flex flex-col">
             <div className="flex items-baseline justify-between mb-4 px-1">
                 <h3 className="text-xl font-semibold text-gray-900">Appointments & Sessions</h3>
-                <button className="text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors">View All</button>
+                <Link to="/practitioner/sessions" className="text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors">View All</Link>
             </div>
 
             <div className="bg-white rounded-[24px] p-6 shadow-sm border border-gray-200/60">

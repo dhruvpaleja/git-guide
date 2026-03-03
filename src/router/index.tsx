@@ -45,6 +45,9 @@ const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
 const PractitionerOnboardingPage = lazy(() => import('@/features/onboarding/screens/PractitionerOnboardingPage'));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 const PractitionerDashboard = lazy(() => import('@/pages/dashboard/PractitionerDashboard'));
+const TodaysSessionsPage = lazy(() => import('@/pages/dashboard/TodaysSessionsPage'));
+const MyClientsPage = lazy(() => import('@/pages/dashboard/MyClientsPage'));
+const ManageAvailabilityPage = lazy(() => import('@/pages/dashboard/ManageAvailabilityPage'));
 const AstrologyDashboard = lazy(() => import('@/pages/dashboard/AstrologyDashboard'));
 const AdminDashboard = lazy(() => import('@/pages/dashboard/AdminDashboard'));
 const PersonalizationPage = lazy(() => import('@/features/dashboard/pages/PersonalizationPage'));
@@ -137,6 +140,30 @@ const router = createBrowserRouter([
             element: (
               <Lazy>
                 <PractitionerDashboard />
+              </Lazy>
+            ),
+          },
+          {
+            path: '/practitioner/sessions',
+            element: (
+              <Lazy>
+                <TodaysSessionsPage />
+              </Lazy>
+            ),
+          },
+          {
+            path: '/practitioner/clients',
+            element: (
+              <Lazy>
+                <MyClientsPage />
+              </Lazy>
+            ),
+          },
+          {
+            path: '/practitioner/availability',
+            element: (
+              <Lazy>
+                <ManageAvailabilityPage />
               </Lazy>
             ),
           },

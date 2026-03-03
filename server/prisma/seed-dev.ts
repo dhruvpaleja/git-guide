@@ -37,7 +37,7 @@ const DEV_USERS = [
 ];
 
 async function seedDevUsers() {
-  console.log('🌱 Seeding development users...');
+  console.warn('🌱 Seeding development users...');
   
   try {
     // Clean existing dev users
@@ -70,7 +70,7 @@ async function seedDevUsers() {
         }
       });
 
-      console.log(`✅ Created ${user.role}: ${user.email}`);
+      console.warn(`✅ Created ${user.role}: ${user.email}`);
       
       // Create therapist profile if role is THERAPIST
       if (user.role === 'THERAPIST') {
@@ -88,7 +88,7 @@ async function seedDevUsers() {
             isAvailable: true,
           }
         });
-        console.log(`  📋 Created therapist profile for ${user.email}`);
+        console.warn(`  📋 Created therapist profile for ${user.email}`);
       }
 
       // Create user profile for regular users
@@ -110,7 +110,7 @@ async function seedDevUsers() {
             onboardingComplete: true,
           }
         });
-        console.log(`  👤 Created user profile for ${user.email}`);
+        console.warn(`  👤 Created user profile for ${user.email}`);
       }
 
       // Create user settings
@@ -125,21 +125,21 @@ async function seedDevUsers() {
       });
     }
 
-    console.log('\n🎉 Development users created successfully!');
-    console.log('\n📋 Login Credentials:');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.warn('\n🎉 Development users created successfully!');
+    console.warn('\n📋 Login Credentials:');
+    console.warn('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     
     DEV_USERS.forEach(user => {
-      console.log(`\n🔐 ${user.role.toUpperCase()} Dashboard:`);
-      console.log(`   Email: ${user.email}`);
-      console.log(`   Password: ${user.password}`);
+      console.warn(`\n🔐 ${user.role.toUpperCase()} Dashboard:`);
+      console.warn(`   Email: ${user.email}`);
+      console.warn(`   Password: ${user.password}`);
     });
 
-    console.log('\n💡 Quick Access Tips:');
-    console.log('   • User Dashboard: Full user experience with therapy booking');
-    console.log('   • Therapist Dashboard: Manage sessions, availability, earnings');
-    console.log('   • Astrologer Dashboard: Astrology consultations and predictions');
-    console.log('   • Admin Dashboard: User management and platform oversight');
+    console.warn('\n💡 Quick Access Tips:');
+    console.warn('   • User Dashboard: Full user experience with therapy booking');
+    console.warn('   • Therapist Dashboard: Manage sessions, availability, earnings');
+    console.warn('   • Astrologer Dashboard: Astrology consultations and predictions');
+    console.warn('   • Admin Dashboard: User management and platform oversight');
     
   } catch (error) {
     console.error('❌ Error seeding dev users:', error);

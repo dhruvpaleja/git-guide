@@ -44,6 +44,8 @@ const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 const PractitionerDashboard = lazy(() => import('@/pages/dashboard/PractitionerDashboard'));
+const AstrologyDashboard = lazy(() => import('@/pages/dashboard/AstrologyDashboard'));
+const AdminDashboard = lazy(() => import('@/pages/dashboard/AdminDashboard'));
 const PersonalizationPage = lazy(() => import('@/features/dashboard/pages/PersonalizationPage'));
 
 // Dashboard sub-pages
@@ -125,6 +127,32 @@ const router = createBrowserRouter([
             element: (
               <Lazy>
                 <PractitionerDashboard />
+              </Lazy>
+            ),
+          },
+        ],
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: '/astrology',
+            element: (
+              <Lazy>
+                <AstrologyDashboard />
+              </Lazy>
+            ),
+          },
+        ],
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: '/admin',
+            element: (
+              <Lazy>
+                <AdminDashboard />
               </Lazy>
             ),
           },

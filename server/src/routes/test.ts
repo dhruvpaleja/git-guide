@@ -18,31 +18,31 @@ router.get('/test', (req, res) => {
 router.get('/test-login/:email', (req, res) => {
   const { email } = req.params;
   
-  // Simple hardcoded users for testing
+  // Simple hardcoded users for testing - roles must match frontend routing expectations
   const testUsers = {
     'user@test.com': {
       id: 'test-user-1',
       email: 'user@test.com',
       name: 'Test User',
-      role: 'user',
+      role: 'user', // Maps to user dashboard
     },
     'therapist@test.com': {
       id: 'test-therapist-1',
       email: 'therapist@test.com',
       name: 'Dr. Test Therapist',
-      role: 'therapist',
+      role: 'practitioner', // Maps to /practitioner route
     },
     'astrologer@test.com': {
       id: 'test-astrologer-1',
       email: 'astrologer@test.com',
       name: 'Test Astrologer',
-      role: 'astrologer',
+      role: 'astrologer', // Maps to /astrology route
     },
     'admin@test.com': {
       id: 'test-admin-1',
       email: 'admin@test.com',
       name: 'Test Admin',
-      role: 'admin',
+      role: 'admin', // Maps to /admin route
     }
   };
   

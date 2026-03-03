@@ -31,7 +31,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const response = await apiService.post<{ user: User, accessToken: string }>('/auth/login', { email, password });
+      // Check if this is a dev login email
+      const isDevLogin = ['user@test.com', 'therapist@test.com', 'astrologer@test.com', 'admin@test.com'].includes(email);
+      
+      let response;
+      if (isDevLogin) {
+        // Use dev login endpoints for test accounts
+        const devLoginUrl = `/api/v1/dev-login/${email}`;
+        response = await apiService.get<{ user: User, accessToken: string }>(devLoginUrl);
+      } else {
+        // Use normal login for real users
+        response = await apiService.post<{ user: User, accessToken: string }>('/auth/login', { email, password });
+      }
 
       if (response.success && response.data) {
         setUser(response.data.user);

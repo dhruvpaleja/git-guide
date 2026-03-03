@@ -118,7 +118,7 @@ const router = createBrowserRouter([
         element: <Navigate to="/dashboard/personalization?s=4" replace />,
       },
       {
-        element: <ProtectedRoute requiredRoles={['practitioner']} />,
+        element: <ProtectedRoute />,
         children: [
           {
             path: '/practitioner',

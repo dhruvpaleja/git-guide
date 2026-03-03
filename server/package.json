@@ -12,7 +12,8 @@
     "seed:test": "tsx scripts/create-test-accounts.ts",
     "db:reset": "npx prisma migrate reset --force && npm run seed:dev",
     "db:generate": "npx prisma generate",
-    "db:migrate": "npx prisma migrate dev"
+    "db:migrate": "npx prisma migrate dev",
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.2",

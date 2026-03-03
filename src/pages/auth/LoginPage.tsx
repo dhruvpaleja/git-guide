@@ -25,28 +25,28 @@ export default function LoginPage() {
             if (success) {
                 // Route based on user role
                 // If the user is a practitioner or astrologer and lacks profile data,
-            // send them back through onboarding. Otherwise go to their dashboard.
-            const needsOnboarding = (user?.role === 'practitioner' || user?.role === 'astrologer') &&
-              !(user?.specialization || user?.bio || user?.phoneNumber);
-            if (needsOnboarding) {
-              const onboardingRole = user?.role === 'astrologer' ? 'astrologer' : 'therapist';
-              navigate(`/practitioner-onboarding?step=1&role=${onboardingRole}`);
-            } else {
-              switch (user?.role) {
-                case 'practitioner':
-                  navigate('/practitioner');
-                  break;
-                case 'astrologer':
-                  navigate('/astrology');
-                  break;
-                case 'admin':
-                  navigate('/admin');
-                  break;
-                default:
-                  navigate('/journey-preparation');
-                  break;
-              }
-            }
+                // send them back through onboarding. Otherwise go to their dashboard.
+                const needsOnboarding = (user?.role === 'practitioner' || user?.role === 'astrologer') &&
+                    !(user?.bio || user?.phoneNumber);
+                if (needsOnboarding) {
+                    const onboardingRole = user?.role === 'astrologer' ? 'astrologer' : 'therapist';
+                    navigate(`/practitioner-onboarding?step=1&role=${onboardingRole}`);
+                } else {
+                    switch (user?.role) {
+                        case 'practitioner':
+                            navigate('/practitioner');
+                            break;
+                        case 'astrologer':
+                            navigate('/astrology');
+                            break;
+                        case 'admin':
+                            navigate('/admin');
+                            break;
+                        default:
+                            navigate('/journey-preparation');
+                            break;
+                    }
+                }
             } else {
                 setError('Invalid email or password. Please try again.');
             }
@@ -212,16 +212,16 @@ export default function LoginPage() {
                         >
                             Create Account
                         </Link>
-                    <div className="mt-1 text-white/50 text-[11px]">
-                        <button
-                            type="button"
-                            onClick={() => navigate('/practitioner-onboarding?step=1')}
-                            className="underline hover:text-white"
-                        >
-                            Practitioner/Astrologer Onboarding
-                        </button>
+                        <div className="mt-1 text-white/50 text-[11px]">
+                            <button
+                                type="button"
+                                onClick={() => navigate('/practitioner-onboarding?step=1')}
+                                className="underline hover:text-white"
+                            >
+                                Practitioner/Astrologer Onboarding
+                            </button>
+                        </div>
                     </div>
-                </div>
 
                     {/* Social Login */}
                     <div className="space-y-2.5 sm:space-y-3 pt-1.5 sm:pt-2">

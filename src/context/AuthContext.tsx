@@ -5,7 +5,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { User } from '@/types';
+import type { User, UserRole } from '@/types';
 import apiService from '@/services/api.service';
 import { toast } from 'sonner';
 import { STORAGE_KEYS } from '@/constants';
@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       // Check if this is a dev login email
       const isDevLogin = ['user@test.com', 'therapist@test.com', 'astrologer@test.com', 'admin@test.com'].includes(email);
-      
+
       // MOCK MODE: Test accounts work without API call (guaranteed to work)
       if (isDevLogin) {
         const mockUsers: Record<string, { id: string; email: string; name: string; role: string; password: string }> = {
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
 
         const mockUser = mockUsers[email];
-        
+
         // Validate password
         if (password !== mockUser.password) {
           toast.error('Invalid email or password. Please try again.');
@@ -131,11 +131,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-const signup = useCallback(async (data: { name: string; email: string; password: string; role?: UserRole }) => {
+  const signup = useCallback(async (data: { name: string; email: string; password: string; role?: UserRole }) => {
     setIsLoading(true);
     try {
       const response = await apiService.post<{ user: User, accessToken: string }>('/auth/register', data);
-      
+
       if (response.success && response.data) {
         setUser(response.data.user);
         localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.accessToken);
@@ -145,11 +145,11 @@ const signup = useCallback(async (data: { name: string; email: string; password:
         // Development mode: simulate successful signup if backend is not available
         const isDevelopment = import.meta.env.MODE === 'development';
         const errorMessage = response.error?.message || 'Signup failed';
-        const isNetworkError = errorMessage.toLowerCase().includes('request failed') || 
-                               errorMessage.toLowerCase().includes('failed to fetch') ||
-                               errorMessage.toLowerCase().includes('network') ||
-                               errorMessage.toLowerCase().includes('connection');
-        
+        const isNetworkError = errorMessage.toLowerCase().includes('request failed') ||
+          errorMessage.toLowerCase().includes('failed to fetch') ||
+          errorMessage.toLowerCase().includes('network') ||
+          errorMessage.toLowerCase().includes('connection');
+
         if (isDevelopment && isNetworkError) {
           // Create mock user for development
           const mockUser: User = {

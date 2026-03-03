@@ -93,6 +93,8 @@ export default function PatternAlerts() {
                                                 <span className="text-[10px] text-white/15 font-medium">{alert.time}</span>
                                                 <button
                                                     onClick={() => setDismissed((s) => new Set(s).add(alert.id))}
+                                                    title="Dismiss alert"
+                                                    aria-label="Dismiss alert"
                                                     className="opacity-0 group-hover:opacity-100 transition-opacity"
                                                 >
                                                     <X className="w-3 h-3 text-white/15 hover:text-white/40" />

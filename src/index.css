@@ -25,7 +25,7 @@
     --ring: 174 72% 40%;
     --radius: 0.625rem;
   }
-  
+
   .light {
     --background: 0 0% 98%;
     --foreground: 240 10% 10%;
@@ -51,11 +51,11 @@
   * {
     @apply border-border;
   }
-  
+
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -63,60 +63,117 @@
 }
 
 @layer utilities {
+
   /* Glow Effects */
   .glow-teal {
     background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.35) 0%, transparent 70%);
   }
-  
+
   .glow-cyan {
     background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
   }
-  
+
   /* Orange Gradient for Wellness Section */
   .gradient-orange {
     background: radial-gradient(circle at center, #FBBF24 0%, #F97316 50%, #EA580C 100%);
   }
-  
+
   /* Glassmorphism */
   .glass {
     background: rgba(255, 255, 255, 0.03);
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
-  
+
   .glass-dark {
     background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   /* Gradient Divider */
   .gradient-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
   }
-  
+
   /* Card Gradient Overlay */
   .card-gradient-overlay {
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
   }
-  
+
   /* Hide scrollbar */
   .hide-scrollbar {
     -ms-overflow-style: none;
-    scrollbar-width: none;
   }
+
+  @supports (scrollbar-width: none) {
+    .hide-scrollbar {
+      scrollbar-width: none;
+    }
+  }
+
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  /* ── Soul Constellation Map styles ── */
+  .constellation-grain {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 128px;
+  }
+
+  .constellation-vignette {
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(5, 5, 7, 0.6) 100%);
+  }
+
+  .constellation-node-glow {
+    width: var(--glow-size);
+    height: var(--glow-size);
+    background-color: var(--glow-bg);
+    filter: var(--glow-blur);
+  }
+
+  .constellation-node-core {
+    width: var(--core-size);
+    height: var(--core-size);
+    background-color: #0a0a0c;
+    border-color: var(--core-border);
+    box-shadow: var(--core-shadow);
+  }
+
+  .constellation-node-inner {
+    width: 40%;
+    height: 40%;
+    background-color: var(--inner-bg);
+    filter: blur(1px);
+  }
+
+  .constellation-node-label {
+    font-size: var(--label-size);
+    top: var(--label-top);
+    letter-spacing: var(--label-spacing);
+  }
+
+  .constellation-pulse-ring {
+    width: var(--ring-size);
+    height: var(--ring-size);
+    background-color: var(--ring-bg);
+    border: 1px solid var(--ring-border);
   }
 }
 
 /* Animations */
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.5;
     transform: scale(1.05);
@@ -128,6 +185,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -139,6 +197,7 @@
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -150,6 +209,7 @@
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -161,6 +221,7 @@
     opacity: 0;
     transform: translateX(30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -172,12 +233,15 @@
     transform: scale(0.8);
     opacity: 0;
   }
+
   10% {
     opacity: 0.6;
   }
+
   50% {
     opacity: 0.3;
   }
+
   100% {
     transform: scale(1.8);
     opacity: 0;
@@ -209,17 +273,42 @@
 }
 
 /* Stagger delays */
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-.stagger-5 { animation-delay: 0.5s; }
-.stagger-6 { animation-delay: 0.6s; }
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+
+.stagger-5 {
+  animation-delay: 0.5s;
+}
+
+.stagger-6 {
+  animation-delay: 0.6s;
+}
 
 /* Animation delay utilities for splash screen circles */
-.animation-delay-500 { animation-delay: 0.5s; }
-.animation-delay-2000 { animation-delay: 2s; }
-.animation-delay-2500 { animation-delay: 2.5s; }
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-2500 {
+  animation-delay: 2.5s;
+}
 
 /* Initial state for animations */
 .animate-on-scroll {
@@ -236,6 +325,7 @@
     opacity: 0;
     filter: blur(1.5px);
   }
+
   100% {
     opacity: 1;
     filter: blur(0px);
@@ -252,10 +342,12 @@
     transform: scale(0.98);
     opacity: 0.55;
   }
+
   50% {
     transform: scale(1.03);
     opacity: 0.75;
   }
+
   100% {
     transform: scale(0.98);
     opacity: 0.55;
@@ -272,10 +364,12 @@
     transform: translate3d(0, 0, 0) scale(1);
     opacity: 0.05;
   }
+
   50% {
     transform: translate3d(0, -4px, 0) scale(1.008);
     opacity: 0.065;
   }
+
   100% {
     transform: translate3d(0, 0, 0) scale(1);
     opacity: 0.05;
@@ -292,9 +386,11 @@
   0% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-4px);
   }
+
   100% {
     transform: translateY(0px);
   }
@@ -304,9 +400,11 @@
   0% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-3px);
   }
+
   100% {
     transform: translateY(0px);
   }
@@ -327,6 +425,7 @@
     transform: translateY(6px) scale(0.992);
     opacity: 0.7;
   }
+
   100% {
     filter: blur(0px);
     transform: translateY(0px) scale(1);
@@ -343,15 +442,19 @@
   0% {
     transform: translate(0, 0);
   }
+
   25% {
     transform: translate(-1%, 1%);
   }
+
   50% {
     transform: translate(1%, -1%);
   }
+
   75% {
     transform: translate(-0.5%, 0.5%);
   }
+
   100% {
     transform: translate(0, 0);
   }
@@ -367,10 +470,12 @@
     opacity: 0.3;
     transform: scale(0.9);
   }
+
   50% {
     opacity: 1;
     transform: scale(1.08);
   }
+
   100% {
     opacity: 0.3;
     transform: scale(0.9);
@@ -378,6 +483,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .animate-immersive-scene-in,
   .animate-ambient-breathe,
   .animate-mandala-breathe,
@@ -390,7 +496,14 @@
 }
 
 /* Delay classes for staggered animation */
-.delay-journey-1 { animation-delay: 0.5s; }
-.delay-journey-2 { animation-delay: 2s; }
-.delay-journey-3 { animation-delay: 3.5s; }
+.delay-journey-1 {
+  animation-delay: 0.5s;
+}
 
+.delay-journey-2 {
+  animation-delay: 2s;
+}
+
+.delay-journey-3 {
+  animation-delay: 3.5s;
+}

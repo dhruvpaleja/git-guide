@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpRight, Loader2 } from 'lucide-react';
@@ -59,7 +59,7 @@ export default function SoulConstellationMap() {
             <div className="absolute bottom-[15%] right-[10%] w-[20%] h-[20%] bg-teal-900/[0.04] blur-[70px] rounded-full pointer-events-none" />
 
             {/* Fine grain texture overlay */}
-            <div className="absolute inset-0 opacity-[0.015] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")', backgroundSize: '128px' }} />
+            <div className="absolute inset-0 opacity-[0.015] pointer-events-none constellation-grain" />
 
             {/* SVG Layer */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -125,13 +125,12 @@ export default function SoulConstellationMap() {
                                 {/* Breathing pulse ring — center node */}
                                 {isCenter && (
                                     <motion.div
-                                        className="absolute rounded-full"
+                                        className="absolute rounded-full constellation-pulse-ring"
                                         style={{
-                                            width: nodeSize * 1.8,
-                                            height: nodeSize * 1.8,
-                                            backgroundColor: `${catColor}08`,
-                                            border: `1px solid ${catColor}08`,
-                                        }}
+                                            '--ring-size': `${nodeSize * 1.8}px`,
+                                            '--ring-bg': `${catColor}08`,
+                                            '--ring-border': `${catColor}08`,
+                                        } as React.CSSProperties}
                                         animate={{ scale: [1, 1.35, 1], opacity: [0.25, 0.05, 0.25] }}
                                         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
                                     />
@@ -139,46 +138,40 @@ export default function SoulConstellationMap() {
 
                                 {/* Outer glow ring for all nodes */}
                                 <div
-                                    className="absolute rounded-full"
+                                    className="absolute rounded-full constellation-node-glow"
                                     style={{
-                                        width: nodeSize * 0.7,
-                                        height: nodeSize * 0.7,
-                                        backgroundColor: `${catColor}06`,
-                                        filter: `blur(${isCenter ? 8 : 4}px)`,
-                                    }}
+                                        '--glow-size': `${nodeSize * 0.7}px`,
+                                        '--glow-bg': `${catColor}06`,
+                                        '--glow-blur': `blur(${isCenter ? 8 : 4}px)`,
+                                    } as React.CSSProperties}
                                 />
 
                                 {/* Core dot */}
                                 <div
-                                    className="relative rounded-full border transition-all duration-500 group-hover:scale-110"
+                                    className="relative rounded-full border transition-all duration-500 group-hover:scale-110 constellation-node-core"
                                     style={{
-                                        width: nodeSize * 0.38,
-                                        height: nodeSize * 0.38,
-                                        backgroundColor: '#0a0a0c',
-                                        borderColor: `${catColor}25`,
-                                        boxShadow: `0 0 ${isCenter ? 20 : 10}px ${catColor}12, inset 0 0 ${isCenter ? 8 : 4}px ${catColor}08`,
-                                    }}
+                                        '--core-size': `${nodeSize * 0.38}px`,
+                                        '--core-border': `${catColor}25`,
+                                        '--core-shadow': `0 0 ${isCenter ? 20 : 10}px ${catColor}12, inset 0 0 ${isCenter ? 8 : 4}px ${catColor}08`,
+                                    } as React.CSSProperties}
                                 >
                                     {/* Inner bright core */}
                                     <div
-                                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full constellation-node-inner"
                                         style={{
-                                            width: '40%',
-                                            height: '40%',
-                                            backgroundColor: `${catColor}40`,
-                                            filter: 'blur(1px)',
-                                        }}
+                                            '--inner-bg': `${catColor}40`,
+                                        } as React.CSSProperties}
                                     />
                                 </div>
 
                                 {/* Label */}
                                 <span
-                                    className="absolute text-white/30 whitespace-nowrap font-medium group-hover:text-white/50 transition-colors duration-500"
+                                    className="absolute text-white/30 whitespace-nowrap font-medium group-hover:text-white/50 transition-colors duration-500 constellation-node-label"
                                     style={{
-                                        fontSize: isCenter ? 11 : 9,
-                                        top: `calc(50% + ${nodeSize * 0.28}px)`,
-                                        letterSpacing: isCenter ? '0.02em' : '0',
-                                    }}
+                                        '--label-size': `${isCenter ? 11 : 9}px`,
+                                        '--label-top': `calc(50% + ${nodeSize * 0.28}px)`,
+                                        '--label-spacing': isCenter ? '0.02em' : '0',
+                                    } as React.CSSProperties}
                                 >
                                     {node.label}
                                 </span>
@@ -229,9 +222,7 @@ export default function SoulConstellationMap() {
             </div>
 
             {/* Edge vignette for cinematic depth */}
-            <div className="absolute inset-0 pointer-events-none rounded-[24px]" style={{
-                background: 'radial-gradient(ellipse at center, transparent 50%, rgba(5,5,7,0.6) 100%)',
-            }} />
+            <div className="absolute inset-0 pointer-events-none rounded-[24px] constellation-vignette" />
         </div>
     );
 }

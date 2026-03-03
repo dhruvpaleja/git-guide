@@ -18,6 +18,8 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
                 {/* Mobile hamburger */}
                 <button
                     onClick={onMenuToggle}
+                    title="Toggle navigation menu"
+                    aria-label="Toggle navigation menu"
                     className="lg:hidden w-9 h-9 rounded-xl bg-white/[0.04] flex items-center justify-center hover:bg-white/[0.08] border border-white/[0.05] transition-colors"
                 >
                     <Menu className="w-[18px] h-[18px] text-white/50" />

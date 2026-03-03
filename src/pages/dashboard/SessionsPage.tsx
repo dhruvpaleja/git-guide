@@ -572,7 +572,7 @@ function FindTherapistPanel({
                     className="w-full h-11 bg-white/[0.03] rounded-[14px] pl-11 pr-4 text-[13px] text-white/70 placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-white/[0.08] focus:bg-white/[0.05] border border-white/[0.04] transition-all"
                 />
                 {searchQuery && (
-                    <button onClick={() => onSearchChange('')} className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <button onClick={() => onSearchChange('')} title="Clear search" aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2">
                         <X className="w-3.5 h-3.5 text-white/20 hover:text-white/40 transition-colors" />
                     </button>
                 )}

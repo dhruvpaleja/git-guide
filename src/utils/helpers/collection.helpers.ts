@@ -96,7 +96,7 @@ export const objectHelpers = {
     keys.forEach(key => {
       const keyStr = key as string;
       if (keyStr in result) {
-        const { [keyStr]: omitted, ...rest } = result;
+        const { [keyStr]: _omitted, ...rest } = result;
         Object.assign(result, rest);
       }
     });

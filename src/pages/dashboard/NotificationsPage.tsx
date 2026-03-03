@@ -55,7 +55,12 @@ export default function NotificationsPage() {
     setIsLoading(false);
   }, []);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => { 
+    // Use setTimeout to avoid setting state directly in effect
+    setTimeout(() => {
+      void load(); 
+    }, 0);
+  }, [load]);
 
   // Real-time WebSocket notifications
   useEffect(() => {

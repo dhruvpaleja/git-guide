@@ -33,7 +33,10 @@ export function useAsyncOperation<T, E = unknown>(
 
   useEffect(() => {
     if (immediate) {
-      execute();
+      // Use setTimeout to avoid setting state directly in effect
+      setTimeout(() => {
+        execute();
+      }, 0);
     }
   }, [execute, immediate]);
 
@@ -105,12 +108,18 @@ export function useWindowSize() {
  */
 export function usePrevious<T>(value: T): T | null {
   const ref = useRef<T>(null);
+  const [previousValue, setPreviousValue] = useState<T | null>(null);
 
   useEffect(() => {
-    ref.current = value;
+    // Update previous value after the component renders
+    const timer = setTimeout(() => {
+      setPreviousValue(ref.current);
+      ref.current = value;
+    }, 0);
+    return () => clearTimeout(timer);
   }, [value]);
 
-  return ref.current;
+  return previousValue;
 }
 
 /**

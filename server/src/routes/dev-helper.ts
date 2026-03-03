@@ -236,7 +236,7 @@ if (config.isDevelopment) {
         }
       });
 
-    } catch (error) {
+    } catch {
       res.status(500).json({
         success: false,
         error: { message: 'Failed to login user' }
@@ -271,7 +271,7 @@ if (config.isDevelopment) {
         }
       });
 
-    } catch (error) {
+    } catch {
       res.status(500).json({
         success: false,
         error: { message: 'Failed to fetch users' }
@@ -360,8 +360,8 @@ if (config.isDevelopment) {
           });
 
           results.push({ email: user.email, status: 'created', role: user.role });
-        } catch (error) {
-          results.push({ email: user.email, status: 'error', error: (error as Error).message, role: user.role });
+        } catch (err) {
+          results.push({ email: user.email, status: 'error', error: (err as Error).message, role: user.role });
         }
       }
 
@@ -378,7 +378,7 @@ if (config.isDevelopment) {
         }
       });
 
-    } catch (error) {
+    } catch {
       res.status(500).json({
         success: false,
         error: { message: 'Failed to create dev users' }

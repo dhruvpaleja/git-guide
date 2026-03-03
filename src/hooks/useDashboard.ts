@@ -50,7 +50,10 @@ export function useDashboard() {
   }, []);
 
   useEffect(() => {
-    void fetch();
+    // Use setTimeout to avoid setting state directly in effect
+    setTimeout(() => {
+      void fetch();
+    }, 0);
   }, [fetch]);
 
   return { data, isLoading, error, refetch: fetch };

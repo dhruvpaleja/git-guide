@@ -16,7 +16,10 @@ export default function CourseDetailsPage() {
     const { id } = useParams();
 
     // Find the matching course from our centralized data based on the URL ID parameter
+    // React Compiler optimization: manual memoization not preserved, but functionally equivalent
     const activeCourse = useMemo(() => {
+        if (!id) return null;
+        
         for (const section of courseSections) {
             for (const course of section.courses) {
                 // Generate the same ID format used in the Link to match it back
@@ -24,6 +27,8 @@ export default function CourseDetailsPage() {
                 if (courseId === id) {
                     return {
                         ...course,
+                        sectionKey: section.key,
+                        sectionTitle: section.title,
                         // Fallbacks or extended data that isn't in courseItem but needed for the UI
                         level: 'Beginner Level',
                         overview: `This foundational course helps learners understand how anxiety develops, how it affects the mind and body, and what early signs to look for. It breaks down psychological, emotional, and physiological components in simple language.\n\nBy the end, learners gain clarity, awareness, and the ability to recognize their personal anxiety patterns with confidence.`,

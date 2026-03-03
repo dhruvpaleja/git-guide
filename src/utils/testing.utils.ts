@@ -47,7 +47,7 @@ export const mockLocalStorage = (() => {
       store[key] = value.toString();
     },
     removeItem: (key: string) => {
-      const { [key]: omitted, ...rest } = store;
+      const { [key]: _omitted, ...rest } = store;
       store = rest;
     },
     clear: () => {

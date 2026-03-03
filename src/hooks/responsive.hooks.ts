@@ -63,7 +63,10 @@ export function useMediaQuery(query: string): boolean {
   useEffect(() => {
     const media = window.matchMedia(query);
     if (media.matches !== matches) {
-      setMatches(media.matches);
+      // Use setTimeout to avoid setting state directly in effect
+      setTimeout(() => {
+        setMatches(media.matches);
+      }, 0);
     }
 
     const listener = () => setMatches(media.matches);

@@ -15,7 +15,7 @@ if (config.isDevelopment) {
         data: result,
         message: '👤 User dashboard access - Full therapy experience'
       });
-    } catch (_error) {
+    } catch {
       res.status(500).json({
         success: false,
         error: { message: 'Failed to login user' }
@@ -31,7 +31,7 @@ if (config.isDevelopment) {
         data: result,
         message: '👨‍⚕️ Therapist dashboard - Manage sessions & earnings'
       });
-    } catch (_error) {
+    } catch {
       res.status(500).json({
         success: false,
         error: { message: 'Failed to login therapist' }
@@ -47,7 +47,7 @@ if (config.isDevelopment) {
         data: result,
         message: '🔮 Astrologer dashboard - Consultations & predictions'
       });
-    } catch (_error) {
+    } catch {
       res.status(500).json({
         success: false,
         error: { message: 'Failed to login astrologer' }
@@ -63,7 +63,7 @@ if (config.isDevelopment) {
         data: result,
         message: '👑 Admin dashboard - Platform management'
       });
-    } catch (_error) {
+    } catch {
       res.status(500).json({
         success: false,
         error: { message: 'Failed to login admin' }

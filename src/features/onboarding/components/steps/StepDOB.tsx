@@ -41,9 +41,12 @@ export default function StepDOB({ value, onChange, onNext, onSkip }: StepProps) 
   const [year, setYear] = useState(initial.year);
 
   useEffect(() => {
-    setDay(initial.day);
-    setMonth(initial.month);
-    setYear(initial.year);
+    // Use setTimeout to avoid setting state directly in effect
+    setTimeout(() => {
+      setDay(initial.day);
+      setMonth(initial.month);
+      setYear(initial.year);
+    }, 0);
   }, [initial.day, initial.month, initial.year]);
 
   const years = useMemo(() => {

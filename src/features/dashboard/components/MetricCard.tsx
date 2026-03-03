@@ -55,8 +55,8 @@ export function MetricCard({ title, date, amount, badgeText, theme }: MetricCard
                 const newValue = (baseNumber + fluctuation).toFixed(1);
 
                 // Reconstruct string
-                const prefix = amount.substring(0, numMatch.index);
-                const suffixMatch = amount.substring(numMatch.index! + numMatch[1].length);
+                const prefix = amount.substring(0, numMatch.index || 0);
+                const suffixMatch = amount.substring((numMatch.index || 0) + numMatch[1].length);
                 setCurrentAmount(`${prefix}${newValue}${suffixMatch}`);
             }
         }, 2500);

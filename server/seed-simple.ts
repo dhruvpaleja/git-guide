@@ -1,8 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
-// Direct database URL for seeding
-const DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/soul_yatri?schema=public";
+const _DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/soul_yatri?schema=public';
 
 const prisma = new PrismaClient();
 

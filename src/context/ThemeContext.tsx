@@ -35,7 +35,7 @@ export function ThemeProvider({
   const [actualTheme, setActualTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
-    const root = window.document.documentElement;
+    const root = document.documentElement;
 
     root.classList.remove('light', 'dark');
 
@@ -46,7 +46,10 @@ export function ThemeProvider({
         : 'light';
 
       root.classList.add(systemTheme);
-      setActualTheme(systemTheme);
+      // Use setTimeout to avoid setting state directly in effect
+      setTimeout(() => {
+        setActualTheme(systemTheme);
+      }, 0);
 
       // Update data-theme for Tailwind variables if any are bound this way
       root.setAttribute('data-theme', systemTheme);

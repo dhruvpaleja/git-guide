@@ -42,7 +42,10 @@ export default function CoursesProgramsPage() {
           courses: [],
         });
       }
-      sections.get(course.sectionKey)!.courses.push(course);
+      const section = sections.get(course.sectionKey);
+      if (section) {
+        section.courses.push(course);
+      }
     });
 
     return Array.from(sections.values());

@@ -102,7 +102,7 @@ if (config.isDevelopment) {
         }
       });
 
-    } catch (error) {
+    } catch (_error) {
       res.status(500).json({
         success: false,
         error: { message: 'Failed to create user' }

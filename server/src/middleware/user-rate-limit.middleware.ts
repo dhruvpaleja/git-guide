@@ -1,4 +1,4 @@
-import { rateLimit, type Options } from 'express-rate-limit';
+import rateLimit from 'express-rate-limit';
 import type { Request, Response } from 'express';
 import type { AuthenticatedRequest } from './auth.middleware.js';
 import { ErrorCode } from '../lib/errors.js';
@@ -25,7 +25,7 @@ function createUserRateLimiter(opts: {
   message: string;
   skipSuccessfulRequests?: boolean;
 }) {
-  return (req: Request, res: Response, next: Function) => {
+  return (req: Request, res: Response, next: () => void) => {
     const authReq = req as AuthenticatedRequest;
     const userId = authReq.auth?.userId;
     const ip = req.ip || req.connection.remoteAddress || 'unknown';
@@ -33,7 +33,6 @@ function createUserRateLimiter(opts: {
     // Use user ID if authenticated, otherwise fall back to IP
     const key = userId ? `user:${userId}` : `ip:${ip}`;
     const now = Date.now();
-    const windowStart = now - opts.windowMs;
 
     // Get current limit data
     let limitData = userLimits.get(key);
@@ -90,7 +89,7 @@ export const userAiLimiter = createUserRateLimiter({
 
 // Role-based rate limiting (higher limits for premium roles)
 export const createRoleBasedLimiter = (baseLimits: { [key: string]: number }) => {
-  return (req: Request, res: Response, next: Function) => {
+  return (req: Request, res: Response, next: () => void) => {
     const authReq = req as AuthenticatedRequest;
     const userRole = authReq.auth?.role || 'USER';
     

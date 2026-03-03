@@ -23,6 +23,16 @@ type FieldErrors = {
     partnerBirthCity?: string;
 };
 
+function InlineError({ message }: { message?: string }) {
+    if (!message) return null;
+    return (
+        <div className="flex items-center gap-1.5 mt-2">
+            <AlertCircle className="size-[12px] text-red-500 flex-shrink-0" />
+            <p className="text-[11px] text-red-500 tracking-[-0.01em]">{message}</p>
+        </div>
+    );
+}
+
 export default function OnboardingPartnerDetailsPage({ onBack, onSubmit, initialData }: OnboardingPartnerDetailsPageProps) {
     const [partnerName, setPartnerName] = useState(initialData?.name || '');
     const [partnerBirthDate, setPartnerBirthDate] = useState(initialData?.birthDate || '');
@@ -122,16 +132,6 @@ export default function OnboardingPartnerDetailsPage({ onBack, onSubmit, initial
     const handleSkip = () => {
         onSubmit(null);
     };
-
-    function InlineError({ message }: { message?: string }) {
-        if (!message) return null;
-        return (
-            <div className="flex items-center gap-1.5 mt-2">
-                <AlertCircle className="size-[12px] text-red-500 flex-shrink-0" />
-                <p className="text-[11px] text-red-500 tracking-[-0.01em]">{message}</p>
-            </div>
-        );
-    }
 
     const inputErrorClass = (fieldName: keyof FieldErrors) =>
         fieldErrors[fieldName] ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : 'border-black/8 focus:border-black/20 focus:ring-black/10';

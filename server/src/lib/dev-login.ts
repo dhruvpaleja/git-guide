@@ -1,5 +1,7 @@
 import { prisma } from './prisma.js';
 import bcrypt from 'bcrypt';
+import { tokensService } from '../services/tokens.service.js';
+import { Role } from '@prisma/client';
 
 // Quick dev login - bypass password for development
 export async function devLogin(email: string) {

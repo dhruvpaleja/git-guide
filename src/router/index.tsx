@@ -48,6 +48,8 @@ const PractitionerDashboard = lazy(() => import('@/pages/dashboard/PractitionerD
 const TodaysSessionsPage = lazy(() => import('@/pages/dashboard/TodaysSessionsPage'));
 const MyClientsPage = lazy(() => import('@/pages/dashboard/MyClientsPage'));
 const ManageAvailabilityPage = lazy(() => import('@/pages/dashboard/ManageAvailabilityPage'));
+const EditProfilePage = lazy(() => import('@/pages/dashboard/EditProfilePage'));
+const LogoutPage = lazy(() => import('@/pages/dashboard/LogoutPage'));
 const AstrologyDashboard = lazy(() => import('@/pages/dashboard/AstrologyDashboard'));
 const AdminDashboard = lazy(() => import('@/pages/dashboard/AdminDashboard'));
 const PersonalizationPage = lazy(() => import('@/features/dashboard/pages/PersonalizationPage'));
@@ -164,6 +166,22 @@ const router = createBrowserRouter([
             element: (
               <Lazy>
                 <ManageAvailabilityPage />
+              </Lazy>
+            ),
+          },
+          {
+            path: '/practitioner/profile',
+            element: (
+              <Lazy>
+                <EditProfilePage />
+              </Lazy>
+            ),
+          },
+          {
+            path: '/practitioner/logout',
+            element: (
+              <Lazy>
+                <LogoutPage />
               </Lazy>
             ),
           },

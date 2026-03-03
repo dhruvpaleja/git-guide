@@ -1,13 +1,11 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import { Outlet } from 'react-router-dom';
 import type { UserRole } from '@/types';
 
 interface ProtectedRouteProps {
   requiredRoles?: UserRole[];
 }
 
-export default function ProtectedRoute({ requiredRoles }: ProtectedRouteProps) {
+export default function ProtectedRoute({ }: ProtectedRouteProps) {
   // ── TEMP: Auth bypassed for UI testing ──
   // TODO: RESTORE before production
   return <Outlet />;

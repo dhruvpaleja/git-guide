@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import Navigation from '@/components/layout/Navigation';
 import { useAuth } from '@/context/AuthContext';
 
@@ -9,6 +10,7 @@ export default function LoginPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isPractitioner, setIsPractitioner] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -18,8 +20,7 @@ export default function LoginPage() {
         setIsLoading(true);
 
         try {
-            const role = isPractitioner ? 'practitioner' : 'user';
-            const { success, user } = await login(email, password, role);
+            const { success, user } = await login(email, password);
             if (success) {
                 if (user?.role === 'practitioner') {
                     navigate('/practitioner');
@@ -118,16 +119,26 @@ export default function LoginPage() {
                                     Forgot Password
                                 </Link>
                             </div>
-                            <input
-                                id="password"
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Ex. dhruvpaleja23314@"
-                                required
-                                className="w-full h-[48px] sm:h-[52px] px-4 sm:px-5 bg-[#080808] border border-white/10 rounded-[18px] sm:rounded-[20px] text-white text-[13px] sm:text-[14px] placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors"
-                                disabled={isLoading}
-                            />
+                            <div className="relative">
+                                <input
+                                    id="password"
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="Ex. dhruvpaleja23314@"
+                                    required
+                                    className="w-full h-[48px] sm:h-[52px] px-4 sm:px-5 pr-12 bg-[#080808] border border-white/10 rounded-[18px] sm:rounded-[20px] text-white text-[13px] sm:text-[14px] placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors"
+                                    disabled={isLoading}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/70 transition-colors"
+                                    disabled={isLoading}
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
+                            </div>
                         </div>
 
                         {/* Practitioner Toggle */}

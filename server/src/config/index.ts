@@ -11,13 +11,23 @@ const isProduction = nodeEnv === 'production';
 const isTest = nodeEnv === 'test';
 const isDevelopment = !isProduction && !isTest;
 
-// Fail-fast for missing critical secrets in production
-if (isProduction) {
-  const required = ['JWT_SECRET', 'DATABASE_URL'];
-  const missing = required.filter(k => !process.env[k]);
-  if (missing.length > 0) {
-    throw new Error(`Missing required env vars in production: ${missing.join(', ')}`);
-  }
+// Fail-fast for missing critical secrets in all environments
+const required = ['JWT_SECRET', 'DATABASE_URL'];
+const missing = required.filter(k => !process.env[k]);
+if (missing.length > 0) {
+  throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+}
+
+// Validate JWT secret strength
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  throw new Error('JWT_SECRET is required');
+}
+if (jwtSecret.length < 32) {
+  throw new Error('JWT_SECRET must be at least 32 characters long for security');
+}
+if (/^[a-zA-Z0-9]+$/.test(jwtSecret)) {
+  console.warn('⚠️  JWT_SECRET contains only alphanumeric characters. Consider using a more complex secret with special characters.');
 }
 
 function envInt(key: string, fallback: number): number {
@@ -53,7 +63,7 @@ export const config = {
   },
 
   // ---- JWT ----
-  jwtSecret: process.env.JWT_SECRET || 'local-dev-only-secret-change-me',
+  jwtSecret: jwtSecret,
   jwt: {
     accessExpiresIn: process.env.JWT_ACCESS_EXPIRES || '15m',
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES || '7d',
@@ -157,8 +167,8 @@ export const config = {
 
   // ---- Security ----
   security: {
-    bcryptRounds: envInt('BCRYPT_ROUNDS', isProduction ? 12 : 10),
+    bcryptRounds: 12, // Minimum 12 rounds for all environments
     ipSalt: process.env.IP_SALT || 'soul-yatri-salt',
     trustProxy: isProduction, // trust X-Forwarded-For in production (behind load balancer)
   },
-} as const;
+};

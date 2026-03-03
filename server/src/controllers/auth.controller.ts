@@ -5,17 +5,28 @@ import { tokensService } from '../services/tokens.service.js';
 import { AIEventLogger } from '../services/ai-event-logger.service.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
+import { registerSchema, loginSchema } from '../validators/auth.validator.js';
 const REFRESH_COOKIE_NAME = 'refresh_token';
 const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 const hashRefreshToken = (token: string) => createHash('sha256').update(token).digest('hex');
 
-const toPublicUser = (user: { id: string; email: string; name: string; role: string }) => ({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role.toLowerCase(),
-});
+const toPublicUser = (user: { id: string; email: string; name: string; role: string }) => {
+    // Map backend roles to frontend roles
+    const roleMapping = {
+        'USER': 'user',
+        'THERAPIST': 'practitioner',
+        'ASTROLOGER': 'astrologer',
+        'ADMIN': 'admin',
+    };
+    
+    return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: roleMapping[user.role as keyof typeof roleMapping] || user.role.toLowerCase(),
+    };
+};
 
 // Ensure cookies are parsed if you use cookie-parser or manually
 const setRefreshCookie = (res: Response, token: string) => {
@@ -61,7 +72,9 @@ export const authController = {
 
     register: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { email, password, name } = req.body;
+            // Validate input before processing
+            const validated = registerSchema.parse({ body: req.body });
+            const { email, password, name } = validated.body;
             const ipHash = req.ip || 'unknown'; // In real app, hash this for privacy
 
             const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -116,7 +129,9 @@ export const authController = {
 
     login: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { email, password } = req.body;
+            // Validate input before processing
+            const validated = loginSchema.parse({ body: req.body });
+            const { email, password } = validated.body;
             const ipHash = req.ip || 'unknown';
             const userAgent = req.headers['user-agent'];
 

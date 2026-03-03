@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
-import type { Role } from '@prisma/client';
 import { config } from '../../config/index.js';
+
+// Define Role locally to avoid Prisma import issues
+type Role = 'USER' | 'THERAPIST' | 'ASTROLOGER' | 'ADMIN' | 'SUPER_ADMIN';
 
 export interface AccessTokenPayload {
     sub: string;
@@ -20,11 +22,11 @@ export interface RefreshTokenPayload {
 
 export const tokensService = {
     generateAccessToken: (userId: string, role: Role) => {
-        return jwt.sign({ sub: userId, role }, config.jwtSecret, { expiresIn: '15m' });
+        return jwt.sign({ sub: userId, role }, config.jwtSecret, { expiresIn: '15m' } as jwt.SignOptions);
     },
 
     generateRefreshToken: (userId: string, familyId: string) => {
-        return jwt.sign({ sub: userId, familyId, type: 'refresh', jti: crypto.randomUUID() }, config.jwtSecret, { expiresIn: '7d' });
+        return jwt.sign({ sub: userId, familyId, type: 'refresh', jti: crypto.randomUUID() }, config.jwtSecret, { expiresIn: '7d' } as jwt.SignOptions);
     },
 
     verifyToken: <T extends object>(token: string): T | null => {

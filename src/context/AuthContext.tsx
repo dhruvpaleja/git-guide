@@ -14,7 +14,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string, role?: string) => Promise<{ success: boolean; user?: User }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; user?: User }>;
   logout: () => Promise<void>;
   signup: (data: { name: string; email: string; password: string }) => Promise<{ success: boolean; error?: string }>;
 }
@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Note: in a full implementation, you'd fetch `/auth/me` on mount to re-hydrate the user
   // This satisfies the Phase 1 MVP requirements.
 
-  const login = useCallback(async (email: string, password: string, requestedRole?: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     setIsLoading(true);
     try {
       const response = await apiService.post<{ user: User, accessToken: string }>('/auth/login', { email, password });
@@ -39,31 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         toast.success('Successfully logged in!');
         return { success: true, user: response.data.user };
       } else {
-        // Development mode: simulate successful login if backend is not available
-        const isDevelopment = import.meta.env.MODE === 'development';
+        // For now, let's see the actual error instead of falling back to dev mode
         const errorMessage = response.error?.message || 'Login failed';
-        const isNetworkError = errorMessage.toLowerCase().includes('request failed') ||
-          errorMessage.toLowerCase().includes('failed to fetch') ||
-          errorMessage.toLowerCase().includes('network') ||
-          errorMessage.toLowerCase().includes('connection');
-
-        if (isDevelopment && isNetworkError) {
-          // Create mock user for development
-          const mockUser: User = {
-            id: 'dev-user-' + Date.now(),
-            name: requestedRole === 'practitioner' ? 'Swati Agarwal (Practitioner)' : 'Dev User',
-            email: email,
-            role: (requestedRole as any) || 'user',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          };
-
-          setUser(mockUser);
-          localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, 'dev-token-' + Date.now());
-          toast.success(`Successfully logged in as ${requestedRole === 'practitioner' ? 'Practitioner' : 'User'} (Dev Mode)`);
-          return { success: true, user: mockUser };
-        }
-
         toast.error(errorMessage);
         return { success: false };
       }

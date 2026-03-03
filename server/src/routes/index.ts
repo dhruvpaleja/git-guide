@@ -17,11 +17,15 @@ import corporateRoutes from './corporate.js';
 import careerRoutes from './careers.js';
 import notificationRoutes from './notifications.js';
 import ngoRoutes from './ngo.js';
+import devLoginRoutes from './dev-login.js';
+import devHelperRoutes from './dev-helper.js';
 
 const router = Router();
 
 router.use(healthRoutes);
 router.use('/auth', authRoutes);
+router.use('/dev-login', devLoginRoutes); // Development only
+router.use('/dev-helper', devHelperRoutes); // Development only
 router.use('/users', userRoutes);
 router.use('/therapy', therapyRoutes);
 router.use('/astrology', astrologyRoutes);

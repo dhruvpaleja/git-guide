@@ -3,9 +3,11 @@
 // ---------------------------------------------------------------------------
 
 import type { Response, NextFunction } from 'express';
-import type { Role } from '@prisma/client';
 import type { AuthenticatedRequest } from './auth.middleware.js';
 import { ErrorCode } from '../lib/errors.js';
+
+// Define Role locally to avoid Prisma import issues
+type Role = 'USER' | 'THERAPIST' | 'ASTROLOGER' | 'ADMIN' | 'SUPER_ADMIN';
 
 /**
  * Middleware factory that restricts access to specific roles.

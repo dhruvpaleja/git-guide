@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     ChevronLeft,
@@ -16,8 +16,8 @@ export default function CourseDetailsPage() {
     const { id } = useParams();
 
     // Find the matching course from our centralized data based on the URL ID parameter
-    // React Compiler optimization: manual memoization not preserved, but functionally equivalent
-    const activeCourse = useMemo(() => {
+    // React Compiler will handle memoization automatically
+    const activeCourse = (() => {
         if (!id) return null;
         
         for (const section of courseSections) {
@@ -69,7 +69,7 @@ export default function CourseDetailsPage() {
             }
         }
         return null;
-    }, [id]);
+    })();
 
     const [activeTab, setActiveTab] = useState('overview');
     const [expandedTopics, setExpandedTopics] = useState<number[]>([]);

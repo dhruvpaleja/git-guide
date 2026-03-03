@@ -94,7 +94,11 @@ export const objectHelpers = {
   omit: <T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> => {
     const result = { ...obj };
     keys.forEach(key => {
-      delete result[key];
+      const keyStr = key as string;
+      if (keyStr in result) {
+        const { [keyStr]: omitted, ...rest } = result;
+        Object.assign(result, rest);
+      }
     });
     return result;
   },

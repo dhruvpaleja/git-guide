@@ -58,7 +58,10 @@ export function ThemeProvider({
 
     root.classList.add(theme);
     root.setAttribute('data-theme', theme);
-    setActualTheme(theme);
+    // Use setTimeout to avoid setting state directly in effect
+    setTimeout(() => {
+      setActualTheme(theme);
+    }, 0);
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {

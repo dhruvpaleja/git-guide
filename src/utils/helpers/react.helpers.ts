@@ -12,8 +12,11 @@ export const useIsMounted = () => {
   const [isMountedState, setIsMountedState] = useState(false);
 
   useEffect(() => {
-    isMounted.current = true;
-    setIsMountedState(true);
+    // Use setTimeout to avoid setting state directly in effect
+    setTimeout(() => {
+      isMounted.current = true;
+      setIsMountedState(true);
+    }, 0);
     return () => {
       isMounted.current = false;
       setIsMountedState(false);

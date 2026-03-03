@@ -1,4 +1,3 @@
-import rateLimit from 'express-rate-limit';
 import type { Request, Response } from 'express';
 import type { AuthenticatedRequest } from './auth.middleware.js';
 import { ErrorCode } from '../lib/errors.js';

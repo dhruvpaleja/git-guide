@@ -772,6 +772,13 @@ export default function BlogPostPage() {
 
   const [newComment, setNewComment] = useState('');
 
+  useEffect(() => {
+    // optional: focus comments when navigated with #comments
+    if (window.location.hash === '#comments' && commentsRef.current) {
+      commentsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
+
   if (!id || !blogPosts[id]) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -790,13 +797,6 @@ export default function BlogPostPage() {
 
   const post = blogPosts[id];
   const contentSections = post.content.split('\n\n').filter(Boolean);
-
-  useEffect(() => {
-    // optional: focus comments when navigated with #comments
-    if (window.location.hash === '#comments' && commentsRef.current) {
-      commentsRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
 
   return (
     <div className="min-h-screen bg-white">

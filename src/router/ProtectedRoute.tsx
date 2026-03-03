@@ -1,11 +1,6 @@
 import { Outlet } from 'react-router-dom';
-import type { UserRole } from '@/types';
 
-interface ProtectedRouteProps {
-  requiredRoles?: UserRole[];
-}
-
-export default function ProtectedRoute({ }: ProtectedRouteProps) {
+export default function ProtectedRoute() {
   // ── TEMP: Auth bypassed for UI testing ──
   // TODO: RESTORE before production
   return <Outlet />;

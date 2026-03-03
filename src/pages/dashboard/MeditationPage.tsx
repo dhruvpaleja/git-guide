@@ -41,8 +41,11 @@ function QuickTimer() {
     if (running && remaining > 0) {
       intervalRef.current = setInterval(() => setRemaining(r => r - 1), 1000);
     } else if (remaining <= 0 && running) {
-      setRunning(false);
-      toast.success('Meditation complete!');
+      // Use setTimeout to avoid setting state directly in effect
+      setTimeout(() => {
+        setRunning(false);
+        toast.success('Meditation complete!');
+      }, 0);
     }
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [running, remaining]);

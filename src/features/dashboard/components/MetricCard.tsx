@@ -52,7 +52,7 @@ export function MetricCard({ title, date, amount, badgeText, theme }: MetricCard
                 const baseNumber = parseFloat(numMatch[1]);
                 // fluctuate by +/- 0.3
                 const fluctuation = (Math.random() * 0.6) - 0.3;
-                let newValue = (baseNumber + fluctuation).toFixed(1);
+                const newValue = (baseNumber + fluctuation).toFixed(1);
 
                 // Reconstruct string
                 const prefix = amount.substring(0, numMatch.index);

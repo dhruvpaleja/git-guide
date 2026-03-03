@@ -64,7 +64,10 @@ export default function NotificationsPage() {
 
     // Connect to WebSocket
     websocketService.connect(token);
-    setIsConnected(websocketService.isConnected());
+    // Use setTimeout to avoid setting state directly in effect
+    setTimeout(() => {
+      setIsConnected(websocketService.isConnected());
+    }, 0);
 
     // Listen for new notifications
     const unsubscribe = websocketService.on('notification', (data) => {

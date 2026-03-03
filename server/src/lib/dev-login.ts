@@ -13,56 +13,7 @@ export async function devLogin(email: string) {
     });
 
     if (!user) {
-      // Fallback to hardcoded user data if database is not available
-      const fallbackUsers = {
-        'user@test.com': {
-          id: 'dev-user-1',
-          email: 'user@test.com',
-          name: 'Test User',
-          role: 'USER',
-        },
-        'therapist@test.com': {
-          id: 'dev-therapist-1',
-          email: 'therapist@test.com',
-          name: 'Dr. Test Therapist',
-          role: 'THERAPIST',
-        },
-        'astrologer@test.com': {
-          id: 'dev-astrologer-1',
-          email: 'astrologer@test.com',
-          name: 'Test Astrologer',
-          role: 'ASTROLOGER',
-        },
-        'admin@test.com': {
-          id: 'dev-admin-1',
-          email: 'admin@test.com',
-          name: 'Test Admin',
-          role: 'ADMIN',
-        }
-      };
-      
-      const fallbackUser = fallbackUsers[email as keyof typeof fallbackUsers];
-      if (!fallbackUser) {
-        throw new Error(`User not found: ${email}`);
-      }
-
-      // Generate tokens directly for development
-      const accessToken = generateDevToken(fallbackUser);
-      const refreshToken = generateDevRefreshToken(fallbackUser.id);
-
-      return {
-        user: {
-          id: fallbackUser.id,
-          email: fallbackUser.email,
-          name: fallbackUser.name,
-          role: fallbackUser.role.toLowerCase(),
-        },
-        accessToken,
-        refreshToken,
-        profile: null, // No profile in fallback
-        therapistProfile: null, // No therapist profile in fallback
-        settings: null, // No settings in fallback
-      };
+      throw new Error(`User not found: ${email}`);
     }
 
     // Generate tokens directly for development
@@ -83,57 +34,8 @@ export async function devLogin(email: string) {
       settings: user.settings,
     };
   } catch (error) {
-    // If database fails, use fallback data
-    console.warn('Database connection failed, using fallback data:', error);
-    
-    const fallbackUsers = {
-      'user@test.com': {
-        id: 'dev-user-1',
-        email: 'user@test.com',
-        name: 'Test User',
-        role: 'USER',
-      },
-      'therapist@test.com': {
-        id: 'dev-therapist-1',
-        email: 'therapist@test.com',
-        name: 'Dr. Test Therapist',
-        role: 'THERAPIST',
-      },
-      'astrologer@test.com': {
-        id: 'dev-astrologer-1',
-        email: 'astrologer@test.com',
-        name: 'Test Astrologer',
-        role: 'ASTROLOGER',
-      },
-      'admin@test.com': {
-        id: 'dev-admin-1',
-        email: 'admin@test.com',
-        name: 'Test Admin',
-        role: 'ADMIN',
-      }
-    };
-    
-    const fallbackUser = fallbackUsers[email as keyof typeof fallbackUsers];
-    if (!fallbackUser) {
-      throw new Error(`User not found: ${email}`);
-    }
-
-    const accessToken = generateDevToken(fallbackUser);
-    const refreshToken = generateDevRefreshToken(fallbackUser.id);
-
-    return {
-      user: {
-        id: fallbackUser.id,
-        email: fallbackUser.email,
-        name: fallbackUser.name,
-        role: fallbackUser.role.toLowerCase(),
-      },
-      accessToken,
-      refreshToken,
-      profile: null,
-      therapistProfile: null,
-      settings: null,
-    };
+    console.warn('Database connection failed, please run npm run seed:test to create test accounts:', error);
+    throw new Error(`Database connection failed. Please run 'npm run seed:test' to create test accounts in the database.`);
   }
 }
 

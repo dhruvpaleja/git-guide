@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint src/ --ext .ts",
-    "seed:dev": "tsx prisma/seed-dev.ts",
+    "seed": "tsx prisma/seed-dev.ts",
+    "seed:test": "tsx scripts/create-test-accounts.ts",
     "db:reset": "npx prisma migrate reset --force && npm run seed:dev",
     "db:generate": "npx prisma generate",
     "db:migrate": "npx prisma migrate dev"

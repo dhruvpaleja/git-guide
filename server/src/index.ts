@@ -15,6 +15,7 @@ import { logger, morganStream } from './lib/logger.js';
 import { prisma } from './lib/prisma.js';
 import { websocketService } from './lib/websocket.js';
 import routes from './routes/index.js';
+import testRoutes from './routes/test.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -103,6 +104,7 @@ app.use('/uploads', express.static(uploadsPath));
 // ---------------------------------------------------------------------------
 app.use(config.api.prefix, routes);
 app.use('/api', routes);
+app.use('/api', testRoutes);
 
 // ---------------------------------------------------------------------------
 // Error handling

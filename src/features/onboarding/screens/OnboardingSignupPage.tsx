@@ -118,7 +118,7 @@ export default function OnboardingSignupPage() {
                     </section>
 
                     {/* CTA Button */}
-                    <div className="mt-8 sm:mt-10 flex justify-center">
+                    <div className="mt-8 sm:mt-10 flex flex-col items-center">
                         <button
                             type="button"
                             onClick={handleStartNow}
@@ -126,6 +126,15 @@ export default function OnboardingSignupPage() {
                         >
                             <span className="relative z-10">Start Now</span>
                         </button>
+                        <div className="mt-4 text-white text-[13px]">
+                            <button
+                                type="button"
+                                onClick={() => navigate('/practitioner-onboarding?step=1&role=therapist')}
+                                className="underline"
+                            >
+                                Therapist / Astrologer Onboarding
+                            </button>
+                        </div>
                     </div>
                 </div>
             </main>

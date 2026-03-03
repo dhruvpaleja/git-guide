@@ -16,7 +16,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; user?: User }>;
   logout: () => Promise<void>;
-  signup: (data: { name: string; email: string; password: string }) => Promise<{ success: boolean; error?: string }>;
+  signup: (data: { name: string; email: string; password: string; role?: UserRole }) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -131,11 +131,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const signup = useCallback(async (data: { name: string; email: string; password: string }) => {
+const signup = useCallback(async (data: { name: string; email: string; password: string; role?: UserRole }) => {
     setIsLoading(true);
     try {
       const response = await apiService.post<{ user: User, accessToken: string }>('/auth/register', data);
-
+      
       if (response.success && response.data) {
         setUser(response.data.user);
         localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.accessToken);
@@ -145,18 +145,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Development mode: simulate successful signup if backend is not available
         const isDevelopment = import.meta.env.MODE === 'development';
         const errorMessage = response.error?.message || 'Signup failed';
-        const isNetworkError = errorMessage.toLowerCase().includes('request failed') ||
-          errorMessage.toLowerCase().includes('failed to fetch') ||
-          errorMessage.toLowerCase().includes('network') ||
-          errorMessage.toLowerCase().includes('connection');
-
+        const isNetworkError = errorMessage.toLowerCase().includes('request failed') || 
+                               errorMessage.toLowerCase().includes('failed to fetch') ||
+                               errorMessage.toLowerCase().includes('network') ||
+                               errorMessage.toLowerCase().includes('connection');
+        
         if (isDevelopment && isNetworkError) {
           // Create mock user for development
           const mockUser: User = {
             id: 'dev-user-' + Date.now(),
             name: data.name,
             email: data.email,
-            role: 'user',
+            role: data.role || 'user',
             createdAt: new Date(),
             updatedAt: new Date(),
           };

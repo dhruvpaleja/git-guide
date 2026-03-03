@@ -42,6 +42,7 @@ const CourseDetailsPage = lazy(() => import('@/pages/CourseDetailsPage'));
 // Auth Pages (Phase 1 MVP)
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
+const PractitionerOnboardingPage = lazy(() => import('@/features/onboarding/screens/PractitionerOnboardingPage'));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 const PractitionerDashboard = lazy(() => import('@/pages/dashboard/PractitionerDashboard'));
 const AstrologyDashboard = lazy(() => import('@/pages/dashboard/AstrologyDashboard'));
@@ -100,6 +101,15 @@ const router = createBrowserRouter([
     element: (
       <Lazy>
         <SignupPage />
+      </Lazy>
+    ),
+  },
+  // practitioner/astrologer multi-step onboarding (public)
+  {
+    path: '/practitioner-onboarding/*',
+    element: (
+      <Lazy>
+        <PractitionerOnboardingPage />
       </Lazy>
     ),
   },

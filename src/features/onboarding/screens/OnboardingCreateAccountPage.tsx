@@ -134,6 +134,16 @@ export default function OnboardingCreateAccountPage({ onBack }: OnboardingCreate
                                 </p>
                             </form>
 
+                            <div className="mt-4 text-center text-[13px]">
+                                <button
+                                    type="button"
+                                    onClick={() => navigate('/practitioner-onboarding?step=1')}
+                                    className="text-blue-600 underline"
+                                >
+                                    Therapist/Astrologer Onboarding
+                                </button>
+                            </div>
+
                             <div className="mt-5 mb-6 lg:mb-0">
                                 <p className="text-center text-[13px] sm:text-[14px] text-black/60">Or Sign Up Using</p>
                                 <div className="mt-3 flex items-center justify-center gap-3">

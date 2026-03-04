@@ -34,8 +34,9 @@ const DEV_USERS = [
 ];
 
 async function seedDevUsers() {
+  // eslint-disable-next-line no-console
   console.log('🌱 Seeding development users...');
-  
+
   try {
     // Clean existing dev users
     await prisma.user.deleteMany({
@@ -49,7 +50,7 @@ async function seedDevUsers() {
     // Create dev users
     for (const user of DEV_USERS) {
       const passwordHash = await bcrypt.hash(user.password, 12);
-      
+
       const createdUser = await prisma.user.create({
         data: {
           email: user.email,
@@ -67,6 +68,7 @@ async function seedDevUsers() {
         }
       });
 
+      // eslint-disable-next-line no-console
       console.log(`✅ Created ${user.role}: ${user.email}`);
       
       // Create therapist profile if role is THERAPIST
@@ -122,23 +124,35 @@ async function seedDevUsers() {
       });
     }
 
+    // eslint-disable-next-line no-console
     console.log('\n🎉 Development users created successfully!');
+    // eslint-disable-next-line no-console
     console.log('\n📋 Login Credentials:');
+    // eslint-disable-next-line no-console
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    
+
     DEV_USERS.forEach(user => {
+      // eslint-disable-next-line no-console
       console.log(`\n🔐 ${user.role.toUpperCase()} Dashboard:`);
+      // eslint-disable-next-line no-console
       console.log(`   Email: ${user.email}`);
+      // eslint-disable-next-line no-console
       console.log(`   Password: ${user.password}`);
     });
 
+    // eslint-disable-next-line no-console
     console.log('\n💡 Quick Access Tips:');
+    // eslint-disable-next-line no-console
     console.log('   • User Dashboard: Full user experience with therapy booking');
+    // eslint-disable-next-line no-console
     console.log('   • Therapist Dashboard: Manage sessions, availability, earnings');
+    // eslint-disable-next-line no-console
     console.log('   • Astrologer Dashboard: Astrology consultations and predictions');
+    // eslint-disable-next-line no-console
     console.log('   • Admin Dashboard: User management and platform oversight');
-    
+
   } catch (error) {
+     
     console.error('❌ Error seeding dev users:', error);
     throw error;
   } finally {

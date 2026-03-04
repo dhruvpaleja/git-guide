@@ -30,6 +30,20 @@ type BlogPost = {
   tags: string[];
 };
 
+interface CommentAuthor {
+  name: string;
+  avatar: string;
+}
+
+interface Comment {
+  id: string;
+  author: CommentAuthor;
+  content: string;
+  createdAt: string;
+  likes: number;
+  replies?: Comment[];
+}
+
 // Blog posts data with full content
 const blogPosts: Record<string, BlogPost> = {
   '1': {
@@ -628,7 +642,7 @@ function CommentItem({
   onReply,
   onToggleLike,
 }: {
-  comment: any;
+  comment: Comment;
   onReply: (parentId: string, text: string) => void;
   onToggleLike: (id: string) => void;
 }) {
@@ -695,7 +709,7 @@ function CommentItem({
         {/* Replies */}
         {comment.replies && comment.replies.length > 0 && (
           <div className="mt-4 border-l border-black/5 pl-4 space-y-4">
-            {comment.replies.map((r: any) => (
+            {comment.replies.map((r) => (
               <div key={r.id} className="flex gap-4">
                 <img src={r.author.avatar} alt={r.author.name} className="w-10 h-10 rounded-full" />
                 <div className="flex-1">

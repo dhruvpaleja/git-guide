@@ -2,9 +2,21 @@ import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, MapPin, Clock, Upload, Camera, X, ChevronDown, ChevronUp, Plus, Heart, User, Trash2, AlertCircle } from 'lucide-react';
 import Navigation from '@/components/layout/Navigation';
 
+interface AstrologyOnboardingData {
+    gender?: 'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY';
+    birthDate: string;
+    birthTime: string;
+    birthTimeAmPm: 'AM' | 'PM' | 'N/A';
+    birthCity: string;
+    faceImage: string | null;
+    unknownBirthTime: boolean;
+    wantMatchmaking: boolean;
+    partners: PartnerData[];
+}
+
 type OnboardingAstrologyPageProps = {
     onBack: () => void;
-    onSubmit: (data?: any) => void;
+    onSubmit: (data?: AstrologyOnboardingData) => void;
 };
 
 interface PartnerData {

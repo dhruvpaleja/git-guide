@@ -37,6 +37,7 @@ class WebSocketService {
       this.ws = new WebSocket(`${this.url}?token=${authToken}`);
 
       this.ws.onopen = () => {
+        // eslint-disable-next-line no-console
         console.log('[WebSocket] Connected');
         this.isConnecting = false;
         this.reconnectAttempts = 0;
@@ -48,11 +49,13 @@ class WebSocketService {
           const message = JSON.parse(event.data as string) as { type: string; data: unknown };
           this.handleMessage(message.type, message.data);
         } catch (error) {
+           
           console.error('[WebSocket] Failed to parse message:', error);
         }
       };
 
       this.ws.onclose = () => {
+        // eslint-disable-next-line no-console
         console.log('[WebSocket] Disconnected');
         this.isConnecting = false;
         this.ws = null;
@@ -60,10 +63,12 @@ class WebSocketService {
       };
 
       this.ws.onerror = (error) => {
+         
         console.error('[WebSocket] Error:', error);
         this.isConnecting = false;
       };
     } catch (error) {
+       
       console.error('[WebSocket] Connection failed:', error);
       this.isConnecting = false;
       this.attemptReconnect();
@@ -138,6 +143,7 @@ class WebSocketService {
 
   private attemptReconnect(): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts || !this.token) {
+      // eslint-disable-next-line no-console
       console.log('[WebSocket] Max reconnect attempts reached or no token');
       return;
     }
@@ -145,6 +151,7 @@ class WebSocketService {
     this.reconnectAttempts++;
     const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1); // Exponential backoff
 
+    // eslint-disable-next-line no-console
     console.log(`[WebSocket] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
 
     setTimeout(() => {

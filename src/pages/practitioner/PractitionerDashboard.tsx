@@ -177,6 +177,11 @@ function StatCard({
 
 // Session Card Component
 function SessionCard({ name, time, type }: { name: string; time: string; type: string }) {
+  const handleStartCall = () => {
+    // TODO: Implement call functionality
+    console.log('Start call with', name);
+  };
+
   return (
     <div className="bg-black rounded-2xl p-4 flex items-center justify-between mb-3">
       <div className="flex items-center gap-3">
@@ -188,8 +193,8 @@ function SessionCard({ name, time, type }: { name: string; time: string; type: s
       </div>
       <div className="flex items-center gap-3">
         <span className="text-white/60 text-sm bg-white/10 px-3 py-1 rounded-full">{time}</span>
-        <button 
-          onClick={() => console.log('Start call with', name)}
+        <button
+          onClick={handleStartCall}
           className="bg-green-500 text-white text-xs px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transition"
         >
           Start Call
@@ -201,6 +206,11 @@ function SessionCard({ name, time, type }: { name: string; time: string; type: s
 
 // Appointment Row Component
 function AppointmentRow({ name, type, date }: { name: string; type: string; date: string }) {
+  const handleReschedule = () => {
+    // TODO: Implement reschedule functionality
+    console.log('Reschedule', name);
+  };
+
   return (
     <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
       <td className="py-3 px-4">
@@ -214,8 +224,8 @@ function AppointmentRow({ name, type, date }: { name: string; type: string; date
       </td>
       <td className="py-3 px-4 text-sm text-gray-600">{date}</td>
       <td className="py-3 px-4">
-        <button 
-          onClick={() => console.log('Reschedule', name)}
+        <button
+          onClick={handleReschedule}
           className="bg-gray-200 text-black text-xs px-4 py-1.5 rounded-lg hover:bg-gray-300 transition"
         >
           Reschedule
@@ -227,6 +237,16 @@ function AppointmentRow({ name, type, date }: { name: string; type: string; date
 
 // Approval Card Component
 function ApprovalCard({ name, role }: { name: string; role: string }) {
+  const handleIgnore = () => {
+    // TODO: Implement ignore functionality
+    console.log('Ignore', name);
+  };
+
+  const handleAccept = () => {
+    // TODO: Implement accept functionality
+    console.log('Accept', name);
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between mb-3">
       <div className="flex items-center gap-3">
@@ -237,14 +257,14 @@ function ApprovalCard({ name, role }: { name: string; role: string }) {
         </div>
       </div>
       <div className="flex gap-2">
-        <button 
-          onClick={() => console.log('Ignore', name)}
+        <button
+          onClick={handleIgnore}
           className="border border-red-500 text-red-500 text-xs px-4 py-1.5 rounded-lg hover:bg-red-50 transition"
         >
           Ignore
         </button>
-        <button 
-          onClick={() => console.log('Accept', name)}
+        <button
+          onClick={handleAccept}
           className="bg-green-500 text-white text-xs px-4 py-1.5 rounded-lg hover:bg-green-600 transition"
         >
           Accept
@@ -256,6 +276,11 @@ function ApprovalCard({ name, role }: { name: string; role: string }) {
 
 // Client Intake Card Component
 function ClientIntakeCard({ name, role, date }: { name: string; role: string; date: string }) {
+  const handleIgnoreIntake = () => {
+    // TODO: Implement ignore functionality
+    console.log('Ignore', name);
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between mb-3">
       <div className="flex items-center gap-3">
@@ -267,8 +292,8 @@ function ClientIntakeCard({ name, role, date }: { name: string; role: string; da
       </div>
       <div className="text-right">
         <p className="text-gray-600 text-xs">{date.split('|')[0]} <span className="text-gray-400">{date.split('|')[1]}</span></p>
-        <button 
-          onClick={() => console.log('Ignore', name)}
+        <button
+          onClick={handleIgnoreIntake}
           className="text-red-500 text-xs px-4 py-1.5 mt-2 hover:text-red-700 transition"
         >
           Ignore
@@ -477,8 +502,11 @@ export default function PractitionerDashboard() {
                             </td>
                             <td className="py-3 px-4 text-sm text-gray-600">{session.date}</td>
                             <td className="py-3 px-4">
-                              <button 
-                                onClick={() => console.log('See summary', session.name)}
+                              <button
+                                onClick={() => {
+                                  // TODO: Implement see summary functionality
+                                  console.log('See summary', session.name);
+                                }}
                                 className="text-gray-600 text-xs px-4 py-1.5 hover:text-black transition"
                               >
                                 See Summary
@@ -521,16 +549,22 @@ export default function PractitionerDashboard() {
                 <div>
                   <h3 className="text-xl font-bold text-black mb-4">Quick Links</h3>
                   <div className="grid grid-cols-1 gap-4">
-                    <div 
-                      onClick={() => console.log('Post Therapy clicked')}
+                    <div
+                      onClick={() => {
+                        // TODO: Implement post therapy functionality
+                        console.log('Post Therapy clicked');
+                      }}
                       className="bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition h-40 flex flex-col items-center justify-center gap-3"
                     >
                       <span className="text-4xl">🙏</span>
                       <h4 className="font-bold text-lg">Post Therapy</h4>
                       <p className="text-xs text-center text-white/90">Get all the clients post therapy records.</p>
                     </div>
-                    <div 
-                      onClick={() => console.log('Support clicked')}
+                    <div
+                      onClick={() => {
+                        // TODO: Implement support functionality
+                        console.log('Support clicked');
+                      }}
                       className="bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition h-40 flex flex-col items-center justify-center gap-3"
                     >
                       <span className="text-4xl">👤</span>

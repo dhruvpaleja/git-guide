@@ -41,9 +41,10 @@ export async function errorMiddleware<T>(response: ApiResponse<T>): Promise<ApiR
  * Log requests and responses
  */
 export function loggingMiddleware<T>(response: ApiResponse<T>): ApiResponse<T> {
+   
   if (import.meta.env.DEV) {
     console.log('API Response:', response);
   }
-  
+
   return response;
 }

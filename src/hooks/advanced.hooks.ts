@@ -149,20 +149,23 @@ export function useOnScreen<T extends HTMLElement>(ref: React.RefObject<T>) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const element = ref.current;
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setIsVisible(true);
-        observer.unobserve(entry.target);
+        if (element) {
+          observer.unobserve(element);
+        }
       }
     });
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (element) {
+      observer.observe(element);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (element) {
+        observer.unobserve(element);
       }
     };
   }, [ref]);

@@ -2,9 +2,19 @@ import { useState, useRef } from 'react';
 import { ArrowLeft, MapPin, Clock, Upload, X, User, Heart, AlertCircle } from 'lucide-react';
 import Navigation from '@/components/layout/Navigation';
 
+interface PartnerOnboardingData {
+    name: string;
+    birthDate: string;
+    birthTime: string;
+    birthTimeAmPm: string;
+    birthCity: string;
+    faceImage: string | null;
+    unknownBirthTime: boolean;
+}
+
 type OnboardingPartnerDetailsPageProps = {
     onBack: () => void;
-    onSubmit: (data?: any) => void;
+    onSubmit: (data?: PartnerOnboardingData | null) => void;
     initialData?: {
         name?: string;
         birthDate?: string;
@@ -46,7 +56,7 @@ export default function OnboardingPartnerDetailsPage({ onBack, onSubmit, initial
     const [partnerFaceImage, setPartnerFaceImage] = useState<string>(initialData?.faceImage || '');
     const [dontKnowTime, setDontKnowTime] = useState(initialData?.unknownBirthTime || false);
     const [roughTime, setRoughTime] = useState<'morning' | 'afternoon' | 'evening' | 'latenight' | ''>(
-        initialData?.unknownBirthTime ? (initialData?.birthTime as any || '') : ''
+        initialData?.unknownBirthTime ? (initialData?.birthTime as 'morning' | 'afternoon' | 'evening' | 'latenight' || '') : ''
     );
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
     const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);

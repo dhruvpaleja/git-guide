@@ -7,13 +7,32 @@ import OnboardingAstrologyPage from '@/features/onboarding/screens/OnboardingAst
 import OnboardingPartnerDetailsPage from '@/features/onboarding/screens/OnboardingPartnerDetailsPage';
 import apiService from '@/services/api.service';
 
+interface AstrologyProfileData {
+    gender?: string;
+    birthDate: string;
+    birthTime: string;
+    birthTimeAmPm: string;
+    birthCity: string;
+    faceImage: string | null;
+    unknownBirthTime: boolean;
+    wantMatchmaking: boolean;
+    partners: Array<{
+        name: string;
+        birthDate: string;
+        birthTime: string;
+        birthTimeAmPm: string;
+        birthCity: string;
+        faceImage: string;
+    }>;
+}
+
 export default function SignupPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const step = searchParams.get('step');
 
     // Store astrology data to pass partner initial data forward
-    const [astrologyData, setAstrologyData] = useState<any>(null);
+    const [astrologyData, setAstrologyData] = useState<AstrologyProfileData | null>(null);
 
     const persistAstrologyProfile = async (payload: Record<string, unknown>) => {
         const response = await apiService.post('/users/astrology-profile', payload);
@@ -40,11 +59,13 @@ export default function SignupPage() {
                     setSearchParams({ step: 'account' });
                 }}
                 onSubmit={(data) => {
-                    setAstrologyData(data);
+                    if (data) {
+                        setAstrologyData(data);
+                    }
                     if (data?.wantMatchmaking) {
                         setSearchParams({ step: 'partner-details' });
                     } else {
-                        void persistAstrologyProfile(data || {}).finally(() => {
+                        void persistAstrologyProfile(data as unknown as Record<string, unknown> || {}).finally(() => {
                             navigate('/journey-preparation');
                         });
                     }
@@ -70,7 +91,7 @@ export default function SignupPage() {
                         navigate('/journey-preparation');
                     });
                 }}
-                initialData={astrologyData?.partner || null}
+                initialData={astrologyData?.partners[0] || null}
             />
         );
     }

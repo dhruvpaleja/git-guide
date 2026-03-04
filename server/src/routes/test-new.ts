@@ -17,9 +17,10 @@ router.get('/test', (req, res) => {
 // Test dev login - ultra simple version
 router.get('/test-login/:email', (req, res) => {
   const { email } = req.params;
-  
+
+  // eslint-disable-next-line no-console
   console.log(`[TEST LOGIN] Received request for: ${email}`);
-  
+
   // Simple hardcoded users - MUST match frontend routing expectations
   const testUsers: Record<string, { id: string; email: string; name: string; role: string }> = {
     'user@test.com': {
@@ -47,16 +48,17 @@ router.get('/test-login/:email', (req, res) => {
       role: 'admin',
     }
   };
-  
+
   const user = testUsers[email];
   if (!user) {
+    // eslint-disable-next-line no-console
     console.log(`[TEST LOGIN] User not found: ${email}`);
     return res.status(404).json({
       success: false,
       error: { message: `User not found: ${email}` }
     });
   }
-  
+
   // Generate simple JWT-like token
   const token = Buffer.from(JSON.stringify({
     sub: user.id,
@@ -67,7 +69,8 @@ router.get('/test-login/:email', (req, res) => {
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24 hours
   })).toString('base64');
-  
+
+  // eslint-disable-next-line no-console
   console.log(`[TEST LOGIN] Success for ${email}, role: ${user.role}`);
   
   // Return EXACTLY what frontend expects

@@ -59,6 +59,7 @@ class AnalyticsService {
    */
   private sendEvent(event: AnalyticsEvent): void {
     // TODO: Send to analytics backend
+     
     if (import.meta.env.MODE === 'development') {
       console.log('Analytics Event:', event);
     }

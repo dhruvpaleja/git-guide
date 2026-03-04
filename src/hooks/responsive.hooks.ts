@@ -239,6 +239,7 @@ export function useInViewport(ref: React.RefObject<HTMLElement>): boolean {
   const [isInViewport, setIsInViewport] = useState(false);
 
   useEffect(() => {
+    const element = ref.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsInViewport(entry.isIntersecting);
@@ -246,13 +247,13 @@ export function useInViewport(ref: React.RefObject<HTMLElement>): boolean {
       { threshold: 0.1 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (element) {
+      observer.observe(element);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (element) {
+        observer.unobserve(element);
       }
     };
   }, [ref]);

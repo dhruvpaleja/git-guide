@@ -40,7 +40,17 @@ export default function PractitionerOnboardingPage() {
 
   const [step, setStep] = useState(initialStep);
 
-  const [data1, setData1] = useState<Step1Data>({ name: '', email: '', password: '', phone: '', specialization: '', signupAs: initialRole });
+  // Initialize with user data if available (lazy initialization pattern)
+  const getInitialData1 = (): Step1Data => ({
+    name: user?.name || '',
+    email: user?.email || '',
+    password: '',
+    phone: '',
+    specialization: '',
+    signupAs: initialRole,
+  });
+
+  const [data1, setData1] = useState<Step1Data>(getInitialData1);
   const [data2, setData2] = useState<Step2Data>({ kycDocument: '', highSchool: '', license: '', kycFile: null });
   const [data3, setData3] = useState<Step3Data>({ bio: '', languages: '', pricing: '' });
 
@@ -51,13 +61,6 @@ export default function PractitionerOnboardingPage() {
     const query = new URLSearchParams(params).toString();
     navigate(`/practitioner-onboarding?${query}`, { replace: true });
   }, [step, data1.signupAs, navigate]);
-
-  useEffect(() => {
-    // if user is already logged in and has role, we can prefill some fields
-    if (user) {
-      setData1(prev => ({ ...prev, name: user.name || '', email: user.email || '' }));
-    }
-  }, [user]);
 
   const { signup } = useAuth();
   const [signupError, setSignupError] = useState<string | null>(null);

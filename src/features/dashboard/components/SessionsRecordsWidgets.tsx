@@ -33,12 +33,12 @@ export function SessionRecordItem({ name, type, date, time, actionText, isComple
             <div className="flex items-center gap-3 shrink-0">
                 {/* Icons */}
                 {!isCompleted && (
-                    <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-white transition-colors">
+                    <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-white transition-colors">
                         <MessageSquare className="w-3.5 h-3.5" />
                     </button>
                 )}
 
-                <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-white transition-colors">
+                <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-white transition-colors">
                     <MoreVertical className="w-4 h-4" />
                 </button>
 
@@ -61,7 +61,7 @@ export function WeeklySessionsWidget() {
         <div className="flex flex-col">
             <div className="flex items-baseline justify-between mb-4 px-1">
                 <h3 className="text-xl font-semibold text-gray-900">Appointments & Sessions</h3>
-                <Link to="/practitioner/sessions" className="text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors">View All</Link>
+                <Link to="/practitioner/sessions" className="inline-flex min-h-[36px] items-center px-2 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors">View All</Link>
             </div>
 
             <div className="bg-white rounded-[24px] p-6 shadow-sm border border-gray-200/60">
@@ -90,7 +90,7 @@ export function CompletedSessionsWidget() {
         <div className="flex flex-col mt-8">
             <div className="flex items-baseline justify-between mb-4 px-1">
                 <h3 className="text-xl font-semibold text-gray-900">Completed Sessions</h3>
-                <button className="text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors">View All</button>
+                <button className="inline-flex min-h-[36px] items-center px-2 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors">View All</button>
             </div>
 
             <div className="bg-white rounded-[24px] p-6 shadow-sm border border-gray-200/60">

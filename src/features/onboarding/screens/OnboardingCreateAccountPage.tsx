@@ -61,7 +61,7 @@ export default function OnboardingCreateAccountPage({ onBack }: OnboardingCreate
                             <button
                                 type="button"
                                 onClick={onBack}
-                                className="mb-8 size-[30px] rounded-full border border-black text-black flex items-center justify-center hover:bg-black hover:text-white transition-colors"
+                                className="mb-8 size-[40px] rounded-full border border-black text-black flex items-center justify-center hover:bg-black hover:text-white transition-colors"
                                 aria-label="Go back"
                             >
                                 <ArrowLeft size={14} className="text-black" />
@@ -138,7 +138,7 @@ export default function OnboardingCreateAccountPage({ onBack }: OnboardingCreate
                                 <button
                                     type="button"
                                     onClick={() => navigate('/practitioner-onboarding?step=1')}
-                                    className="text-blue-600 underline"
+                                    className="inline-flex min-h-[36px] items-center text-blue-600 underline"
                                 >
                                     Therapist/Astrologer Onboarding
                                 </button>

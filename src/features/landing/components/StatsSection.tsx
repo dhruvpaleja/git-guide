@@ -104,7 +104,7 @@ function StatCard({
 
       <a
         href="#"
-        className="text-[14px] lg:text-[15px] font-normal text-white/30 tracking-tight hover:text-white/60 transition-colors duration-300"
+        className="inline-flex min-h-[40px] items-center px-1 text-[14px] lg:text-[15px] font-normal text-white/30 tracking-tight hover:text-white/60 transition-colors duration-300"
       >
         {stat.action}
       </a>

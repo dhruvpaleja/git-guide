@@ -35,12 +35,12 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:012`
-- Phase target: `Phase 5 continuation (performance gate completion)`
+- `BATCH:013`
+- Phase target: `Phase 6 responsiveness pass`
 - Objective:
-  - Add explicit bundle budget policy and deterministic enforcement.
-  - Measure and record performance deltas vs BATCH:011 baseline metrics.
-  - Apply low-risk render optimizations in heavy dashboard/landing paths.
+  - Verify responsive behavior across mobile/tablet/desktop breakpoints for all primary routes.
+  - Fix overflow, touch-target, and layout stability issues without changing core visual style.
+  - Generate screenshot evidence and route-by-breakpoint matrix for handoff-safe validation.
   - Preserve QA dev-login/mock-auth behavior.
   - Keep `npm run lint:ci` and `npm run quality:ci` passing.
   - Update docs at batch end.

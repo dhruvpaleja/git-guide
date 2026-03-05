@@ -25,7 +25,7 @@ export function ClientIntakeItem({ name, type, dateStr }: IntakeItemProps) {
                 <span className="text-[11px] font-semibold text-gray-600 line-clamp-1">{dateStr}</span>
             </div>
 
-            <button className="px-5 py-1.5 shrink-0 rounded-full text-xs font-semibold text-rose-500 border border-rose-100 bg-rose-50/50 hover:bg-rose-50 transition-colors ml-2">
+            <button className="min-h-[36px] px-5 py-2 shrink-0 rounded-full text-xs font-semibold text-rose-500 border border-rose-100 bg-rose-50/50 hover:bg-rose-50 transition-colors ml-2">
                 Ignore
             </button>
         </div>
@@ -40,7 +40,7 @@ export function ClientIntakeWidget() {
                     <h3 className="text-lg font-semibold text-gray-900">Client Intake</h3>
                     <span className="text-xs font-medium text-gray-400 tracking-wide">(Read Only)</span>
                 </div>
-                <button className="text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors">View All</button>
+                <button className="inline-flex min-h-[36px] items-center px-2 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors">View All</button>
             </div>
 
             <div className="flex flex-col gap-0">

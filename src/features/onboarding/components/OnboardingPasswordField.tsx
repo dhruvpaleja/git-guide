@@ -30,7 +30,7 @@ export default function OnboardingPasswordField({
                 </label>
                 <button
                     type="button"
-                    className="text-[10px] text-black hover:underline"
+                    className="inline-flex min-h-[36px] items-center text-[12px] text-black hover:underline"
                     onClick={onSuggestPassword}
                     disabled={disabled}
                 >
@@ -53,7 +53,7 @@ export default function OnboardingPasswordField({
                     type="button"
                     aria-label={isVisible ? 'Hide password' : 'Show password'}
                     onClick={() => setIsVisible((prev) => !prev)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-black/55 hover:text-black transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-9 w-9 flex items-center justify-center rounded-full text-black/55 hover:text-black hover:bg-black/5 transition-colors"
                     disabled={disabled}
                 >
                     {isVisible ? <EyeOff size={18} /> : <Eye size={18} />}

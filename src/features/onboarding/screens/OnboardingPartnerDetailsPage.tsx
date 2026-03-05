@@ -283,7 +283,7 @@ export default function OnboardingPartnerDetailsPage({ onBack, onSubmit, initial
                                                                     key={period}
                                                                     type="button"
                                                                     onClick={() => setPartnerBirthTimeAmPm(period)}
-                                                                    className={`px-3.5 py-1.5 text-[12px] font-semibold rounded-[8px]
+                                                                    className={`min-h-[36px] px-4 py-2 text-[12px] font-semibold rounded-[8px]
                                                                                transition-all duration-200 tracking-[-0.01em]
                                                                                ${partnerBirthTimeAmPm === period
                                                                                    ? 'bg-black text-white shadow-sm'
@@ -299,7 +299,7 @@ export default function OnboardingPartnerDetailsPage({ onBack, onSubmit, initial
                                                     <button
                                                         type="button"
                                                         onClick={() => { setDontKnowTime(true); setPartnerBirthTime(''); }}
-                                                        className="text-[11px] text-black/50 hover:text-black transition-colors duration-200 tracking-[-0.01em] mt-2"
+                                                        className="inline-flex min-h-[36px] items-center text-[11px] text-black/50 hover:text-black transition-colors duration-200 tracking-[-0.01em] mt-2"
                                                     >
                                                         I don't know their exact birth time
                                                     </button>
@@ -333,7 +333,7 @@ export default function OnboardingPartnerDetailsPage({ onBack, onSubmit, initial
                                                     <button
                                                         type="button"
                                                         onClick={() => { setDontKnowTime(false); setRoughTime(''); }}
-                                                        className="text-[11px] text-black/50 hover:text-black transition-colors duration-200 tracking-[-0.01em]"
+                                                        className="inline-flex min-h-[36px] items-center text-[11px] text-black/50 hover:text-black transition-colors duration-200 tracking-[-0.01em]"
                                                     >
                                                         I know their exact birth time
                                                     </button>

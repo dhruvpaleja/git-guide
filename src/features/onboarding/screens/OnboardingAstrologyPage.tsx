@@ -444,7 +444,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                                     key={period}
                                                                     type="button"
                                                                     onClick={() => setBirthTimeAmPm(period)}
-                                                                    className={`px-3.5 py-1.5 text-[12px] font-semibold rounded-[8px] transition-all duration-200 tracking-[-0.01em]
+                                                                    className={`min-h-[36px] px-4 py-2 text-[12px] font-semibold rounded-[8px] transition-all duration-200 tracking-[-0.01em]
                                                                                ${birthTimeAmPm === period ? 'bg-black text-white shadow-sm' : 'text-black/50 hover:text-black/70'}`}
                                                                 >
                                                                     {period}
@@ -455,7 +455,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                     <button
                                                         type="button"
                                                         onClick={() => { setDontKnowTime(true); setBirthTime(''); }}
-                                                        className="text-[11px] text-black/50 hover:text-black transition-colors duration-200 tracking-[-0.01em] underline underline-offset-2"
+                                                        className="inline-flex min-h-[36px] items-center text-[11px] text-black/50 hover:text-black transition-colors duration-200 tracking-[-0.01em] underline underline-offset-2"
                                                     >
                                                         I don't know my exact birth time
                                                     </button>
@@ -542,7 +542,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                     <button
                                                         type="button"
                                                         onClick={() => { setDontKnowTime(false); setFaceImage(''); setFaceValidationMsg(''); }}
-                                                        className="text-[11px] text-black/50 hover:text-black transition-colors duration-200 tracking-[-0.01em] underline underline-offset-2"
+                                                        className="inline-flex min-h-[36px] items-center text-[11px] text-black/50 hover:text-black transition-colors duration-200 tracking-[-0.01em] underline underline-offset-2"
                                                     >
                                                         I know my exact birth time
                                                     </button>
@@ -559,7 +559,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                 <span className="font-semibold text-black/40">{cityLabel}</span>
                                             </label>
                                             <button type="button" onClick={detectLocation} disabled={isLoadingLocation}
-                                                className="text-[11px] sm:text-[12px] text-black/50 hover:text-black tracking-[-0.01em] transition-colors duration-200 disabled:text-black/30 disabled:cursor-wait font-medium">
+                                                className="inline-flex min-h-[36px] items-center text-[11px] sm:text-[12px] text-black/50 hover:text-black tracking-[-0.01em] transition-colors duration-200 disabled:text-black/30 disabled:cursor-wait font-medium">
                                                 {isLoadingLocation ? 'Detecting...' : 'Suggest A Location'}
                                             </button>
                                         </div>
@@ -680,7 +680,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                                     {(['AM', 'PM'] as const).map((period) => (
                                                                         <button key={period} type="button"
                                                                             onClick={() => setCurrentPartner(p => ({ ...p, birthTimeAmPm: period }))}
-                                                                            className={`px-3 py-1 text-[11px] font-semibold rounded-[8px] transition-all duration-200
+                                                                            className={`min-h-[32px] px-3 py-1 text-[11px] font-semibold rounded-[8px] transition-all duration-200
                                                                                        ${currentPartner.birthTimeAmPm === period ? 'bg-black text-white shadow-sm' : 'text-black/50 hover:text-black/70'}`}>
                                                                             {period}
                                                                         </button>

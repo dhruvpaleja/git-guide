@@ -40,7 +40,7 @@ export function PractitionerSidebar() {
             {/* Back Button */}
             <Link
                 to="/practitioner"
-                className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center mb-8 hover:bg-gray-50 hover:border-gray-300 active:scale-90 transition-all duration-150"
+                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center mb-8 hover:bg-gray-50 hover:border-gray-300 active:scale-90 transition-all duration-150"
             >
                 <svg fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-gray-600">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />

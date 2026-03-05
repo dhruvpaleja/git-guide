@@ -134,7 +134,7 @@ function JobCard({ job }: { job: Job }) {
           <span className="inline-flex items-center gap-1.5"><IndianRupee size={14} />{job.salary}</span>
           <span className="inline-flex items-center gap-1.5"><UserRound size={14} />{job.exp}</span>
         </div>
-        <button type="button" className="h-[30px] w-[80px] rounded-[12px] bg-white text-[14px] font-semibold text-black">Apply</button>
+        <button type="button" className="h-[40px] w-[96px] rounded-[12px] bg-white text-[14px] font-semibold text-black">Apply</button>
       </div>
     </article>
   );
@@ -231,7 +231,7 @@ export default function CareerPage() {
             <input className="h-[60px] w-[340px] rounded-[25px] border border-white bg-white pl-[30px] pr-12 text-[16px] text-black placeholder:text-black/50 focus:outline-none" placeholder="Search for openings" />
             <Search size={16} className="absolute right-6 top-1/2 -translate-y-1/2 text-black/50" />
           </label>
-          <button type="button" className="inline-flex items-center gap-4 text-[16px]">Categories <span className="space-y-1.5"><span className="block h-[2px] w-[25px] rounded bg-white" /><span className="block h-[2px] w-[25px] rounded bg-white" /><span className="block h-[2px] w-[25px] rounded bg-white" /></span></button>
+          <button type="button" className="inline-flex min-h-[40px] items-center gap-4 px-2 text-[16px]">Categories <span className="space-y-1.5"><span className="block h-[2px] w-[25px] rounded bg-white" /><span className="block h-[2px] w-[25px] rounded bg-white" /><span className="block h-[2px] w-[25px] rounded bg-white" /></span></button>
         </div>
 
         <div className="mt-12 border-t border-white/20 pt-12">

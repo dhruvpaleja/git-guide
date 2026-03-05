@@ -31,7 +31,7 @@ export default function ContactPage() {
                     <img src="/images/contact/contact-flag-icon.png" alt="India" className="h-[16px] w-[16px] rounded-full object-cover" />
                   </span>
                   <span className="ml-3 text-[14px] font-semibold tracking-[-0.14px]">+91</span>
-                  <input className="ml-4 w-full bg-transparent text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="88888 99999" />
+                  <input className="ml-4 h-full w-full bg-transparent text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="88888 99999" />
                 </div>
               </label>
 

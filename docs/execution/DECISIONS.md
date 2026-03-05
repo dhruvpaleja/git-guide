@@ -179,3 +179,21 @@
 - Batch: BATCH:012
 - Decision: Hoist static hero text animation constants/character arrays in `HeroSection` outside the component function.
 - Rationale: Avoids recreation of static animation metadata and mapped character sources on each render with no UI/animation behavior change.
+
+## D-031
+- Date: 2026-03-05
+- Batch: BATCH:013
+- Decision: Expand responsiveness evidence scope from core routes to full primary route inventory (public/auth/onboarding/dashboard/practitioner/admin/astrology) in `scripts/responsive-audit.mjs`.
+- Rationale: Ensures Phase 6 handoff can prove cross-device behavior for the entire working app surface, not only a subset.
+
+## D-032
+- Date: 2026-03-05
+- Batch: BATCH:013
+- Decision: Treat decorative off-screen elements as non-failing unless they generate measurable horizontal overflow; fail conditions remain strict on actual overflow and touch-target violations.
+- Rationale: Prevents false negatives from intentionally clipped art while preserving strict detection of real responsiveness breakage.
+
+## D-033
+- Date: 2026-03-05
+- Batch: BATCH:013
+- Decision: Apply responsiveness fixes through shared/high-leverage components first (Footer, dashboard headers/widgets, onboarding controls) and then route-level targeted patches only where audit data showed failures.
+- Rationale: Maximizes coverage with minimal UI churn, keeps visual identity stable, and avoids uncontrolled redesign risk.

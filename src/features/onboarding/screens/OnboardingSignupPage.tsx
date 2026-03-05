@@ -130,7 +130,7 @@ export default function OnboardingSignupPage() {
                             <button
                                 type="button"
                                 onClick={() => navigate('/practitioner-onboarding?step=1&role=therapist')}
-                                className="underline"
+                                className="inline-flex min-h-[36px] items-center underline"
                             >
                                 Therapist / Astrologer Onboarding
                             </button>

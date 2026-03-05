@@ -1,0 +1,5333 @@
+{
+  "baseUrl": "http://127.0.0.1:4173",
+  "generatedAt": "2026-03-05T08:13:32.862Z",
+  "runLabel": "baseline",
+  "breakpoints": [
+    {
+      "name": "mobile-320",
+      "width": 320,
+      "height": 800
+    },
+    {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812
+    },
+    {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "name": "tablet-834",
+      "width": 834,
+      "height": 1112
+    },
+    {
+      "name": "desktop-1024",
+      "width": 1024,
+      "height": 768
+    },
+    {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "routes": [
+    {
+      "id": "landing",
+      "path": "/home"
+    },
+    {
+      "id": "about",
+      "path": "/about"
+    },
+    {
+      "id": "business",
+      "path": "/business"
+    },
+    {
+      "id": "corporate",
+      "path": "/business/corporate"
+    },
+    {
+      "id": "courses",
+      "path": "/courses"
+    },
+    {
+      "id": "blogs",
+      "path": "/blogs"
+    },
+    {
+      "id": "contact",
+      "path": "/contact"
+    },
+    {
+      "id": "login",
+      "path": "/login"
+    },
+    {
+      "id": "signup",
+      "path": "/signup"
+    },
+    {
+      "id": "signup-account-step",
+      "path": "/signup?step=account"
+    },
+    {
+      "id": "signup-astrology-step",
+      "path": "/signup?step=astrology"
+    },
+    {
+      "id": "signup-partner-step",
+      "path": "/signup?step=partner-details"
+    },
+    {
+      "id": "practitioner-onboarding-step-1",
+      "path": "/practitioner-onboarding?step=1&role=therapist"
+    },
+    {
+      "id": "practitioner-onboarding-step-2",
+      "path": "/practitioner-onboarding?step=2&role=therapist"
+    },
+    {
+      "id": "practitioner-onboarding-step-3",
+      "path": "/practitioner-onboarding?step=3&role=therapist"
+    },
+    {
+      "id": "dashboard-home",
+      "path": "/dashboard"
+    },
+    {
+      "id": "dashboard-sessions",
+      "path": "/dashboard/sessions"
+    },
+    {
+      "id": "dashboard-notifications",
+      "path": "/dashboard/notifications"
+    },
+    {
+      "id": "dashboard-connections",
+      "path": "/dashboard/connections"
+    },
+    {
+      "id": "dashboard-personalization",
+      "path": "/dashboard/personalization?s=4"
+    },
+    {
+      "id": "practitioner-dashboard",
+      "path": "/practitioner"
+    },
+    {
+      "id": "practitioner-clients",
+      "path": "/practitioner/clients"
+    }
+  ],
+  "report": [
+    {
+      "routeId": "landing",
+      "path": "/home",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -90,
+                "right": 410,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -590,
+                "right": 910,
+                "width": 1500
+              },
+              {
+                "selector": "img.block.max-w-none",
+                "left": -590,
+                "right": 910,
+                "width": 1500
+              },
+              {
+                "selector": "div.absolute.inset-0",
+                "left": -78,
+                "right": 398,
+                "width": 475
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -80,
+                "right": 620,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -80,
+                "right": 620,
+                "width": 700
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 80,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 81,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 86,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -62,
+                "right": 438,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -562,
+                "right": 938,
+                "width": 1500
+              },
+              {
+                "selector": "img.block.max-w-none",
+                "left": -562,
+                "right": 938,
+                "width": 1500
+              },
+              {
+                "selector": "div.absolute.inset-0",
+                "left": -52,
+                "right": 427,
+                "width": 479
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -25,
+                "right": 675,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -25,
+                "right": 675,
+                "width": 700
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 80,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 81,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 86,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -55,
+                "right": 445,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -555,
+                "right": 945,
+                "width": 1500
+              },
+              {
+                "selector": "img.block.max-w-none",
+                "left": -555,
+                "right": 945,
+                "width": 1500
+              },
+              {
+                "selector": "div.absolute.inset-0",
+                "left": -44,
+                "right": 434,
+                "width": 478
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -10,
+                "right": 690,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -10,
+                "right": 690,
+                "width": 700
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 80,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 81,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 86,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -366,
+                "right": 1134,
+                "width": 1500
+              },
+              {
+                "selector": "img.block.max-w-none",
+                "left": -366,
+                "right": 1134,
+                "width": 1500
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": 368,
+                "right": 1068,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": 368,
+                "right": 1068,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -120,
+                "right": 888,
+                "width": 1008
+              },
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -144,
+                "right": 1056,
+                "width": 1200
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 80,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 81,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 86,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -333,
+                "right": 1167,
+                "width": 1500
+              },
+              {
+                "selector": "img.block.max-w-none",
+                "left": -333,
+                "right": 1167,
+                "width": 1500
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": 434,
+                "right": 1134,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": 434,
+                "right": 1134,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -87,
+                "right": 921,
+                "width": 1008
+              },
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -122,
+                "right": 1078,
+                "width": 1200
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 80,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 81,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[14px].lg:text-[15px]",
+                "width": 86,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -238,
+                "right": 1262,
+                "width": 1500
+              },
+              {
+                "selector": "img.block.max-w-none",
+                "left": -238,
+                "right": 1262,
+                "width": 1500
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": 624,
+                "right": 1324,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": 624,
+                "right": 1324,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -59,
+                "right": 1141,
+                "width": 1200
+              },
+              {
+                "selector": "img.block.max-w-none",
+                "left": -59,
+                "right": 1141,
+                "width": 1200
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -110,
+                "right": 1390,
+                "width": 1500
+              },
+              {
+                "selector": "img.block.max-w-none",
+                "left": -110,
+                "right": 1390,
+                "width": 1500
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": 880,
+                "right": 1580,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": 880,
+                "right": 1580,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.-inset-full",
+                "left": -100,
+                "right": 393,
+                "width": 493
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.inset-[-100%]",
+                "left": -30,
+                "right": 1470,
+                "width": 1500
+              },
+              {
+                "selector": "img.block.max-w-none",
+                "left": -30,
+                "right": 1470,
+                "width": 1500
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": -300,
+                "right": 400,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.pointer-events-none",
+                "left": 1040,
+                "right": 1740,
+                "width": 700
+              },
+              {
+                "selector": "img.block.w-full",
+                "left": 1040,
+                "right": 1740,
+                "width": 700
+              },
+              {
+                "selector": "div.absolute.-inset-full",
+                "left": -20,
+                "right": 473,
+                "width": 493
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "about",
+      "path": "/about",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.mb-4",
+                "left": -6,
+                "right": 266,
+                "width": 272
+              },
+              {
+                "selector": "span.text-[#18A2B8].uppercase",
+                "left": -6,
+                "right": 115,
+                "width": 121
+              },
+              {
+                "selector": "h2.text-[48px].font-bold",
+                "left": -6,
+                "right": 266,
+                "width": 272
+              },
+              {
+                "selector": "div.mt-8.space-y-6",
+                "left": -6,
+                "right": 266,
+                "width": 272
+              },
+              {
+                "selector": "div",
+                "left": -6,
+                "right": 266,
+                "width": 272
+              },
+              {
+                "selector": "h3.text-[28px].font-bold",
+                "left": -6,
+                "right": 266,
+                "width": 272
+              },
+              {
+                "selector": "p.text-[#000000].opacity-80",
+                "left": -6,
+                "right": 266,
+                "width": 272
+              },
+              {
+                "selector": "div.pt-2",
+                "left": -6,
+                "right": 266,
+                "width": 272
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.mb-4",
+                "left": -6,
+                "right": 321,
+                "width": 327
+              },
+              {
+                "selector": "span.text-[#18A2B8].uppercase",
+                "left": -6,
+                "right": 115,
+                "width": 121
+              },
+              {
+                "selector": "h2.text-[48px].font-bold",
+                "left": -6,
+                "right": 321,
+                "width": 327
+              },
+              {
+                "selector": "div.mt-8.space-y-6",
+                "left": -6,
+                "right": 321,
+                "width": 327
+              },
+              {
+                "selector": "div",
+                "left": -6,
+                "right": 321,
+                "width": 327
+              },
+              {
+                "selector": "h3.text-[28px].font-bold",
+                "left": -6,
+                "right": 321,
+                "width": 327
+              },
+              {
+                "selector": "p.text-[#000000].opacity-80",
+                "left": -6,
+                "right": 321,
+                "width": 327
+              },
+              {
+                "selector": "div.pt-2",
+                "left": -6,
+                "right": 321,
+                "width": 327
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.mb-4",
+                "left": -6,
+                "right": 336,
+                "width": 342
+              },
+              {
+                "selector": "span.text-[#18A2B8].uppercase",
+                "left": -6,
+                "right": 115,
+                "width": 121
+              },
+              {
+                "selector": "h2.text-[48px].font-bold",
+                "left": -6,
+                "right": 336,
+                "width": 342
+              },
+              {
+                "selector": "div.mt-8.space-y-6",
+                "left": -6,
+                "right": 336,
+                "width": 342
+              },
+              {
+                "selector": "div",
+                "left": -6,
+                "right": 336,
+                "width": 342
+              },
+              {
+                "selector": "h3.text-[28px].font-bold",
+                "left": -6,
+                "right": 336,
+                "width": 342
+              },
+              {
+                "selector": "p.text-[#000000].opacity-80",
+                "left": -6,
+                "right": 336,
+                "width": 342
+              },
+              {
+                "selector": "div.pt-2",
+                "left": -6,
+                "right": 336,
+                "width": 342
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.flex.items-center",
+                "left": 591,
+                "right": 856,
+                "width": 265
+              },
+              {
+                "selector": "div.flex.flex-col",
+                "left": 591,
+                "right": 856,
+                "width": 265
+              },
+              {
+                "selector": "h3.text-[32px].md:text-[36px]",
+                "left": 599,
+                "right": 848,
+                "width": 249
+              },
+              {
+                "selector": "span",
+                "left": 779,
+                "right": 828,
+                "width": 49
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.flex.items-center",
+                "left": 591,
+                "right": 856,
+                "width": 265
+              },
+              {
+                "selector": "div.flex.flex-col",
+                "left": 591,
+                "right": 856,
+                "width": 265
+              },
+              {
+                "selector": "h3.text-[32px].md:text-[36px]",
+                "left": 599,
+                "right": 848,
+                "width": 249
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.flex.items-center",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-gray-400.hover:text-[#18A2B8]",
+                "width": 20,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "business",
+      "path": "/business",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.absolute.right-4",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.absolute.right-4",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.absolute.right-4",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.absolute.right-4",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.absolute.right-4",
+                "width": 20,
+                "height": 20
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "corporate",
+      "path": "/business/corporate",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "courses",
+      "path": "/courses",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 257,
+                "height": 20
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 312,
+                "height": 20
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 321,
+                "height": 20
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 58,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 318,
+                "height": 24
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 67,
+                "height": 21
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 67,
+                "height": 21
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 67,
+                "height": 21
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 67,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 318,
+                "height": 24
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 67,
+                "height": 21
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 67,
+                "height": 21
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 67,
+                "height": 21
+              },
+              {
+                "selector": "button.text-[12px].tracking-[-0.12px]",
+                "width": 67,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "blogs",
+      "path": "/blogs",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 239,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 294,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 309,
+                "height": 21
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 318,
+                "height": 24
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-full.bg-transparent",
+                "width": 318,
+                "height": 24
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "contact",
+      "path": "/contact",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.ml-4.w-full",
+                "width": 169,
+                "height": 21
+              },
+              {
+                "selector": "input.h-[24px].w-[24px]",
+                "width": 22,
+                "height": 24
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.ml-4.w-full",
+                "width": 222,
+                "height": 21
+              },
+              {
+                "selector": "input.h-[24px].w-[24px]",
+                "width": 24,
+                "height": 24
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.ml-4.w-full",
+                "width": 237,
+                "height": 21
+              },
+              {
+                "selector": "input.h-[24px].w-[24px]",
+                "width": 24,
+                "height": 24
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.ml-4.w-full",
+                "width": 579,
+                "height": 21
+              },
+              {
+                "selector": "input.h-[24px].w-[24px]",
+                "width": 24,
+                "height": 24
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "input.ml-4.w-full",
+                "width": 645,
+                "height": 21
+              },
+              {
+                "selector": "input.h-[24px].w-[24px]",
+                "width": 24,
+                "height": 24
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 54,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 45,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 25,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 23,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 111,
+                "height": 18
+              },
+              {
+                "selector": "a.text-[12px].text-white/70",
+                "width": 79,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "login",
+      "path": "/login",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-250px]",
+                "left": 170,
+                "right": 570,
+                "width": 400
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 170,
+                "right": 570,
+                "width": 400
+              },
+              {
+                "selector": "div.absolute.left-[-250px]",
+                "left": -250,
+                "right": 100,
+                "width": 350
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -250,
+                "right": 100,
+                "width": 350
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-white.text-[9px]",
+                "width": 72,
+                "height": 14
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "a.text-white.underline",
+                "width": 88,
+                "height": 15
+              },
+              {
+                "selector": "button.underline.hover:text-white",
+                "width": 181,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-250px]",
+                "left": 225,
+                "right": 625,
+                "width": 400
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 225,
+                "right": 625,
+                "width": 400
+              },
+              {
+                "selector": "div.absolute.left-[-250px]",
+                "left": -250,
+                "right": 100,
+                "width": 350
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -250,
+                "right": 100,
+                "width": 350
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-white.text-[9px]",
+                "width": 72,
+                "height": 14
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "a.text-white.underline",
+                "width": 88,
+                "height": 15
+              },
+              {
+                "selector": "button.underline.hover:text-white",
+                "width": 181,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-250px]",
+                "left": 240,
+                "right": 640,
+                "width": 400
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 240,
+                "right": 640,
+                "width": 400
+              },
+              {
+                "selector": "div.absolute.left-[-250px]",
+                "left": -250,
+                "right": 100,
+                "width": 350
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -250,
+                "right": 100,
+                "width": 350
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-white.text-[9px]",
+                "width": 72,
+                "height": 14
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "a.text-white.underline",
+                "width": 88,
+                "height": 15
+              },
+              {
+                "selector": "button.underline.hover:text-white",
+                "width": 181,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-250px]",
+                "left": 468,
+                "right": 968,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 468,
+                "right": 968,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-250px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-white.text-[9px]",
+                "width": 80,
+                "height": 15
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "a.text-white.underline",
+                "width": 96,
+                "height": 16
+              },
+              {
+                "selector": "button.underline.hover:text-white",
+                "width": 181,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-250px]",
+                "left": 534,
+                "right": 1034,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 534,
+                "right": 1034,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-250px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.text-white.text-[9px]",
+                "width": 80,
+                "height": 15
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "a.text-white.underline",
+                "width": 96,
+                "height": 16
+              },
+              {
+                "selector": "button.underline.hover:text-white",
+                "width": 181,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-250px]",
+                "left": 624,
+                "right": 1224,
+                "width": 600
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 624,
+                "right": 1224,
+                "width": 600
+              },
+              {
+                "selector": "div.absolute.left-[-250px]",
+                "left": -200,
+                "right": 300,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 300,
+                "width": 500
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-250px]",
+                "left": 880,
+                "right": 1480,
+                "width": 600
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 880,
+                "right": 1480,
+                "width": 600
+              },
+              {
+                "selector": "div.absolute.left-[-250px]",
+                "left": -200,
+                "right": 300,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 300,
+                "width": 500
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-250px]",
+                "left": 1040,
+                "right": 1640,
+                "width": 600
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 1040,
+                "right": 1640,
+                "width": 600
+              },
+              {
+                "selector": "div.absolute.left-[-250px]",
+                "left": -200,
+                "right": 300,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 300,
+                "width": 500
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "signup",
+      "path": "/signup",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-200px]",
+                "left": 20,
+                "right": 520,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 20,
+                "right": 520,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-200px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "button.underline",
+                "width": 210,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-200px]",
+                "left": 75,
+                "right": 575,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 75,
+                "right": 575,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-200px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "button.underline",
+                "width": 210,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-200px]",
+                "left": 90,
+                "right": 590,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 90,
+                "right": 590,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-200px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "button.underline",
+                "width": 210,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-200px]",
+                "left": 468,
+                "right": 968,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 468,
+                "right": 968,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-200px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "button.underline",
+                "width": 210,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-200px]",
+                "left": 534,
+                "right": 1034,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 534,
+                "right": 1034,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-200px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "button.underline",
+                "width": 210,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-200px]",
+                "left": 724,
+                "right": 1224,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 724,
+                "right": 1224,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-200px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-200px]",
+                "left": 980,
+                "right": 1480,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 980,
+                "right": 1480,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-200px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.right-[-200px]",
+                "left": 1140,
+                "right": 1640,
+                "width": 500
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": 1140,
+                "right": 1640,
+                "width": 500
+              },
+              {
+                "selector": "div.absolute.left-[-200px]",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              },
+              {
+                "selector": "div.w-full.h-full",
+                "left": -200,
+                "right": 250,
+                "width": 450
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "signup-account-step",
+      "path": "/signup?step=account",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.mb-8.size-[30px]",
+                "width": 30,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[10px].text-black",
+                "width": 98,
+                "height": 15
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "button.text-blue-600.underline",
+                "width": 202,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.mb-8.size-[30px]",
+                "width": 30,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[10px].text-black",
+                "width": 98,
+                "height": 15
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "button.text-blue-600.underline",
+                "width": 202,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.mb-8.size-[30px]",
+                "width": 30,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[10px].text-black",
+                "width": 98,
+                "height": 15
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "button.text-blue-600.underline",
+                "width": 202,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.mb-8.size-[30px]",
+                "width": 30,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[10px].text-black",
+                "width": 98,
+                "height": 15
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "button.text-blue-600.underline",
+                "width": 202,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.mb-8.size-[30px]",
+                "width": 30,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[10px].text-black",
+                "width": 98,
+                "height": 15
+              },
+              {
+                "selector": "button.absolute.right-4",
+                "width": 18,
+                "height": 18
+              },
+              {
+                "selector": "button.text-blue-600.underline",
+                "width": 202,
+                "height": 20
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "signup-astrology-step",
+      "path": "/signup?step=astrology",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 163,
+                "height": 17
+              },
+              {
+                "selector": "button.text-[11px].sm:text-[12px]",
+                "width": 59,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 163,
+                "height": 17
+              },
+              {
+                "selector": "button.text-[11px].sm:text-[12px]",
+                "width": 96,
+                "height": 33
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 163,
+                "height": 17
+              },
+              {
+                "selector": "button.text-[11px].sm:text-[12px]",
+                "width": 101,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 163,
+                "height": 17
+              },
+              {
+                "selector": "button.text-[11px].sm:text-[12px]",
+                "width": 110,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 163,
+                "height": 17
+              },
+              {
+                "selector": "button.text-[11px].sm:text-[12px]",
+                "width": 110,
+                "height": 18
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "signup-partner-step",
+      "path": "/signup?step=partner-details",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 170,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 170,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 170,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 170,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "warn",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": [
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 48,
+                "height": 30
+              },
+              {
+                "selector": "button.px-3.5.py-1.5",
+                "width": 47,
+                "height": 30
+              },
+              {
+                "selector": "button.text-[11px].text-black/50",
+                "width": 170,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "practitioner-onboarding-step-1",
+      "path": "/practitioner-onboarding?step=1&role=therapist",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "practitioner-onboarding-step-2",
+      "path": "/practitioner-onboarding?step=2&role=therapist",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "practitioner-onboarding-step-3",
+      "path": "/practitioner-onboarding?step=3&role=therapist",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "dashboard-home",
+      "path": "/dashboard",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.bottom-[-10%]",
+                "left": 240,
+                "right": 352,
+                "width": 112
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.relative.w-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "a.h-8.pl-0.5",
+                "width": 44,
+                "height": 32
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 79,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 66,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 83,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.bottom-[-10%]",
+                "left": 281,
+                "right": 413,
+                "width": 131
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.relative.w-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "a.h-8.pl-0.5",
+                "width": 44,
+                "height": 32
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 79,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 66,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 83,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.bottom-[-10%]",
+                "left": 293,
+                "right": 429,
+                "width": 137
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.relative.w-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "a.h-8.pl-0.5",
+                "width": 44,
+                "height": 32
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 79,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 66,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 83,
+                "height": 17
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.bottom-[-10%]",
+                "left": 576,
+                "right": 845,
+                "width": 269
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-[180px].h-8",
+                "width": 180,
+                "height": 32
+              },
+              {
+                "selector": "a.relative.w-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "a.h-8.pl-0.5",
+                "width": 88,
+                "height": 32
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 79,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 66,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.bottom-[-10%]",
+                "left": 626,
+                "right": 917,
+                "width": 292
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "input.w-[180px].h-8",
+                "width": 180,
+                "height": 32
+              },
+              {
+                "selector": "a.relative.w-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "a.h-8.pl-0.5",
+                "width": 88,
+                "height": 32
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 79,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              },
+              {
+                "selector": "button.mt-2.5.text-[11px]",
+                "width": 66,
+                "height": 17
+              },
+              {
+                "selector": "button.opacity-0.group-hover:opacity-100",
+                "width": 12,
+                "height": 12
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.bottom-[-10%]",
+                "left": 768,
+                "right": 1126,
+                "width": 358
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.bottom-[-10%]",
+                "left": 960,
+                "right": 1408,
+                "width": 448
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.absolute.bottom-[-10%]",
+                "left": 1080,
+                "right": 1584,
+                "width": 504
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "dashboard-sessions",
+      "path": "/dashboard/sessions",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "dashboard-notifications",
+      "path": "/dashboard/notifications",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "dashboard-connections",
+      "path": "/dashboard/connections",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "dashboard-personalization",
+      "path": "/dashboard/personalization?s=4",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "practitioner-dashboard",
+      "path": "/practitioner",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.relative.flex-1",
+                "left": 104,
+                "right": 384,
+                "width": 280
+              },
+              {
+                "selector": "input.w-full.bg-gray-50",
+                "left": 104,
+                "right": 384,
+                "width": 280
+              },
+              {
+                "selector": "svg",
+                "left": 352,
+                "right": 368,
+                "width": 16
+              },
+              {
+                "selector": "circle",
+                "left": 354,
+                "right": 365,
+                "width": 11
+              },
+              {
+                "selector": "div.flex.items-center",
+                "left": 340,
+                "right": 472,
+                "width": 132
+              },
+              {
+                "selector": "span.text-[12px].md:text-[14px]",
+                "left": 340,
+                "right": 401,
+                "width": 61
+              },
+              {
+                "selector": "div.flex.items-center",
+                "left": 413,
+                "right": 472,
+                "width": 59
+              },
+              {
+                "selector": "span.text-2xl.md:text-[32px]",
+                "left": 413,
+                "right": 444,
+                "width": 31
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.w-8.h-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "button.w-10.h-10",
+                "width": 30,
+                "height": 40
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 40,
+                "height": 20
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "width": 78,
+                "height": 30
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.relative.flex-1",
+                "left": 104,
+                "right": 384,
+                "width": 280
+              },
+              {
+                "selector": "input.w-full.bg-gray-50",
+                "left": 104,
+                "right": 384,
+                "width": 280
+              },
+              {
+                "selector": "div.flex.items-center",
+                "left": 340,
+                "right": 472,
+                "width": 132
+              },
+              {
+                "selector": "span.text-[12px].md:text-[14px]",
+                "left": 340,
+                "right": 401,
+                "width": 61
+              },
+              {
+                "selector": "div.flex.items-center",
+                "left": 413,
+                "right": 472,
+                "width": 59
+              },
+              {
+                "selector": "span.text-2xl.md:text-[32px]",
+                "left": 413,
+                "right": 444,
+                "width": 31
+              },
+              {
+                "selector": "svg",
+                "left": 452,
+                "right": 472,
+                "width": 20
+              },
+              {
+                "selector": "path",
+                "left": 454,
+                "right": 471,
+                "width": 17
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.w-8.h-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 40,
+                "height": 20
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "width": 78,
+                "height": 30
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "width": 79,
+                "height": 30
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.flex.items-center",
+                "left": 340,
+                "right": 472,
+                "width": 132
+              },
+              {
+                "selector": "span.text-[12px].md:text-[14px]",
+                "left": 340,
+                "right": 401,
+                "width": 61
+              },
+              {
+                "selector": "div.flex.items-center",
+                "left": 413,
+                "right": 472,
+                "width": 59
+              },
+              {
+                "selector": "span.text-2xl.md:text-[32px]",
+                "left": 413,
+                "right": 444,
+                "width": 31
+              },
+              {
+                "selector": "svg",
+                "left": 452,
+                "right": 472,
+                "width": 20
+              },
+              {
+                "selector": "path",
+                "left": 454,
+                "right": 471,
+                "width": 17
+              },
+              {
+                "selector": "div.flex.items-center",
+                "left": 239,
+                "right": 404,
+                "width": 165
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "left": 325,
+                "right": 404,
+                "width": 79
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.w-8.h-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 40,
+                "height": 20
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "width": 78,
+                "height": 30
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "width": 79,
+                "height": 30
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.flex.items-center",
+                "left": 719,
+                "right": 892,
+                "width": 173
+              },
+              {
+                "selector": "span.text-[12px].md:text-[14px]",
+                "left": 719,
+                "right": 804,
+                "width": 85
+              },
+              {
+                "selector": "span.text-2xl.md:text-[32px]",
+                "left": 824,
+                "right": 892,
+                "width": 67
+              },
+              {
+                "selector": "div.absolute.w-4",
+                "left": 739,
+                "right": 771,
+                "width": 32
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.w-8.h-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 40,
+                "height": 20
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "width": 91,
+                "height": 30
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "width": 91,
+                "height": 30
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.flex.items-center",
+                "left": 785,
+                "right": 958,
+                "width": 173
+              },
+              {
+                "selector": "span.text-[12px].md:text-[14px]",
+                "left": 785,
+                "right": 870,
+                "width": 85
+              },
+              {
+                "selector": "span.text-2xl.md:text-[32px]",
+                "left": 890,
+                "right": 958,
+                "width": 67
+              }
+            ],
+            "smallTouchTargets": [
+              {
+                "selector": "a.w-8.h-8",
+                "width": 32,
+                "height": 32
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 90,
+                "height": 20
+              },
+              {
+                "selector": "button.text-[13px].font-medium",
+                "width": 40,
+                "height": 20
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.absolute.bottom-5",
+                "width": 61,
+                "height": 17
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "width": 91,
+                "height": 30
+              },
+              {
+                "selector": "button.px-5.py-1.5",
+                "width": 91,
+                "height": 30
+              }
+            ]
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "fail",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [
+              {
+                "selector": "div.flex.items-center",
+                "left": 975,
+                "right": 1148,
+                "width": 173
+              },
+              {
+                "selector": "span.text-[12px].md:text-[14px]",
+                "left": 975,
+                "right": 1060,
+                "width": 85
+              },
+              {
+                "selector": "span.text-2xl.md:text-[32px]",
+                "left": 1080,
+                "right": 1148,
+                "width": 67
+              }
+            ],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    },
+    {
+      "routeId": "practitioner-clients",
+      "path": "/practitioner/clients",
+      "results": [
+        {
+          "breakpoint": "mobile-320",
+          "viewport": "320x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-375",
+          "viewport": "375x812",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "mobile-390",
+          "viewport": "390x844",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-768",
+          "viewport": "768x1024",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "tablet-834",
+          "viewport": "834x1112",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1024",
+          "viewport": "1024x768",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1280",
+          "viewport": "1280x800",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        },
+        {
+          "breakpoint": "desktop-1440",
+          "viewport": "1440x900",
+          "status": "pass",
+          "diagnostics": {
+            "horizontalOverflowPx": 0,
+            "outOfViewportElements": [],
+            "smallTouchTargets": []
+          }
+        }
+      ]
+    }
+  ]
+}

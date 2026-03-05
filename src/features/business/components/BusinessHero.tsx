@@ -27,7 +27,7 @@ export default function BusinessHero() {
                     />
                     <button
                         type="button"
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 hover:text-black transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full flex items-center justify-center text-black/40 hover:text-black hover:bg-black/5 transition-colors"
                     >
                         <Search size={20} strokeWidth={2} />
                     </button>

@@ -95,7 +95,7 @@ export default function PatternAlerts() {
                                                     onClick={() => setDismissed((s) => new Set(s).add(alert.id))}
                                                     title="Dismiss alert"
                                                     aria-label="Dismiss alert"
-                                                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    className="h-9 w-9 flex items-center justify-center rounded-full opacity-70 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white/[0.05] transition-opacity"
                                                 >
                                                     <X className="w-3 h-3 text-white/15 hover:text-white/40" />
                                                 </button>
@@ -119,7 +119,7 @@ export default function PatternAlerts() {
                                         </p>
                                         <button
                                             onClick={() => navigate(alert.actionRoute)}
-                                            className="mt-2.5 text-[11px] text-white/25 hover:text-white/55 transition-colors font-medium"
+                                            className="mt-2.5 inline-flex min-h-[36px] items-center text-[11px] text-white/25 hover:text-white/55 transition-colors font-medium"
                                         >
                                             {alert.actionText} →
                                         </button>

@@ -114,7 +114,7 @@ export default function LoginPage() {
                                 </label>
                                 <Link
                                     to="/forgot-password"
-                                    className="text-white text-[9px] sm:text-[10px] hover:text-white/80 transition-colors"
+                                    className="inline-flex min-h-[36px] items-center text-white text-[12px] sm:text-[13px] hover:text-white/80 transition-colors"
                                 >
                                     Forgot Password
                                 </Link>
@@ -133,7 +133,7 @@ export default function LoginPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/70 transition-colors"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 h-9 w-9 flex items-center justify-center rounded-full text-white/50 hover:text-white/70 hover:bg-white/5 transition-colors"
                                     disabled={isLoading}
                                 >
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -188,7 +188,7 @@ export default function LoginPage() {
                         <span className="text-white/50">I Don't Have An Account </span>
                         <Link
                             to="/signup"
-                            className="text-white underline hover:text-white/80 transition-colors"
+                            className="inline-flex min-h-[36px] items-center text-white underline hover:text-white/80 transition-colors"
                         >
                             Create Account
                         </Link>
@@ -196,7 +196,7 @@ export default function LoginPage() {
                             <button
                                 type="button"
                                 onClick={() => navigate('/practitioner-onboarding?step=1')}
-                                className="underline hover:text-white"
+                                className="inline-flex min-h-[36px] items-center underline hover:text-white"
                             >
                                 Practitioner/Astrologer Onboarding
                             </button>

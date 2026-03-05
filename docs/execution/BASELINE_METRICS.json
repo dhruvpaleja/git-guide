@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-05T20:52:00+05:30",
+  "generated_at": "2026-03-06T01:45:00+05:30",
   "notes": "Phase 0 baseline preserved with incremental batch updates for handoff continuity.",
   "baseline": {
     "frontend": {
@@ -249,6 +249,41 @@
         "main_css": 0
       },
       "notes": "Added deterministic bundle budget policy enforcement and low-risk render-path optimizations in Navigation, SoulConstellationMap, and HeroSection while preserving QA auth/mock behavior and existing UI flows."
+    },
+    {
+      "batch_id": "BATCH:013",
+      "phase": "6 responsiveness pass",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint_ci": "pass",
+        "quality_ci": "pass",
+        "responsive_audit_final": "pass_328_of_328"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 114,
+        "landing_page_chunk_kb": 91.42,
+        "vendor_chunk_kb": 98.46,
+        "animation_chunk_kb": 193.91,
+        "three_core_chunk_kb": 181.68
+      },
+      "responsive_metrics": {
+        "routes_audited": 41,
+        "breakpoints_audited": 8,
+        "total_route_breakpoint_checks": 328,
+        "fail_count": 0,
+        "warn_count": 0,
+        "pass_count": 328,
+        "baseline_issue_count_before_fixes": 78
+      },
+      "evidence_paths": {
+        "matrix": "docs/execution/evidence/BATCH_013_RESPONSIVENESS/MATRIX.md",
+        "final_report": "docs/execution/evidence/BATCH_013_RESPONSIVENESS/final/report.json",
+        "screenshots_root": "docs/execution/evidence/BATCH_013_RESPONSIVENESS/final"
+      },
+      "notes": "Completed full-route responsiveness verification and applied touch-target/layout overflow fixes with no auth-flow or core visual-style regressions. Mock-auth/dev-login behavior unchanged."
     }
   ]
 }

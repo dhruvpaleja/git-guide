@@ -28,7 +28,7 @@ export default function AstrologyDashboard() {
       {/* Header */}
       <header className="bg-black/20 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex flex-col gap-3 py-3 sm:h-16 sm:py-0 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                 <Sparkles className="w-6 h-6 text-white" />
@@ -38,12 +38,12 @@ export default function AstrologyDashboard() {
                 <p className="text-xs text-white/60">Welcome, Test Astrologer</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               <Button 
                 variant="ghost" 
                 size="sm"
                 onClick={() => navigate('/dashboard')}
-                className="text-white/70 hover:text-white"
+                className="text-white/70 hover:text-white w-full sm:w-auto justify-center sm:justify-start"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Main
@@ -52,7 +52,7 @@ export default function AstrologyDashboard() {
                 variant="outline" 
                 size="sm"
                 onClick={handleLogout}
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white hover:bg-white/10 w-full sm:w-auto"
               >
                 Logout
               </Button>
@@ -177,7 +177,7 @@ export default function AstrologyDashboard() {
                   ].map((consultation, index) => (
                     <div 
                       key={index}
-                      className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10"
+                      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-white/5 rounded-lg border border-white/10"
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
@@ -190,7 +190,7 @@ export default function AstrologyDashboard() {
                           <div className="text-sm text-white/60">{consultation.type}</div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end">
                         <div className="flex items-center gap-2 text-white/70">
                           <Clock className="w-4 h-4" />
                           <span className="text-sm">{consultation.time}</span>

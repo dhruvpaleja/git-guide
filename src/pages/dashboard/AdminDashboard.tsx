@@ -32,7 +32,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <header className="bg-slate-900 border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex flex-col gap-3 py-3 sm:h-16 sm:py-0 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
@@ -42,12 +42,12 @@ export default function AdminDashboard() {
                 <p className="text-xs text-slate-400">Platform Management</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               <Button 
                 variant="ghost" 
                 size="sm"
                 onClick={() => navigate('/dashboard')}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-400 hover:text-white w-full sm:w-auto justify-center sm:justify-start"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 User View
@@ -56,7 +56,7 @@ export default function AdminDashboard() {
                 variant="outline" 
                 size="sm"
                 onClick={handleLogout}
-                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+                className="border-slate-600 text-slate-300 hover:bg-slate-800 w-full sm:w-auto"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
                   ].map((activity, index) => (
                     <div 
                       key={index}
-                      className="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700"
+                      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700"
                     >
                       <div className="flex items-center gap-4">
                         <div className={`w-2 h-2 rounded-full ${
@@ -197,7 +197,7 @@ export default function AdminDashboard() {
                           <div className="text-sm text-slate-400">{activity.user}</div>
                         </div>
                       </div>
-                      <div className="text-sm text-slate-500">{activity.time}</div>
+                      <div className="text-sm text-slate-500 sm:pl-4">{activity.time}</div>
                     </div>
                   ))}
                 </div>

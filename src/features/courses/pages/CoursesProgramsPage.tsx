@@ -74,7 +74,7 @@ export default function CoursesProgramsPage() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-transparent text-[13px] tracking-[-0.13px] placeholder:text-black/50 focus:outline-none sm:text-[14px] sm:tracking-[-0.14px] md:text-[16px] md:tracking-[-0.16px]"
+            className="h-full w-full bg-transparent text-[13px] tracking-[-0.13px] placeholder:text-black/50 focus:outline-none sm:text-[14px] sm:tracking-[-0.14px] md:text-[16px] md:tracking-[-0.16px]"
             placeholder="Search for courses..."
           />
           {searchTerm && (
@@ -148,7 +148,7 @@ export default function CoursesProgramsPage() {
                     </h2>
                     <button 
                       type="button" 
-                      className="text-[12px] tracking-[-0.12px] text-black/50 transition-all duration-300 hover:text-black hover:translate-x-1 sm:text-[13px] sm:tracking-[-0.13px] md:text-[14px] md:tracking-[-0.14px]"
+                      className="inline-flex min-h-[40px] items-center text-[12px] tracking-[-0.12px] text-black/50 transition-all duration-300 hover:text-black hover:translate-x-1 sm:text-[13px] sm:tracking-[-0.13px] md:text-[14px] md:tracking-[-0.14px]"
                     >
                       View All →
                     </button>

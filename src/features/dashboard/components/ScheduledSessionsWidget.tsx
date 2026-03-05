@@ -38,7 +38,7 @@ export function ScheduledSessionItem({ name, type, time, isActive = false }: Ses
                 <div className={`px-4 py-1.5 rounded-full text-xs font-semibold ${timeBg}`}>
                     {time}
                 </div>
-                <button className={`px-5 py-1.5 rounded-full text-xs font-semibold transition-colors ${buttonStyle}`}>
+                <button className={`min-h-[36px] px-5 py-2 rounded-full text-xs font-semibold transition-colors ${buttonStyle}`}>
                     Start Call
                 </button>
             </div>

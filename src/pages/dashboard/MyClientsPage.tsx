@@ -174,11 +174,11 @@ export default function MyClientsPage() {
 
                                 {/* Actions */}
                                 <div className="flex items-center gap-2 ml-auto shrink-0">
-                                    <button className="px-4 py-1.5 rounded-full text-[11px] font-semibold text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 transition-colors hidden sm:block">
+                                    <button className="min-h-[36px] px-4 py-2 rounded-full text-[11px] font-semibold text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 transition-colors hidden sm:block">
                                         Previous Sessions
                                     </button>
-                                    <span className="px-4 py-1.5 rounded-full border border-gray-200 text-[11px] font-semibold text-gray-500 bg-gray-50">{client.time}</span>
-                                    <button className="px-5 py-1.5 rounded-full text-[11px] font-bold text-white bg-[#14B8A6] hover:bg-[#0D9488] transition-colors shadow-sm">
+                                    <span className="min-h-[36px] inline-flex items-center px-4 py-2 rounded-full border border-gray-200 text-[11px] font-semibold text-gray-500 bg-gray-50">{client.time}</span>
+                                    <button className="min-h-[36px] px-5 py-2 rounded-full text-[11px] font-bold text-white bg-[#14B8A6] hover:bg-[#0D9488] transition-colors shadow-sm">
                                         Reschedule
                                     </button>
                                     <button className="w-8 h-8 rounded-full border border-gray-200 items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors hidden sm:flex">
@@ -226,7 +226,7 @@ export default function MyClientsPage() {
                                         </div>
 
                                         <div className="flex items-center gap-2">
-                                            <button className="px-5 py-1.5 rounded-full text-[11px] font-bold text-red-500 bg-red-50 border border-red-100 hover:bg-red-100 transition-colors">
+                                            <button className="min-h-[36px] px-5 py-2 rounded-full text-[11px] font-bold text-red-500 bg-red-50 border border-red-100 hover:bg-red-100 transition-colors">
                                                 Ignore
                                             </button>
                                             <button className="w-8 h-8 rounded-full border border-gray-200 items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors hidden sm:flex">

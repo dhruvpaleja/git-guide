@@ -140,7 +140,7 @@ export function MetricCard({ title, date, amount, badgeText, theme }: MetricCard
             </div>
 
             {/* View Details Link */}
-            <button className={`absolute bottom-5 right-5 text-[11px] font-medium transition-colors ${viewDetailsColor}`}>
+            <button className={`absolute bottom-4 right-4 min-h-[36px] px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors ${viewDetailsColor}`}>
                 View Details
             </button>
 

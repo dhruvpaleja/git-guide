@@ -153,7 +153,7 @@ export default function TodaysSessionsPage() {
                                     {/* Action buttons */}
                                     <div className="flex items-center gap-2 ml-auto">
                                         <span className="px-4 py-1.5 rounded-full border border-white/20 text-xs font-medium text-white/70">{heroSession.time}</span>
-                                        <button className="px-5 py-1.5 rounded-full border border-white/20 text-xs font-semibold hover:bg-white/10 transition-colors">Reschedule</button>
+                                        <button className="min-h-[36px] px-5 py-2 rounded-full border border-white/20 text-xs font-semibold hover:bg-white/10 transition-colors">Reschedule</button>
                                         <button title="Join Call" aria-label="Join Call" className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors">
                                             <Camera className="w-4 h-4 text-white/70" />
                                         </button>

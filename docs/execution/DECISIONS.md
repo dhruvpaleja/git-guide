@@ -197,3 +197,9 @@
 - Batch: BATCH:013
 - Decision: Apply responsiveness fixes through shared/high-leverage components first (Footer, dashboard headers/widgets, onboarding controls) and then route-level targeted patches only where audit data showed failures.
 - Rationale: Maximizes coverage with minimal UI churn, keeps visual identity stable, and avoids uncontrolled redesign risk.
+
+## D-034
+- Date: 2026-03-05
+- Batch: BATCH:013
+- Decision: Exclude local AI-agent/playwright helper trees (`.agent/**`, `.agents/**`, `playwright-utils/**`, `tests/**`) from root ESLint global scope.
+- Rationale: These paths are local tooling assets, not production app surface; keeping them in root `lint:ci` created false gate failures that blocked Phase 6 verification despite healthy product code.

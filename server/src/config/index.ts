@@ -34,6 +34,14 @@ function envInt(key: string, fallback: number): number {
   return parseInt(process.env[key] || String(fallback), 10);
 }
 
+function envBool(key: string, fallback: boolean): boolean {
+  const value = process.env[key];
+  if (value === undefined) {
+    return fallback;
+  }
+  return ['1', 'true', 'yes', 'on'].includes(value.toLowerCase());
+}
+
 // ---------------------------------------------------------------------------
 // Unified Config
 // ---------------------------------------------------------------------------
@@ -45,6 +53,12 @@ export const config = {
   isProduction,
   isDevelopment,
   isTest,
+
+  // ---- Runtime Route Flags ----
+  runtime: {
+    enableDevRoutes: envBool('ENABLE_DEV_ROUTES', isDevelopment),
+    enableTestRoutes: envBool('ENABLE_TEST_ROUTES', isDevelopment || isTest),
+  },
 
   // ---- API ----
   api: {

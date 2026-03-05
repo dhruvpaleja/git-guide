@@ -1,0 +1,114 @@
+{
+  "generated_at": "2026-03-05T13:20:00.000Z",
+  "notes": "Phase 0 baseline preserved with incremental batch updates for handoff continuity.",
+  "baseline": {
+    "frontend": {
+      "typecheck": {
+        "status": "pass",
+        "command": "npm run type-check"
+      },
+      "lint": {
+        "status": "pass_with_warnings",
+        "command": "npm run lint:check",
+        "warning_count": 30
+      }
+    },
+    "server": {
+      "build": {
+        "status": "pass",
+        "command": "npm run build",
+        "workdir": "server"
+      }
+    },
+    "route_inventory": {
+      "protected_frontend_routes_file": "src/router/index.tsx",
+      "server_mount_file": "server/src/index.ts",
+      "server_routes_index_file": "server/src/routes/index.ts"
+    },
+    "critical_findings_snapshot": [
+      "auth bypass in ProtectedRoute",
+      "mock auth enabled inline in AuthContext",
+      "dev/test route exposure risk",
+      "websocket auth claim mismatch",
+      "token storage key inconsistency"
+    ]
+  },
+  "batch_history": [
+    {
+      "batch_id": "BATCH:001",
+      "phase": "0 + 1",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint": "pass_with_warnings",
+        "server_build": "pass"
+      }
+    },
+    {
+      "batch_id": "BATCH:002",
+      "phase": "1",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_zero_warning": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 418.85,
+        "landing_page_chunk_kb": 161.71,
+        "vendor_chunk_kb": 98.47
+      }
+    },
+    {
+      "batch_id": "BATCH:003",
+      "phase": "2",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_zero_warning": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 419.15,
+        "landing_page_chunk_kb": 161.98,
+        "vendor_chunk_kb": 98.47
+      },
+      "notes": "Architecture convergence only; mock auth and UI/UX behavior intentionally preserved."
+    },
+    {
+      "batch_id": "BATCH:004",
+      "phase": "3",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_zero_warning": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 419.74,
+        "landing_page_chunk_kb": 161.98,
+        "vendor_chunk_kb": 98.47
+      },
+      "notes": "Shared contracts unified auth/API/websocket typing across frontend/backend with backward-compatible adapters and no QA flow changes."
+    },
+    {
+      "batch_id": "BATCH:005",
+      "phase": "1 + 2 re-verification",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_zero_warning": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 420.36,
+        "landing_page_chunk_kb": 161.98,
+        "vendor_chunk_kb": 98.47
+      },
+      "notes": "Phase 1/2 re-audit identified and fixed guardrail drift (runtime flag control + fail-closed dev/test route defaults) without changing QA-visible UI behavior."
+    }
+  ]
+}

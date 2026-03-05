@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
-import { PractitionerHeader } from '@/features/dashboard/components/PractitionerHeader';
+import { PractitionerSidebar, PractitionerHeader } from '@/features/dashboard';
 import { Camera, MoreVertical, ChevronLeft, Star, TrendingUp } from 'lucide-react';
 
 /* ── Hard-coded data ─────────────────────────────────────────── */
@@ -155,10 +154,10 @@ export default function TodaysSessionsPage() {
                                     <div className="flex items-center gap-2 ml-auto">
                                         <span className="px-4 py-1.5 rounded-full border border-white/20 text-xs font-medium text-white/70">{heroSession.time}</span>
                                         <button className="px-5 py-1.5 rounded-full border border-white/20 text-xs font-semibold hover:bg-white/10 transition-colors">Reschedule</button>
-                                        <button className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors">
+                                        <button title="Join Call" aria-label="Join Call" className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors">
                                             <Camera className="w-4 h-4 text-white/70" />
                                         </button>
-                                        <button className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors">
+                                        <button title="More Options" aria-label="More Options" className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors">
                                             <MoreVertical className="w-4 h-4 text-white/70" />
                                         </button>
                                     </div>
@@ -232,10 +231,10 @@ export default function TodaysSessionsPage() {
                                             <button className="px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-[#2C2F7A] hover:bg-[#24276B] transition-colors">
                                                 Reschedule
                                             </button>
-                                            <button className="w-8 h-8 rounded-full border border-gray-200 items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors hidden sm:flex">
+                                            <button title="Join Call" aria-label="Join Call" className="w-8 h-8 rounded-full border border-gray-200 items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors hidden sm:flex">
                                                 <Camera className="w-3.5 h-3.5" />
                                             </button>
-                                            <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors">
+                                            <button title="More Options" aria-label="More Options" className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors">
                                                 <MoreVertical className="w-4 h-4" />
                                             </button>
                                         </div>

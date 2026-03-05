@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Auth Context
  * Global authentication state management
@@ -9,6 +10,7 @@ import type { User, UserRole } from '@/types';
 import apiService from '@/services/api.service';
 import { toast } from 'sonner';
 import { STORAGE_KEYS } from '@/constants';
+import { runtimeFlags } from '@/config';
 
 interface AuthContextType {
   user: User | null;
@@ -32,7 +34,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       // Check if this is a dev login email
-      const isDevLogin = ['user@test.com', 'therapist@test.com', 'astrologer@test.com', 'admin@test.com'].includes(email);
+      const isDevLogin = runtimeFlags.mockAuthEnabled
+        && ['user@test.com', 'therapist@test.com', 'astrologer@test.com', 'admin@test.com'].includes(email);
 
       // MOCK MODE: Test accounts work without API call (guaranteed to work)
       if (isDevLogin) {

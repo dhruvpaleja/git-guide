@@ -60,7 +60,7 @@ export default function CorporateSection() {
               className="rounded-[20px] md:rounded-[30px] border border-white/60 backdrop-blur-md flex flex-col items-center justify-center px-4 md:px-5 py-3 md:py-4 shrink-0 w-full md:w-[200px]"
               style={{ background: 'rgba(255,255,255,0.25)' }}
             >
-              <h4 className="text-sm md:text-[16px] font-semibold text-black mb-1">Topic</h4>
+              <h3 className="text-sm md:text-[16px] font-semibold text-black mb-1">Topic</h3>
               <p className="text-[11px] md:text-[12px] text-black/90 text-center leading-snug">
                 Leadership Mindfulness Training
               </p>
@@ -71,7 +71,7 @@ export default function CorporateSection() {
               className="rounded-[20px] md:rounded-[30px] border border-white/60 backdrop-blur-md flex flex-col items-center justify-center px-4 md:px-5 py-3 md:py-4 shrink-0 w-full md:w-[280px]"
               style={{ background: 'rgba(255,255,255,0.25)' }}
             >
-              <h4 className="text-sm md:text-[16px] font-semibold text-black mb-1">Problem</h4>
+              <h3 className="text-sm md:text-[16px] font-semibold text-black mb-1">Problem</h3>
               <p className="text-[11px] md:text-[12px] text-black/90 text-center leading-[1.6]">
                 Workplace pressure drives leader burnout and reactive decisions, impacting teams.
               </p>
@@ -82,7 +82,7 @@ export default function CorporateSection() {
               className="rounded-[20px] md:rounded-[30px] border border-white/60 backdrop-blur-md flex flex-col items-center justify-center px-4 md:px-5 py-3 md:py-4 flex-1 md:min-w-[300px]"
               style={{ background: 'rgba(255,255,255,0.25)' }}
             >
-              <h4 className="text-sm md:text-[16px] font-semibold text-black mb-1">Solution</h4>
+              <h3 className="text-sm md:text-[16px] font-semibold text-black mb-1">Solution</h3>
               <p className="text-[11px] md:text-[12px] text-black/90 text-center leading-[1.6]">
                 Soul Yatri's Leadership Mindfulness Training helps leaders build clarity and emotional intelligence through a 4–8 week program.
               </p>

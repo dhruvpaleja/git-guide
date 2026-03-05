@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
@@ -5,6 +6,7 @@ import Navigation from '@/components/layout/Navigation';
 import { useAuth } from '@/context/AuthContext';
 
 export default function LoginPage() {
+    useDocumentTitle('Login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -82,7 +84,7 @@ export default function LoginPage() {
 
                     {/* Error Message */}
                     {error && (
-                        <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-3 sm:px-4 py-2 sm:py-2.5 rounded-[18px] sm:rounded-[20px] text-xs sm:text-sm text-center">
+                        <div role="alert" className="bg-red-500/10 border border-red-500/20 text-red-400 px-3 sm:px-4 py-2 sm:py-2.5 rounded-[18px] sm:rounded-[20px] text-xs sm:text-sm text-center">
                             {error}
                         </div>
                     )}
@@ -97,6 +99,7 @@ export default function LoginPage() {
                             <input
                                 id="email"
                                 type="email"
+                                autoComplete="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Ex. dhruvpaleja10@hotmail.com"
@@ -123,6 +126,7 @@ export default function LoginPage() {
                                 <input
                                     id="password"
                                     type={showPassword ? 'text' : 'password'}
+                                    autoComplete="current-password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Ex. dhruvpaleja23314@"

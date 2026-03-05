@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
@@ -35,6 +36,7 @@ const clientIntake = [
 /* ── Component ───────────────────────────────────────────────── */
 
 export default function MyClientsPage() {
+    useDocumentTitle('My Clients');
     const [activeFilter, setActiveFilter] = useState<'all' | 'therapy' | 'counselling'>('all');
 
     const filteredClients = activeFilter === 'all'
@@ -59,8 +61,8 @@ export default function MyClientsPage() {
 
                     <div className="flex items-center gap-3">
                         {/* Notification bell */}
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <button aria-label="Notifications" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                            <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
                         </button>
                         {/* Search */}
                         <div className="hidden lg:flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100 min-w-[220px]">
@@ -68,11 +70,11 @@ export default function MyClientsPage() {
                             <Search className="w-4 h-4 text-gray-300 ml-auto" />
                         </div>
                         {/* Filter icon */}
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                        <button aria-label="Filter" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
                             <SlidersHorizontal className="w-4 h-4" />
                         </button>
                         {/* Info icon */}
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                        <button aria-label="Info" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
                             <AlertCircle className="w-4 h-4" />
                         </button>
                         {/* Ignored Clients */}
@@ -87,7 +89,7 @@ export default function MyClientsPage() {
                     <div className="bg-[#1A1A1A] text-white rounded-b-[20px] px-6 py-3 flex items-center justify-between max-w-3xl ml-auto">
                         <div className="flex items-center gap-2">
                             <span className="text-xs text-white/50 font-medium">Total Earnings</span>
-                            <span className="text-xl font-bold">₹48.5k<span className="text-sm font-normal text-white/40">.80</span></span>
+                            <span className="text-xl font-bold">₹48.5k<span className="text-sm font-normal text-white/50">.80</span></span>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="text-xs text-white/50 font-medium">Your Rating</span>
@@ -181,10 +183,10 @@ export default function MyClientsPage() {
                                     <button className="min-h-[36px] px-5 py-2 rounded-full text-[11px] font-bold text-white bg-[#14B8A6] hover:bg-[#0D9488] transition-colors shadow-sm">
                                         Reschedule
                                     </button>
-                                    <button className="w-8 h-8 rounded-full border border-gray-200 items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors hidden sm:flex">
+                                    <button aria-label="Video call" className="w-8 h-8 rounded-full border border-gray-200 items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors hidden sm:flex">
                                         <Camera className="w-3.5 h-3.5" />
                                     </button>
-                                    <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors">
+                                    <button aria-label="More options" className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors">
                                         <MoreVertical className="w-4 h-4" />
                                     </button>
                                 </div>
@@ -229,10 +231,10 @@ export default function MyClientsPage() {
                                             <button className="min-h-[36px] px-5 py-2 rounded-full text-[11px] font-bold text-red-500 bg-red-50 border border-red-100 hover:bg-red-100 transition-colors">
                                                 Ignore
                                             </button>
-                                            <button className="w-8 h-8 rounded-full border border-gray-200 items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors hidden sm:flex">
+                                            <button aria-label="Video call" className="w-8 h-8 rounded-full border border-gray-200 items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors hidden sm:flex">
                                                 <Camera className="w-3.5 h-3.5" />
                                             </button>
-                                            <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors">
+                                            <button aria-label="More options" className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors">
                                                 <MoreVertical className="w-4 h-4" />
                                             </button>
                                         </div>

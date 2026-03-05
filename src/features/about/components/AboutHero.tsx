@@ -46,8 +46,10 @@ export default function AboutHero() {
             </div>
 
             {/* Scroll Down Arrow */}
-            <div
-                className="mt-20 flex justify-center items-center w-[60px] h-[60px] rounded-full border border-black/10 cursor-pointer hover:bg-black/5 transition-colors"
+            <button
+                type="button"
+                aria-label="Scroll down"
+                className="mt-20 flex justify-center items-center w-[60px] h-[60px] rounded-full border border-black/10 cursor-pointer hover:bg-black/5 transition-colors bg-transparent"
                 style={{
                     opacity: isVisible ? 1 : 0,
                     transform: isVisible ? 'translateY(0)' : 'translateY(12px)',
@@ -55,10 +57,10 @@ export default function AboutHero() {
                 }}
                 onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
             >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M12 4L12 20M12 20L6 14M12 20L18 14" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-            </div>
+            </button>
         </section>
     );
 }

@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, ArrowUp, CheckCircle2, Loader2, Shield, Lock, Clock, Flame } from 'lucide-react';
@@ -12,6 +13,7 @@ interface ConfessionEntry {
 }
 
 export default function ConfessionalPage() {
+  useDocumentTitle('The Confessional');
   const [text, setText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -72,7 +74,7 @@ export default function ConfessionalPage() {
           </div>
           <div>
             <h1 className="text-xl font-semibold text-white/90 tracking-tight">The Confessional</h1>
-            <p className="text-sm text-white/30">Your safe room. Nothing leaves here.</p>
+            <p className="text-sm text-white/50">Your safe room. Nothing leaves here.</p>
           </div>
         </div>
 
@@ -194,7 +196,7 @@ export default function ConfessionalPage() {
           animate={{ opacity: 1 }}
           className="mt-8"
         >
-          <h3 className="text-white/30 uppercase tracking-wider text-xs font-semibold mb-4 ml-2">
+          <h3 className="text-white/50 uppercase tracking-wider text-xs font-semibold mb-4 ml-2">
             Previous confessions
           </h3>
 
@@ -208,7 +210,7 @@ export default function ConfessionalPage() {
                 className="p-5 rounded-2xl bg-[#0c0c0c] border border-[#1a1a1a]"
               >
                 <p className="text-sm text-white/50 leading-relaxed">{entry.content}</p>
-                <p className="text-[11px] text-white/30 mt-2">
+                <p className="text-[11px] text-white/50 mt-2">
                   {new Date(entry.createdAt).toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',

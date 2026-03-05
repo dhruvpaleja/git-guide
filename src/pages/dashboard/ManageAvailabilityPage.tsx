@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
@@ -77,6 +78,7 @@ const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'Jul
 /* ── Component ───────────────────────────────────────────────── */
 
 export default function ManageAvailabilityPage() {
+    useDocumentTitle('Manage Availability');
     const [activeTab, setActiveTab] = useState<'schedule' | 'tasks' | 'events'>('schedule');
     const [viewMode, setViewMode] = useState<'Day' | 'Week'>('Week');
     const [currentMonth, setCurrentMonth] = useState(11); // December
@@ -121,17 +123,17 @@ export default function ManageAvailabilityPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <button aria-label="Notifications" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                            <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
                         </button>
                         <div className="hidden lg:flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100 min-w-[220px]">
                             <span className="text-sm text-gray-400">Search for what you want...</span>
                             <Search className="w-4 h-4 text-gray-300 ml-auto" />
                         </div>
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                        <button aria-label="Filter" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
                             <SlidersHorizontal className="w-4 h-4" />
                         </button>
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                        <button aria-label="Info" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
                             <AlertCircle className="w-4 h-4" />
                         </button>
                         <button className="text-sm font-medium text-orange-400 hover:text-orange-500 transition-colors hidden md:block">Ignored Clients</button>
@@ -178,7 +180,7 @@ export default function ManageAvailabilityPage() {
                                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                 )}
                             </button>
-                            <button className="w-10 h-10 rounded-full bg-[#2C2F7A] text-white flex items-center justify-center hover:bg-[#24276B] transition-colors shadow-md">
+                            <button aria-label="Add event" className="w-10 h-10 rounded-full bg-[#2C2F7A] text-white flex items-center justify-center hover:bg-[#24276B] transition-colors shadow-md">
                                 <Plus className="w-5 h-5" />
                             </button>
                         </div>
@@ -214,10 +216,10 @@ export default function ManageAvailabilityPage() {
                                 Today
                             </button>
                             <div className="flex items-center gap-1">
-                                <button onClick={handlePrevMonth} className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors bg-white">
+                                <button onClick={handlePrevMonth} aria-label="Previous month" className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors bg-white">
                                     <ChevronLeft className="w-4 h-4 text-gray-600" />
                                 </button>
-                                <button onClick={handleNextMonth} className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors bg-white">
+                                <button onClick={handleNextMonth} aria-label="Next month" className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors bg-white">
                                     <ChevronRight className="w-4 h-4 text-gray-600" />
                                 </button>
                             </div>
@@ -256,7 +258,11 @@ export default function ManageAvailabilityPage() {
                                 return (
                                     <div key={day} className={`p-3 text-center border-l border-gray-100 cursor-pointer transition-colors ${dayNum === selectedDay ? 'bg-[#1A1A1A]' : 'hover:bg-gray-50'
                                         }`}
+                                        role="button"
+                                        tabIndex={0}
+                                        aria-label={`Select ${day}${dayNum > 0 && dayNum <= daysInMonth ? ` ${dayNum}` : ''}`}
                                         onClick={() => { if (dayNum > 0 && dayNum <= daysInMonth) setSelectedDay(dayNum); }}
+                                        onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && dayNum > 0 && dayNum <= daysInMonth) { e.preventDefault(); setSelectedDay(dayNum); } }}
                                     >
                                         <span className={`text-[10px] font-bold uppercase tracking-wider ${dayNum === selectedDay ? 'text-white/60' : 'text-gray-400'}`}>
                                             {day}
@@ -360,10 +366,10 @@ export default function ManageAvailabilityPage() {
                         <div className="flex items-center justify-between mb-4">
                             <h4 className="text-sm font-bold text-gray-900">{monthNames[currentMonth]} {currentYear}</h4>
                             <div className="flex items-center gap-1">
-                                <button onClick={handlePrevMonth} className="w-6 h-6 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
+                                <button onClick={handlePrevMonth} aria-label="Previous month" className="w-6 h-6 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
                                     <ChevronLeft className="w-3.5 h-3.5 text-gray-500" />
                                 </button>
-                                <button onClick={handleNextMonth} className="w-6 h-6 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
+                                <button onClick={handleNextMonth} aria-label="Next month" className="w-6 h-6 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
                                     <ChevronRight className="w-3.5 h-3.5 text-gray-500" />
                                 </button>
                             </div>

@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
 import { PractitionerHeader } from '@/features/dashboard/components/PractitionerHeader';
 import { MetricCard } from '@/features/dashboard/components/MetricCard';
@@ -8,6 +9,7 @@ import { WeeklySessionsWidget, CompletedSessionsWidget } from '@/features/dashbo
 import { QuickLinksWidget } from '@/features/dashboard/components/QuickLinksWidget';
 
 export default function PractitionerDashboard() {
+  useDocumentTitle('Practitioner Dashboard');
     return (
         <div className="min-h-screen bg-[#FDFDFD] flex font-sans">
             {/* Fixed Left Navigation */}

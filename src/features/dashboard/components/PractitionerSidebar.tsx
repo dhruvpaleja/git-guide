@@ -105,6 +105,7 @@ export function PractitionerSidebar() {
                 <button
                     className="p-3 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-700 active:scale-90 transition-all duration-200 ease-out group relative"
                     title="Settings"
+                    aria-label="Settings"
                 >
                     <Settings className="w-5 h-5 transition-transform duration-200 group-hover:rotate-90 group-hover:scale-110" />
                     <span className="absolute left-full ml-3 px-2.5 py-1 rounded-lg bg-gray-900 text-white text-[11px] font-semibold whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none shadow-lg z-[60]">

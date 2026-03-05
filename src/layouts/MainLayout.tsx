@@ -9,7 +9,7 @@ export default function MainLayout() {
   return (
     <div className={`min-h-screen overflow-x-hidden ${isLightPage ? 'bg-white text-black' : 'bg-black text-white'}`}>
       <Navigation />
-      <main>
+      <main id="main-content">
         <Outlet />
       </main>
       <Footer />

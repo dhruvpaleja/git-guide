@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
@@ -5,6 +6,7 @@ import StudentCounsellingHeroSection from '../features/student-counselling/compo
 import StudentCounsellingCardsGrid from '../features/student-counselling/components/StudentCounsellingCardsGrid';
 
 export default function StudentCounsellingDemoPage() {
+    useDocumentTitle('Student Counselling Demo');
     const navigate = useNavigate();
 
     useEffect(() => {

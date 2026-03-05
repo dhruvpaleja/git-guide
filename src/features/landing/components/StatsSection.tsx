@@ -89,25 +89,25 @@ function StatCard({
         transition: `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${delay}s`,
       }}
     >
-      <h3
+      <p
         className="text-[22px] lg:text-[24px] font-semibold text-white tracking-tight mb-2 whitespace-nowrap"
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
         {stat.prefix}
         <span>{formatNumber(count, stat.format)}</span>
         {stat.suffix}
-      </h3>
+      </p>
 
-      <p className="text-[14px] lg:text-[15px] font-normal text-white/40 leading-relaxed mb-5 text-center max-w-[280px]">
+      <p className="text-[14px] lg:text-[15px] font-normal text-white/50 leading-relaxed mb-5 text-center max-w-[280px]">
         {stat.subtitle}
       </p>
 
-      <a
-        href="#"
-        className="inline-flex min-h-[40px] items-center px-1 text-[14px] lg:text-[15px] font-normal text-white/30 tracking-tight hover:text-white/60 transition-colors duration-300"
+      <button
+        type="button"
+        className="inline-flex min-h-[40px] items-center px-1 text-[14px] lg:text-[15px] font-normal text-white/50 tracking-tight hover:text-white/60 transition-colors duration-300 bg-transparent border-none cursor-pointer"
       >
         {stat.action}
-      </a>
+      </button>
     </div>
   );
 }
@@ -223,7 +223,7 @@ export default function StatsSection() {
         {/* Subtitle */}
         <div className="text-center mb-16">
           <p
-            className="text-[14px] md:text-[15px] font-normal text-white/40 tracking-tight max-w-[400px] mx-auto"
+            className="text-[14px] md:text-[15px] font-normal text-white/50 tracking-tight max-w-[400px] mx-auto"
             style={{
               lineHeight: '1.5',
               opacity: isVisible ? 1 : 0,

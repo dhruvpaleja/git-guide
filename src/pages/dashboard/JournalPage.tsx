@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -42,6 +43,7 @@ const parchment =
 /* ══════════════════════════════════════════════════════════════════ */
 
 export default function JournalPage() {
+  useDocumentTitle('Journal');
   /* ── State ──────────────────────────────────────────────────── */
   const [activeView, setActiveView] = useState<'write' | 'read'>('read');
   const [title, setTitle] = useState('');
@@ -264,6 +266,7 @@ export default function JournalPage() {
         )}
 
         {/* Entries */}
+        <div aria-live="polite">
         {isLoading ? (
           <div className="flex-1 flex justify-center items-center">
             <Loader2 className="w-6 h-6 text-stone-400 animate-spin" />
@@ -310,6 +313,7 @@ export default function JournalPage() {
             </AnimatePresence>
           </div>
         )}
+        </div>
 
         {/* Pagination */}
         {totalPages > 1 && (
@@ -317,6 +321,7 @@ export default function JournalPage() {
             <button
               onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
               disabled={currentPage === 0}
+              aria-label="Previous page"
               className="p-1.5 rounded-full hover:bg-stone-200/50 disabled:opacity-25 transition-colors text-stone-500"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -338,6 +343,7 @@ export default function JournalPage() {
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages - 1, p + 1))}
               disabled={currentPage >= totalPages - 1}
+              aria-label="Next page"
               className="p-1.5 rounded-full hover:bg-stone-200/50 disabled:opacity-25 transition-colors text-stone-500"
             >
               <ChevronRight className="w-4 h-4" />

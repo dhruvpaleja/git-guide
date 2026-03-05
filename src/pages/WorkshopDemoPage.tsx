@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
@@ -5,6 +6,7 @@ import WorkshopHeroSection from '../features/workshop/components/WorkshopHeroSec
 import WorkshopCardsGrid from '../features/workshop/components/WorkshopCardsGrid';
 
 export default function WorkshopDemoPage() {
+    useDocumentTitle('Workshop Demo');
     const navigate = useNavigate();
 
     useEffect(() => {

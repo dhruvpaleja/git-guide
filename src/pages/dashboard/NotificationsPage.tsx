@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Loader2, CheckCheck, AlertTriangle, Sparkles, Users, Heart, Zap, Info, Wifi, WifiOff } from 'lucide-react';
@@ -41,6 +42,7 @@ function timeAgo(dateStr: string) {
 }
 
 export default function NotificationsPage() {
+  useDocumentTitle('Notifications');
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -150,7 +152,7 @@ export default function NotificationsPage() {
                   className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 border border-white/10"
                 >
                   <WifiOff className="w-2.5 h-2.5 text-white/30" />
-                  <span className="text-[9px] text-white/30 font-medium uppercase tracking-wider">Offline</span>
+                  <span className="text-[9px] text-white/50 font-medium uppercase tracking-wider">Offline</span>
                 </motion.div>
               )}
             </div>
@@ -168,12 +170,13 @@ export default function NotificationsPage() {
         )}
       </motion.div>
 
+      <div aria-live="polite">
       {isLoading ? (
         <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 text-white/40 animate-spin" /></div>
       ) : notifications.length === 0 ? (
         <div className="text-center py-20">
           <Bell className="w-12 h-12 text-white/20 mx-auto mb-4" />
-          <p className="text-white/40">No notifications yet.</p>
+          <p className="text-white/50">No notifications yet.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -205,7 +208,7 @@ export default function NotificationsPage() {
                           <span className="text-sm font-medium text-white/80 truncate">{n.title}</span>
                           {!n.isRead && <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />}
                         </div>
-                        <span className="text-xs text-white/30 shrink-0">{timeAgo(n.createdAt)}</span>
+                        <span className="text-xs text-white/50 shrink-0">{timeAgo(n.createdAt)}</span>
                       </div>
                       <p className="text-sm text-white/45 line-clamp-2 mt-0.5">{n.body}</p>
                     </div>
@@ -216,6 +219,7 @@ export default function NotificationsPage() {
           </AnimatePresence>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -61,7 +61,7 @@ export default function SoulSyncCard({ type = 'platonic' }: SoulSyncCardProps) {
                         </div>
                         <div>
                             <h3 className="text-white font-semibold tracking-tight">{c.title}</h3>
-                            <p className="text-xs text-white/40 uppercase tracking-wider font-medium">{c.label}</p>
+                            <p className="text-xs text-white/50 uppercase tracking-wider font-medium">{c.label}</p>
                         </div>
                     </div>
 

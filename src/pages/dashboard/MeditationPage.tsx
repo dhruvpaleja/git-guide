@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Plus, X, Loader2, Timer, Pause, Play, RotateCcw, Flame } from 'lucide-react';
@@ -101,10 +102,10 @@ function QuickTimer() {
             </div>
           </div>
           <div className="flex gap-2">
-            <button onClick={toggle} className="w-10 h-10 rounded-xl bg-white/[0.06] flex items-center justify-center hover:bg-white/[0.1] transition-colors">
+            <button onClick={toggle} aria-label={running ? 'Pause timer' : 'Play timer'} className="w-10 h-10 rounded-xl bg-white/[0.06] flex items-center justify-center hover:bg-white/[0.1] transition-colors">
               {running ? <Pause className="w-4 h-4 text-white/60" /> : <Play className="w-4 h-4 text-white/60" />}
             </button>
-            <button onClick={reset} className="w-10 h-10 rounded-xl bg-white/[0.06] flex items-center justify-center hover:bg-white/[0.1] transition-colors">
+            <button onClick={reset} aria-label="Reset timer" className="w-10 h-10 rounded-xl bg-white/[0.06] flex items-center justify-center hover:bg-white/[0.1] transition-colors">
               <RotateCcw className="w-4 h-4 text-white/60" />
             </button>
           </div>
@@ -115,6 +116,7 @@ function QuickTimer() {
 }
 
 export default function MeditationPage() {
+  useDocumentTitle('Meditation');
   const [showForm, setShowForm] = useState(false);
   const [duration, setDuration] = useState(10);
   const [type, setType] = useState<typeof TYPES[number]>('guided');
@@ -219,7 +221,7 @@ export default function MeditationPage() {
           >
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-white/90 font-semibold">Log Meditation Session</h3>
-              <button onClick={() => setShowForm(false)} className="text-white/40 hover:text-white transition-colors">
+              <button onClick={() => setShowForm(false)} aria-label="Close form" className="text-white/40 hover:text-white transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -227,7 +229,7 @@ export default function MeditationPage() {
             {/* Duration */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-white/40 uppercase tracking-widest">Duration</span>
+                <span className="text-xs text-white/50 uppercase tracking-widest">Duration</span>
                 <span className="text-lg font-semibold text-white">{duration} min</span>
               </div>
               <input
@@ -236,20 +238,20 @@ export default function MeditationPage() {
                 className="w-full h-2 rounded-full bg-[#2b2b2b] appearance-none cursor-pointer accent-accent"
               />
               <div className="flex justify-between mt-1">
-                <span className="text-[10px] text-white/30">1 min</span>
-                <span className="text-[10px] text-white/30">60 min</span>
+                <span className="text-[10px] text-white/50">1 min</span>
+                <span className="text-[10px] text-white/50">60 min</span>
               </div>
             </div>
 
             {/* Type */}
             <div className="mb-6">
-              <span className="text-xs text-white/40 uppercase tracking-widest block mb-3">Type</span>
+              <span className="text-xs text-white/50 uppercase tracking-widest block mb-3">Type</span>
               <div className="flex gap-2">
                 {TYPES.map(t => (
                   <button
                     key={t}
                     onClick={() => setType(t)}
-                    className={`flex-1 py-2 rounded-2xl text-sm font-medium transition-colors capitalize ${type === t ? 'bg-white/10 text-white border border-white/20' : 'bg-white/5 text-white/40 border border-white/10 hover:border-white/20'}`}
+                    className={`flex-1 py-2 rounded-2xl text-sm font-medium transition-colors capitalize ${type === t ? 'bg-white/10 text-white border border-white/20' : 'bg-white/5 text-white/50 border border-white/10 hover:border-white/20'}`}
                   >
                     {t}
                   </button>
@@ -269,12 +271,13 @@ export default function MeditationPage() {
         )}
       </AnimatePresence>
 
+      <div aria-live="polite">
       {isLoading ? (
         <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 text-white/40 animate-spin" /></div>
       ) : logs.length === 0 ? (
         <div className="text-center py-20">
           <Brain className="w-12 h-12 text-white/20 mx-auto mb-4" />
-          <p className="text-white/40">No meditation sessions logged yet.</p>
+          <p className="text-white/50">No meditation sessions logged yet.</p>
         </div>
       ) : (
         <div className="grid gap-4">
@@ -292,14 +295,15 @@ export default function MeditationPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-sm font-medium text-white/80 capitalize">{log.type} Meditation</span>
-                  <span className="text-xs text-white/30 shrink-0">{new Date(log.createdAt).toLocaleDateString()}</span>
+                  <span className="text-xs text-white/50 shrink-0">{new Date(log.createdAt).toLocaleDateString()}</span>
                 </div>
-                <p className="text-xs text-white/40 mt-0.5">{formatSeconds(log.duration)}</p>
+                <p className="text-xs text-white/50 mt-0.5">{formatSeconds(log.duration)}</p>
               </div>
             </motion.div>
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

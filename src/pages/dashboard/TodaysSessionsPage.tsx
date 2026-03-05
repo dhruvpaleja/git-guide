@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PractitionerSidebar, PractitionerHeader } from '@/features/dashboard';
@@ -37,6 +38,7 @@ const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 /* ── Main component ──────────────────────────────────────────── */
 
 export default function TodaysSessionsPage() {
+    useDocumentTitle("Today's Sessions");
     const [activeTab, setActiveTab] = useState<'upcoming' | 'previous'>('upcoming');
 
     return (

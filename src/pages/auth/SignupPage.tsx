@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -27,6 +28,7 @@ interface AstrologyProfileData {
 }
 
 export default function SignupPage() {
+    useDocumentTitle('Sign Up');
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const step = searchParams.get('step');

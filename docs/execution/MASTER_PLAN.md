@@ -35,12 +35,11 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:013`
-- Phase target: `Phase 6 responsiveness pass`
+- `BATCH:014`
+- Phase target: `Phase 7 accessibility pass (WCAG 2.1 AA)`
 - Objective:
-  - Verify responsive behavior across mobile/tablet/desktop breakpoints for all primary routes.
-  - Fix overflow, touch-target, and layout stability issues without changing core visual style.
-  - Generate screenshot evidence and route-by-breakpoint matrix for handoff-safe validation.
+  - Bring frontend to WCAG 2.1 Level AA compliance without visual/behavioral changes.
+  - 15 sub-tasks: eslint-plugin-jsx-a11y, skip-nav, landmarks, ARIA, alt text, form labels, headings, page titles, keyboard nav, color contrast, reduced motion, ARIA live regions, button/link semantics, SVG accessibility.
   - Preserve QA dev-login/mock-auth behavior.
-  - Keep `npm run lint:ci` and `npm run quality:ci` passing.
+  - All quality gates passing: `type-check`, `lint:ci`, `build`.
   - Update docs at batch end.

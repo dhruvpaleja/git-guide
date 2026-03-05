@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -241,8 +242,7 @@ const fadeUp = {
 type Tab = 'upcoming' | 'find' | 'history';
 
 /* ━━━━━━━━━━━━━━━━━━━━ Component ━━━━━━━━━━━━━━━━━━━━ */
-export default function SessionsPage() {
-    const [activeTab, setActiveTab] = useState<Tab>('upcoming');
+export default function SessionsPage() {  useDocumentTitle('Sessions');    const [activeTab, setActiveTab] = useState<Tab>('upcoming');
     const [selectedFilter, setSelectedFilter] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -300,7 +300,7 @@ export default function SessionsPage() {
                         <div className="absolute top-0 right-0 w-16 h-16 bg-white/[0.02] blur-[30px] rounded-full" />
                         <div className="flex items-center gap-2 mb-2">
                             <stat.icon className={`w-3.5 h-3.5 ${stat.accent} opacity-70`} />
-                            <span className="text-[10px] text-white/30 font-medium uppercase tracking-wider">{stat.label}</span>
+                            <span className="text-[10px] text-white/50 font-medium uppercase tracking-wider">{stat.label}</span>
                         </div>
                         <span className={`text-[22px] font-bold ${stat.accent} opacity-90`}>{stat.value}</span>
                     </div>
@@ -315,7 +315,7 @@ export default function SessionsPage() {
                         onClick={() => setActiveTab(tab.key)}
                         className={`relative flex items-center gap-2 px-4 py-2.5 rounded-[10px] text-[12px] font-medium transition-all duration-300 ${activeTab === tab.key
                             ? 'bg-white/[0.07] text-white/90 shadow-sm'
-                            : 'text-white/40 hover:text-white/60 hover:bg-white/[0.03]'
+                            : 'text-white/50 hover:text-white/60 hover:bg-white/[0.03]'
                             }`}
                     >
                         <tab.icon className="w-3.5 h-3.5" />
@@ -323,7 +323,7 @@ export default function SessionsPage() {
                         {tab.count !== undefined && (
                             <span className={`ml-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold ${activeTab === tab.key
                                 ? 'bg-amber-500/15 text-amber-400'
-                                : 'bg-white/[0.05] text-white/30'
+                                : 'bg-white/[0.05] text-white/50'
                                 }`}>
                                 {tab.count}
                             </span>
@@ -418,7 +418,7 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                                     </div>
                                     <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Session Starting Soon</span>
                                 </div>
-                                <span className="text-[12px] text-white/40 font-medium">{session.date} · {session.time}</span>
+                                <span className="text-[12px] text-white/50 font-medium">{session.date} · {session.time}</span>
                             </div>
 
                             {/* Therapist Info */}
@@ -428,15 +428,15 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h3 className="text-[16px] font-semibold text-white/90">{session.therapistName}</h3>
-                                    <p className="text-[12px] text-white/40">{session.therapistTitle}</p>
+                                    <p className="text-[12px] text-white/50">{session.therapistTitle}</p>
                                     <div className="flex items-center gap-3 mt-1.5">
                                         <div className="flex items-center gap-1.5">
                                             <SessionIcon className="w-3 h-3 text-white/25" />
-                                            <span className="text-[10px] text-white/30">{sessionTypeLabels[session.sessionType]}</span>
+                                            <span className="text-[10px] text-white/50">{sessionTypeLabels[session.sessionType]}</span>
                                         </div>
                                         <div className="flex items-center gap-1.5">
                                             <Timer className="w-3 h-3 text-white/25" />
-                                            <span className="text-[10px] text-white/30">{session.duration}</span>
+                                            <span className="text-[10px] text-white/50">{session.duration}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -480,7 +480,7 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                                     <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`} />
                                     <span className={`text-[10px] font-semibold ${statusStyle.text}`}>{statusStyle.label}</span>
                                 </div>
-                                <span className="text-[11px] text-white/30 font-medium">{session.date}</span>
+                                <span className="text-[11px] text-white/50 font-medium">{session.date}</span>
                             </div>
 
                             {/* Therapist */}
@@ -490,7 +490,7 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                                 </div>
                                 <div>
                                     <h4 className="text-[13px] font-semibold text-white/80">{session.therapistName}</h4>
-                                    <p className="text-[10px] text-white/30">{session.therapistTitle}</p>
+                                    <p className="text-[10px] text-white/50">{session.therapistTitle}</p>
                                 </div>
                             </div>
 
@@ -498,15 +498,15 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                             <div className="flex items-center gap-4 mb-4">
                                 <div className="flex items-center gap-1.5">
                                     <Clock className="w-3 h-3 text-white/20" />
-                                    <span className="text-[11px] text-white/40">{session.time}</span>
+                                    <span className="text-[11px] text-white/50">{session.time}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                     <Timer className="w-3 h-3 text-white/20" />
-                                    <span className="text-[11px] text-white/40">{session.duration}</span>
+                                    <span className="text-[11px] text-white/50">{session.duration}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                     <SessionIcon className="w-3 h-3 text-white/20" />
-                                    <span className="text-[11px] text-white/40">{sessionTypeLabels[session.sessionType]}</span>
+                                    <span className="text-[11px] text-white/50">{sessionTypeLabels[session.sessionType]}</span>
                                 </div>
                             </div>
 
@@ -531,7 +531,7 @@ function UpcomingPanel({ sessions }: { sessions: UpcomingSession[] }) {
                         // This would be better with a prop callback or setActiveTab
                         document.querySelector<HTMLButtonElement>('[data-tab="find"]')?.click();
                     }}
-                    className="w-full rounded-[16px] p-4 bg-white/[0.015] border border-dashed border-white/[0.06] hover:border-amber-500/15 hover:bg-white/[0.025] transition-all flex items-center justify-center gap-2 text-white/30 hover:text-amber-400/70 group"
+                    className="w-full rounded-[16px] p-4 bg-white/[0.015] border border-dashed border-white/[0.06] hover:border-amber-500/15 hover:bg-white/[0.025] transition-all flex items-center justify-center gap-2 text-white/50 hover:text-amber-400/70 group"
                 >
                     <span className="w-6 h-6 rounded-full bg-white/[0.04] group-hover:bg-amber-500/10 flex items-center justify-center transition-colors">
                         <ChevronRight className="w-3.5 h-3.5" />
@@ -586,7 +586,7 @@ function FindTherapistPanel({
                         onClick={() => onFilterChange(f)}
                         className={`px-4 py-2 rounded-full text-[11px] font-medium whitespace-nowrap border transition-all duration-300 ${selectedFilter === f
                             ? 'bg-amber-500/10 border-amber-500/15 text-amber-400/90'
-                            : 'bg-white/[0.02] border-white/[0.04] text-white/40 hover:text-white/60 hover:bg-white/[0.04]'
+                            : 'bg-white/[0.02] border-white/[0.04] text-white/50 hover:text-white/60 hover:bg-white/[0.04]'
                             }`}
                     >
                         {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -651,7 +651,7 @@ function FindTherapistPanel({
                             {/* Specializations */}
                             <div className="flex flex-wrap gap-1.5 mb-3">
                                 {therapist.specializations.map((spec) => (
-                                    <span key={spec} className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.04] text-[9px] text-white/40 font-medium">
+                                    <span key={spec} className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.04] text-[9px] text-white/50 font-medium">
                                         {spec}
                                     </span>
                                 ))}
@@ -692,7 +692,7 @@ function FindTherapistPanel({
             {/* Empty State */}
             {therapists.length === 0 && (
                 <div className="py-16 text-center">
-                    <p className="text-[14px] text-white/30">No therapists found matching your criteria.</p>
+                    <p className="text-[14px] text-white/50">No therapists found matching your criteria.</p>
                     <button
                         onClick={() => { onFilterChange('all'); onSearchChange(''); }}
                         className="mt-3 text-[12px] text-amber-500/60 hover:text-amber-400 transition-colors font-medium"
@@ -711,7 +711,7 @@ function HistoryPanel({ sessions }: { sessions: PastSession[] }) {
         <div>
             {/* Session History Header */}
             <div className="flex items-center justify-between mb-4">
-                <p className="text-[12px] text-white/30">
+                <p className="text-[12px] text-white/50">
                     <span className="text-white/50 font-semibold">{sessions.length}</span> recent sessions shown
                 </p>
                 <button className="text-[11px] text-amber-500/50 hover:text-amber-400 font-medium transition-colors">
@@ -740,7 +740,7 @@ function HistoryPanel({ sessions }: { sessions: PastSession[] }) {
                                         <span className="text-[9px] text-white/20">·</span>
                                         <span className="text-[10px] text-white/25">{session.date}</span>
                                     </div>
-                                    <p className="text-[11px] text-white/30 mt-0.5 truncate">{session.topic}</p>
+                                    <p className="text-[11px] text-white/50 mt-0.5 truncate">{session.topic}</p>
                                 </div>
 
                                 {/* Meta */}
@@ -761,7 +761,7 @@ function HistoryPanel({ sessions }: { sessions: PastSession[] }) {
 
                                     {/* Summary Button */}
                                     {session.hasSummary ? (
-                                        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.07] text-white/40 hover:text-white/60 text-[10px] font-medium transition-all border border-white/[0.04]">
+                                        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.07] text-white/50 hover:text-white/60 text-[10px] font-medium transition-all border border-white/[0.04]">
                                             <FileText className="w-3 h-3" />
                                             Summary
                                         </button>
@@ -783,7 +783,7 @@ function HistoryPanel({ sessions }: { sessions: PastSession[] }) {
                 <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-3">
                         <CircleDot className="w-3.5 h-3.5 text-purple-400/60" />
-                        <span className="text-[11px] text-white/40 font-medium">February Summary</span>
+                        <span className="text-[11px] text-white/50 font-medium">February Summary</span>
                     </div>
                     <div className="grid grid-cols-3 gap-4">
                         <div>

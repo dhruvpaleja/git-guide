@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useNavigate } from 'react-router-dom';
 
 const GREETINGS = [
@@ -52,6 +53,7 @@ function GradientCircle({
 }
 
 export default function SplashScreen() {
+  useDocumentTitle('Soul Yatri');
   const navigate = useNavigate();
   const [greetingIndex, setGreetingIndex] = useState(0);
 
@@ -68,8 +70,12 @@ export default function SplashScreen() {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label="Continue to Soul Yatri"
       className="relative flex h-screen w-full cursor-pointer items-center justify-center overflow-hidden bg-black"
       onClick={handleClick}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } }}
     >
       {/* Animated Concentric Circles */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">

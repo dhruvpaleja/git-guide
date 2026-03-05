@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -80,6 +81,7 @@ const fadeUp = {
 };
 
 export default function DashboardPage() {
+  useDocumentTitle('Dashboard');
   const [isConfessionalActive, setIsConfessionalActive] = useState(false);
   const { data } = useDashboard();
   const { user } = useAuth();
@@ -120,7 +122,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <GreetingIcon className="w-3.5 h-3.5 text-amber-500/60" />
-                <p className="text-[11px] text-white/30 font-semibold tracking-[0.12em] uppercase">
+                <p className="text-[11px] text-white/50 font-semibold tracking-[0.12em] uppercase">
                   {greeting.text}
                 </p>
               </div>
@@ -141,7 +143,7 @@ export default function DashboardPage() {
                   <Play className="w-3.5 h-3.5 text-amber-400 ml-0.5" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-white/40 font-medium uppercase tracking-wider">Next Session</p>
+                  <p className="text-[10px] text-white/50 font-medium uppercase tracking-wider">Next Session</p>
                   <p className="text-[13px] text-white/85 font-semibold">{data.upcomingSession.therapistName}</p>
                 </div>
                 <ChevronRight className="w-4 h-4 text-white/15 group-hover:text-white/40 ml-1 transition-colors" />

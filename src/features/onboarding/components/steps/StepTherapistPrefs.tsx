@@ -123,7 +123,7 @@ export default function StepTherapistPrefs({ value, onChange, onNext, onBack, on
           Continue
         </button>
         {onSkip && (
-          <button onClick={onSkip} className="text-white/30 text-sm hover:text-white/60 transition-colors">
+          <button onClick={onSkip} className="text-white/50 text-sm hover:text-white/60 transition-colors">
             Skip
           </button>
         )}

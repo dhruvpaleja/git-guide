@@ -24,7 +24,7 @@ export default function CorporateCTA() {
 
                 {/* Consultation text */}
                 <p
-                    className="text-center text-white/40 text-[13px] md:text-[14px] leading-[22px] max-w-[600px] mx-auto"
+                    className="text-center text-white/50 text-[13px] md:text-[14px] leading-[22px] max-w-[600px] mx-auto"
                     style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                     Book a free 30-minute consultation with our mindfulness strategist to experience how Soul Yatri can elevate your leaders' focus, empathy, and well-being.

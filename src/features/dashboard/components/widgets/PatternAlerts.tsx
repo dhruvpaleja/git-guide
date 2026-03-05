@@ -69,7 +69,7 @@ export default function PatternAlerts() {
                 )}
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3" aria-live="polite">
                 <AnimatePresence>
                     {visibleAlerts.map((alert, idx) => {
                         const config = typeConfig[alert.type];

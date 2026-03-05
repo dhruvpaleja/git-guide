@@ -36,7 +36,7 @@ type FieldErrors = {
 function InlineError({ message }: { message?: string }) {
     if (!message) return null;
     return (
-        <div className="flex items-center gap-1.5 mt-2">
+        <div role="alert" className="flex items-center gap-1.5 mt-2">
             <AlertCircle className="size-[12px] text-red-500 flex-shrink-0" />
             <p className="text-[11px] text-red-500 tracking-[-0.01em]">{message}</p>
         </div>

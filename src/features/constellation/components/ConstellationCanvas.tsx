@@ -407,8 +407,12 @@ export default function ConstellationCanvas({
   const nodeMap = new Map(nodes.map((n) => [n.id, n]));
 
   return (
+    /* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- interactive canvas with role="application" */
     <div
       ref={containerRef}
+      role="application"
+      aria-label="Soul Constellation interactive canvas"
+      tabIndex={0}
       className="relative w-full h-full rounded-[30px] overflow-hidden bg-[#060608] border border-[#1a1a1a]/60"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -514,12 +518,14 @@ export default function ConstellationCanvas({
       <div className="absolute bottom-6 right-6 flex flex-col gap-2 z-20">
         <button
           onClick={() => onZoom(viewState.zoom + 0.2)}
+          aria-label="Zoom in"
           className="w-9 h-9 rounded-xl bg-[#111]/80 border border-[#2b2b2b] flex items-center justify-center text-white/60 hover:text-white hover:bg-[#1a1a1a] transition-all backdrop-blur-sm text-lg font-light"
         >
           +
         </button>
         <button
           onClick={() => onZoom(viewState.zoom - 0.2)}
+          aria-label="Zoom out"
           className="w-9 h-9 rounded-xl bg-[#111]/80 border border-[#2b2b2b] flex items-center justify-center text-white/60 hover:text-white hover:bg-[#1a1a1a] transition-all backdrop-blur-sm text-lg font-light"
         >
           −
@@ -529,7 +535,8 @@ export default function ConstellationCanvas({
             onZoom(1);
             onPan(0, 0);
           }}
-          className="w-9 h-9 rounded-xl bg-[#111]/80 border border-[#2b2b2b] flex items-center justify-center text-white/40 hover:text-white hover:bg-[#1a1a1a] transition-all backdrop-blur-sm"
+          aria-label="Center view"
+          className="w-9 h-9 rounded-xl bg-[#111]/80 border border-[#2b2b2b] flex items-center justify-center text-white/50 hover:text-white hover:bg-[#1a1a1a] transition-all backdrop-blur-sm"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="3" />
@@ -541,9 +548,10 @@ export default function ConstellationCanvas({
       {/* Zoom level indicator */}
       {viewState.zoom !== 1 && (
         <div className="absolute bottom-6 left-6 px-3 py-1.5 rounded-full bg-[#111]/60 border border-[#2b2b2b] backdrop-blur-sm">
-          <span className="text-xs text-white/40 font-mono">{Math.round(viewState.zoom * 100)}%</span>
+          <span className="text-xs text-white/50 font-mono">{Math.round(viewState.zoom * 100)}%</span>
         </div>
       )}
     </div>
   );
+  /* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
 }

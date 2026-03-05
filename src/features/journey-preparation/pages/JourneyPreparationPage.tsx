@@ -4,6 +4,7 @@
  * Displays static cards with unblur animation effect
  */
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MandalaBackground from '../components/MandalaBackground';
@@ -18,6 +19,7 @@ export default function JourneyPreparationPage({
   onComplete,
   autoAdvanceDelay = 5600, // lets users feel the full immersive sequence before dashboard
 }: JourneyPreparationPageProps) {
+  useDocumentTitle('Journey Preparation');
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
   const [stageScale, setStageScale] = useState(1);
@@ -62,10 +64,14 @@ export default function JourneyPreparationPage({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label="Skip journey preparation"
       className={`w-screen h-screen bg-white relative overflow-hidden transition-opacity duration-500 animate-immersive-scene-in ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
       onClick={handleSkip}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSkip(); } }}
     >
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0)_0%,rgba(0,0,0,0.03)_100%)]" />
 

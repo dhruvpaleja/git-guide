@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -18,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 
 export default function AdminDashboard() {
+  useDocumentTitle('Admin Dashboard');
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
 

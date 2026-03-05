@@ -3,6 +3,7 @@ import { ReactLenis } from 'lenis/react';
 
 export default function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
     const [isMobile, setIsMobile] = useState(false);
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
     useEffect(() => {
         const checkMobile = () => {
@@ -11,11 +12,20 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
 
         checkMobile();
         window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+
+        const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+        setPrefersReducedMotion(mql.matches);
+        const handleMotionChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+        mql.addEventListener('change', handleMotionChange);
+
+        return () => {
+            window.removeEventListener('resize', checkMobile);
+            mql.removeEventListener('change', handleMotionChange);
+        };
     }, []);
 
-    // Disable lenis completely on mobile for native scroll performance
-    if (isMobile) {
+    // Disable lenis on mobile or when user prefers reduced motion
+    if (isMobile || prefersReducedMotion) {
         return <>{children}</>;
     }
 

@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
@@ -214,7 +215,7 @@ function BlogCard({ post }: { post: BlogPost }) {
           }`}>
             <img
               src={dark ? '/images/blogs/blogs-author-icon-light.png' : '/images/blogs/blogs-author-icon-dark.png'}
-              alt="Author"
+              alt="" aria-hidden="true"
               className="h-[20px] w-[20px] sm:h-[25px] sm:w-[25px]"
             />
           </span>
@@ -233,6 +234,7 @@ function BlogCard({ post }: { post: BlogPost }) {
 }
 
 export default function BlogsPage() {
+  useDocumentTitle('Blog');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 

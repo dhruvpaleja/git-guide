@@ -48,7 +48,7 @@ export default function Footer() {
         </div>
 
         {/* Description */}
-        <p className="text-[12px] text-white/40 leading-[2] max-w-[500px] mb-6">
+        <p className="text-[12px] text-white/50 leading-[2] max-w-[500px] mb-6">
           Soul Yatri blends modern psychology with cultural wisdom to offer compassionate,
           science-backed and culturally-sensitive mental well-being. We help you understand
           what's happening inside and give you practical steps.
@@ -57,12 +57,15 @@ export default function Footer() {
         {/* Email + CTA */}
         <div className="flex flex-col sm:flex-row gap-3 mb-10">
           <div className="flex items-center h-[42px] rounded-full border border-white/15 bg-[#080808] px-5 w-full sm:w-[260px]">
+            <label htmlFor="footer-email" className="sr-only">Email address</label>
             <input
+              id="footer-email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter Email Address"
-              className="h-full w-full bg-transparent text-[12px] text-white/40 placeholder-white/30 focus:outline-none"
+              className="h-full w-full bg-transparent text-[12px] text-white/50 placeholder-white/30 focus:outline-none"
             />
           </div>
           <button className="h-[42px] px-6 bg-white rounded-full text-[12px] font-semibold text-black transition-all duration-300 hover:bg-zinc-100 hover:scale-105">
@@ -72,7 +75,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-white/8 pt-5">
-          <p className="text-[11px] text-white/40 text-center sm:text-left">
+          <p className="text-[11px] text-white/50 text-center sm:text-left">
             © 2025 Soul Yatri Pvt. Ltd. | All Rights Reserved
           </p>
           <div className="flex items-center justify-center sm:justify-end gap-3">

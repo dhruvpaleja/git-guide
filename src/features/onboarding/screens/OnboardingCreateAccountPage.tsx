@@ -73,7 +73,7 @@ export default function OnboardingCreateAccountPage({ onBack }: OnboardingCreate
                             <p className="mt-3 text-[15px] sm:text-[16px] text-black/50 tracking-[-0.16px]">To Start Healing Your Journey.</p>
 
                             {error && (
-                                <div className="mt-6 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">
+                                <div role="alert" className="mt-6 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">
                                     {error}
                                 </div>
                             )}
@@ -86,6 +86,7 @@ export default function OnboardingCreateAccountPage({ onBack }: OnboardingCreate
                                     <input
                                         id="onboarding-name"
                                         type="text"
+                                        autoComplete="name"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="Ex. Dhruv Paleja"
@@ -101,6 +102,7 @@ export default function OnboardingCreateAccountPage({ onBack }: OnboardingCreate
                                     <input
                                         id="onboarding-email"
                                         type="email"
+                                        autoComplete="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="Ex. dhruvpaleja10@hotmail.com"

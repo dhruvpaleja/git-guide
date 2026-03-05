@@ -14,6 +14,12 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
 
     return (
         <header className="sticky top-0 z-40 h-[60px] sm:h-16 w-full flex items-center justify-between px-5 sm:px-8 md:px-10 bg-[#050507]/80 backdrop-blur-2xl border-b border-white/[0.04] transition-colors duration-500">
+            <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-md focus:text-sm focus:font-semibold"
+            >
+                Skip to main content
+            </a>
             <div className="flex items-center gap-3">
                 {/* Mobile hamburger */}
                 <button

@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useMemo } from 'react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -358,7 +359,7 @@ function MatchCard({ match, idx }: { match: ConnectionMatch; idx: number }) {
               className="overflow-hidden"
             >
               <div className="pb-5 space-y-3">
-                <div className="flex items-center gap-2 text-xs text-white/30 uppercase tracking-wider font-medium">
+                <div className="flex items-center gap-2 text-xs text-white/50 uppercase tracking-wider font-medium">
                   <Activity className="w-3.5 h-3.5" />
                   Compatibility Breakdown
                 </div>
@@ -369,7 +370,7 @@ function MatchCard({ match, idx }: { match: ConnectionMatch; idx: number }) {
                     { label: 'Frequency', value: Math.max(65, match.synergy - 4), icon: Radio },
                   ].map((bar) => (
                     <div key={bar.label} className="space-y-1.5">
-                      <div className="flex items-center gap-1.5 text-[11px] text-white/40">
+                      <div className="flex items-center gap-1.5 text-[11px] text-white/50">
                         <bar.icon className="w-3 h-3" />
                         {bar.label}
                       </div>
@@ -382,7 +383,7 @@ function MatchCard({ match, idx }: { match: ConnectionMatch; idx: number }) {
                           transition={{ duration: 0.8, ease: 'easeOut' }}
                         />
                       </div>
-                      <div className="text-[11px] text-white/30 text-right">{bar.value}%</div>
+                      <div className="text-[11px] text-white/50 text-right">{bar.value}%</div>
                     </div>
                   ))}
                 </div>
@@ -408,7 +409,7 @@ function MatchCard({ match, idx }: { match: ConnectionMatch; idx: number }) {
             {/* Expand details */}
             <button
               onClick={() => setExpanded(!expanded)}
-              className="flex items-center gap-1.5 text-[11px] text-white/30 hover:text-white/60 transition-colors"
+              className="flex items-center gap-1.5 text-[11px] text-white/50 hover:text-white/60 transition-colors"
             >
               <Eye className="w-3.5 h-3.5" />
               {expanded ? 'Less' : 'Details'}
@@ -464,7 +465,7 @@ function StatsBar({ matches }: { matches: ConnectionMatch[] }) {
           </div>
           <div>
             <div className="text-sm font-semibold text-white/80">{stat.value}</div>
-            <div className="text-[11px] text-white/30 uppercase tracking-wider">{stat.label}</div>
+            <div className="text-[11px] text-white/50 uppercase tracking-wider">{stat.label}</div>
           </div>
         </motion.div>
       ))}
@@ -475,6 +476,7 @@ function StatsBar({ matches }: { matches: ConnectionMatch[] }) {
 // ── Main Page ──────────────────────────────────────────────────────────
 
 export default function ConnectionsPage() {
+  useDocumentTitle('Connections');
   const [activeFilter, setActiveFilter] = useState<ConnectionType>('all');
   const [showFilter, setShowFilter] = useState(false);
 
@@ -521,7 +523,7 @@ export default function ConnectionsPage() {
                   'flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-medium transition-all',
                   showFilter
                     ? 'bg-white/10 border-white/20 text-white'
-                    : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/70',
+                    : 'bg-white/[0.03] border-white/[0.06] text-white/50 hover:text-white/70',
                 )}
               >
                 <Filter className="w-3.5 h-3.5" />
@@ -554,7 +556,7 @@ export default function ConnectionsPage() {
                     'flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-medium transition-all',
                     activeFilter === key
                       ? 'bg-white/10 border-white/20 text-white'
-                    : 'bg-white/[0.03] border-[#1a1a1a] text-white/40 hover:text-white/70 hover:bg-white/5',
+                    : 'bg-white/[0.03] border-[#1a1a1a] text-white/50 hover:text-white/70 hover:bg-white/5',
                   )}
                 >
                   <Icon className="w-3.5 h-3.5" />

@@ -15,7 +15,7 @@ export default function CorporateHero() {
 
             {/* Back arrow */}
             <div className="max-w-[1240px] mx-auto px-6 md:px-16 mb-2">
-                <Link to="/business" className="inline-flex items-center text-white/40 hover:text-white transition-colors">
+                <Link to="/business" className="inline-flex items-center text-white/50 hover:text-white transition-colors">
                     <ChevronLeft size={20} />
                 </Link>
             </div>
@@ -29,10 +29,10 @@ export default function CorporateHero() {
                     Corporate Wellness
                 </h1>
                 <div className="flex items-center gap-4 mt-2">
-                    <Link to="/business" className="text-white/40 text-[12px] hover:text-white transition-colors" style={{ fontFamily: "'Manrope', sans-serif" }}>
+                    <Link to="/business" className="text-white/50 text-[12px] hover:text-white transition-colors" style={{ fontFamily: "'Manrope', sans-serif" }}>
                         Back To Business
                     </Link>
-                    <button className="text-white/40 text-[12px] hover:text-white transition-colors" style={{ fontFamily: "'Manrope', sans-serif" }}>
+                    <button className="text-white/50 text-[12px] hover:text-white transition-colors" style={{ fontFamily: "'Manrope', sans-serif" }}>
                         Report
                     </button>
                 </div>

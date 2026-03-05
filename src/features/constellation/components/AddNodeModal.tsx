@@ -120,10 +120,11 @@ export default function AddNodeModal({ isOpen, onClose, onSubmit }: AddNodeModal
           <div className="relative px-8 pt-8 pb-4 flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold text-white tracking-tight">Add to Constellation</h2>
-              <p className="text-sm text-white/40 mt-1">Map a new part of your emotional universe</p>
+              <p className="text-sm text-white/50 mt-1">Map a new part of your emotional universe</p>
             </div>
             <button
               onClick={resetAndClose}
+              aria-label="Close"
               className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
             >
               <X className="w-4 h-4 text-white/50" />
@@ -212,20 +213,21 @@ export default function AddNodeModal({ isOpen, onClose, onSubmit }: AddNodeModal
                     </h3>
                     <div className="space-y-4">
                       <div>
-                        <label className="text-xs text-white/30 uppercase tracking-wider mb-2 block">Label</label>
+                        <label htmlFor="node-label" className="text-xs text-white/50 uppercase tracking-wider mb-2 block">Label</label>
                         <input
+                          id="node-label"
                           type="text"
                           value={label}
                           onChange={(e) => setLabel(e.target.value)}
                           placeholder="e.g., Career Burnout, New Relationship, Health Goal"
                           maxLength={50}
                           className="w-full h-12 px-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-white/20 focus:outline-none focus:border-accent/40 transition-colors text-sm"
-                          autoFocus
                         />
                       </div>
                       <div>
-                        <label className="text-xs text-white/30 uppercase tracking-wider mb-2 block">Description</label>
+                        <label htmlFor="node-description" className="text-xs text-white/50 uppercase tracking-wider mb-2 block">Description</label>
                         <textarea
+                          id="node-description"
                           value={description}
                           onChange={(e) => setDescription(e.target.value)}
                           placeholder="What's going on with this? How does it affect you?"
@@ -235,10 +237,11 @@ export default function AddNodeModal({ isOpen, onClose, onSubmit }: AddNodeModal
                         />
                       </div>
                       <div>
-                        <label className="text-xs text-white/30 uppercase tracking-wider mb-2 block">
+                        <label htmlFor="node-tags" className="text-xs text-white/50 uppercase tracking-wider mb-2 block">
                           Tags <span className="text-white/20">(comma-separated)</span>
                         </label>
                         <input
+                          id="node-tags"
                           type="text"
                           value={tags}
                           onChange={(e) => setTags(e.target.value)}
@@ -272,7 +275,7 @@ export default function AddNodeModal({ isOpen, onClose, onSubmit }: AddNodeModal
                             )}
                           >
                             <span className="text-2xl">{cfg.emoji}</span>
-                            <span className={cn('text-xs font-medium', isActive ? 'text-white' : 'text-white/40')}>
+                            <span className={cn('text-xs font-medium', isActive ? 'text-white' : 'text-white/50')}>
                               {cfg.label}
                             </span>
                             {isActive && (
@@ -298,7 +301,7 @@ export default function AddNodeModal({ isOpen, onClose, onSubmit }: AddNodeModal
                     <div className="flex flex-col items-center gap-8 py-8">
                       <div className="text-center">
                         <p className="text-6xl font-bold text-white mb-2">{intensity}</p>
-                        <p className="text-sm text-white/40">
+                        <p className="text-sm text-white/50">
                           {intensity === 1 && 'Subtle background presence'}
                           {intensity === 2 && 'Noticeable but manageable'}
                           {intensity === 3 && 'Significantly impactful'}
@@ -317,7 +320,7 @@ export default function AddNodeModal({ isOpen, onClose, onSubmit }: AddNodeModal
                                 ? 'bg-white text-black border-white scale-105'
                                 : intensity >= lvl
                                   ? 'bg-white/10 border-white/20 text-white/70'
-                                  : 'bg-white/[0.02] border-white/[0.06] text-white/30 hover:border-white/10',
+                                  : 'bg-white/[0.02] border-white/[0.06] text-white/50 hover:border-white/10',
                             )}
                           >
                             {lvl}
@@ -347,7 +350,7 @@ export default function AddNodeModal({ isOpen, onClose, onSubmit }: AddNodeModal
                         </div>
                         <div>
                           <p className="text-white font-semibold">{label || 'Untitled'}</p>
-                          <p className="text-xs text-white/40">
+                          <p className="text-xs text-white/50">
                             {CATEGORY_CONFIGS[category].label} · {EMOTION_CONFIGS[emotion].label} · Intensity {intensity}
                           </p>
                         </div>
@@ -356,14 +359,14 @@ export default function AddNodeModal({ isOpen, onClose, onSubmit }: AddNodeModal
                       {tags && (
                         <div className="flex flex-wrap gap-1.5 mt-3">
                           {tags.split(',').map((t) => t.trim()).filter(Boolean).map((tag) => (
-                            <span key={tag} className="px-2 py-0.5 rounded-full bg-white/5 text-xs text-white/40">
+                            <span key={tag} className="px-2 py-0.5 rounded-full bg-white/5 text-xs text-white/50">
                               {tag}
                             </span>
                           ))}
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-white/30 mt-3 text-center">
+                    <p className="text-xs text-white/50 mt-3 text-center">
                       The node will appear in your constellation map. You can drag it to reposition.
                     </p>
                   </div>

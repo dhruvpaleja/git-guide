@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { apiService } from '@/services/api.service';
@@ -77,6 +78,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 }
 
 export default function SettingsPage() {
+  useDocumentTitle('Settings');
   const navigate = useNavigate();
   const [values, setValues] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};

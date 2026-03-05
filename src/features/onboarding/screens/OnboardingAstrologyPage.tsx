@@ -356,10 +356,10 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
 
                                     {/* GENDER */}
                                     <div>
-                                        <label className="block text-[13px] sm:text-[14px] text-black/60 tracking-[-0.01em] mb-3 font-medium">
+                                        <span className="block text-[13px] sm:text-[14px] text-black/60 tracking-[-0.01em] mb-3 font-medium">
                                             Gender <span className="font-semibold text-black/40">(Optional)</span>
-                                        </label>
-                                        <div className="grid grid-cols-2 gap-2">
+                                        </span>
+                                        <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Gender">
                                             {[
                                                 { value: 'MALE', label: 'Male' },
                                                 { value: 'FEMALE', label: 'Female' },
@@ -532,6 +532,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                                     <p className="text-[10px] text-white/80">Face photo uploaded successfully</p>
                                                                 </div>
                                                                 <button type="button" onClick={removeFaceImage}
+                                                                    aria-label="Remove photo"
                                                                     className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded-full text-white transition-all duration-200">
                                                                     <X className="size-[14px]" />
                                                                 </button>
@@ -626,10 +627,10 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                                         <p className="text-[10px] text-black/40">{formatDateForDisplay(partner.birthDate)} &middot; {partner.birthCity}</p>
                                                                     </div>
                                                                     <div className="flex gap-1.5">
-                                                                        <button type="button" onClick={() => editPartner(idx)} className="p-1.5 hover:bg-black/5 rounded-lg transition-colors">
+                                                                        <button type="button" onClick={() => editPartner(idx)} aria-label={`Edit ${partner.name}`} className="p-1.5 hover:bg-black/5 rounded-lg transition-colors">
                                                                             <ChevronDown className="size-[14px] text-black/40" />
                                                                         </button>
-                                                                        <button type="button" onClick={() => removePartner(idx)} className="p-1.5 hover:bg-red-50 rounded-lg transition-colors">
+                                                                        <button type="button" onClick={() => removePartner(idx)} aria-label={`Remove ${partner.name}`} className="p-1.5 hover:bg-red-50 rounded-lg transition-colors">
                                                                             <Trash2 className="size-[14px] text-red-400" />
                                                                         </button>
                                                                     </div>
@@ -654,25 +655,25 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                         )}
 
                                                         <div>
-                                                            <label className="block text-[11px] text-black/50 mb-1.5 font-medium">Partner Name *</label>
-                                                            <input type="text" placeholder="Full name" value={currentPartner.name}
+                                                            <label htmlFor="partner-name" className="block text-[11px] text-black/50 mb-1.5 font-medium">Partner Name *</label>
+                                                            <input id="partner-name" type="text" placeholder="Full name" value={currentPartner.name}
                                                                 onChange={(e) => setCurrentPartner(p => ({ ...p, name: e.target.value }))}
                                                                 className="w-full h-[48px] px-4 bg-white border border-black/8 rounded-[10px] text-[13px] text-black placeholder:text-black/30 focus:outline-none focus:border-black/20 focus:ring-1 focus:ring-black/10 transition-all duration-200" />
                                                         </div>
 
                                                         <div>
-                                                            <label className="block text-[11px] text-black/50 mb-1.5 font-medium">Birth Date *</label>
-                                                            <input type="date" value={currentPartner.birthDate}
+                                                            <label htmlFor="partner-birthdate" className="block text-[11px] text-black/50 mb-1.5 font-medium">Birth Date *</label>
+                                                            <input id="partner-birthdate" type="date" value={currentPartner.birthDate}
                                                                 onChange={(e) => setCurrentPartner(p => ({ ...p, birthDate: e.target.value }))}
                                                                 className="w-full h-[48px] px-4 bg-white border border-black/8 rounded-[10px] text-[13px] text-black focus:outline-none focus:border-black/20 focus:ring-1 focus:ring-black/10 transition-all duration-200 [color-scheme:light]" />
                                                         </div>
 
                                                         <div>
-                                                            <label className="block text-[11px] text-black/50 mb-1.5 font-medium">Birth Time *</label>
+                                                            <label htmlFor="partner-birthtime" className="block text-[11px] text-black/50 mb-1.5 font-medium">Birth Time *</label>
                                                             <div className="flex gap-2">
                                                                 <div className="flex-1 relative">
                                                                     <Clock className="absolute left-3 top-1/2 -translate-y-1/2 size-[14px] text-black/30 pointer-events-none" />
-                                                                    <input type="time" value={currentPartner.birthTime}
+                                                                    <input id="partner-birthtime" type="time" value={currentPartner.birthTime}
                                                                         onChange={(e) => setCurrentPartner(p => ({ ...p, birthTime: e.target.value }))}
                                                                         className="w-full h-[48px] pl-10 pr-3 bg-white border border-black/8 rounded-[10px] text-[13px] text-black focus:outline-none focus:border-black/20 focus:ring-1 focus:ring-black/10 transition-all duration-200 [color-scheme:light]" />
                                                                 </div>
@@ -690,19 +691,19 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                         </div>
 
                                                         <div>
-                                                            <label className="block text-[11px] text-black/50 mb-1.5 font-medium">Birth City *</label>
+                                                            <label htmlFor="partner-birthcity" className="block text-[11px] text-black/50 mb-1.5 font-medium">Birth City *</label>
                                                             <div className="relative">
                                                                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 size-[14px] text-black/30 pointer-events-none" />
-                                                                <input type="text" placeholder="Ex. Delhi" value={currentPartner.birthCity}
+                                                                <input id="partner-birthcity" type="text" placeholder="Ex. Delhi" value={currentPartner.birthCity}
                                                                     onChange={(e) => setCurrentPartner(p => ({ ...p, birthCity: e.target.value }))}
                                                                     className="w-full h-[48px] pl-10 pr-3 bg-white border border-black/8 rounded-[10px] text-[13px] text-black placeholder:text-black/30 focus:outline-none focus:border-black/20 focus:ring-1 focus:ring-black/10 transition-all duration-200" />
                                                             </div>
                                                         </div>
 
                                                         <div>
-                                                            <label className="block text-[11px] text-black/50 mb-1.5 font-medium">
-                                                                Face Photo <span className="text-black/30">(Optional)</span>
-                                                            </label>
+                                                            <span className="block text-[11px] text-black/50 mb-1.5 font-medium">
+                                                                Face Photo <span className="text-black/50">(Optional)</span>
+                                                            </span>
                                                             {!currentPartner.faceImage ? (
                                                                 <div className="grid grid-cols-2 gap-2">
                                                                     <button type="button" onClick={() => partnerFileInputRef.current?.click()}
@@ -786,6 +787,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                             <p className="text-[10px] text-white/50 mt-1">Ensure forehead and hair are visible</p>
                         </div>
                         <div className="relative rounded-[16px] overflow-hidden">
+                            {/* eslint-disable-next-line jsx-a11y/media-has-caption -- live camera feed, not pre-recorded media */}
                             <video ref={videoRef} autoPlay playsInline className="w-full" />
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div className="w-[200px] h-[260px] border-2 border-white/30 rounded-[50%]" />
@@ -806,6 +808,7 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                             <p className="text-[13px] text-white/80 font-medium">Capture partner's face</p>
                         </div>
                         <div className="relative rounded-[16px] overflow-hidden">
+                            {/* eslint-disable-next-line jsx-a11y/media-has-caption -- live camera feed, not pre-recorded media */}
                             <video ref={partnerVideoRef} autoPlay playsInline className="w-full" />
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div className="w-[200px] h-[260px] border-2 border-white/30 rounded-[50%]" />

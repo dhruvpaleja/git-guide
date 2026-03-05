@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -739,6 +740,7 @@ function CommentItem({
 }
 
 export default function BlogPostPage() {
+  useDocumentTitle('Blog Post');
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const [liked, setLiked] = useState(false);
@@ -842,6 +844,7 @@ export default function BlogPostPage() {
           <button
             onClick={() => setLiked(!liked)}
             aria-pressed={liked}
+            aria-label={liked ? 'Unlike article' : 'Like article'}
             className={`p-3 rounded-full transition-all shadow-md flex items-center justify-center ${
               liked ? 'bg-red-100 text-red-600' : 'bg-white/90 text-black hover:bg-white'
             }`}

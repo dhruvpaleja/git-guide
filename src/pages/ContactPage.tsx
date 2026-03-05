@@ -1,5 +1,8 @@
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 export default function ContactPage() {
+  useDocumentTitle('Contact Us');
   return (
     <div className="w-full bg-[#f3f3f3] text-black">
       <section className="mx-auto min-h-[1510px] w-full max-w-[1440px] px-6 pb-24 pt-[120px] sm:px-10 lg:px-[82px]">
@@ -16,12 +19,12 @@ export default function ContactPage() {
             <form className="space-y-7">
               <label className="block">
                 <span className="mb-3 block text-[16px] tracking-[-0.16px] text-black">Enter Full Name <span className="text-[#d93025]">*</span></span>
-                <input className="h-[60px] w-full rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="Ex. Dhruv Paleja" />
+                <input autoComplete="name" className="h-[60px] w-full rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="Ex. Dhruv Paleja" />
               </label>
 
               <label className="block">
                 <span className="mb-3 block text-[16px] tracking-[-0.16px] text-black">Enter Mail <span className="text-[#d93025]">*</span></span>
-                <input className="h-[60px] w-full rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="Ex. dhruvpaleja10@hotmail.com" />
+                <input autoComplete="email" className="h-[60px] w-full rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="Ex. dhruvpaleja10@hotmail.com" />
               </label>
 
               <label className="block">
@@ -31,7 +34,7 @@ export default function ContactPage() {
                     <img src="/images/contact/contact-flag-icon.png" alt="India" className="h-[16px] w-[16px] rounded-full object-cover" />
                   </span>
                   <span className="ml-3 text-[14px] font-semibold tracking-[-0.14px]">+91</span>
-                  <input className="ml-4 h-full w-full bg-transparent text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="88888 99999" />
+                  <input autoComplete="tel" className="ml-4 h-full w-full bg-transparent text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="88888 99999" />
                 </div>
               </label>
 

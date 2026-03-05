@@ -115,6 +115,12 @@ export default function Navigation() {
       className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[95%] max-w-[800px] ${isScrolled ? 'top-2' : 'top-6'
         }`}
     >
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-md focus:text-sm focus:font-semibold"
+      >
+        Skip to main content
+      </a>
       <div className={`rounded-full px-6 py-3 flex items-center justify-between shadow-2xl transition-all duration-500 backdrop-blur-md border border-white/10 ${isLight ? 'bg-black/80' : 'bg-white/10'
         }`}>
         {/* Logo */}
@@ -131,7 +137,7 @@ export default function Navigation() {
         </a>
 
         {/* Nav Links */}
-        <nav className="hidden md:flex items-center justify-center gap-1 flex-1 px-4">
+        <nav aria-label="Main navigation" className="hidden md:flex items-center justify-center gap-1 flex-1 px-4">
           {navItems.map((item) => {
             const isActive = location.pathname.startsWith(item.path) || (item.path === '/home' && location.pathname === '/');
 
@@ -156,6 +162,9 @@ export default function Navigation() {
         <div className="md:hidden flex items-center">
           <button
             onClick={() => setIsMobileMenuOpen((open) => !open)}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-nav-menu"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             className="p-2 text-white/70 hover:text-white transition-colors duration-300"
           >
             {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -166,7 +175,7 @@ export default function Navigation() {
       {/* Mobile menu dropdown */}
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 right-0 mt-2 p-2">
-          <nav className={`rounded-2xl border border-white/10 p-2 flex flex-col gap-1 shadow-2xl backdrop-blur-md transition-colors duration-500 ${isLight ? 'bg-black/90' : 'bg-black/40'
+          <nav id="mobile-nav-menu" aria-label="Mobile navigation" className={`rounded-2xl border border-white/10 p-2 flex flex-col gap-1 shadow-2xl backdrop-blur-md transition-colors duration-500 ${isLight ? 'bg-black/90' : 'bg-black/40'
             }`}>
             {navItems.map((item) => {
               const isActive = location.pathname.startsWith(item.path) || (item.path === '/home' && location.pathname === '/');

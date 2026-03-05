@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useNavigate } from 'react-router-dom';
 
 export default function NotFoundPage() {
+  useDocumentTitle('Page Not Found');
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -50,7 +52,7 @@ export default function NotFoundPage() {
           >
             <img 
               src="https://www.figma.com/api/mcp/asset/2a3be53c-efb9-4fcd-8c4a-7daa7c26be4d" 
-              alt="" 
+              alt="Page not found" 
               className="w-full h-full object-contain drop-shadow-lg"
             />
           </div>
@@ -58,9 +60,9 @@ export default function NotFoundPage() {
       </div>
 
       {/* Oops Message */}
-      <h2 className="text-2xl md:text-4xl font-semibold font-['Manrope'] text-white text-center mb-10 tracking-tight px-4 max-w-2xl">
+      <h1 className="text-2xl md:text-4xl font-semibold font-['Manrope'] text-white text-center mb-10 tracking-tight px-4 max-w-2xl">
         Oops! Page Not Found...
-      </h2>
+      </h1>
 
       {/* Search Bar */}
       <form onSubmit={handleSearch} className="w-full max-w-xl mb-16 px-4">

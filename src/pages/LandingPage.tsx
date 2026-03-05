@@ -8,7 +8,10 @@ import CorporateSection from '@/features/landing/components/CorporateSection';
 import FAQSection from '@/features/landing/components/FAQSection';
 import CTASection from '@/features/landing/components/CTASection';
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 export default function LandingPage() {
+  useDocumentTitle('Home');
   return (
     <>
       <HeroSection />

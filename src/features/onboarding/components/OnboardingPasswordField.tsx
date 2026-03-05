@@ -42,6 +42,7 @@ export default function OnboardingPasswordField({
                 <input
                     id={id}
                     type={isVisible ? 'text' : 'password'}
+                    autoComplete="new-password"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}

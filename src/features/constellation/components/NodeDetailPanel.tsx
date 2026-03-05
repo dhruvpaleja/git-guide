@@ -93,13 +93,14 @@ export default function NodeDetailPanel({
                     {config.label}
                   </span>
                   <span className="text-white/20">·</span>
-                  <span className="text-xs text-white/40">{emotionConfig.label}</span>
+                  <span className="text-xs text-white/50">{emotionConfig.label}</span>
                 </div>
               </div>
             </div>
           </div>
           <button
             onClick={onClose}
+            aria-label="Close panel"
             className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors flex-shrink-0"
           >
             <X className="w-4 h-4 text-white/50" />
@@ -112,7 +113,7 @@ export default function NodeDetailPanel({
         {/* Intensity meter */}
         <div className="mb-5">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-white/40 uppercase tracking-wider font-medium">Intensity</span>
+            <span className="text-xs text-white/50 uppercase tracking-wider font-medium">Intensity</span>
             <span className="text-xs font-semibold" style={{ color: emotionConfig.color }}>
               {node.intensity}/5
             </span>
@@ -135,8 +136,8 @@ export default function NodeDetailPanel({
         {node.note && (
           <div className="mb-5 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
             <div className="flex items-center gap-2 mb-2">
-              <MessageSquare className="w-3.5 h-3.5 text-white/30" />
-              <span className="text-xs text-white/30 uppercase tracking-wider">Note</span>
+              <MessageSquare className="w-3.5 h-3.5 text-white/50" />
+              <span className="text-xs text-white/50 uppercase tracking-wider">Note</span>
             </div>
             <p className="text-sm text-white/60 leading-relaxed italic">"{node.note}"</p>
           </div>
@@ -146,22 +147,22 @@ export default function NodeDetailPanel({
         <div className="flex gap-3 mb-5">
           <div className="flex-1 p-3 rounded-2xl bg-[#1e8e3e]/[0.06] border border-[#1e8e3e]/10">
             <p className="text-2xl font-semibold text-[#1e8e3e]">{harmonyCount}</p>
-            <p className="text-xs text-white/40 mt-0.5">Harmony</p>
+            <p className="text-xs text-white/50 mt-0.5">Harmony</p>
           </div>
           <div className="flex-1 p-3 rounded-2xl bg-[#d93025]/[0.06] border border-[#d93025]/10">
             <p className="text-2xl font-semibold text-[#d93025]">{frictionCount}</p>
-            <p className="text-xs text-white/40 mt-0.5">Friction</p>
+            <p className="text-xs text-white/50 mt-0.5">Friction</p>
           </div>
           <div className="flex-1 p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
             <p className="text-2xl font-semibold text-white/70">{connectedNodes.length}</p>
-            <p className="text-xs text-white/40 mt-0.5">Total Links</p>
+            <p className="text-xs text-white/50 mt-0.5">Total Links</p>
           </div>
         </div>
 
         {/* Connected nodes list */}
         {connectedNodes.length > 0 && (
           <div className="mb-5">
-            <h3 className="text-xs text-white/40 uppercase tracking-wider font-medium mb-3">Connected Nodes</h3>
+            <h3 className="text-xs text-white/50 uppercase tracking-wider font-medium mb-3">Connected Nodes</h3>
             <div className="space-y-2">
               {connectedNodes.map(({ connection, otherNode }) => {
                 if (!otherNode) return null;
@@ -169,7 +170,7 @@ export default function NodeDetailPanel({
                 const connectionColors = {
                   harmony: 'text-[#1e8e3e]',
                   friction: 'text-[#d93025]',
-                  neutral: 'text-white/30',
+                  neutral: 'text-white/50',
                   evolving: 'text-purple-400',
                 };
                 return (
@@ -202,8 +203,8 @@ export default function NodeDetailPanel({
         {node.tags.length > 0 && (
           <div className="mb-5">
             <div className="flex items-center gap-2 mb-2.5">
-              <Tag className="w-3.5 h-3.5 text-white/30" />
-              <span className="text-xs text-white/30 uppercase tracking-wider">Tags</span>
+              <Tag className="w-3.5 h-3.5 text-white/50" />
+              <span className="text-xs text-white/50 uppercase tracking-wider">Tags</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {node.tags.map((tag) => (
@@ -216,7 +217,7 @@ export default function NodeDetailPanel({
         )}
 
         {/* Timestamps */}
-        <div className="flex items-center gap-4 mb-6 text-xs text-white/30">
+        <div className="flex items-center gap-4 mb-6 text-xs text-white/50">
           <div className="flex items-center gap-1.5">
             <Clock className="w-3 h-3" />
             <span>Created {formatDate(node.createdAt)}</span>
@@ -236,6 +237,7 @@ export default function NodeDetailPanel({
           </button>
           <button
             onClick={() => onTogglePin(node.id, !node.isPinned)}
+            aria-label={node.isPinned ? 'Unpin node' : 'Pin node'}
             className={cn(
               'flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border text-sm font-medium transition-all',
               node.isPinned
@@ -247,6 +249,7 @@ export default function NodeDetailPanel({
           </button>
           <button
             onClick={() => onDelete(node.id)}
+            aria-label="Delete node"
             className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-red-500/5 border border-red-500/10 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 transition-all text-sm font-medium"
           >
             <Trash2 className="w-4 h-4" />

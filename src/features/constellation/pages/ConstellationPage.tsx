@@ -4,6 +4,7 @@
  * Accessible at /dashboard/constellation
  */
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -33,6 +34,7 @@ const filterCategories: { key: NodeCategory | 'all'; label: string }[] = [
 ];
 
 export default function ConstellationPage() {
+  useDocumentTitle('Soul Constellation');
   const {
     nodes,
     connections,
@@ -141,7 +143,7 @@ export default function ConstellationPage() {
             </div>
             The Constellation
           </h1>
-          <p className="text-sm text-white/30 mt-1 ml-12">
+          <p className="text-sm text-white/50 mt-1 ml-12">
             {nodes.length} node{nodes.length !== 1 ? 's' : ''} &middot;{' '}
             {connections.length} connection{connections.length !== 1 ? 's' : ''}
           </p>
@@ -220,6 +222,7 @@ export default function ConstellationPage() {
           {/* Reset */}
           <button
             onClick={handleResetView}
+            aria-label="Reset view"
             className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/[0.08] text-xs text-white/50 hover:text-white/80 hover:bg-white/10 transition-all"
           >
             <RotateCcw className="w-3.5 h-3.5" />

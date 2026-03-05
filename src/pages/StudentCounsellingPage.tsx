@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, TrendingUp, Users, Heart, Clock } from 'lucide-react';
 
@@ -58,6 +59,7 @@ const analyticsData = [
 ];
 
 export default function StudentCounsellingPage() {
+  useDocumentTitle('Student Counselling');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
 

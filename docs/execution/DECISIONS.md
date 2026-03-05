@@ -203,3 +203,21 @@
 - Batch: BATCH:013
 - Decision: Exclude local AI-agent/playwright helper trees (`.agent/**`, `.agents/**`, `playwright-utils/**`, `tests/**`) from root ESLint global scope.
 - Rationale: These paths are local tooling assets, not production app surface; keeping them in root `lint:ci` created false gate failures that blocked Phase 6 verification despite healthy product code.
+
+## D-035
+- Date: 2025-07-24
+- Batch: BATCH:014
+- Decision: Use universal `prefers-reduced-motion: reduce` CSS rule with `!important` to suppress all animations/transitions, rather than targeting individual animation classes.
+- Rationale: Guarantees complete motion suppression including third-party and dynamically generated animations without needing to maintain a per-class allow-list.
+
+## D-036
+- Date: 2025-07-24
+- Batch: BATCH:014
+- Decision: Set color contrast floor at text-white/50 for all readable text on dark backgrounds (from text-white/30 and text-white/40), and text-black/50 for light backgrounds.
+- Rationale: Achieves WCAG AA 4.5:1 minimum contrast ratio while preserving existing design hierarchy. Icons and decorative elements excluded from contrast changes.
+
+## D-037
+- Date: 2025-07-24
+- Batch: BATCH:014
+- Decision: Create shared `useDocumentTitle` hook applied to all 38 page components rather than setting title in route metadata.
+- Rationale: Works with React Router's existing lazy-loaded route setup without requiring router config changes. Hook pattern is composable and allows dynamic titles.

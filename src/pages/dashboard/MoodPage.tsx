@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Smile, Plus, X, Loader2, TrendingUp, BarChart3 } from 'lucide-react';
@@ -84,6 +85,7 @@ function AverageScoreBadge({ entries }: { entries: MoodEntry[] }) {
 }
 
 export default function MoodPage() {
+  useDocumentTitle('Mood Tracker');
   const [score, setScore] = useState(5);
   const [note, setNote] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -153,7 +155,7 @@ export default function MoodPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-white tracking-tight">Mood Tracker</h1>
-          <p className="text-sm text-white/40 mt-1">Track your emotional state daily</p>
+          <p className="text-sm text-white/50 mt-1">Track your emotional state daily</p>
         </div>
         <div className="flex items-center gap-3">
           <AverageScoreBadge entries={entries} />
@@ -177,7 +179,7 @@ export default function MoodPage() {
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-white/90 font-semibold">How are you feeling?</h3>
-              <button onClick={() => setShowForm(false)} className="text-white/40 hover:text-white transition-colors">
+              <button onClick={() => setShowForm(false)} aria-label="Close form" className="text-white/40 hover:text-white transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -185,7 +187,7 @@ export default function MoodPage() {
             {/* Score Slider */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-white/40 uppercase tracking-widest">Mood Level</span>
+                <span className="text-xs text-white/50 uppercase tracking-widest">Mood Level</span>
                 <span className="text-lg font-semibold text-white">{score} — {MOOD_LABELS[score]}</span>
               </div>
               <input
@@ -194,14 +196,14 @@ export default function MoodPage() {
                 className="w-full h-2 rounded-full bg-[#2b2b2b] appearance-none cursor-pointer accent-accent"
               />
               <div className="flex justify-between mt-1">
-                <span className="text-[10px] text-white/30">1</span>
-                <span className="text-[10px] text-white/30">10</span>
+                <span className="text-[10px] text-white/50">1</span>
+                <span className="text-[10px] text-white/50">10</span>
               </div>
             </div>
 
             {/* Tags */}
             <div className="mb-5">
-              <span className="text-xs text-white/40 uppercase tracking-widest block mb-3">Emotions</span>
+              <span className="text-xs text-white/50 uppercase tracking-widest block mb-3">Emotions</span>
               <div className="flex flex-wrap gap-2">
                 {COMMON_TAGS.map(tag => (
                   <button
@@ -240,12 +242,13 @@ export default function MoodPage() {
       {!isLoadingEntries && entries.length >= 2 && <MoodTrendChart entries={entries} />}
 
       {/* Entries List */}
+      <div aria-live="polite">
       {isLoadingEntries ? (
         <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 text-white/40 animate-spin" /></div>
       ) : entries.length === 0 ? (
         <div className="text-center py-20">
           <Smile className="w-12 h-12 text-white/20 mx-auto mb-4" />
-          <p className="text-white/40">No mood logs yet. Start tracking to see patterns.</p>
+          <p className="text-white/50">No mood logs yet. Start tracking to see patterns.</p>
         </div>
       ) : (
         <div className="grid gap-4">
@@ -266,7 +269,7 @@ export default function MoodPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <span className="text-sm font-medium text-white/80">{MOOD_LABELS[entry.score] ?? entry.score}</span>
-                  <span className="text-xs text-white/30 shrink-0">{new Date(entry.createdAt).toLocaleDateString()}</span>
+                  <span className="text-xs text-white/50 shrink-0">{new Date(entry.createdAt).toLocaleDateString()}</span>
                 </div>
                 {entry.note && <p className="text-sm text-white/50 mb-2">{entry.note}</p>}
                 {entry.tags.length > 0 && (
@@ -281,6 +284,7 @@ export default function MoodPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

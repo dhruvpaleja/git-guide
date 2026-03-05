@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -12,6 +13,7 @@ import {
 import { courseSections } from '@/features/courses/constants/courses.data';
 
 export default function CourseDetailsPage() {
+    useDocumentTitle('Course Details');
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -114,13 +116,14 @@ export default function CourseDetailsPage() {
                 <div className="flex items-center gap-4 mb-8">
                     <button
                         onClick={() => navigate(-1)}
+                        aria-label="Go back"
                         className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/5 transition-colors group"
                     >
                         <ChevronLeft className="w-5 h-5 text-white/70 group-hover:text-white" />
                     </button>
-                    <span className="text-white/60 text-sm hidden md:block group-hover:text-white transition-colors cursor-pointer" onClick={() => navigate(-1)}>
+                    <button type="button" className="text-white/60 text-sm hidden md:block group-hover:text-white transition-colors cursor-pointer bg-transparent border-none" onClick={() => navigate(-1)}>
                         Back to Courses
-                    </span>
+                    </button>
                 </div>
 
                 <h1 className="text-3xl md:text-5xl font-semibold mb-6 tracking-tight">{activeCourse.category} Courses</h1>
@@ -260,14 +263,14 @@ export default function CourseDetailsPage() {
                                 <div className="text-right w-full md:w-auto mt-6 md:mt-0">
                                     <div className="text-white/60 text-sm mb-1">Course Fees</div>
                                     <div className="text-4xl md:text-[42px] font-bold mb-1 tracking-tight">{activeCourse.price}</div>
-                                    <div className="text-xs text-white/40 mb-1">All Taxes are included.</div>
+                                    <div className="text-xs text-white/50 mb-1">All Taxes are included.</div>
                                     {activeCourse.originalPrice && (
-                                        <div className="text-xs text-white/30 line-through">Original Value: {activeCourse.originalPrice}</div>
+                                        <div className="text-xs text-white/50 line-through">Original Value: {activeCourse.originalPrice}</div>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="mt-8 text-xs text-white/40">
+                            <div className="mt-8 text-xs text-white/50">
                                 Course Updated: {activeCourse.lastUpdated}
                             </div>
 

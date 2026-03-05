@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navigation from '@/components/layout/Navigation';
@@ -31,6 +32,7 @@ interface Step3Data {
 const inputCls = "w-full h-14 rounded-full border border-gray-200 bg-gray-50 px-4 text-black placeholder-gray-400";
 
 export default function PractitionerOnboardingPage() {
+  useDocumentTitle('Practitioner Onboarding');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -128,7 +130,7 @@ export default function PractitionerOnboardingPage() {
           {step === 1 && (
             <>
               {signupError && (
-                <div className="max-w-3xl mx-auto mb-4 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">
+                <div role="alert" className="max-w-3xl mx-auto mb-4 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">
                   {signupError}
                 </div>
               )}
@@ -185,11 +187,12 @@ function Step1Form({ initial, onNext }: { initial: Step1Data; onNext: (v: Step1D
     <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
       <div className="bg-white p-8 rounded-3xl border border-gray-200 shadow-lg space-y-6">
         <h2 className="text-2xl font-semibold text-center">Step 1 - Information</h2>
-        {error && <div className="text-red-600 text-sm text-center">{error}</div>}
+        {error && <div role="alert" className="text-red-600 text-sm text-center">{error}</div>}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Enter Name</label>
+            <label htmlFor="pract-name" className="block text-sm text-gray-600 mb-1">Enter Name</label>
             <input
+              id="pract-name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="Ex. Shweta Basu..."
@@ -198,8 +201,9 @@ function Step1Form({ initial, onNext }: { initial: Step1Data; onNext: (v: Step1D
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Enter Email</label>
+            <label htmlFor="pract-email" className="block text-sm text-gray-600 mb-1">Enter Email</label>
             <input
+              id="pract-email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="Ex. shewtabasuofficial@gmail.com..."
@@ -209,8 +213,9 @@ function Step1Form({ initial, onNext }: { initial: Step1Data; onNext: (v: Step1D
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Create Password</label>
+            <label htmlFor="pract-password" className="block text-sm text-gray-600 mb-1">Create Password</label>
             <input
+              id="pract-password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               type="password"
@@ -220,10 +225,11 @@ function Step1Form({ initial, onNext }: { initial: Step1Data; onNext: (v: Step1D
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Enter Phone Number</label>
+            <label htmlFor="pract-phone" className="block text-sm text-gray-600 mb-1">Enter Phone Number</label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">+91</span>
               <input
+                id="pract-phone"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, '') })}
                 placeholder="Ex. 8993454544"
@@ -233,8 +239,9 @@ function Step1Form({ initial, onNext }: { initial: Step1Data; onNext: (v: Step1D
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Sign Up As</label>
+            <label htmlFor="pract-signupAs" className="block text-sm text-gray-600 mb-1">Sign Up As</label>
             <select
+              id="pract-signupAs"
               value={form.signupAs}
               onChange={(e) =>
                 setForm({ ...form, signupAs: e.target.value as 'therapist' | 'astrologer' })
@@ -247,8 +254,9 @@ function Step1Form({ initial, onNext }: { initial: Step1Data; onNext: (v: Step1D
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Specialization</label>
+            <label htmlFor="pract-specialization" className="block text-sm text-gray-600 mb-1">Specialization</label>
             <input
+              id="pract-specialization"
               value={form.specialization}
               onChange={(e) => setForm({ ...form, specialization: e.target.value })}
               placeholder={
@@ -317,7 +325,7 @@ function Step2Form({ initial, onNext, onBack }: { initial: Step2Data; onNext: (v
     <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
       <div className="bg-white p-8 rounded-3xl border border-gray-200 shadow-lg space-y-6">
         <h2 className="text-2xl font-semibold text-center">Step 2 - Know Your Customer</h2>
-        {error && <div className="text-red-600 text-sm text-center">{error}</div>}
+        {error && <div role="alert" className="text-red-600 text-sm text-center">{error}</div>}
 
         <input
           ref={fileInputRef}
@@ -343,10 +351,11 @@ function Step2Form({ initial, onNext, onBack }: { initial: Step2Data; onNext: (v
                     <Globe size={24} className="text-gray-400 mb-1" />
                   );
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={doc}
                     onClick={() => handleDocClick(doc)}
-                    className={`w-28 h-28 rounded-2xl border flex flex-col items-center justify-center cursor-pointer p-2 ${form.kycDocument === doc ? 'border-black' : 'border-gray-300'
+                    className={`w-28 h-28 rounded-2xl border flex flex-col items-center justify-center cursor-pointer p-2 bg-transparent ${form.kycDocument === doc ? 'border-black' : 'border-gray-300'
                       }`}
                   >
                     {icon}
@@ -362,7 +371,7 @@ function Step2Form({ initial, onNext, onBack }: { initial: Step2Data; onNext: (v
                         {form.kycFile.name}
                       </span>
                     )}
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -370,8 +379,9 @@ function Step2Form({ initial, onNext, onBack }: { initial: Step2Data; onNext: (v
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm text-gray-600 mb-1">What's your High School Degree?</label>
+              <label htmlFor="pract-highschool" className="block text-sm text-gray-600 mb-1">What's your High School Degree?</label>
               <input
+                id="pract-highschool"
                 value={form.highSchool}
                 onChange={(e) => setForm({ ...form, highSchool: e.target.value })}
                 placeholder="Ex. Psychology & Therapy Expert Degree."
@@ -379,8 +389,9 @@ function Step2Form({ initial, onNext, onBack }: { initial: Step2Data; onNext: (v
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Do you have a License of your Profession?</label>
+              <label htmlFor="pract-license" className="block text-sm text-gray-600 mb-1">Do you have a License of your Profession?</label>
               <input
+                id="pract-license"
                 value={form.license}
                 onChange={(e) => setForm({ ...form, license: e.target.value })}
                 placeholder="Ex. Counsellor, Therapist, Psychologist..."
@@ -435,7 +446,7 @@ function Step3Form({ initial, onNext, onBack }: { initial: Step3Data; onNext: (v
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* avatar upload */}
           <div className="flex flex-col items-center md:items-start space-y-3">
-            <label className="relative" onClick={handleAvatarClick}>
+            <button type="button" className="relative bg-transparent border-none p-0 cursor-pointer" onClick={handleAvatarClick} aria-label="Upload avatar photo">
               <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer overflow-hidden">
                 {form.avatarFile ? (
                   <img
@@ -460,21 +471,13 @@ function Step3Form({ initial, onNext, onBack }: { initial: Step3Data; onNext: (v
                   </svg>
                 )}
               </div>
-              <input
-                type="file"
-                accept="image/*"
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                onChange={(e) => {
-                  const file = e.target.files ? e.target.files[0] : null;
-                  setForm((prev) => ({ ...prev, avatarFile: file }));
-                }}
-              />
-            </label>
+            </button>
             <span className="text-sm text-gray-600">Pick Your Image</span>
           </div>
           <div className="space-y-4">
-            <label className="block text-sm text-gray-600">Bio</label>
+            <label htmlFor="pract-bio" className="block text-sm text-gray-600">Bio</label>
             <textarea
+              id="pract-bio"
               value={form.bio}
               onChange={e => setForm({ ...form, bio: e.target.value })}
               rows={5}
@@ -484,8 +487,9 @@ function Step3Form({ initial, onNext, onBack }: { initial: Step3Data; onNext: (v
           </div>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Which Languages you Speak?</label>
+              <label htmlFor="pract-languages" className="block text-sm text-gray-600 mb-1">Which Languages you Speak?</label>
               <input
+                id="pract-languages"
                 value={form.languages}
                 onChange={e => setForm({ ...form, languages: e.target.value })}
                 placeholder="Ex. English, Hindi, Marathi, Tamil, Telugu..."
@@ -493,10 +497,11 @@ function Step3Form({ initial, onNext, onBack }: { initial: Step3Data; onNext: (v
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">What's your Pricing Per Sessions?</label>
+              <label htmlFor="pract-pricing" className="block text-sm text-gray-600 mb-1">What's your Pricing Per Sessions?</label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
                 <input
+                  id="pract-pricing"
                   value={form.pricing}
                   onChange={e => setForm({ ...form, pricing: e.target.value })}
                   placeholder="Ex. 699 - 900"

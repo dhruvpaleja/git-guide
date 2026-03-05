@@ -66,7 +66,7 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
                 </AnimatePresence>
 
                 {submitted ? (
-                    <div className="flex-1 flex items-center justify-center gap-3">
+                    <div className="flex-1 flex items-center justify-center gap-3" role="status" aria-live="polite">
                         <CheckCircle2 className="w-5 h-5 text-emerald-400/80" />
                         <span className="text-white/50 text-[13px] font-medium">Recorded. Your constellation updates.</span>
                     </div>
@@ -79,7 +79,7 @@ export default function TheConfessional({ onFocusChange }: { onFocusChange?: (fo
                         placeholder={prompt}
                         className={cn(
                             "flex-1 w-full bg-transparent resize-none p-5 sm:p-6 placeholder:text-white/18 focus:outline-none tracking-[-0.01em] hide-scrollbar font-medium transition-all duration-700 relative z-10",
-                            isFocused ? "text-[16px] sm:text-[18px] text-white/80 leading-relaxed" : "text-[14px] text-white/40"
+                            isFocused ? "text-[16px] sm:text-[18px] text-white/80 leading-relaxed" : "text-[14px] text-white/50"
                         )}
                     />
                 )}

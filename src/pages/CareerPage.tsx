@@ -140,7 +140,10 @@ function JobCard({ job }: { job: Job }) {
   );
 }
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 export default function CareerPage() {
+  useDocumentTitle('Careers');
   return (
     <div className="w-full bg-[#f3f3f3] font-['Manrope',sans-serif] text-black">
       <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 pt-[120px] sm:px-10 lg:px-[82px]">

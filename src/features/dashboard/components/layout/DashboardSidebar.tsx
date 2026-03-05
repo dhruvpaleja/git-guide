@@ -91,7 +91,7 @@ export default function DashboardSidebar({ forceExpanded, onNavigate }: Dashboar
       <div className="mx-3 h-px bg-white/[0.05] mb-2" />
 
       {/* ─── Navigation ─── */}
-      <nav className="flex-1 w-full flex flex-col gap-0.5 px-2 overflow-y-auto hide-scrollbar pt-1">
+      <nav aria-label="Dashboard navigation" className="flex-1 w-full flex flex-col gap-0.5 px-2 overflow-y-auto hide-scrollbar pt-1">
         {navSections.map((section, sIdx) => (
           <div key={section.label}>
             {/* Section label */}
@@ -166,7 +166,7 @@ export default function DashboardSidebar({ forceExpanded, onNavigate }: Dashboar
                 'flex items-center w-full px-3 py-2.5 rounded-full transition-all duration-300',
                 active
                   ? 'text-white font-semibold bg-white/[0.06]'
-                  : 'text-white/40 hover:text-white/70 hover:bg-white/[0.03]',
+                  : 'text-white/50 hover:text-white/70 hover:bg-white/[0.03]',
               )}
             >
               <item.icon className="w-[17px] h-[17px] flex-shrink-0 ml-1" strokeWidth={active ? 2.2 : 1.6} />

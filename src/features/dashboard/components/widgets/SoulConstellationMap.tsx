@@ -85,9 +85,11 @@ export default function SoulConstellationMap() {
     }, [connections, renderNodeMap]);
 
     return (
-        <div
+        <button
+            type="button"
             onClick={() => navigate('/dashboard/constellation')}
-            className="relative w-full h-[320px] sm:h-[380px] lg:h-[420px] bg-[#070709] border border-white/[0.04] rounded-[20px] overflow-hidden flex items-center justify-center cursor-pointer group hover:border-white/[0.07] transition-all duration-700"
+            className="relative w-full h-[320px] sm:h-[380px] lg:h-[420px] bg-[#070709] border border-white/[0.04] rounded-[20px] overflow-hidden flex items-center justify-center cursor-pointer group hover:border-white/[0.07] transition-all duration-700 text-left"
+            aria-label="Open Soul Constellation Map"
         >
             {/* ── Cinematic ambient glows ── */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-purple-900/[0.08] blur-[100px] rounded-full pointer-events-none group-hover:bg-purple-800/[0.12] transition-all duration-1000" />
@@ -254,6 +256,6 @@ export default function SoulConstellationMap() {
 
             {/* Edge vignette for cinematic depth */}
             <div className="absolute inset-0 pointer-events-none rounded-[24px] constellation-vignette" />
-        </div>
+        </button>
     );
 }

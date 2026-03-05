@@ -334,6 +334,7 @@ export default function PractitionerDashboard() {
             onClick={handleLogout}
             className="w-11 h-11 hover:bg-white/10 rounded-2xl flex items-center justify-center transition text-white"
             title="Logout"
+            aria-label="Logout"
           >
             <LogOut size={20} />
           </button>
@@ -367,7 +368,7 @@ export default function PractitionerDashboard() {
           </div>
 
           <div className="flex items-center gap-4 shrink-0">
-            <button className="relative w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition shrink-0">
+            <button aria-label="Notifications" className="relative w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition shrink-0">
               <Bell size={20} className="text-black" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
@@ -547,28 +548,30 @@ export default function PractitionerDashboard() {
                 <div>
                   <h3 className="text-xl font-bold text-black mb-4">Quick Links</h3>
                   <div className="grid grid-cols-1 gap-4">
-                    <div
+                    <button
+                      type="button"
                       onClick={() => {
                         // TODO: Implement post therapy functionality
                         // console.log('Post Therapy clicked');
                       }}
-                      className="bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition h-40 flex flex-col items-center justify-center gap-3"
+                      className="bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition h-40 flex flex-col items-center justify-center gap-3 border-none w-full"
                     >
-                      <span className="text-4xl">🙏</span>
+                      <span className="text-4xl" aria-hidden="true">🙏</span>
                       <h4 className="font-bold text-lg">Post Therapy</h4>
                       <p className="text-xs text-center text-white/90">Get all the clients post therapy records.</p>
-                    </div>
-                    <div
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => {
                         // TODO: Implement support functionality
                         // console.log('Support clicked');
                       }}
-                      className="bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition h-40 flex flex-col items-center justify-center gap-3"
+                      className="bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition h-40 flex flex-col items-center justify-center gap-3 border-none w-full"
                     >
-                      <span className="text-4xl">👤</span>
+                      <span className="text-4xl" aria-hidden="true">👤</span>
                       <h4 className="font-bold text-lg">Support</h4>
                       <p className="text-xs text-center text-white/90">Get support for your better understanding.</p>
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>

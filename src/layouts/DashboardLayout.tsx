@@ -52,7 +52,7 @@ export default function DashboardLayout() {
 
         <DashboardTopbar onMenuToggle={() => setMobileNavOpen((v) => !v)} />
 
-        <main className="flex-1 px-5 pb-12 pt-6 sm:px-8 md:px-10 sm:pt-8 relative w-full max-w-[1400px] mx-auto">
+        <main id="main-content" className="flex-1 px-5 pb-12 pt-6 sm:px-8 md:px-10 sm:pt-8 relative w-full max-w-[1400px] mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}

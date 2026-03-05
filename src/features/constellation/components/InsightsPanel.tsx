@@ -102,16 +102,17 @@ export default function InsightsPanel({
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-white">System Intelligence</h3>
-                  <p className="text-xs text-white/30">
+                  <p className="text-xs text-white/50">
                     {unreadCount > 0 ? `${unreadCount} new insight${unreadCount > 1 ? 's' : ''}` : 'All caught up'}
                   </p>
                 </div>
               </div>
               <button
                 onClick={onClose}
+                aria-label="Close"
                 className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
               >
-                <X className="w-4 h-4 text-white/40" />
+                <X className="w-4 h-4 text-white/50" />
               </button>
             </div>
 
@@ -168,7 +169,7 @@ export default function InsightsPanel({
                           {!insight.isRead && (
                             <button
                               onClick={() => onMarkRead(insight.id)}
-                              className="flex items-center gap-1 px-2 py-1.5 rounded-xl text-xs text-white/30 hover:text-white/60 transition-colors"
+                              className="flex items-center gap-1 px-2 py-1.5 rounded-xl text-xs text-white/50 hover:text-white/60 transition-colors"
                             >
                               <Check className="w-3 h-3" />
                               Mark read
@@ -186,7 +187,7 @@ export default function InsightsPanel({
                   <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4">
                     <Brain className="w-6 h-6 text-white/20" />
                   </div>
-                  <p className="text-sm text-white/40">No insights yet</p>
+                  <p className="text-sm text-white/50">No insights yet</p>
                   <p className="text-xs text-white/20 mt-1">Add more nodes to unlock pattern detection</p>
                 </div>
               )}

@@ -218,7 +218,7 @@ export default function PersonalizationPage() {
         <div className="h-2 rounded-full bg-white/10 overflow-hidden">
           <div className="h-full w-1/3 bg-white animate-pulse" />
         </div>
-        <p className="text-center text-white/40 mt-4 text-sm">Preparing your personalization...</p>
+        <p className="text-center text-white/50 mt-4 text-sm">Preparing your personalization...</p>
       </div>
     );
   }
@@ -249,7 +249,7 @@ export default function PersonalizationPage() {
       </div>
 
       <div className="mt-2 flex items-center justify-center gap-2">
-        <p className="text-center text-white/30 text-[11px] tracking-wider">
+        <p className="text-center text-white/50 text-[11px] tracking-wider">
           QUESTION {stepPosition} OF {PERSONALIZATION_STEPS.length}
         </p>
         {(pendingSaves > 0 || submittingFinalStep) && <span className="text-[11px] text-white/45 animate-pulse">Saving...</span>}

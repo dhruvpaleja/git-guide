@@ -32,7 +32,7 @@ export default function HumanMatchCard() {
                     <p className="text-[14px] text-white/55 leading-[1.7] mb-2.5">
                         Friction between <span className="text-white/80 font-medium">Career</span> and <span className="text-white/80 font-medium">Anxiety</span> nodes over 3 weeks.
                     </p>
-                    <p className="text-[13px] text-white/40 leading-[1.7]">
+                    <p className="text-[13px] text-white/50 leading-[1.7]">
                         <span className="text-white/65 font-medium">Dr. Aisha M.</span> specializes in high-functioning corporate anxiety and has helped 200+ professionals navigate similar patterns.
                     </p>
                 </div>
@@ -52,10 +52,10 @@ export default function HumanMatchCard() {
                         <div>
                             <p className="text-[13px] text-white/70 font-semibold">Dr. Aisha M.</p>
                             <div className="flex items-center gap-2 mt-0.5">
-                                <p className="text-[10px] text-white/30">Clinical Psychologist</p>
+                                <p className="text-[10px] text-white/50">Clinical Psychologist</p>
                                 <div className="flex items-center gap-0.5">
                                     <Star className="w-2.5 h-2.5 text-amber-400/60 fill-amber-400/60" />
-                                    <span className="text-[10px] text-white/30">4.9</span>
+                                    <span className="text-[10px] text-white/50">4.9</span>
                                 </div>
                             </div>
                         </div>

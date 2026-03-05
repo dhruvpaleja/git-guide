@@ -67,7 +67,7 @@ export default function OnboardingSignupPage() {
                                                 <Icon className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-300" />
                                             </div>
                                             {/* Step number */}
-                                            <div className="mt-3 text-white/40 text-[11px] font-medium tracking-widest uppercase">
+                                            <div className="mt-3 text-white/50 text-[11px] font-medium tracking-widest uppercase">
                                                 Step {step.id}
                                             </div>
                                             {/* Title */}
@@ -75,7 +75,7 @@ export default function OnboardingSignupPage() {
                                                 {step.title}
                                             </h2>
                                             {/* Description */}
-                                            <p className="mt-1.5 text-white/40 text-[12px] leading-[1.5] tracking-[-0.08px]">
+                                            <p className="mt-1.5 text-white/50 text-[12px] leading-[1.5] tracking-[-0.08px]">
                                                 {step.description}
                                             </p>
                                         </article>
@@ -101,12 +101,12 @@ export default function OnboardingSignupPage() {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-white/30 text-[10px] font-medium tracking-wider uppercase">{step.id}</span>
+                                                    <span className="text-white/50 text-[10px] font-medium tracking-wider uppercase">{step.id}</span>
                                                     <h2 className="text-white text-[14px] sm:text-[15px] font-semibold leading-snug tracking-[-0.12px]">
                                                         {step.title}
                                                     </h2>
                                                 </div>
-                                                <p className="mt-0.5 text-white/40 text-[12px] sm:text-[13px] leading-[1.4] line-clamp-1">
+                                                <p className="mt-0.5 text-white/50 text-[12px] sm:text-[13px] leading-[1.4] line-clamp-1">
                                                     {step.description}
                                                 </p>
                                             </div>

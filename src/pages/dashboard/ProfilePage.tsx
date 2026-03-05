@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
@@ -28,6 +29,7 @@ const defaultStats = [
 ] as const;
 
 export default function ProfilePage() {
+  useDocumentTitle('Profile');
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -180,6 +182,7 @@ export default function ProfilePage() {
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingAvatar}
+                aria-label="Upload profile photo"
                 className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-accent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-accent/90 disabled:opacity-50"
               >
                 <Camera className="w-3 h-3 text-white" />
@@ -209,14 +212,16 @@ export default function ProfilePage() {
                   <p className="text-[11px] text-white/25 uppercase tracking-widest">Edit Profile</p>
                   <button
                     onClick={() => { setEditing(false); setEditName(user?.name ?? ''); setEditEmail(user?.email ?? ''); }}
-                    className="text-white/30 hover:text-white/60 transition-colors"
+                    aria-label="Cancel editing"
+                    className="text-white/50 hover:text-white/60 transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
                 <div>
-                  <label className="text-xs text-white/30 block mb-1.5">Display Name</label>
+                  <label htmlFor="profile-editName" className="text-xs text-white/50 block mb-1.5">Display Name</label>
                   <input
+                    id="profile-editName"
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-accent/40 transition-colors"
@@ -224,8 +229,9 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-white/30 block mb-1.5">Email Address</label>
+                  <label htmlFor="profile-editEmail" className="text-xs text-white/50 block mb-1.5">Email Address</label>
                   <input
+                    id="profile-editEmail"
                     value={editEmail}
                     onChange={(e) => setEditEmail(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-accent/40 transition-colors"
@@ -234,7 +240,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 {saveError && (
-                  <p className="text-xs text-red-400/80 bg-red-500/[0.06] border border-red-500/10 rounded-lg px-3 py-2">{saveError}</p>
+                  <p role="alert" className="text-xs text-red-400/80 bg-red-500/[0.06] border border-red-500/10 rounded-lg px-3 py-2">{saveError}</p>
                 )}
               </motion.div>
             ) : (

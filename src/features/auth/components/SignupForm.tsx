@@ -112,7 +112,7 @@ export default function SignupForm() {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {serverError && (
-                <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded-md">
+                <div role="alert" className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded-md">
                     {serverError}
                 </div>
             )}

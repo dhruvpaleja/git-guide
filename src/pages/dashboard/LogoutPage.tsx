@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
@@ -25,6 +26,7 @@ const UPCOMING_SESSIONS = [
 ];
 
 export default function LogoutPage() {
+    useDocumentTitle('Logging Out');
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const [loggedOut, setLoggedOut] = useState(false);
     const [countdown, setCountdown] = useState(3);
@@ -66,17 +68,17 @@ export default function LogoutPage() {
                         </div>
                     </div>
                     <div className="flex items-center gap-2.5">
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <button aria-label="Notifications" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                            <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
                         </button>
                         <div className="hidden lg:flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100 min-w-[200px]">
                             <span className="text-sm text-gray-400 truncate">Search for what you want...</span>
                             <Search className="w-4 h-4 text-gray-300 ml-auto shrink-0" />
                         </div>
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                        <button aria-label="Filter" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
                             <SlidersHorizontal className="w-4 h-4" />
                         </button>
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                        <button aria-label="Info" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
                             <AlertCircle className="w-4 h-4" />
                         </button>
                         <button className="text-sm font-medium text-orange-400 hover:text-orange-500 transition-colors hidden md:block">Ignored Clients</button>
@@ -120,7 +122,7 @@ export default function LogoutPage() {
 
                                 {/* Stats Card */}
                                 <div className="bg-[#1A1A1A] rounded-[20px] p-5 text-white">
-                                    <p className="text-[10px] text-white/40 font-bold uppercase tracking-wider mb-4">Your Impact</p>
+                                    <p className="text-[10px] text-white/50 font-bold uppercase tracking-wider mb-4">Your Impact</p>
                                     {[
                                         { icon: Star, label: 'Rating', value: `${STATS.rating} ★`, color: 'text-yellow-400' },
                                         { icon: TrendingUp, label: 'Total Earnings', value: STATS.totalEarnings, color: 'text-emerald-400' },

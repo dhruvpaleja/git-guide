@@ -102,7 +102,7 @@ export default function StudentCounsellingCardsGrid() {
                         transitionDelay: '600ms',
                     }}
                 >
-                    <p className="text-white/40 text-xs md:text-sm">
+                    <p className="text-white/50 text-xs md:text-sm">
                         Hover over cards to pause • Auto-scrolling carousel
                     </p>
                 </div>

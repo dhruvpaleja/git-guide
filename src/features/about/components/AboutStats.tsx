@@ -34,11 +34,11 @@ export default function AboutStats() {
                                 transition: `all 0.8s ease ${index * 0.2}s`
                             }}
                         >
-                            <h3 className="text-[28px] sm:text-[32px] md:text-[36px] font-semibold tracking-tight text-black leading-tight mb-2 whitespace-normal md:whitespace-nowrap" style={{ fontFamily: "'Manrope', sans-serif" }}>
+                            <h2 className="text-[28px] sm:text-[32px] md:text-[36px] font-semibold tracking-tight text-black leading-tight mb-2 whitespace-normal md:whitespace-nowrap" style={{ fontFamily: "'Manrope', sans-serif" }}>
                                 {stat.prefix}
                                 <AnimatedNumber target={stat.number} isVisible={isVisible} />
                                 {stat.suffix}
-                            </h3>
+                            </h2>
                             <p className="text-[16px] md:text-[18px] font-normal leading-relaxed text-black/80 max-w-[200px]" style={{ fontFamily: "'Manrope', sans-serif" }}>
                                 {stat.subtitle}
                             </p>

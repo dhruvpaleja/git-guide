@@ -1,3 +1,4 @@
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
@@ -36,6 +37,7 @@ const initialProfile = {
 /* ── Component ───────────────────────────────────────────────── */
 
 export default function EditProfilePage() {
+    useDocumentTitle('Edit Profile');
     const [profile, setProfile] = useState(initialProfile);
     const [newLanguage, setNewLanguage] = useState('');
     const [newSpecialization, setNewSpecialization] = useState('');
@@ -112,17 +114,17 @@ export default function EditProfilePage() {
                         </div>
                     </div>
                     <div className="flex items-center gap-2.5">
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <button aria-label="Notifications" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                            <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
                         </button>
                         <div className="hidden lg:flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100 min-w-[200px]">
                             <span className="text-sm text-gray-400 truncate">Search for what you want...</span>
                             <Search className="w-4 h-4 text-gray-300 ml-auto shrink-0" />
                         </div>
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                        <button aria-label="Filter" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
                             <SlidersHorizontal className="w-4 h-4" />
                         </button>
-                        <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                        <button aria-label="Info" className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
                             <AlertCircle className="w-4 h-4" />
                         </button>
                         <button className="text-sm font-medium text-orange-400 hover:text-orange-500 transition-colors hidden md:block">Ignored Clients</button>
@@ -178,7 +180,7 @@ export default function EditProfilePage() {
                                     <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-200 cursor-pointer">
                                         <Camera className="w-6 h-6 text-white" />
                                     </div>
-                                    <button className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#2C2F7A] text-white flex items-center justify-center shadow-md hover:bg-[#24276B] transition-colors">
+                                    <button aria-label="Edit profile photo" className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#2C2F7A] text-white flex items-center justify-center shadow-md hover:bg-[#24276B] transition-colors">
                                         <Edit3 className="w-3.5 h-3.5" />
                                     </button>
                                 </div>
@@ -264,8 +266,9 @@ export default function EditProfilePage() {
                                         </div>
                                     ))}
                                     <div>
-                                        <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Gender</label>
+                                        <label htmlFor="edit-gender" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Gender</label>
                                         <select
+                                            id="edit-gender"
                                             value={profile.gender}
                                             onChange={e => updateField('gender', e.target.value)}
                                             className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-[#2C2F7A] focus:ring-2 focus:ring-[#2C2F7A]/10 transition-all appearance-none cursor-pointer"
@@ -277,8 +280,9 @@ export default function EditProfilePage() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Country</label>
+                                        <label htmlFor="edit-country" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Country</label>
                                         <input
+                                            id="edit-country"
                                             value={profile.country}
                                             onChange={e => updateField('country', e.target.value)}
                                             className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-[#2C2F7A] focus:ring-2 focus:ring-[#2C2F7A]/10 transition-all"
@@ -288,8 +292,9 @@ export default function EditProfilePage() {
 
                                 {/* Bio */}
                                 <div className="mt-4">
-                                    <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Professional Bio</label>
+                                    <label htmlFor="edit-bio" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Professional Bio</label>
                                     <textarea
+                                        id="edit-bio"
                                         value={profile.bio}
                                         onChange={e => updateField('bio', e.target.value)}
                                         rows={4}
@@ -299,12 +304,12 @@ export default function EditProfilePage() {
 
                                 {/* Languages */}
                                 <div className="mt-4">
-                                    <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-2">Languages</label>
+                                    <span className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-2">Languages</span>
                                     <div className="flex flex-wrap items-center gap-2">
                                         {profile.languages.map(lang => (
                                             <span key={lang} className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-[11px] font-semibold border border-indigo-100 transition-all hover:bg-indigo-100">
                                                 {lang}
-                                                <button onClick={() => removeLanguage(lang)} className="hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
+                                                <button onClick={() => removeLanguage(lang)} aria-label={`Remove ${lang}`} className="hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
                                             </span>
                                         ))}
                                         <div className="flex items-center gap-1">
@@ -315,7 +320,7 @@ export default function EditProfilePage() {
                                                 placeholder="Add language"
                                                 className="h-[30px] px-3 bg-white border border-gray-200 rounded-full text-[11px] text-gray-700 focus:outline-none focus:border-[#2C2F7A] w-[110px] transition-colors"
                                             />
-                                            <button onClick={addLanguage} className="w-[30px] h-[30px] rounded-full bg-[#2C2F7A] text-white flex items-center justify-center hover:bg-[#24276B] transition-all active:scale-90">
+                                            <button onClick={addLanguage} aria-label="Add language" className="w-[30px] h-[30px] rounded-full bg-[#2C2F7A] text-white flex items-center justify-center hover:bg-[#24276B] transition-all active:scale-90">
                                                 <Plus className="w-3.5 h-3.5" />
                                             </button>
                                         </div>
@@ -331,31 +336,31 @@ export default function EditProfilePage() {
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Years of Experience</label>
-                                        <input value={profile.experience} onChange={e => updateField('experience', e.target.value)} type="number" className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all" />
+                                        <label htmlFor="edit-experience" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Years of Experience</label>
+                                        <input id="edit-experience" value={profile.experience} onChange={e => updateField('experience', e.target.value)} type="number" className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all" />
                                     </div>
                                     <div>
-                                        <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Qualifications</label>
-                                        <input value={profile.qualifications} onChange={e => updateField('qualifications', e.target.value)} className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all" />
+                                        <label htmlFor="edit-qualifications" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Qualifications</label>
+                                        <input id="edit-qualifications" value={profile.qualifications} onChange={e => updateField('qualifications', e.target.value)} className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all" />
                                     </div>
                                     <div>
-                                        <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">License Number</label>
-                                        <input value={profile.licenseNumber} onChange={e => updateField('licenseNumber', e.target.value)} className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all" />
+                                        <label htmlFor="edit-licenseNumber" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">License Number</label>
+                                        <input id="edit-licenseNumber" value={profile.licenseNumber} onChange={e => updateField('licenseNumber', e.target.value)} className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all" />
                                     </div>
                                     <div>
-                                        <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Session Rate (₹)</label>
-                                        <input value={profile.sessionRate} onChange={e => updateField('sessionRate', e.target.value)} type="number" className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all" />
+                                        <label htmlFor="edit-sessionRate" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Session Rate (₹)</label>
+                                        <input id="edit-sessionRate" value={profile.sessionRate} onChange={e => updateField('sessionRate', e.target.value)} type="number" className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all" />
                                     </div>
                                 </div>
 
                                 {/* Specializations */}
                                 <div className="mt-4">
-                                    <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-2">Specializations</label>
+                                    <span className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-2">Specializations</span>
                                     <div className="flex flex-wrap items-center gap-2">
                                         {profile.specializations.map(spec => (
                                             <span key={spec} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full text-[11px] font-semibold border border-emerald-100 transition-all hover:bg-emerald-100">
                                                 {spec}
-                                                <button onClick={() => removeSpecialization(spec)} className="hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
+                                                <button onClick={() => removeSpecialization(spec)} aria-label={`Remove ${spec}`} className="hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
                                             </span>
                                         ))}
                                         <div className="flex items-center gap-1">
@@ -366,7 +371,7 @@ export default function EditProfilePage() {
                                                 placeholder="Add specialization"
                                                 className="h-[30px] px-3 bg-white border border-gray-200 rounded-full text-[11px] text-gray-700 focus:outline-none focus:border-emerald-500 w-[140px] transition-colors"
                                             />
-                                            <button onClick={addSpecialization} className="w-[30px] h-[30px] rounded-full bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition-all active:scale-90">
+                                            <button onClick={addSpecialization} aria-label="Add specialization" className="w-[30px] h-[30px] rounded-full bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition-all active:scale-90">
                                                 <Plus className="w-3.5 h-3.5" />
                                             </button>
                                         </div>
@@ -382,8 +387,9 @@ export default function EditProfilePage() {
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                                     <div>
-                                        <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Session Duration</label>
+                                        <label htmlFor="edit-sessionDuration" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Session Duration</label>
                                         <select
+                                            id="edit-sessionDuration"
                                             value={profile.sessionDuration}
                                             onChange={e => updateField('sessionDuration', e.target.value)}
                                             className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-amber-500 transition-all appearance-none cursor-pointer"
@@ -396,17 +402,17 @@ export default function EditProfilePage() {
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
                                         <div>
-                                            <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">From</label>
-                                            <input value={profile.availableFrom} onChange={e => updateField('availableFrom', e.target.value)} type="time" className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-amber-500 transition-all" />
+                                            <label htmlFor="edit-availableFrom" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">From</label>
+                                            <input id="edit-availableFrom" value={profile.availableFrom} onChange={e => updateField('availableFrom', e.target.value)} type="time" className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-amber-500 transition-all" />
                                         </div>
                                         <div>
-                                            <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">To</label>
-                                            <input value={profile.availableTo} onChange={e => updateField('availableTo', e.target.value)} type="time" className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-amber-500 transition-all" />
+                                            <label htmlFor="edit-availableTo" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">To</label>
+                                            <input id="edit-availableTo" value={profile.availableTo} onChange={e => updateField('availableTo', e.target.value)} type="time" className="w-full h-[44px] px-4 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-amber-500 transition-all" />
                                         </div>
                                     </div>
                                 </div>
 
-                                <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-2">Available Days</label>
+                                <span className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-2">Available Days</span>
                                 <div className="flex flex-wrap gap-2">
                                     {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
                                         <button
@@ -431,15 +437,16 @@ export default function EditProfilePage() {
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                                     <div>
-                                        <label className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Current Password</label>
+                                        <label htmlFor="edit-password" className="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1.5">Current Password</label>
                                         <div className="relative">
                                             <input
+                                                id="edit-password"
                                                 value={profile.password}
                                                 onChange={e => updateField('password', e.target.value)}
                                                 type={showPassword ? 'text' : 'password'}
                                                 className="w-full h-[44px] px-4 pr-12 bg-[#F9F9FB] border border-gray-100 rounded-[12px] text-sm text-gray-800 font-medium focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-400/10 transition-all"
                                             />
-                                            <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                            <button onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
                                                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                             </button>
                                         </div>

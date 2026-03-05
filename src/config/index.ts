@@ -20,4 +20,6 @@ export const config = {
   isProduction: import.meta.env.MODE === 'production',
 };
 
+export { runtimeFlags } from './runtime.flags';
+
 export default config;

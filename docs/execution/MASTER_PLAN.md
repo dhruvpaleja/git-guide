@@ -35,11 +35,11 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:005`
-- Phase target: `1 + 2 verification hardening`
+- `BATCH:006`
+- Phase target: `3 verification + stabilization`
 - Objective:
-  - Re-verify Phase 1 and Phase 2 gates in-depth against implemented code.
-  - Fix discovered guardrail regressions without changing QA-visible UI/UX behavior.
-  - Keep mock auth + bypass behavior active for QA, but enforce runtime-flag control path.
-  - Close accidental dev/test route exposure defaults in server runtime config/examples.
+  - Run in-depth review on local Phase 3 contract unification changes.
+  - Push Phase 3 changes to `master` only after strict verification passes.
+  - Fix discovered commit-integrity gap from BATCH:005 (`runtimeFlags` import without committed runtime flags source).
+  - Preserve current QA auth bypass + mock auth behavior and existing UI/UX.
   - Keep mock auth + ProtectedRoute bypass behavior unchanged for QA.

@@ -3,28 +3,9 @@
 // ---------------------------------------------------------------------------
 
 import type { Response } from 'express';
+import type { ApiEnvelope, PaginationMeta } from '../shared/contracts/api.contracts.js';
 
-export interface ApiResponse<T = unknown> {
-  success: boolean;
-  data?: T;
-  error?: {
-    code: string;
-    message: string;
-    details?: Record<string, unknown>;
-  };
-  meta?: PaginationMeta;
-  timestamp: string;
-  requestId?: string;
-}
-
-export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-  hasNext: boolean;
-  hasPrev: boolean;
-}
+export type ApiResponse<T = unknown> = ApiEnvelope<T, string, PaginationMeta>;
 
 /**
  * Send a standardized success response

@@ -65,3 +65,15 @@
 - Batch: BATCH:005
 - Decision: Change server defaults for `ENABLE_DEV_ROUTES` and `ENABLE_TEST_ROUTES` to fail-closed (`false` outside dev/test defaults), including `.env.example`.
 - Rationale: Prevents accidental route exposure and aligns with Phase 1 risk stabilization goals.
+
+## D-012
+- Date: 2026-03-05
+- Batch: BATCH:006
+- Decision: Include `src/config/runtime.flags.ts` and the `runtimeFlags` re-export in `src/config/index.ts` in committed history before Phase 3 push.
+- Rationale: BATCH:005 introduced `runtimeFlags` imports; without committing source/export, remote master could fail in clean environments.
+
+## D-013
+- Date: 2026-03-05
+- Batch: BATCH:006
+- Decision: Phase 3 push scope includes only contract/type/API/WS unification files plus the runtime-flags integrity fix; no UI/UX behavior changes.
+- Rationale: Preserves QA workflows while restoring deterministic compile/runtime behavior.

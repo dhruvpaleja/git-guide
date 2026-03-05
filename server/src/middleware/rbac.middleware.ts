@@ -5,9 +5,7 @@
 import type { Response, NextFunction } from 'express';
 import type { AuthenticatedRequest } from './auth.middleware.js';
 import { ErrorCode } from '../lib/errors.js';
-
-// Define Role locally to avoid Prisma import issues
-type Role = 'USER' | 'THERAPIST' | 'ASTROLOGER' | 'ADMIN' | 'SUPER_ADMIN';
+import type { ServerRole } from '../shared/contracts/auth.contracts.js';
 
 /**
  * Middleware factory that restricts access to specific roles.
@@ -15,7 +13,7 @@ type Role = 'USER' | 'THERAPIST' | 'ASTROLOGER' | 'ADMIN' | 'SUPER_ADMIN';
  * Usage:
  *   router.get('/admin/users', requireAuth, requireRole('ADMIN', 'SUPER_ADMIN'), handler);
  */
-export function requireRole(...allowedRoles: Role[]) {
+export function requireRole(...allowedRoles: ServerRole[]) {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.auth?.role) {
       res.status(401).json({
@@ -26,7 +24,7 @@ export function requireRole(...allowedRoles: Role[]) {
       return;
     }
 
-    const userRole = req.auth.role.toUpperCase() as Role;
+    const userRole = req.auth.role.toUpperCase() as ServerRole;
 
     if (!allowedRoles.includes(userRole)) {
       res.status(403).json({
@@ -65,8 +63,8 @@ export function requireOwnership(paramName = 'userId') {
     const resourceOwnerId = req.params[paramName];
 
     // Allow admins to access any resource
-    const adminRoles: Role[] = ['ADMIN', 'SUPER_ADMIN'];
-    const userRole = req.auth.role.toUpperCase() as Role;
+    const adminRoles: ServerRole[] = ['ADMIN', 'SUPER_ADMIN'];
+    const userRole = req.auth.role.toUpperCase() as ServerRole;
 
     if (resourceOwnerId !== req.auth.userId && !adminRoles.includes(userRole)) {
       res.status(403).json({

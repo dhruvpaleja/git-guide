@@ -3,12 +3,58 @@
  * Centralized API communication with circuit-breaker for fast failure
  */
 
-import { API_CONSTANTS } from '@/constants';
+import { API_CONSTANTS, STORAGE_KEYS } from '@/constants';
 import type { ApiResponse, RequestConfig } from '@/types';
+import { isApiEnvelope } from '@contracts/api.contracts';
 
 /** Simple circuit-breaker: after a network failure, skip retries for a cooldown period. */
 let circuitOpenUntil = 0;
 const CIRCUIT_COOLDOWN = 10_000; // 10 s
+
+function hasObjectShape(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object';
+}
+
+function extractTimestamp(payload: unknown): string {
+  if (isApiEnvelope(payload)) {
+    return payload.timestamp;
+  }
+  if (hasObjectShape(payload) && typeof payload.timestamp === 'string') {
+    return payload.timestamp;
+  }
+  return new Date().toISOString();
+}
+
+function extractRequestId(payload: unknown): string | undefined {
+  if (isApiEnvelope(payload)) {
+    return payload.requestId;
+  }
+  if (hasObjectShape(payload) && typeof payload.requestId === 'string') {
+    return payload.requestId;
+  }
+  return undefined;
+}
+
+function extractError(payload: unknown, status: number, statusText: string) {
+  if (isApiEnvelope(payload) && payload.error) {
+    return payload.error;
+  }
+
+  if (hasObjectShape(payload)) {
+    const nestedError = hasObjectShape(payload.error) ? payload.error : payload;
+    const code = typeof nestedError.code === 'string' ? nestedError.code : `HTTP_${status}`;
+    const message = typeof nestedError.message === 'string'
+      ? nestedError.message
+      : `HTTP ${status}: ${statusText}`;
+    const details = hasObjectShape(nestedError.details) ? nestedError.details : undefined;
+    return { code, message, details };
+  }
+
+  return {
+    code: `HTTP_${status}`,
+    message: `HTTP ${status}: ${statusText}`,
+  };
+}
 
 class ApiService {
   private baseUrl: string;
@@ -20,6 +66,24 @@ class ApiService {
       timeout: API_CONSTANTS.TIMEOUT,
       retries: API_CONSTANTS.RETRY_ATTEMPTS,
     };
+  }
+
+  private async parseResponseBody(response: Response): Promise<unknown> {
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.includes('application/json')) {
+      return null;
+    }
+
+    try {
+      return await response.json();
+    } catch {
+      return null;
+    }
+  }
+
+  private getAuthHeaders(): Record<string, string> {
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
   /**
@@ -63,9 +127,7 @@ class ApiService {
         method: 'POST',
         credentials: 'include',
         headers: {
-          ...(localStorage.getItem('auth_token')
-            ? { Authorization: `Bearer ${localStorage.getItem('auth_token')}` }
-            : {}),
+          ...this.getAuthHeaders(),
           ...mergedConfig.headers,
           // Don't set Content-Type - browser will set it with boundary
         },
@@ -73,23 +135,28 @@ class ApiService {
         signal,
       });
 
-      const result = await response.json();
+      const result = await this.parseResponseBody(response);
 
       if (!response.ok) {
         return {
           success: false,
-          error: {
-            code: result?.error?.code || `HTTP_${response.status}`,
-            message: result?.error?.message || `HTTP ${response.status}: ${response.statusText}`,
-          },
-          timestamp: result?.timestamp || new Date().toISOString(),
+          error: extractError(result, response.status, response.statusText),
+          timestamp: extractTimestamp(result),
+          requestId: extractRequestId(result),
         };
+      }
+
+      if (isApiEnvelope(result)) {
+        return result as ApiResponse<T>;
       }
 
       return {
         success: true,
-        data: result.data as T,
-        timestamp: result.timestamp || new Date().toISOString(),
+        data: (hasObjectShape(result) && Object.prototype.hasOwnProperty.call(result, 'data')
+          ? result.data
+          : result) as T,
+        timestamp: extractTimestamp(result),
+        requestId: extractRequestId(result),
       };
     } catch (error) {
       return {
@@ -136,9 +203,7 @@ class ApiService {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            ...(localStorage.getItem('auth_token')
-              ? { Authorization: `Bearer ${localStorage.getItem('auth_token')}` }
-              : {}),
+            ...this.getAuthHeaders(),
             ...mergedConfig.headers,
           },
           body: data ? JSON.stringify(data) : undefined,
@@ -148,32 +213,26 @@ class ApiService {
         // Successful network call — reset circuit-breaker.
         circuitOpenUntil = 0;
 
-        const result = await response.json();
+        const result = await this.parseResponseBody(response);
 
         if (!response.ok) {
           return {
             success: false,
-            error: {
-              code: result?.error?.code || `HTTP_${response.status}`,
-              message: result?.error?.message || `HTTP ${response.status}: ${response.statusText}`,
-              details: result?.error?.details,
-            },
-            timestamp: result?.timestamp || new Date().toISOString(),
+            error: extractError(result, response.status, response.statusText),
+            timestamp: extractTimestamp(result),
+            requestId: extractRequestId(result),
           };
         }
 
-        if (result?.success === true) {
-          return {
-            success: true,
-            data: result.data as T,
-            timestamp: result.timestamp || new Date().toISOString(),
-          };
+        if (isApiEnvelope(result)) {
+          return result as ApiResponse<T>;
         }
 
         return {
           success: true,
           data: result as T,
-          timestamp: result?.timestamp || new Date().toISOString(),
+          timestamp: extractTimestamp(result),
+          requestId: extractRequestId(result),
         };
       } catch (error) {
         lastError = error instanceof Error ? error : new Error('Unknown error');

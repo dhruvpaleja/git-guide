@@ -6,25 +6,22 @@ import { AIEventLogger } from '../services/ai-event-logger.service.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 import { prisma } from '../lib/prisma.js';
 import { registerSchema, loginSchema } from '../validators/auth.validator.js';
+import { isServerRole, mapServerRoleToAppRole, type RefreshTokenPayload } from '../shared/contracts/auth.contracts.js';
 const REFRESH_COOKIE_NAME = 'refresh_token';
 const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 const hashRefreshToken = (token: string) => createHash('sha256').update(token).digest('hex');
 
 const toPublicUser = (user: { id: string; email: string; name: string; role: string }) => {
-    // Map backend roles to frontend roles
-    const roleMapping = {
-        'USER': 'user',
-        'THERAPIST': 'practitioner',
-        'ASTROLOGER': 'astrologer',
-        'ADMIN': 'admin',
-    };
-    
+    const normalizedRole = isServerRole(user.role)
+        ? mapServerRoleToAppRole(user.role)
+        : 'user';
+
     return {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: roleMapping[user.role as keyof typeof roleMapping] || user.role.toLowerCase(),
+        role: normalizedRole,
     };
 };
 
@@ -200,7 +197,7 @@ export const authController = {
                 return res.status(401).json({ success: false, error: { message: 'Refresh token missing' } });
             }
 
-            const payload = tokensService.verifyToken<{ sub: string; familyId: string; type: string }>(refreshToken);
+            const payload = tokensService.verifyToken<RefreshTokenPayload>(refreshToken);
             if (!payload || payload.type !== 'refresh' || !payload.sub || !payload.familyId) {
                 clearRefreshCookie(res);
                 return res.status(401).json({ success: false, error: { message: 'Invalid refresh token' } });

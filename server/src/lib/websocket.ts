@@ -1,18 +1,17 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import type { Server as HTTPServer } from 'http';
-import jwt from 'jsonwebtoken';
-import { config } from '../config/index.js';
 import { logger } from './logger.js';
-type JwtPayload = { userId: string };
+import { tokensService } from '../services/tokens.service.js';
+import type { AccessTokenPayload } from '../shared/contracts/auth.contracts.js';
+import {
+  isClientToServerWebSocketMessage,
+  type ClientToServerWebSocketMessage,
+  type ServerToClientWebSocketMessage,
+} from '../shared/contracts/websocket.contracts.js';
 
 interface AuthenticatedWebSocket extends WebSocket {
   userId?: string;
   isAlive?: boolean;
-}
-
-interface WebSocketMessage {
-  type: string;
-  data: unknown;
 }
 
 class WebSocketService {
@@ -34,15 +33,14 @@ class WebSocketService {
             return;
           }
 
-          // Verify JWT token
-          jwt.verify(token, config.jwtSecret, (err: unknown, decoded: unknown) => {
-            if (err || !decoded) {
-              callback(false, 401, 'Unauthorized: Invalid token');
-              return;
-            }
-            (info.req as { userId?: string }).userId = (decoded as JwtPayload).userId;
-            callback(true);
-          });
+          const decoded = tokensService.verifyToken<AccessTokenPayload>(token);
+          if (!decoded?.sub) {
+            callback(false, 401, 'Unauthorized: Invalid token');
+            return;
+          }
+
+          (info.req as { userId?: string }).userId = decoded.sub;
+          callback(true);
         } catch {
           callback(false, 400, 'Bad Request');
         }
@@ -72,7 +70,11 @@ class WebSocketService {
 
       ws.on('message', (data: Buffer) => {
         try {
-          const message = JSON.parse(data.toString()) as WebSocketMessage;
+          const message = JSON.parse(data.toString()) as unknown;
+          if (!isClientToServerWebSocketMessage(message)) {
+            logger.warn('websocket_invalid_message', { userId, message });
+            return;
+          }
           this.handleMessage(ws, message);
         } catch (error) {
           logger.error('websocket_message_error', { error: error instanceof Error ? error.message : String(error), userId });
@@ -116,7 +118,7 @@ class WebSocketService {
     logger.info('websocket_server_initialized', { path: '/ws' });
   }
 
-  private handleMessage(ws: AuthenticatedWebSocket, message: WebSocketMessage): void {
+  private handleMessage(ws: AuthenticatedWebSocket, message: ClientToServerWebSocketMessage): void {
     const { userId } = ws;
     logger.debug('websocket_message_received', { userId, type: message.type });
 
@@ -147,7 +149,7 @@ class WebSocketService {
     }
   }
 
-  private sendToClient(ws: AuthenticatedWebSocket, message: WebSocketMessage): void {
+  private sendToClient(ws: AuthenticatedWebSocket, message: ServerToClientWebSocketMessage): void {
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify(message));
     }
@@ -156,7 +158,7 @@ class WebSocketService {
   /**
    * Send notification to a specific user (all their active connections)
    */
-  sendToUser(userId: string, message: WebSocketMessage): void {
+  sendToUser(userId: string, message: ServerToClientWebSocketMessage): void {
     const userClients = this.clients.get(userId);
     if (!userClients || userClients.size === 0) {
       logger.debug('websocket_user_not_connected', { userId, messageType: message.type });
@@ -173,7 +175,7 @@ class WebSocketService {
   /**
    * Broadcast to all connected users
    */
-  broadcast(message: WebSocketMessage): void {
+  broadcast(message: ServerToClientWebSocketMessage): void {
     this.wss?.clients.forEach((ws: WebSocket) => {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify(message));

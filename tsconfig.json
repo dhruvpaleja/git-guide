@@ -10,7 +10,8 @@
   ],
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@contracts/*": ["./server/src/shared/contracts/*"]
     }
   }
 }

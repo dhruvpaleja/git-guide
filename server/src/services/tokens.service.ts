@@ -1,31 +1,12 @@
 import jwt from 'jsonwebtoken';
 import { config } from '../config/index.js';
+import type { AccessTokenPayload, RefreshTokenPayload, ServerRole } from '../shared/contracts/auth.contracts.js';
 
-// Define Role locally since Prisma import is failing
-type Role = 'USER' | 'THERAPIST' | 'ASTROLOGER' | 'ADMIN' | 'SUPER_ADMIN';
-
-export interface AccessTokenPayload {
-    sub: string;
-    role: Role;
-    jti: string; // JWT ID for token tracking and revocation
-    iat?: number;
-    exp?: number;
-    iss?: string; // Issuer
-    aud?: string; // Audience
-}
-
-export interface RefreshTokenPayload {
-    sub: string;
-    familyId: string;
-    type: 'refresh';
-    jti: string;
-    iat?: number;
-    exp?: number;
-}
+export type { AccessTokenPayload, RefreshTokenPayload, ServerRole } from '../shared/contracts/auth.contracts.js';
 
 export const tokensService = {
-    generateAccessToken: (userId: string, role: Role) => {
-        const payload = {
+    generateAccessToken: (userId: string, role: ServerRole) => {
+        const payload: AccessTokenPayload = {
             sub: userId,
             role,
             jti: crypto.randomUUID(),
@@ -36,10 +17,10 @@ export const tokensService = {
     },
 
     generateRefreshToken: (userId: string, familyId: string) => {
-        const payload = {
+        const payload: RefreshTokenPayload = {
             sub: userId,
             familyId,
-            type: 'refresh' as const,
+            type: 'refresh',
             jti: crypto.randomUUID(),
             iss: config.jwt.issuer,
             aud: config.jwt.audience,

@@ -2,6 +2,8 @@
  * Authentication and Authorization Types
  */
 
+import type { AppRole } from '@contracts/auth.contracts';
+
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -22,7 +24,7 @@ export interface AuthResponse extends AuthToken {
   user: User;
 }
 
-export type UserRole = 'user' | 'therapist' | 'astrologer' | 'admin' | 'moderator' | 'practitioner';
+export type UserRole = AppRole;
 
 export interface User {
   id: string;

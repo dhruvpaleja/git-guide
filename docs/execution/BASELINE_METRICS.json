@@ -109,6 +109,23 @@
         "vendor_chunk_kb": 98.47
       },
       "notes": "Phase 1/2 re-audit identified and fixed guardrail drift (runtime flag control + fail-closed dev/test route defaults) without changing QA-visible UI behavior."
+    },
+    {
+      "batch_id": "BATCH:006",
+      "phase": "3 verification + stabilization",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_zero_warning": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 420.36,
+        "landing_page_chunk_kb": 161.98,
+        "vendor_chunk_kb": 98.47
+      },
+      "notes": "Phase 3 deep review passed; shared contract batch prepared for push and runtime-flags commit-integrity gap fixed without changing QA UI/auth behavior."
     }
   ]
 }

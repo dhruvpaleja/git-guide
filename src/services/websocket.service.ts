@@ -3,23 +3,51 @@
  * Manages WebSocket connection for push notifications, live updates, and real-time features
  */
 
-type MessageHandler = (data: unknown) => void;
+import {
+  isServerToClientWebSocketMessage,
+  type ClientToServerEventType,
+  type ClientToServerPayloadMap,
+  type ServerToClientEventType,
+  type ServerToClientPayloadMap,
+} from '@contracts/websocket.contracts';
+
+type MessageHandler<T = unknown> = (data: T) => void;
+type HandlerKey = ServerToClientEventType | '*';
 
 class WebSocketService {
   private ws: WebSocket | null = null;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000; // Start with 1s
-  private handlers: Map<string, Set<MessageHandler>> = new Map();
+  private handlers: Map<HandlerKey, Set<MessageHandler>> = new Map();
   private isConnecting = false;
   private url: string;
   private token: string | null = null;
 
   constructor() {
-    // Use wss:// in production, ws:// in development
+    this.url = this.resolveWebSocketUrl();
+  }
+
+  private resolveWebSocketUrl(): string {
+    const explicitWsUrl = import.meta.env.VITE_WS_URL as string | undefined;
+    if (explicitWsUrl) {
+      const normalized = explicitWsUrl.replace(/\/$/, '');
+      return normalized.endsWith('/ws') ? normalized : `${normalized}/ws`;
+    }
+
+    const apiUrl = import.meta.env.VITE_API_URL as string | undefined;
+    if (apiUrl) {
+      try {
+        const parsed = new URL(apiUrl);
+        const protocol = parsed.protocol === 'https:' ? 'wss:' : 'ws:';
+        return `${protocol}//${parsed.host}/ws`;
+      } catch {
+        // Fall through to window-location fallback.
+      }
+    }
+
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = import.meta.env.VITE_API_URL?.replace(/^https?:\/\//, '') || 'localhost:3001';
-    this.url = `${protocol}//${host}/ws`;
+    return `${protocol}//${window.location.host}/ws`;
   }
 
   /**
@@ -34,7 +62,7 @@ class WebSocketService {
     this.isConnecting = true;
 
     try {
-      this.ws = new WebSocket(`${this.url}?token=${authToken}`);
+      this.ws = new WebSocket(`${this.url}?token=${encodeURIComponent(authToken)}`);
 
       this.ws.onopen = () => {
         // eslint-disable-next-line no-console
@@ -46,7 +74,17 @@ class WebSocketService {
 
       this.ws.onmessage = (event: MessageEvent) => {
         try {
-          const message = JSON.parse(event.data as string) as { type: string; data: unknown };
+          if (typeof event.data !== 'string') {
+            console.warn('[WebSocket] Ignoring non-text message');
+            return;
+          }
+
+          const message = JSON.parse(event.data) as unknown;
+          if (!isServerToClientWebSocketMessage(message)) {
+            console.warn('[WebSocket] Ignoring unsupported message shape');
+            return;
+          }
+
           this.handleMessage(message.type, message.data);
         } catch (error) {
            
@@ -79,6 +117,8 @@ class WebSocketService {
    * Disconnect from WebSocket server
    */
   disconnect(): void {
+    this.token = null;
+    this.isConnecting = false;
     if (this.ws) {
       this.ws.close();
       this.ws = null;
@@ -89,7 +129,7 @@ class WebSocketService {
   /**
    * Subscribe to a specific event type
    */
-  on(eventType: string, handler: MessageHandler): () => void {
+  on(eventType: HandlerKey, handler: MessageHandler): () => void {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
     }
@@ -113,7 +153,7 @@ class WebSocketService {
   /**
    * Send a message to the server
    */
-  send(type: string, data: unknown): void {
+  send<T extends ClientToServerEventType>(type: T, data: ClientToServerPayloadMap[T]): void {
     if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify({ type, data }));
     } else {
@@ -128,7 +168,7 @@ class WebSocketService {
     return this.ws?.readyState === WebSocket.OPEN;
   }
 
-  private handleMessage(type: string, data: unknown): void {
+  private handleMessage<T extends ServerToClientEventType>(type: T, data: ServerToClientPayloadMap[T]): void {
     const handlers = this.handlers.get(type);
     if (handlers) {
       handlers.forEach((handler) => handler(data));

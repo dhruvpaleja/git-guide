@@ -5,6 +5,7 @@ import apiService from '@/services/api.service';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { websocketService } from '@/services/websocket.service';
+import { STORAGE_KEYS } from '@/constants';
 
 interface Notification {
   id: string;
@@ -64,7 +65,7 @@ export default function NotificationsPage() {
 
   // Real-time WebSocket notifications
   useEffect(() => {
-    const token = localStorage.getItem('token') || localStorage.getItem('auth_token');
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
     if (!token) return;
 
     // Connect to WebSocket
@@ -76,7 +77,7 @@ export default function NotificationsPage() {
 
     // Listen for new notifications
     const unsubscribe = websocketService.on('notification', (data) => {
-      const newNotif = data as Notification;
+      const newNotif = data as unknown as Notification;
       setNotifications((prev) => [newNotif, ...prev]);
       setUnreadCount((prev) => prev + 1);
       
@@ -96,6 +97,7 @@ export default function NotificationsPage() {
     return () => {
       unsubscribe();
       clearInterval(interval);
+      websocketService.disconnect();
     };
   }, []);
 

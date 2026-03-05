@@ -1,19 +1,15 @@
 /**
  * API-related type definitions
  */
+import type {
+  ApiEnvelope,
+  ApiErrorShape,
+  PaginationMeta,
+} from '@contracts/api.contracts';
 
-export interface ApiResponse<T = unknown> {
-  success: boolean;
-  data?: T;
-  error?: ApiError;
-  timestamp: string;
-}
+export type ApiResponse<T = unknown> = ApiEnvelope<T, string, PaginationMeta>;
 
-export interface ApiError {
-  code: string;
-  message: string;
-  details?: Record<string, unknown>;
-}
+export type ApiError = ApiErrorShape;
 
 export interface PaginationParams {
   page: number;

@@ -1,19 +1,17 @@
 import type { Request, Response, NextFunction } from 'express';
 
 import { tokensService } from '../services/tokens.service.js';
-
-// Define Role locally to avoid Prisma import issues
-type Role = 'USER' | 'THERAPIST' | 'ASTROLOGER' | 'ADMIN' | 'SUPER_ADMIN';
+import type { AccessTokenPayload, ServerRole } from '../shared/contracts/auth.contracts.js';
 
 export interface AuthenticatedRequest extends Request {
   auth?: {
     userId: string;
-    role: Role;
+    role: ServerRole;
   };
 }
 
 // Role hierarchy for permission checking
-const roleHierarchy: Record<Role, Role[]> = {
+const roleHierarchy: Record<ServerRole, ServerRole[]> = {
   USER: [],
   THERAPIST: ['USER'],
   ASTROLOGER: ['USER'],
@@ -30,9 +28,9 @@ export function requireAuth(req: AuthenticatedRequest, res: Response, next: Next
   }
 
   const token = authHeader.slice(7);
-  const payload = tokensService.verifyToken<{ sub: string; role: Role; jti: string }>(token);
+  const payload = tokensService.verifyToken<AccessTokenPayload>(token);
 
-  if (!payload?.sub) {
+  if (!payload?.sub || !payload.role) {
     res.status(401).json({ success: false, error: { message: 'Unauthorized' } });
     return;
   }
@@ -41,7 +39,7 @@ export function requireAuth(req: AuthenticatedRequest, res: Response, next: Next
   next();
 }
 
-export function requireRole(requiredRole: Role) {
+export function requireRole(requiredRole: ServerRole) {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.auth) {
       res.status(401).json({ success: false, error: { message: 'Authentication required' } });
@@ -60,7 +58,7 @@ export function requireRole(requiredRole: Role) {
   };
 }
 
-export function requireAnyRole(roles: Role[]) {
+export function requireAnyRole(roles: ServerRole[]) {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.auth) {
       res.status(401).json({ success: false, error: { message: 'Authentication required' } });

@@ -89,3 +89,21 @@
 - Batch: BATCH:008
 - Decision: Patch CI regression with minimal-scope fixes (feature barrel export restoration + targeted lint remediation) instead of broad Phase 4 refactor.
 - Rationale: Restores production build stability fastest while preserving current UI/UX and active QA mock-auth behavior.
+
+## D-016
+- Date: 2026-03-05
+- Batch: BATCH:009
+- Decision: Keep dev-login capability available by default for active QA, but enforce explicit runtime-flag-controlled mounting across bootstrap and route index.
+- Rationale: Preserves the user's hard requirement (do not remove dev logins yet) while making exposure policy deterministic and centrally controlled.
+
+## D-017
+- Date: 2026-03-05
+- Batch: BATCH:009
+- Decision: Mount test routes only when `runtime.enableTestRoutes` is true.
+- Rationale: Removes unconditional test-route exposure and separates QA dev-login behavior from test-only endpoints.
+
+## D-018
+- Date: 2026-03-05
+- Batch: BATCH:009
+- Decision: Correct execution tracking to reflect committed state and mark prior manifest/compat ownership claims as deferred artifacts not present in HEAD.
+- Rationale: Restores handoff integrity so future agents can trust docs without ambiguous historical drift.

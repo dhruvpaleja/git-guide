@@ -19,13 +19,16 @@ import notificationRoutes from './notifications.js';
 import ngoRoutes from './ngo.js';
 import devLoginRoutes from './dev-login.js';
 import devHelperRoutes from './dev-helper.js';
+import { config } from '../config/index.js';
 
 const router = Router();
 
 router.use(healthRoutes);
 router.use('/auth', authRoutes);
-router.use('/dev-login', devLoginRoutes); // Development only
-router.use('/dev-helper', devHelperRoutes); // Development only
+if (config.runtime.enableDevRoutes) {
+  router.use('/dev-login', devLoginRoutes);
+  router.use('/dev-helper', devHelperRoutes);
+}
 router.use('/users', userRoutes);
 router.use('/therapy', therapyRoutes);
 router.use('/astrology', astrologyRoutes);

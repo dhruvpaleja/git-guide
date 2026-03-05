@@ -35,10 +35,10 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:008`
-- Phase target: `4 lint/static quality enforcement (regression hotfix)`
+- `BATCH:009`
+- Phase target: `1R + 2R route/doc drift repair`
 - Objective:
-  - Resolve CI/build regression introduced in previous batch while preserving existing UI/UX behavior.
-  - Restore missing dashboard feature barrel exports required by dashboard pages.
-  - Clear remaining lint blockers (`react-refresh/only-export-components`, `no-explicit-any`, `no-console`) in enforced scope.
-  - Keep mock auth + ProtectedRoute bypass behavior unchanged for QA and Vercel UI-flow testing.
+  - Make server route exposure deterministic: test routes and dev routes are mounted only through explicit runtime flags.
+  - Preserve QA dev-login/mock-auth behavior until explicit user instruction to remove it.
+  - Repair execution-document drift so STATUS/DECISIONS/RISKS match committed reality.
+  - Defer non-Block-A lint warning cleanup to Phase 4 close batch.

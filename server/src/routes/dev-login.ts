@@ -4,8 +4,8 @@ import { config } from '../config/index.js';
 
 const router = Router();
 
-// Enable in development and production for testing
-if (config.isDevelopment || config.isProduction) {
+// Enabled through explicit runtime flag to preserve QA login flows safely.
+if (config.runtime.enableDevRoutes) {
   // Quick login endpoints for development
   router.get('/user@test.com', async (req, res) => {
     try {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-05T12:11:08+05:30",
+  "generated_at": "2026-03-05T12:34:33+05:30",
   "notes": "Phase 0 baseline preserved with incremental batch updates for handoff continuity.",
   "baseline": {
     "frontend": {
@@ -159,6 +159,22 @@
         "vendor_chunk_kb": 98.47
       },
       "notes": "Fixed missing dashboard barrel exports and lint blockers that failed production CI; QA mock-auth and UI/UX behavior intentionally unchanged."
+    },
+    {
+      "batch_id": "BATCH:009",
+      "phase": "1R + 2R repair",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "fail_with_18_existing_warnings",
+        "server_build": "pass",
+        "server_lint_ci": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 420.36,
+        "landing_page_chunk_kb": 161.98,
+        "vendor_chunk_kb": 98.47
+      },
+      "notes": "Route exposure made deterministic via runtime-gated mounting while keeping QA dev-login behavior; frontend lint warnings remain for Phase 4 close."
     }
   ]
 }

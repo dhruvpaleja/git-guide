@@ -56,8 +56,10 @@ export const config = {
 
   // ---- Runtime Route Flags ----
   runtime: {
-    enableDevRoutes: envBool('ENABLE_DEV_ROUTES', isDevelopment),
-    enableTestRoutes: envBool('ENABLE_TEST_ROUTES', isDevelopment || isTest),
+    // Keep dev routes available for active QA unless explicitly disabled.
+    enableDevRoutes: envBool('ENABLE_DEV_ROUTES', isDevelopment || isProduction),
+    // Test routes are opt-in outside dedicated test runs.
+    enableTestRoutes: envBool('ENABLE_TEST_ROUTES', isTest),
   },
 
   // ---- API ----

@@ -104,8 +104,10 @@ app.use('/uploads', express.static(uploadsPath));
 // ---------------------------------------------------------------------------
 app.use(config.api.prefix, routes);
 app.use('/api', routes);
-app.use(config.api.prefix, testRoutes);
-app.use('/api', testRoutes);
+if (config.runtime.enableTestRoutes) {
+  app.use(config.api.prefix, testRoutes);
+  app.use('/api', testRoutes);
+}
 
 // ---------------------------------------------------------------------------
 // Error handling

@@ -27,3 +27,18 @@ repo_url_utf8.txt
 status.txt
 tc_output.txt
 server/build_out.txt
+
+# Playwright and E2E testing (dev only)
+playwright.config.ts
+playwright-utils/
+tests/
+/tests/
+
+# Agent skills and development tools
+.agents/
+.agent/
+
+# Playwright HTML reports
+playwright-report/
+blob-report/
+test-results/

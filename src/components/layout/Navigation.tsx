@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,12 @@ const navItems = [
   { label: 'Signup', path: '/signup' },
 ];
 
+const LIGHT_THEME_ROUTE_SEGMENTS = ['/about', '/business', '/blog', '/contact', '/careers', '/courses'];
+
+function resolveThemeFromPathname(pathname: string): 'light' | 'dark' {
+  return LIGHT_THEME_ROUTE_SEGMENTS.some((segment) => pathname.includes(segment)) ? 'light' : 'dark';
+}
+
 export default function Navigation() {
   // Use lazy initializer to avoid calling setState in effect
   const [isScrolled, setIsScrolled] = useState(() => {
@@ -24,9 +30,16 @@ export default function Navigation() {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const location = useLocation();
   const navigate = useNavigate();
+  const isScrolledRef = useRef(isScrolled);
+  const themeRef = useRef(theme);
+  const rafIdRef = useRef<number | null>(null);
 
-  const handleScroll = useCallback(() => {
-    setIsScrolled(window.scrollY > 30);
+  const updateHeaderState = useCallback(() => {
+    const nextIsScrolled = window.scrollY > 30;
+    if (nextIsScrolled !== isScrolledRef.current) {
+      isScrolledRef.current = nextIsScrolled;
+      setIsScrolled(nextIsScrolled);
+    }
 
     const elements = document.querySelectorAll('.bg-white, .bg-black, [data-theme]');
     let foundTheme: 'light' | 'dark' | null = null;
@@ -47,25 +60,44 @@ export default function Navigation() {
     }
 
     if (!foundTheme) {
-      foundTheme = (location.pathname.includes('/about') || location.pathname.includes('/business') || location.pathname.includes('/blog') || location.pathname.includes('/contact') || location.pathname.includes('/careers') || location.pathname.includes('/courses')) ? 'light' : 'dark';
+      foundTheme = resolveThemeFromPathname(location.pathname);
     }
 
-    setTheme(foundTheme);
+    if (foundTheme !== themeRef.current) {
+      themeRef.current = foundTheme;
+      setTheme(foundTheme);
+    }
   }, [location.pathname]);
+
+  const handleScroll = useCallback(() => {
+    if (rafIdRef.current !== null) {
+      return;
+    }
+
+    rafIdRef.current = window.requestAnimationFrame(() => {
+      rafIdRef.current = null;
+      updateHeaderState();
+    });
+  }, [updateHeaderState]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafIdRef.current !== null) {
+        window.cancelAnimationFrame(rafIdRef.current);
+      }
+    };
   }, [handleScroll]);
 
   // Update navbar theme when navigating to a new page
   // Use setTimeout to avoid setState-in-effect warning
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      handleScroll();
+      updateHeaderState();
     }, 0);
     return () => clearTimeout(timeoutId);
-  }, [location.pathname, handleScroll]);
+  }, [location.pathname, updateHeaderState]);
 
   // Handle Logo click
   const handleLogoClick = (e: React.MouseEvent) => {
@@ -123,7 +155,7 @@ export default function Navigation() {
         {/* Mobile toggle */}
         <div className="md:hidden flex items-center">
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
             className="p-2 text-white/70 hover:text-white transition-colors duration-300"
           >
             {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}

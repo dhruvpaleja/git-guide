@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "distDir": "dist/assets",
+  "budgets": [
+    {
+      "name": "core_app_shell",
+      "patterns": ["index-*.js"],
+      "mode": "max",
+      "maxKB": 120,
+      "required": true
+    },
+    {
+      "name": "vendor_runtime",
+      "patterns": ["vendor-*.js"],
+      "mode": "max",
+      "maxKB": 105,
+      "required": true
+    },
+    {
+      "name": "animation_runtime",
+      "patterns": ["animation-*.js"],
+      "mode": "max",
+      "maxKB": 205,
+      "required": true
+    },
+    {
+      "name": "three_runtime",
+      "patterns": ["three-core-*.js"],
+      "mode": "max",
+      "maxKB": 190,
+      "required": true
+    },
+    {
+      "name": "landing_route_chunk",
+      "patterns": ["LandingPage-*.js"],
+      "mode": "max",
+      "maxKB": 95,
+      "required": true
+    },
+    {
+      "name": "dashboard_route_chunk",
+      "patterns": ["DashboardPage-*.js"],
+      "mode": "max",
+      "maxKB": 40,
+      "required": true
+    },
+    {
+      "name": "auth_login_chunk",
+      "patterns": ["LoginPage-*.js"],
+      "mode": "max",
+      "maxKB": 12,
+      "required": true
+    },
+    {
+      "name": "auth_signup_chunk",
+      "patterns": ["SignupPage-*.js"],
+      "mode": "max",
+      "maxKB": 90,
+      "required": true
+    },
+    {
+      "name": "main_css_bundle",
+      "patterns": ["index-*.css"],
+      "mode": "max",
+      "maxKB": 220,
+      "required": true
+    }
+  ]
+}

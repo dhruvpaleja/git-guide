@@ -12,7 +12,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,json,css}\"",
     "type-check": "tsc --noEmit",
-    "quality:ci": "npm run type-check && npm run lint:ci && npm run build && cd server && npm run build && npm run lint:ci",
+    "bundle:budget": "node scripts/check-bundle-budgets.js",
+    "quality:ci": "npm run type-check && npm run lint:ci && npm run build && npm run bundle:budget && cd server && npm run build && npm run lint:ci",
     "preview": "vite preview",
     "analyze": "vite build --analyze"
   },

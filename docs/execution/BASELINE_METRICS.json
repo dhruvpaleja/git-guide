@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-05T20:12:00+05:30",
+  "generated_at": "2026-03-05T20:52:00+05:30",
   "notes": "Phase 0 baseline preserved with incremental batch updates for handoff continuity.",
   "baseline": {
     "frontend": {
@@ -213,6 +213,42 @@
         "three_core_chunk_kb": 181.68
       },
       "notes": "Removed Tailwind ambiguous utility warnings, normalized selected inline styles to reusable utilities, and split heavy animation/3D libraries into dedicated chunks while preserving QA auth behavior and UI/UX flow."
+    },
+    {
+      "batch_id": "BATCH:012",
+      "phase": "5 continuation",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "pass",
+        "frontend_build": "pass",
+        "bundle_budget_check": "pass",
+        "server_build": "pass",
+        "server_lint_ci": "pass",
+        "quality_ci": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 113.16,
+        "landing_page_chunk_kb": 91.38,
+        "vendor_chunk_kb": 98.46,
+        "animation_chunk_kb": 193.91,
+        "three_core_chunk_kb": 181.68,
+        "dashboard_page_chunk_kb": 36.08,
+        "login_page_chunk_kb": 9.2,
+        "signup_page_chunk_kb": 83.98,
+        "main_css_kb": 216.94
+      },
+      "deltas_vs_batch_011_kb": {
+        "main_js": 0.23,
+        "landing_page_chunk": -0.03,
+        "vendor_chunk": 0,
+        "animation_chunk": 0,
+        "three_core_chunk": 0,
+        "dashboard_page_chunk": 0.21,
+        "login_page_chunk": 0,
+        "signup_page_chunk": 0,
+        "main_css": 0
+      },
+      "notes": "Added deterministic bundle budget policy enforcement and low-risk render-path optimizations in Navigation, SoulConstellationMap, and HeroSection while preserving QA auth/mock behavior and existing UI flows."
     }
   ]
 }

@@ -35,12 +35,12 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:011`
-- Phase target: `Phase 5 kickoff (performance engineering pass + style cleanup)`
+- `BATCH:012`
+- Phase target: `Phase 5 continuation (performance gate completion)`
 - Objective:
-  - Remove Tailwind CLI ambiguous utility warnings without changing behavior/UI.
-  - Normalize safe inline style usage in structural UI paths.
-  - Improve chunking strategy for heavy animation/3D dependencies.
+  - Add explicit bundle budget policy and deterministic enforcement.
+  - Measure and record performance deltas vs BATCH:011 baseline metrics.
+  - Apply low-risk render optimizations in heavy dashboard/landing paths.
   - Preserve QA dev-login/mock-auth behavior.
   - Keep `npm run lint:ci` and `npm run quality:ci` passing.
   - Update docs at batch end.

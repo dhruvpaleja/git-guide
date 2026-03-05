@@ -6,6 +6,21 @@ import constellationService from '@/features/constellation/services/constellatio
 import { CATEGORY_CONFIGS } from '@/features/constellation/types/index.js';
 import type { ConstellationNode, ConstellationConnection } from '@/features/constellation/types/index.js';
 
+type PositionedNode = ConstellationNode & { px: number; py: number };
+
+type RenderConnection = {
+    id: string;
+    path: string;
+    stroke: string;
+    dropShadow: string;
+};
+
+const CONNECTION_STYLES: Record<string, { stroke: string; dropShadow: string }> = {
+    harmony: { stroke: 'url(#wg-harmony)', dropShadow: '#1e8e3e30' },
+    friction: { stroke: 'url(#wg-friction)', dropShadow: '#d9302530' },
+    evolving: { stroke: 'url(#wg-evolving)', dropShadow: '#a78bfa30' },
+};
+
 export default function SoulConstellationMap() {
     const navigate = useNavigate();
     const [nodes, setNodes] = useState<ConstellationNode[]>([]);
@@ -23,7 +38,7 @@ export default function SoulConstellationMap() {
             .finally(() => setIsLoading(false));
     }, []);
 
-    const renderNodes = useMemo(() => {
+    const renderNodes = useMemo<PositionedNode[]>(() => {
         if (nodes.length === 0) return [];
         const margin = 15;
         const xs = nodes.map((n) => n.x);
@@ -41,12 +56,33 @@ export default function SoulConstellationMap() {
         }));
     }, [nodes]);
 
-    const connectionGrad = (type: string) => {
-        if (type === 'harmony') return 'url(#wg-harmony)';
-        if (type === 'friction') return 'url(#wg-friction)';
-        if (type === 'evolving') return 'url(#wg-evolving)';
-        return '#333';
-    };
+    const renderNodeMap = useMemo(() => {
+        return new Map(renderNodes.map((node) => [node.id, node]));
+    }, [renderNodes]);
+
+    const renderConnections = useMemo<RenderConnection[]>(() => {
+        return connections
+            .map((conn) => {
+                const src = renderNodeMap.get(conn.sourceId);
+                const tgt = renderNodeMap.get(conn.targetId);
+
+                if (!src || !tgt) {
+                    return null;
+                }
+
+                const mx = (src.px + tgt.px) / 2;
+                const my = (src.py + tgt.py) / 2 - 5;
+                const style = CONNECTION_STYLES[conn.type] ?? { stroke: '#333', dropShadow: '#33333320' };
+
+                return {
+                    id: conn.id,
+                    path: `M ${src.px} ${src.py} Q ${mx} ${my} ${tgt.px} ${tgt.py}`,
+                    stroke: style.stroke,
+                    dropShadow: style.dropShadow,
+                };
+            })
+            .filter((connection): connection is RenderConnection => connection !== null);
+    }, [connections, renderNodeMap]);
 
     return (
         <div
@@ -78,20 +114,15 @@ export default function SoulConstellationMap() {
                     </linearGradient>
                 </defs>
 
-                {connections.map((conn) => {
-                    const src = renderNodes.find((n) => n.id === conn.sourceId);
-                    const tgt = renderNodes.find((n) => n.id === conn.targetId);
-                    if (!src || !tgt) return null;
-                    const mx = (src.px + tgt.px) / 2;
-                    const my = (src.py + tgt.py) / 2 - 5;
+                {renderConnections.map((connection) => {
                     return (
                         <motion.path
-                            key={conn.id}
-                            d={`M ${src.px} ${src.py} Q ${mx} ${my} ${tgt.px} ${tgt.py}`}
+                            key={connection.id}
+                            d={connection.path}
                             fill="none"
-                            stroke={connectionGrad(conn.type)}
+                            stroke={connection.stroke}
                             strokeWidth="0.3"
-                            style={{ filter: `drop-shadow(0 0 6px ${conn.type === 'friction' ? '#d9302530' : conn.type === 'harmony' ? '#1e8e3e30' : '#a78bfa30'})` }}
+                            style={{ filter: `drop-shadow(0 0 6px ${connection.dropShadow})` }}
                             initial={{ pathLength: 0, opacity: 0 }}
                             animate={{ pathLength: 1, opacity: 0.6 }}
                             transition={{ duration: 3, delay: 0.5, ease: 'easeOut' }}

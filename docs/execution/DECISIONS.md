@@ -155,3 +155,27 @@
 - Batch: BATCH:011
 - Decision: Expand Vite manual chunking to isolate heavy animation and 3D dependency groups (`animation`, `three-core`) from app core (`index`).
 - Rationale: Improves cacheability and lowers core app chunk size without changing routes, API contracts, or user-visible UI flows.
+
+## D-027
+- Date: 2026-03-05
+- Batch: BATCH:012
+- Decision: Add explicit bundle budget policy in `docs/execution/bundle-budgets.json` and enforce it via `scripts/check-bundle-budgets.js` wired into `quality:ci`.
+- Rationale: Provides deterministic pass/fail guardrails for core/app-route chunk growth while keeping route/API behavior unchanged.
+
+## D-028
+- Date: 2026-03-05
+- Batch: BATCH:012
+- Decision: Optimize navigation scroll handling with `requestAnimationFrame` scheduling and ref-based state guards to avoid redundant state updates on scroll.
+- Rationale: Reduces avoidable rerenders in a globally mounted component without affecting visual behavior or routing.
+
+## D-029
+- Date: 2026-03-05
+- Batch: BATCH:012
+- Decision: Replace `connections -> renderNodes.find()` per-edge lookups in `SoulConstellationMap` with memoized node map + memoized render connection list.
+- Rationale: Eliminates repeated O(n*m) lookup work in a dashboard hero widget while preserving exact rendering output and interactions.
+
+## D-030
+- Date: 2026-03-05
+- Batch: BATCH:012
+- Decision: Hoist static hero text animation constants/character arrays in `HeroSection` outside the component function.
+- Rationale: Avoids recreation of static animation metadata and mapped character sources on each render with no UI/animation behavior change.

@@ -7,6 +7,21 @@ import { Link } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const HERO_WORD_ONE_CHARS = Array.from('Your ');
+const HERO_WORD_TWO_CHARS = Array.from('Journey Begins.');
+const HERO_TITLE_VARIANTS = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05, delayChildren: 0.6 },
+  },
+};
+const HERO_LETTER_VARIANTS = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+const HERO_CURSOR_TRANSITION = { repeat: Infinity, duration: 0.8, ease: 'linear' } as const;
+
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
   const container = useRef<HTMLDivElement>(null);
@@ -134,32 +149,26 @@ export default function HeroSection() {
         >
           <motion.h1
             className="text-3xl sm:text-4xl lg:text-[60px] font-medium text-white lg:leading-[1.2] tracking-[-0.02em] text-center lg:text-left drop-shadow-md"
-            variants={{
-              hidden: { opacity: 1 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.05, delayChildren: 0.6 }
-              }
-            }}
+            variants={HERO_TITLE_VARIANTS}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
           >
-            {"Your ".split("").map((char, i) => (
-              <motion.span key={`w1-${i}`} variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>{char}</motion.span>
+            {HERO_WORD_ONE_CHARS.map((char, i) => (
+              <motion.span key={`w1-${i}`} variants={HERO_LETTER_VARIANTS}>{char}</motion.span>
             ))}
             <br className="hidden lg:block" />
 
-            {"Journey Begins.".split("").map((char, i) => (
-              <motion.span key={`w2-${i}`} variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>{char}</motion.span>
+            {HERO_WORD_TWO_CHARS.map((char, i) => (
+              <motion.span key={`w2-${i}`} variants={HERO_LETTER_VARIANTS}>{char}</motion.span>
             ))}
             <motion.span
               animate={{ opacity: [1, 0] }}
-              transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+              transition={HERO_CURSOR_TRANSITION}
               className="inline-block w-[2px] h-[56px] bg-white/70 align-middle ml-1 -translate-y-2 hidden lg:inline-block"
             />
             <motion.span
               animate={{ opacity: [1, 0] }}
-              transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+              transition={HERO_CURSOR_TRANSITION}
               className="inline-block w-[2px] h-[28px] bg-white/70 align-middle ml-1 -translate-y-1 lg:hidden"
             />
           </motion.h1>

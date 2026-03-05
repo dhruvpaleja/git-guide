@@ -1,9 +1,10 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.app.json",
   "compilerOptions": {
-    "types": ["@playwright/test"],
-    "moduleResolution": "bundler"
+    "types": ["@playwright/test", "node"],
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true
   },
-  "include": ["tests/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["tests/**/*.ts", "playwright.config.ts"]
 }

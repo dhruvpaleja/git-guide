@@ -286,7 +286,7 @@ export async function testRateLimiting(
       const response = await context.fetch(url);
       if (response.status() === 429) {
         rateLimitedCount++;
-      } else if (response.ok) {
+      } else if (response.ok()) {
         successCount++;
       }
     } catch (error) {

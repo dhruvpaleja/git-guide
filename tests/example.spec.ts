@@ -1,7 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 test.describe('Soul Yatri - Cross-browser Tests', () => {
-  test('homepage loads successfully', async ({ page, browserName }) => {
+  test('homepage loads successfully', async ({ page, browserName }: { page: Page; browserName: string }) => {
     await page.goto('/');
     
     // Verify page title

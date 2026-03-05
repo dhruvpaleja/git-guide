@@ -42,3 +42,10 @@ tests/
 playwright-report/
 blob-report/
 test-results/
+
+# Local Playwright helper notes (do not commit)
+PLAYWRIGHT_FUNCTIONS_REFERENCE.md
+PLAYWRIGHT_GUIDE.md
+PLAYWRIGHT_INSTALLATION_SUMMARY.md
+PLAYWRIGHT_SETUP_COMPLETE.md
+build_result.txt

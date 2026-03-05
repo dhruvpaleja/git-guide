@@ -28,6 +28,19 @@ export default defineConfig({
             'react-hook-form',
             'date-fns',
           ],
+          'animation': [
+            'framer-motion',
+            'gsap',
+            '@gsap/react',
+            'animejs',
+            'aos',
+            'lottie-react',
+          ],
+          'three-core': [
+            'three',
+            '@react-three/fiber',
+            '@react-three/drei',
+          ],
           'ui': [
             '@radix-ui/react-dialog',
             '@radix-ui/react-dropdown-menu',

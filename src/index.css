@@ -163,6 +163,26 @@
     background-color: var(--ring-bg);
     border: 1px solid var(--ring-border);
   }
+
+  /* Reusable transition timing utilities to avoid ambiguous Tailwind tokens */
+  .ease-soul-smooth {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ease-soul-spring {
+    transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Auth decorative background orbs */
+  .auth-orb-warm {
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.4) 0%, rgba(255, 69, 0, 0.2) 40%, transparent 70%);
+    filter: blur(60px);
+  }
+
+  .auth-orb-cool {
+    background: radial-gradient(circle, rgba(0, 191, 255, 0.4) 0%, rgba(30, 144, 255, 0.2) 40%, transparent 70%);
+    filter: blur(60px);
+  }
 }
 
 /* Animations */

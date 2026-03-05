@@ -163,7 +163,7 @@ export default function DashboardPage() {
         ═══════════════════════════════════════════════════════════ */}
         <motion.div
           variants={fadeUp}
-          className={`mb-6 relative transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${isConfessionalActive
+          className={`mb-6 relative transition-all duration-1000 ease-soul-smooth ${isConfessionalActive
               ? 'z-50 scale-[1.01] shadow-[0_30px_100px_rgba(0,0,0,0.8)]'
               : 'z-10 scale-100'
             }`}

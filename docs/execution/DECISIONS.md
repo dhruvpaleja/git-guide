@@ -131,3 +131,27 @@
 - Batch: BATCH:010
 - Decision: Removed or explicitly suppressed `console.log` statements in frontend with `// eslint-disable-next-line no-console` (only where explicitly gated by `import.meta.env.DEV` or mock behavior). Mock interaction logs were replaced with comments.
 - Rationale: Passes strict `no-console` linting rule without altering end-user UI/UX or feature parity.
+
+## D-023
+- Date: 2026-03-05
+- Batch: BATCH:011
+- Decision: Replace ambiguous Tailwind timing-function arbitrary classes with stable CSS utility classes (`ease-soul-smooth`, `ease-soul-spring`) defined in `src/index.css`.
+- Rationale: Removes build-time Tailwind ambiguity warnings while keeping transition timing curves and visual behavior unchanged.
+
+## D-024
+- Date: 2026-03-05
+- Batch: BATCH:011
+- Decision: Convert Login page decorative orb inline styles into reusable CSS utility classes (`auth-orb-warm`, `auth-orb-cool`).
+- Rationale: Reduces inline style churn and keeps decorative styling deterministic without altering layout or interaction flow.
+
+## D-025
+- Date: 2026-03-05
+- Batch: BATCH:011
+- Decision: Keep Sidebar CSS custom-property behavior, but normalize style object creation through typed style-variable helpers/memoization.
+- Rationale: Preserves UI behavior while reducing ad-hoc style casts and improving structural style consistency in shared UI primitives.
+
+## D-026
+- Date: 2026-03-05
+- Batch: BATCH:011
+- Decision: Expand Vite manual chunking to isolate heavy animation and 3D dependency groups (`animation`, `three-core`) from app core (`index`).
+- Rationale: Improves cacheability and lowers core app chunk size without changing routes, API contracts, or user-visible UI flows.

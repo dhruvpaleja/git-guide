@@ -63,22 +63,10 @@ export default function LoginPage() {
         <div className="relative min-h-screen bg-black overflow-hidden">
             {/* Background Decorative Elements */}
             <div className="absolute right-[-250px] sm:right-[-200px] top-[-150px] sm:top-[-100px] w-[400px] sm:w-[500px] lg:w-[600px] h-[400px] sm:h-[500px] lg:h-[600px] pointer-events-none opacity-50 sm:opacity-60">
-                <div
-                    className="w-full h-full rounded-full"
-                    style={{
-                        background: 'radial-gradient(circle, rgba(255, 140, 0, 0.4) 0%, rgba(255, 69, 0, 0.2) 40%, transparent 70%)',
-                        filter: 'blur(60px)'
-                    }}
-                />
+                <div className="w-full h-full rounded-full auth-orb-warm" />
             </div>
             <div className="absolute left-[-250px] sm:left-[-200px] bottom-[-150px] sm:bottom-[-100px] w-[350px] sm:w-[450px] lg:w-[500px] h-[350px] sm:h-[450px] lg:h-[500px] pointer-events-none opacity-50 sm:opacity-60">
-                <div
-                    className="w-full h-full rounded-full"
-                    style={{
-                        background: 'radial-gradient(circle, rgba(0, 191, 255, 0.4) 0%, rgba(30, 144, 255, 0.2) 40%, transparent 70%)',
-                        filter: 'blur(60px)'
-                    }}
-                />
+                <div className="w-full h-full rounded-full auth-orb-cool" />
             </div>
 
             {/* Navigation */}
@@ -163,7 +151,7 @@ export default function LoginPage() {
                                 aria-label="Toggle Practitioner Login"
                             >
                                 <span
-                                    className={`w-[28px] h-[28px] bg-white rounded-full flex items-center justify-center shadow-md transform transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isPractitioner ? 'translate-x-[34px]' : 'translate-x-0'
+                                    className={`w-[28px] h-[28px] bg-white rounded-full flex items-center justify-center shadow-md transform transition-all duration-400 ease-soul-spring ${isPractitioner ? 'translate-x-[34px]' : 'translate-x-0'
                                         }`}
                                 >
                                     <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isPractitioner ? 'opacity-100' : 'opacity-0'}`}>

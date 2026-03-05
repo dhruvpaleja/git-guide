@@ -35,10 +35,12 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:010`
-- Phase target: `Phase 4 close (frontend warning cleanup to make root lint:ci pass)`
+- `BATCH:011`
+- Phase target: `Phase 5 kickoff (performance engineering pass + style cleanup)`
 - Objective:
-  - Fix the remaining 18 frontend lint warnings without changing behavior/UI.
+  - Remove Tailwind CLI ambiguous utility warnings without changing behavior/UI.
+  - Normalize safe inline style usage in structural UI paths.
+  - Improve chunking strategy for heavy animation/3D dependencies.
   - Preserve QA dev-login/mock-auth behavior.
-  - Make `npm run lint:ci` pass.
+  - Keep `npm run lint:ci` and `npm run quality:ci` passing.
   - Update docs at batch end.

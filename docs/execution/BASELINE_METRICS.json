@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-05T12:34:33+05:30",
+  "generated_at": "2026-03-05T20:12:00+05:30",
   "notes": "Phase 0 baseline preserved with incremental batch updates for handoff continuity.",
   "baseline": {
     "frontend": {
@@ -193,6 +193,26 @@
         "vendor_chunk_kb": 98.47
       },
       "notes": "Fixed 18 frontend lint warnings (react-refresh, no-console, exhaustive-deps, incompatible-library) to achieve clean lint:ci build while preserving mock-auth and UI behavior."
+    },
+    {
+      "batch_id": "BATCH:011",
+      "phase": "5 kickoff",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint_ci": "pass",
+        "quality_ci": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 112.93,
+        "landing_page_chunk_kb": 91.41,
+        "vendor_chunk_kb": 98.46,
+        "animation_chunk_kb": 193.91,
+        "three_core_chunk_kb": 181.68
+      },
+      "notes": "Removed Tailwind ambiguous utility warnings, normalized selected inline styles to reusable utilities, and split heavy animation/3D libraries into dedicated chunks while preserving QA auth behavior and UI/UX flow."
     }
   ]
 }

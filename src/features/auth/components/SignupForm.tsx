@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/context/AuthContext';
@@ -41,13 +41,17 @@ export default function SignupForm() {
     const {
         register,
         handleSubmit,
-        watch,
+        control,
         formState: { errors },
     } = useForm<SignupFormValues>({
         resolver: zodResolver(signupSchema),
     });
 
-    const watchPassword = watch('password', '');
+    const watchPassword = useWatch({
+        control,
+        name: 'password',
+        defaultValue: ''
+    });
 
     // Calculate password strength on the fly
     const calculateStrength = (pwd: string) => {

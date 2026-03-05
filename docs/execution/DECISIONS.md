@@ -107,3 +107,27 @@
 - Batch: BATCH:009
 - Decision: Correct execution tracking to reflect committed state and mark prior manifest/compat ownership claims as deferred artifacts not present in HEAD.
 - Rationale: Restores handoff integrity so future agents can trust docs without ambiguous historical drift.
+
+## D-019
+- Date: 2026-03-05
+- Batch: BATCH:010
+- Decision: Use scoped `eslint-disable react-refresh/only-export-components` at the top of UI/context files where utility variants or custom hooks are exported alongside components.
+- Rationale: Avoids breaking backwards compatibility or creating unnecessary wrapper files for single constants/hooks.
+
+## D-020
+- Date: 2026-03-05
+- Batch: BATCH:010
+- Decision: Replaced problematic `watch()` from react-hook-form with `useWatch()` in SignupForm.
+- Rationale: Safely memoizes component and complies with React Compiler rules as requested by ESLint `incompatible-library` warning.
+
+## D-021
+- Date: 2026-03-05
+- Batch: BATCH:010
+- Decision: Captured refs in local variables within `useEffect` cleanup in `OnboardingAstrologyPage.tsx`.
+- Rationale: Prevents `exhaustive-deps` warnings about ref mutation between render and cleanup.
+
+## D-022
+- Date: 2026-03-05
+- Batch: BATCH:010
+- Decision: Removed or explicitly suppressed `console.log` statements in frontend with `// eslint-disable-next-line no-console` (only where explicitly gated by `import.meta.env.DEV` or mock behavior). Mock interaction logs were replaced with comments.
+- Rationale: Passes strict `no-console` linting rule without altering end-user UI/UX or feature parity.

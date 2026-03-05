@@ -56,7 +56,7 @@ export default function PractitionerOnboardingPage() {
 
   // keep search params in sync for deep-linking if step or signupAs changes
   useEffect(() => {
-    const params: Record<string,string> = { step: String(step) };
+    const params: Record<string, string> = { step: String(step) };
     if (data1.signupAs) params.role = data1.signupAs;
     const query = new URLSearchParams(params).toString();
     navigate(`/practitioner-onboarding?${query}`, { replace: true });
@@ -88,7 +88,7 @@ export default function PractitionerOnboardingPage() {
   const handleFinish = (values: Step3Data) => {
     setData3(values);
     // here we would normally submit to server or update profile
-    console.log('practitioner onboarding complete', { ...data1, ...data2, ...values });
+    // TODO: log 'practitioner onboarding complete' with { ...data1, ...data2, ...values }
     // mark onboarding complete; redirect to appropriate dashboard
     if (data1.signupAs === 'astrologer') {
       navigate('/astrology');
@@ -123,11 +123,11 @@ export default function PractitionerOnboardingPage() {
           </div>
         </div>
 
-          {/* form container */}
-          <div className="mt-10">
-            {step === 1 && (
-              <>
-                {signupError && (
+        {/* form container */}
+        <div className="mt-10">
+          {step === 1 && (
+            <>
+              {signupError && (
                 <div className="max-w-3xl mx-auto mb-4 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">
                   {signupError}
                 </div>
@@ -346,17 +346,16 @@ function Step2Form({ initial, onNext, onBack }: { initial: Step2Data; onNext: (v
                   <div
                     key={doc}
                     onClick={() => handleDocClick(doc)}
-                    className={`w-28 h-28 rounded-2xl border flex flex-col items-center justify-center cursor-pointer p-2 ${
-                      form.kycDocument === doc ? 'border-black' : 'border-gray-300'
-                    }`}
+                    className={`w-28 h-28 rounded-2xl border flex flex-col items-center justify-center cursor-pointer p-2 ${form.kycDocument === doc ? 'border-black' : 'border-gray-300'
+                      }`}
                   >
                     {icon}
                     <span className="text-xs text-gray-500 text-center">
                       {doc === 'national_id'
                         ? 'National ID Card'
                         : doc === 'voter_id'
-                        ? 'Voter ID Card'
-                        : 'Passport'}
+                          ? 'Voter ID Card'
+                          : 'Passport'}
                     </span>
                     {form.kycDocument === doc && form.kycFile && (
                       <span className="mt-1 text-xs text-green-600 truncate">
@@ -433,89 +432,89 @@ function Step3Form({ initial, onNext, onBack }: { initial: Step3Data; onNext: (v
       <div className="bg-white p-8 rounded-3xl border border-gray-200 shadow-lg space-y-6">
         <h2 className="text-2xl font-semibold text-center">Step 3 - Profile</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* avatar upload */}
-        <div className="flex flex-col items-center md:items-start space-y-3">
-          <label className="relative" onClick={handleAvatarClick}>
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer overflow-hidden">
-              {form.avatarFile ? (
-                <img
-                  src={URL.createObjectURL(form.avatarFile)}
-                  alt="avatar"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-8 h-8 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.717 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* avatar upload */}
+          <div className="flex flex-col items-center md:items-start space-y-3">
+            <label className="relative" onClick={handleAvatarClick}>
+              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer overflow-hidden">
+                {form.avatarFile ? (
+                  <img
+                    src={URL.createObjectURL(form.avatarFile)}
+                    alt="avatar"
+                    className="w-full h-full object-cover"
                   />
-                </svg>
-              )}
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              onChange={(e) => {
-                const file = e.target.files ? e.target.files[0] : null;
-                setForm((prev) => ({ ...prev, avatarFile: file }));
-              }}
-            />
-          </label>
-          <span className="text-sm text-gray-600">Pick Your Image</span>
-        </div>
-        <div className="space-y-4">
-          <label className="block text-sm text-gray-600">Bio</label>
-          <textarea
-            value={form.bio}
-            onChange={e => setForm({ ...form, bio: e.target.value })}
-            rows={5}
-            placeholder="Ex. Hi there! I'm Sakshi Sharma. I'm a counsellor and mind psychologist who helps..."
-            className="w-full rounded-[32px] border border-gray-200 bg-gray-50 px-4 py-2 text-black placeholder-gray-400"
-          />
-        </div>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">Which Languages you Speak?</label>
-            <input
-              value={form.languages}
-              onChange={e => setForm({ ...form, languages: e.target.value })}
-              placeholder="Ex. English, Hindi, Marathi, Tamil, Telugu..."
-              className={inputCls}
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-8 h-8 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.717 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                )}
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={(e) => {
+                  const file = e.target.files ? e.target.files[0] : null;
+                  setForm((prev) => ({ ...prev, avatarFile: file }));
+                }}
+              />
+            </label>
+            <span className="text-sm text-gray-600">Pick Your Image</span>
+          </div>
+          <div className="space-y-4">
+            <label className="block text-sm text-gray-600">Bio</label>
+            <textarea
+              value={form.bio}
+              onChange={e => setForm({ ...form, bio: e.target.value })}
+              rows={5}
+              placeholder="Ex. Hi there! I'm Sakshi Sharma. I'm a counsellor and mind psychologist who helps..."
+              className="w-full rounded-[32px] border border-gray-200 bg-gray-50 px-4 py-2 text-black placeholder-gray-400"
             />
           </div>
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">What's your Pricing Per Sessions?</label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Which Languages you Speak?</label>
               <input
-                value={form.pricing}
-                onChange={e => setForm({ ...form, pricing: e.target.value })}
-                placeholder="Ex. 699 - 900"
-                className={`${inputCls} pl-12`}
+                value={form.languages}
+                onChange={e => setForm({ ...form, languages: e.target.value })}
+                placeholder="Ex. English, Hindi, Marathi, Tamil, Telugu..."
+                className={inputCls}
               />
             </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">What's your Pricing Per Sessions?</label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+                <input
+                  value={form.pricing}
+                  onChange={e => setForm({ ...form, pricing: e.target.value })}
+                  placeholder="Ex. 699 - 900"
+                  className={`${inputCls} pl-12`}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex justify-between">
-        <button type="button" onClick={onBack} className="text-gray-600 hover:underline">
-          Back
-        </button>
-        <button type="submit" className="bg-black text-white px-8 py-3 rounded-full shadow hover:bg-gray-900">
-          Finish
-        </button>
-      </div>
+        <div className="flex justify-between">
+          <button type="button" onClick={onBack} className="text-gray-600 hover:underline">
+            Back
+          </button>
+          <button type="submit" className="bg-black text-white px-8 py-3 rounded-full shadow hover:bg-gray-900">
+            Finish
+          </button>
+        </div>
       </div> {/* wrapper end */}
     </form>
   );

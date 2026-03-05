@@ -59,8 +59,9 @@ class AnalyticsService {
    */
   private sendEvent(event: AnalyticsEvent): void {
     // TODO: Send to analytics backend
-     
+
     if (import.meta.env.MODE === 'development') {
+      // eslint-disable-next-line no-console
       console.log('Analytics Event:', event);
     }
   }

@@ -175,6 +175,24 @@
         "vendor_chunk_kb": 98.47
       },
       "notes": "Route exposure made deterministic via runtime-gated mounting while keeping QA dev-login behavior; frontend lint warnings remain for Phase 4 close."
+    },
+    {
+      "batch_id": "BATCH:010",
+      "phase": "4 close",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint_ci": "pass",
+        "quality_ci": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 420.36,
+        "landing_page_chunk_kb": 161.98,
+        "vendor_chunk_kb": 98.47
+      },
+      "notes": "Fixed 18 frontend lint warnings (react-refresh, no-console, exhaustive-deps, incompatible-library) to achieve clean lint:ci build while preserving mock-auth and UI behavior."
     }
   ]
 }

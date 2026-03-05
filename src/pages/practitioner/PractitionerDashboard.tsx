@@ -50,12 +50,12 @@ interface GraphDataPoint {
   timestamp: number;
 }
 
-function AnimatedLineGraph({ 
-  initialValue, 
-  color, 
-  onChange 
-}: { 
-  initialValue: number; 
+function AnimatedLineGraph({
+  initialValue,
+  color,
+  onChange
+}: {
+  initialValue: number;
   color: string;
   onChange?: (value: number) => void;
 }) {
@@ -71,16 +71,16 @@ function AnimatedLineGraph({
         // Generate new value with slight variation (stock market like)
         const variance = (Math.random() - 0.5) * (initialValue * 0.3);
         const newValue = Math.max(initialValue * 0.5, lastValue + variance);
-        
+
         const newData = [
           ...prevData.slice(-9),
           { value: newValue, timestamp: Date.now() }
         ];
-        
+
         onChange?.(newValue);
         setIsAnimating(true);
         setTimeout(() => setIsAnimating(false), 100);
-        
+
         return newData;
       });
     }, 2000);
@@ -92,7 +92,7 @@ function AnimatedLineGraph({
   const maxValue = Math.max(initialValue * 1.5, ...data.map(d => d.value));
   const minValue = Math.min(initialValue * 0.5, ...data.map(d => d.value));
   const range = maxValue - minValue || 1;
-  
+
   const points = data.map((point, index) => {
     const x = (index / Math.max(data.length - 1, 1)) * 100;
     const y = 100 - ((point.value - minValue) / range) * 100;
@@ -125,14 +125,14 @@ function AnimatedLineGraph({
 }
 
 // Stat Card Component
-function StatCard({ 
-  label, 
-  amount, 
-  currency, 
-  change, 
-  changeType, 
-  graphColor, 
-  period 
+function StatCard({
+  label,
+  amount,
+  currency,
+  change,
+  changeType,
+  graphColor,
+  period
 }: {
   label: string;
   amount: string;
@@ -145,11 +145,10 @@ function StatCard({
   const [displayAmount, setDisplayAmount] = useState(amount);
 
   return (
-    <div className={`rounded-2xl p-5 flex flex-col gap-3 border-2 ${
-      changeType === 'positive' 
-        ? 'border-green-200 bg-gradient-to-br from-green-50 to-white' 
+    <div className={`rounded-2xl p-5 flex flex-col gap-3 border-2 ${changeType === 'positive'
+        ? 'border-green-200 bg-gradient-to-br from-green-50 to-white'
         : 'border-red-200 bg-gradient-to-br from-red-50 to-white'
-    }`}>
+      }`}>
       <div className="flex justify-between items-start">
         <div>
           <p className="text-gray-600 text-sm font-medium">{label}</p>
@@ -159,16 +158,15 @@ function StatCard({
         </div>
         <span className="text-xs text-gray-500">{period}</span>
       </div>
-      
-      <AnimatedLineGraph 
-        initialValue={parseInt(amount.replace(/[^0-9.]/g, ''))} 
+
+      <AnimatedLineGraph
+        initialValue={parseInt(amount.replace(/[^0-9.]/g, ''))}
         color={graphColor}
         onChange={(val) => setDisplayAmount(val.toFixed(2))}
       />
-      
-      <div className={`text-xs font-medium ${
-        changeType === 'positive' ? 'text-green-600' : 'text-red-600'
-      }`}>
+
+      <div className={`text-xs font-medium ${changeType === 'positive' ? 'text-green-600' : 'text-red-600'
+        }`}>
         {changeType === 'positive' ? '↑' : '↓'} {change}
       </div>
     </div>
@@ -179,7 +177,7 @@ function StatCard({
 function SessionCard({ name, time, type }: { name: string; time: string; type: string }) {
   const handleStartCall = () => {
     // TODO: Implement call functionality
-    console.log('Start call with', name);
+    // console.log('Start call with', name);
   };
 
   return (
@@ -208,7 +206,7 @@ function SessionCard({ name, time, type }: { name: string; time: string; type: s
 function AppointmentRow({ name, type, date }: { name: string; type: string; date: string }) {
   const handleReschedule = () => {
     // TODO: Implement reschedule functionality
-    console.log('Reschedule', name);
+    // console.log('Reschedule', name);
   };
 
   return (
@@ -239,12 +237,12 @@ function AppointmentRow({ name, type, date }: { name: string; type: string; date
 function ApprovalCard({ name, role }: { name: string; role: string }) {
   const handleIgnore = () => {
     // TODO: Implement ignore functionality
-    console.log('Ignore', name);
+    // console.log('Ignore', name);
   };
 
   const handleAccept = () => {
     // TODO: Implement accept functionality
-    console.log('Accept', name);
+    // console.log('Accept', name);
   };
 
   return (
@@ -278,7 +276,7 @@ function ApprovalCard({ name, role }: { name: string; role: string }) {
 function ClientIntakeCard({ name, role, date }: { name: string; role: string; date: string }) {
   const handleIgnoreIntake = () => {
     // TODO: Implement ignore functionality
-    console.log('Ignore', name);
+    // console.log('Ignore', name);
   };
 
   return (
@@ -315,7 +313,7 @@ export default function PractitionerDashboard() {
       {/* Sidebar */}
       <div className="w-20 bg-black flex flex-col items-center py-6 space-y-6 sticky top-0 h-screen">
         <img src={soulLogo} alt="Soul Yatri" className="w-10 h-10" />
-        
+
         <nav className="flex flex-col space-y-4">
           <button className="w-11 h-11 bg-white rounded-2xl flex items-center justify-center hover:scale-110 transition">
             <span className="text-black text-lg">🏠</span>
@@ -332,7 +330,7 @@ export default function PractitionerDashboard() {
         </nav>
 
         <div className="mt-auto pt-6 border-t border-white/10">
-          <button 
+          <button
             onClick={handleLogout}
             className="w-11 h-11 hover:bg-white/10 rounded-2xl flex items-center justify-center transition text-white"
             title="Logout"
@@ -388,7 +386,7 @@ export default function PractitionerDashboard() {
             {/* Your Dashboard Section */}
             <div>
               <h2 className="text-3xl font-bold text-black mb-6">Your Dashboard</h2>
-              
+
               {/* Stats Cards with Animated Graphs */}
               <div className="grid grid-cols-3 gap-6 mb-8">
                 <StatCard
@@ -459,7 +457,7 @@ export default function PractitionerDashboard() {
                     <h3 className="text-xl font-bold text-black">Appointments & Sessions</h3>
                     <button className="text-gray-600 text-sm hover:text-black transition">View All</button>
                   </div>
-                  
+
                   <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                     <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
                       <p className="text-xs font-semibold text-gray-600">Weekly Sessions Records</p>
@@ -481,7 +479,7 @@ export default function PractitionerDashboard() {
                     <h3 className="text-xl font-bold text-black">Completed Sessions</h3>
                     <button className="text-gray-600 text-sm hover:text-black transition">View All</button>
                   </div>
-                  
+
                   <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                     <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
                       <p className="text-xs font-semibold text-gray-600">Last 5 Sessions Records</p>
@@ -505,7 +503,7 @@ export default function PractitionerDashboard() {
                               <button
                                 onClick={() => {
                                   // TODO: Implement see summary functionality
-                                  console.log('See summary', session.name);
+                                  // console.log('See summary', session.name);
                                 }}
                                 className="text-gray-600 text-xs px-4 py-1.5 hover:text-black transition"
                               >
@@ -552,7 +550,7 @@ export default function PractitionerDashboard() {
                     <div
                       onClick={() => {
                         // TODO: Implement post therapy functionality
-                        console.log('Post Therapy clicked');
+                        // console.log('Post Therapy clicked');
                       }}
                       className="bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition h-40 flex flex-col items-center justify-center gap-3"
                     >
@@ -563,7 +561,7 @@ export default function PractitionerDashboard() {
                     <div
                       onClick={() => {
                         // TODO: Implement support functionality
-                        console.log('Support clicked');
+                        // console.log('Support clicked');
                       }}
                       className="bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition h-40 flex flex-col items-center justify-center gap-3"
                     >

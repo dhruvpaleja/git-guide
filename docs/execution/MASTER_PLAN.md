@@ -35,10 +35,10 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:009`
-- Phase target: `1R + 2R route/doc drift repair`
+- `BATCH:010`
+- Phase target: `Phase 4 close (frontend warning cleanup to make root lint:ci pass)`
 - Objective:
-  - Make server route exposure deterministic: test routes and dev routes are mounted only through explicit runtime flags.
-  - Preserve QA dev-login/mock-auth behavior until explicit user instruction to remove it.
-  - Repair execution-document drift so STATUS/DECISIONS/RISKS match committed reality.
-  - Defer non-Block-A lint warning cleanup to Phase 4 close batch.
+  - Fix the remaining 18 frontend lint warnings without changing behavior/UI.
+  - Preserve QA dev-login/mock-auth behavior.
+  - Make `npm run lint:ci` pass.
+  - Update docs at batch end.

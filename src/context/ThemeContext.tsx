@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- Context providers must export both the provider component and the consumer hook */
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'dark' | 'light' | 'system';

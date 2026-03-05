@@ -74,17 +74,19 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
         if (!birthCity) {
             detectLocation();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Cleanup cameras on unmount
     useEffect(() => {
+        const currentVideo = videoRef.current;
+        const currentPartnerVideo = partnerVideoRef.current;
         return () => {
-            if (videoRef.current?.srcObject) {
-                (videoRef.current.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+            if (currentVideo?.srcObject) {
+                (currentVideo.srcObject as MediaStream).getTracks().forEach(track => track.stop());
             }
-            if (partnerVideoRef.current?.srcObject) {
-                (partnerVideoRef.current.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+            if (currentPartnerVideo?.srcObject) {
+                (currentPartnerVideo.srcObject as MediaStream).getTracks().forEach(track => track.stop());
             }
         };
     }, []);
@@ -370,11 +372,10 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                                         key={option.value}
                                                         type="button"
                                                         onClick={() => setGender(option.value as typeof gender)}
-                                                        className={`px-4 py-3 rounded-[12px] border text-[12px] font-medium transition-all duration-200 ${
-                                                            selected
+                                                        className={`px-4 py-3 rounded-[12px] border text-[12px] font-medium transition-all duration-200 ${selected
                                                                 ? 'bg-black text-white border-black'
                                                                 : 'bg-white text-black/60 border-black/10 hover:border-black/20'
-                                                        }`}
+                                                            }`}
                                                     >
                                                         {option.label}
                                                     </button>
@@ -413,8 +414,8 @@ export default function OnboardingAstrologyPage({ onBack, onSubmit }: Onboarding
                                             )}
                                         </div>
 
-                                    {/* BIRTH TIME */}
-                                    <div>
+                                        {/* BIRTH TIME */}
+                                        <div>
                                             <div className="flex items-center justify-between mb-3">
                                                 <label className="block text-[13px] sm:text-[14px] text-black/60 tracking-[-0.01em] font-medium">
                                                     What's your birth time?{' '}

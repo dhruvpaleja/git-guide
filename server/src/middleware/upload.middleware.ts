@@ -39,7 +39,7 @@ const storage = multer.memoryStorage();
 // File filter function
 const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   const fileExtension = path.extname(file.originalname).toLowerCase();
-  
+
   // Check for dangerous extensions
   if (DANGEROUS_EXTENSIONS.includes(fileExtension)) {
     cb(new Error(`File type ${fileExtension} is not allowed for security reasons`));
@@ -48,7 +48,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
 
   // Check MIME type
   const allAllowedMimeTypes = [...ALLOWED_MIME_TYPES.images, ...ALLOWED_MIME_TYPES.documents];
-  if (!allAllowedMimeTypes.includes(file.mimetype as any)) {
+  if (!allAllowedMimeTypes.includes(file.mimetype as typeof allAllowedMimeTypes[number])) {
     cb(new Error(`MIME type ${file.mimetype} is not allowed`));
     return;
   }
@@ -95,15 +95,15 @@ export const validateFileUpload = (allowedTypes: ('images' | 'documents')[] = ['
     if (file.size > maxSize) {
       return res.status(400).json({
         success: false,
-        error: { 
-          message: `File size exceeds maximum allowed size of ${maxSize / (1024 * 1024)}MB` 
+        error: {
+          message: `File size exceeds maximum allowed size of ${maxSize / (1024 * 1024)}MB`
         }
       });
     }
 
     // Validate MIME type against allowed types
     const allowedMimeTypes = allowedTypes.flatMap(type => ALLOWED_MIME_TYPES[type]);
-    if (!allowedMimeTypes.includes(file.mimetype as any)) {
+    if (!allowedMimeTypes.includes(file.mimetype as typeof allowedMimeTypes[number])) {
       return res.status(400).json({
         success: false,
         error: { message: `File type ${file.mimetype} is not allowed` }
@@ -130,7 +130,7 @@ export const validateFileUpload = (allowedTypes: ('images' | 'documents')[] = ['
       }
       // WebP: 52 49 46 46 ... 57 45 42 50
       else if (buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46 &&
-               buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50) {
+        buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50) {
         isValidImage = true;
       }
 
@@ -150,12 +150,12 @@ export const validateFileUpload = (allowedTypes: ('images' | 'documents')[] = ['
 export const sanitizeFilename = (originalname: string): string => {
   const ext = path.extname(originalname).toLowerCase();
   const name = path.basename(originalname, ext);
-  
+
   // Remove dangerous characters and replace with underscores
   const sanitizedName = name
     .replace(/[<>:"|?*]/g, '_')
     .replace(/\.\./g, '_')
     .substring(0, 50); // Limit length
-  
+
   return `${sanitizedName}_${Date.now()}${ext}`;
 };

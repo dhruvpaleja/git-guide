@@ -6,14 +6,14 @@ import { config } from '../config/index.js';
 
 const router = Router();
 
-// Enable in development and production for testing
-if (config.isDevelopment || config.isProduction) {
-  
+// Enabled by explicit runtime flag for QA/test workflows.
+if (config.runtime.enableDevRoutes) {
+
   // Create dev user endpoint
   router.get('/dev-create-user/:email/:password/:name', async (req, res) => {
     try {
       const { email, password, name } = req.params;
-      
+
       // Check if user exists
       const existingUser = await prisma.user.findUnique({ where: { email } });
       if (existingUser) {
@@ -114,7 +114,7 @@ if (config.isDevelopment || config.isProduction) {
   router.get('/dev-login/:email', async (req, res) => {
     try {
       const { email } = req.params;
-      
+
       let user = await prisma.user.findUnique({
         where: { email },
         include: {
@@ -128,23 +128,23 @@ if (config.isDevelopment || config.isProduction) {
       if (!user) {
         const passwords = {
           'user@test.com': 'user123',
-          'therapist@test.com': 'therapist123', 
+          'therapist@test.com': 'therapist123',
           'astrologer@test.com': 'astrologer123',
           'admin@test.com': 'admin123'
         };
-        
+
         const names = {
           'user@test.com': 'Test User',
           'therapist@test.com': 'Dr. Test Therapist',
-          'astrologer@test.com': 'Test Astrologer', 
+          'astrologer@test.com': 'Test Astrologer',
           'admin@test.com': 'Test Admin'
         };
 
         const password = passwords[email as keyof typeof passwords] || 'password123';
         const name = names[email as keyof typeof names] || 'Test User';
-        
+
         const passwordHash = await bcrypt.hash(password, 12);
-        
+
         user = await prisma.user.create({
           data: {
             email,
@@ -307,7 +307,7 @@ if (config.isDevelopment || config.isProduction) {
               email: user.email,
               passwordHash,
               name: user.name,
-              role: user.role as any,
+              role: user.role as 'USER' | 'THERAPIST' | 'ASTROLOGER' | 'ADMIN',
               isVerified: true,
             },
           });

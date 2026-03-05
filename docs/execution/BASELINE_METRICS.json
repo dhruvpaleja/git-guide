@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-05T13:20:00.000Z",
+  "generated_at": "2026-03-05T12:11:08+05:30",
   "notes": "Phase 0 baseline preserved with incremental batch updates for handoff continuity.",
   "baseline": {
     "frontend": {
@@ -141,6 +141,24 @@
         "vendor_chunk_kb": 98.47
       },
       "notes": "Introduced strict lint CI scripts and consolidated quality gate command with verified execution."
+    },
+    {
+      "batch_id": "BATCH:008",
+      "phase": "4 regression hotfix",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint_ci": "pass",
+        "quality_ci": "pass"
+      },
+      "bundle_snapshot": {
+        "main_js_kb": 420.36,
+        "landing_page_chunk_kb": 161.98,
+        "vendor_chunk_kb": 98.47
+      },
+      "notes": "Fixed missing dashboard barrel exports and lint blockers that failed production CI; QA mock-auth and UI/UX behavior intentionally unchanged."
     }
   ]
 }

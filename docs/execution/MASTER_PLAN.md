@@ -35,10 +35,10 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:007`
-- Phase target: `4 lint/static quality enforcement`
+- `BATCH:008`
+- Phase target: `4 lint/static quality enforcement (regression hotfix)`
 - Objective:
-  - Establish explicit CI-grade quality commands with fail-on-warning lint behavior for frontend and server.
-  - Add a single top-level quality gate command for deterministic local/CI parity.
-  - Validate static quality scripts without modifying UI/UX or QA auth behavior.
-  - Keep mock auth + ProtectedRoute bypass behavior unchanged for QA.
+  - Resolve CI/build regression introduced in previous batch while preserving existing UI/UX behavior.
+  - Restore missing dashboard feature barrel exports required by dashboard pages.
+  - Clear remaining lint blockers (`react-refresh/only-export-components`, `no-explicit-any`, `no-console`) in enforced scope.
+  - Keep mock auth + ProtectedRoute bypass behavior unchanged for QA and Vercel UI-flow testing.

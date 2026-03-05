@@ -14,14 +14,14 @@ const DEV_USERS = [
     role: 'USER' as const,
   },
   {
-    email: 'therapist@test.com', 
+    email: 'therapist@test.com',
     password: 'therapist123',
     name: 'Dr. Test Therapist',
     role: 'THERAPIST' as const,
   },
   {
     email: 'astrologer@test.com',
-    password: 'astrologer123', 
+    password: 'astrologer123',
     name: 'Test Astrologer',
     role: 'ASTROLOGER' as const,
   },
@@ -70,7 +70,7 @@ async function seedDevUsers() {
 
       // eslint-disable-next-line no-console
       console.log(`✅ Created ${user.role}: ${user.email}`);
-      
+
       // Create therapist profile if role is THERAPIST
       if (user.role === 'THERAPIST') {
         await prisma.therapistProfile.create({
@@ -87,6 +87,7 @@ async function seedDevUsers() {
             isAvailable: true,
           }
         });
+        // eslint-disable-next-line no-console
         console.log(`  📋 Created therapist profile for ${user.email}`);
       }
 
@@ -109,6 +110,7 @@ async function seedDevUsers() {
             onboardingComplete: true,
           }
         });
+        // eslint-disable-next-line no-console
         console.log(`  👤 Created user profile for ${user.email}`);
       }
 
@@ -152,7 +154,7 @@ async function seedDevUsers() {
     console.log('   • Admin Dashboard: User management and platform oversight');
 
   } catch (error) {
-     
+
     console.error('❌ Error seeding dev users:', error);
     throw error;
   } finally {

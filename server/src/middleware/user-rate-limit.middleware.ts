@@ -28,14 +28,14 @@ function createUserRateLimiter(opts: {
     const authReq = req as AuthenticatedRequest;
     const userId = authReq.auth?.userId;
     const ip = req.ip || req.connection.remoteAddress || 'unknown';
-    
+
     // Use user ID if authenticated, otherwise fall back to IP
     const key = userId ? `user:${userId}` : `ip:${ip}`;
     const now = Date.now();
 
     // Get current limit data
     let limitData = userLimits.get(key);
-    
+
     // Reset if window expired
     if (!limitData || limitData.resetTime <= now) {
       limitData = { count: 0, resetTime: now + opts.windowMs };
@@ -91,7 +91,7 @@ export const createRoleBasedLimiter = (baseLimits: { [key: string]: number }) =>
   return (req: Request, res: Response, next: () => void) => {
     const authReq = req as AuthenticatedRequest;
     const userRole = authReq.auth?.role || 'USER';
-    
+
     // Get multiplier based on role
     const multipliers = {
       USER: 1,
@@ -100,17 +100,17 @@ export const createRoleBasedLimiter = (baseLimits: { [key: string]: number }) =>
       ADMIN: 5,
       SUPER_ADMIN: 10,
     };
-    
+
     const multiplier = multipliers[userRole as keyof typeof multipliers] || 1;
-    
+
     // Apply role-based limits
     const adjustedLimits = Object.entries(baseLimits).reduce((acc, [key, value]) => {
       acc[key] = value * multiplier;
       return acc;
     }, {} as typeof baseLimits);
-    
+
     // Store adjusted limits for use by the actual limiter
-    (req as any).roleBasedLimits = adjustedLimits;
+    (req as Request & { roleBasedLimits?: typeof baseLimits }).roleBasedLimits = adjustedLimits;
     next();
   };
 };

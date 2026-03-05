@@ -83,3 +83,9 @@
 - Batch: BATCH:007
 - Decision: Add `lint:ci` scripts in root and server, plus root `quality:ci` script chaining frontend+server type/lint/build checks.
 - Rationale: Enforces fail-on-warning static quality gate consistently in local and CI-equivalent runs.
+
+## D-015
+- Date: 2026-03-05
+- Batch: BATCH:008
+- Decision: Patch CI regression with minimal-scope fixes (feature barrel export restoration + targeted lint remediation) instead of broad Phase 4 refactor.
+- Rationale: Restores production build stability fastest while preserving current UI/UX and active QA mock-auth behavior.

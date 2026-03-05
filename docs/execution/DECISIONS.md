@@ -77,3 +77,9 @@
 - Batch: BATCH:006
 - Decision: Phase 3 push scope includes only contract/type/API/WS unification files plus the runtime-flags integrity fix; no UI/UX behavior changes.
 - Rationale: Preserves QA workflows while restoring deterministic compile/runtime behavior.
+
+## D-014
+- Date: 2026-03-05
+- Batch: BATCH:007
+- Decision: Add `lint:ci` scripts in root and server, plus root `quality:ci` script chaining frontend+server type/lint/build checks.
+- Rationale: Enforces fail-on-warning static quality gate consistently in local and CI-equivalent runs.

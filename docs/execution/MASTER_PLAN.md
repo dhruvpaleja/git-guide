@@ -35,11 +35,10 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:006`
-- Phase target: `3 verification + stabilization`
+- `BATCH:007`
+- Phase target: `4 lint/static quality enforcement`
 - Objective:
-  - Run in-depth review on local Phase 3 contract unification changes.
-  - Push Phase 3 changes to `master` only after strict verification passes.
-  - Fix discovered commit-integrity gap from BATCH:005 (`runtimeFlags` import without committed runtime flags source).
-  - Preserve current QA auth bypass + mock auth behavior and existing UI/UX.
+  - Establish explicit CI-grade quality commands with fail-on-warning lint behavior for frontend and server.
+  - Add a single top-level quality gate command for deterministic local/CI parity.
+  - Validate static quality scripts without modifying UI/UX or QA auth behavior.
   - Keep mock auth + ProtectedRoute bypass behavior unchanged for QA.

@@ -8,9 +8,11 @@
     "build": "tsc -b && vite build",
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
+    "lint:ci": "eslint . --max-warnings 0",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,json,css}\"",
     "type-check": "tsc --noEmit",
+    "quality:ci": "npm run type-check && npm run lint:ci && npm run build && cd server && npm run build && npm run lint:ci",
     "preview": "vite preview",
     "analyze": "vite build --analyze"
   },

@@ -41,5 +41,5 @@
   - Bring frontend to WCAG 2.1 Level AA compliance without visual/behavioral changes.
   - 15 sub-tasks: eslint-plugin-jsx-a11y, skip-nav, landmarks, ARIA, alt text, form labels, headings, page titles, keyboard nav, color contrast, reduced motion, ARIA live regions, button/link semantics, SVG accessibility.
   - Preserve QA dev-login/mock-auth behavior.
-  - All quality gates passing: `type-check`, `lint:ci`, `build`.
+  - All quality gates passing: `type-check`, `lint:ci`, `build`, `(cd server && npm run build)`, `(cd server && npm run lint:ci)`, `quality:ci`.
   - Update docs at batch end.

@@ -284,6 +284,33 @@
         "screenshots_root": "docs/execution/evidence/BATCH_013_RESPONSIVENESS/final"
       },
       "notes": "Completed full-route responsiveness verification and applied touch-target/layout overflow fixes with no auth-flow or core visual-style regressions. Mock-auth/dev-login behavior unchanged."
+    },
+    {
+      "batch_id": "BATCH:014",
+      "phase": "7 accessibility pass",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint_ci": "pass",
+        "quality_ci": "pass"
+      },
+      "a11y_summary": {
+        "eslint_jsx_a11y_violations_fixed": 66,
+        "skip_nav_added": true,
+        "pages_with_document_title": 38,
+        "images_with_alt_text_fixed": 15,
+        "forms_with_labels_fixed": 20,
+        "contrast_fixes": 109,
+        "heading_hierarchy_fixes": 30,
+        "aria_attributes_added": 48,
+        "reduced_motion_support": true
+      },
+      "evidence_paths": {
+        "matrix": "docs/execution/evidence/BATCH_014_ACCESSIBILITY/MATRIX.md"
+      },
+      "notes": "Phase 7 accessibility pass completed with post-review gate repair (SmoothScrollProvider lint fix), artifact cleanup, and execution-doc consistency updates while preserving dev-login/mock-auth behavior."
     }
   ]
 }

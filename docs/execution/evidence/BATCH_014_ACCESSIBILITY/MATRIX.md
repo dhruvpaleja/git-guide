@@ -1,52 +1,84 @@
 # BATCH:014 Accessibility (WCAG 2.1 AA) Matrix
 
-Generated: 2025-07-24
+Generated: 2026-03-05T20:48:52+05:30
 
 ## Summary
 
-Phase 7 accessibility pass bringing Soul Yatri frontend to WCAG 2.1 Level AA compliance.
-All 15 sub-tasks completed. All quality gates pass (type-check, lint:ci, build).
+Phase 7 accessibility pass for Soul Yatri was re-verified after post-review fixes.
+Scope remained additive only (no auth-flow, API-contract, or UI redesign changes).
 
-## Sub-Task Completion Matrix
+## WCAG 2.1 AA Compliance Status by Category
 
-| # | Sub-Task | Status | Files Modified | Notes |
-|---|----------|--------|----------------|-------|
-| 1 | eslint-plugin-jsx-a11y | PASS | eslint.config.js, package.json, 40+ source files | 66 violations fixed (alt text, label, role, tabIndex, heading) |
-| 2 | HTML document-level (lang, viewport) | PASS | — | Already compliant in index.html |
-| 3 | Skip navigation links | PASS | src/components/layout/Navigation.tsx, src/index.css | "Skip to main content" link + sr-only styles |
-| 4 | Landmarks audit | PASS | 20+ page/layout files | `<main>`, `<nav>`, `<footer>`, `<section>` elements verified |
-| 5 | Nav ARIA attributes | PASS | Navigation.tsx, DashboardSidebar.tsx, PractitionerSidebar.tsx, Footer.tsx | aria-label on all nav elements |
-| 6 | Image alt text | PASS | 15+ files | Descriptive alt text on all `<img>`, decorative images marked role="presentation" |
-| 7 | Form accessibility | PASS | 20+ form files | htmlFor/id labels, autocomplete attributes, fieldset/legend |
-| 8 | Heading hierarchy | PASS | 30+ files | h1→h2→h3 hierarchy enforced, no skipped levels |
-| 9 | useDocumentTitle | PASS | src/hooks/useDocumentTitle.ts + 38 page files | Dynamic `<title>` on all 38 pages via shared hook |
-| 10 | Keyboard navigation | PASS | — | No div/span onClick; all interactive elements keyboard-accessible |
-| 11 | Color contrast | PASS | 30+ files (109 instances) | text-white/30→/50, text-white/40→/50, text-black/30→/50 (icons excluded) |
-| 12 | Reduced motion | PASS | src/index.css, SmoothScrollProvider.tsx | Universal prefers-reduced-motion rule; Lenis scroll disabled when reduced motion |
-| 13 | ARIA live regions | PASS | form.tsx + 10 page/widget files | role="alert" on form errors; aria-live="polite" on dashboard dynamic content |
-| 14 | Button/link semantics | PASS | — (verified clean from prior tasks) | No div/span onClick, no href="#" |
-| 15 | SVG/icon accessibility | PASS | 18 files (48 buttons) | aria-label on all icon-only buttons; aria-hidden on decorative SVGs |
+| Category | Criteria | Status | Notes |
+|---|---|---|---|
+| Perceivable | 1.1.1 Non-text Content | PASS | Image alt audit completed; decorative images set appropriately. |
+| Perceivable | 1.3.1 Info and Relationships | PASS | Landmark and heading hierarchy audit completed across route inventory. |
+| Perceivable | 1.4.3 Contrast (Minimum) | PASS | Contrast floor fixes applied to information-bearing low-opacity text. |
+| Operable | 2.1.1 Keyboard | PASS | Interactive controls keyboard reachable; no div/span click-only controls in audited routes. |
+| Operable | 2.4.1 Bypass Blocks | PASS | Skip-to-main-content link implemented from primary navigation surfaces. |
+| Operable | 2.4.2 Page Titled | PASS | useDocumentTitle applied across route pages. |
+| Operable | 2.4.3 Focus Order | PASS | Focus flow validated through nav, content, and form interactions. |
+| Operable | 2.4.7 Focus Visible | PASS | Existing focus-visible patterns preserved and extended where needed. |
+| Understandable | 3.1.1 Language of Page | PASS | index.html already includes `lang="en"`. |
+| Understandable | 3.3.1 Error Identification | PASS | Form error message semantics improved via shared form primitives and page fixes. |
+| Understandable | 3.3.2 Labels or Instructions | PASS | Form labels/autocomplete updates applied in auth/onboarding/contact/footer paths. |
+| Robust | 4.1.2 Name, Role, Value | PASS | ARIA labels and icon-only control naming expanded; lint-based a11y checks enabled. |
 
-## Quality Gates
+## Per-Route Status
+
+Legend: PASS means route-level checks for skip-nav availability, landmark structure, heading structure, title hook coverage, form labeling (where applicable), and image alt semantics passed in Phase 7 verification.
+
+| Route | Skip Nav | Landmarks | Heading Hierarchy | Page Title | Forms Labeled | Images Alt | Status |
+|---|---|---|---|---|---|---|---|
+| landing (/home) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| about (/about) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| business (/business) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| corporate (/business/corporate) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| courses (/courses) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| course-details (/courses/1) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| blogs (/blogs) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| blog-post (/blog/1) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| careers (/careers) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| contact (/contact) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| student-counselling (/student-counselling) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| workshop-demo (/business/workshop-demo) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| student-counselling-demo (/business/student-counselling-demo) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| login (/login) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| signup (/signup) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| signup-account-step (/signup?step=account) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| signup-astrology-step (/signup?step=astrology) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| signup-partner-step (/signup?step=partner-details) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| practitioner-onboarding-step-1 (/practitioner-onboarding?step=1&role=therapist) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| practitioner-onboarding-step-2 (/practitioner-onboarding?step=2&role=therapist) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| practitioner-onboarding-step-3 (/practitioner-onboarding?step=3&role=therapist) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-home (/dashboard) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-sessions (/dashboard/sessions) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-notifications (/dashboard/notifications) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-connections (/dashboard/connections) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-personalization (/dashboard/personalization?s=4) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-mood (/dashboard/mood) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-journal (/dashboard/journal) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-meditate (/dashboard/meditate) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-profile (/dashboard/profile) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-settings (/dashboard/settings) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-constellation (/dashboard/constellation) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| dashboard-confessional (/dashboard/confessional) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| practitioner-dashboard (/practitioner) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| practitioner-sessions (/practitioner/sessions) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| practitioner-clients (/practitioner/clients) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| practitioner-availability (/practitioner/availability) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| practitioner-profile (/practitioner/profile) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| practitioner-logout (/practitioner/logout) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| astrology-dashboard (/astrology) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| admin-dashboard (/admin) | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+
+## Gate Verification (Post-Review Fix Pass)
 
 | Gate | Result |
-|------|--------|
-| `npx tsc --noEmit` | PASS (exit 0) |
-| `npx eslint . --max-warnings 0` | PASS (exit 0) |
-| `npx vite build` | PASS (exit 0) |
-
-## Key Files Created
-
-- `src/hooks/useDocumentTitle.ts` — shared hook for dynamic page titles
-
-## Key Dependencies Added
-
-- `eslint-plugin-jsx-a11y` (devDependency) — automated a11y lint rules
-
-## Non-Negotiable Constraints Verified
-
-- [x] Dev-login/mock-auth/QA bypass: UNCHANGED
-- [x] Visual appearance: UNCHANGED (all changes additive/semantic)
-- [x] Routing, API contracts, auth behavior: UNCHANGED
-- [x] No server code changes
-- [x] All quality gates pass after every sub-task
+|---|---|
+| `npm run type-check` | PASS |
+| `npm run lint:ci` | PASS |
+| `npm run build` | PASS |
+| `cd server && npm run build` | PASS |
+| `cd server && npm run lint:ci` | PASS |
+| `npm run quality:ci` | PASS |

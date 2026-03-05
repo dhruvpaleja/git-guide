@@ -3,7 +3,12 @@ import { ReactLenis } from 'lenis/react';
 
 export default function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
     const [isMobile, setIsMobile] = useState(false);
-    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+        if (typeof window === 'undefined') {
+            return false;
+        }
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    });
 
     useEffect(() => {
         const checkMobile = () => {
@@ -14,7 +19,6 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
         window.addEventListener('resize', checkMobile);
 
         const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
-        setPrefersReducedMotion(mql.matches);
         const handleMotionChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
         mql.addEventListener('change', handleMotionChange);
 

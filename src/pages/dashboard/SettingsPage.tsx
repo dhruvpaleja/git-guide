@@ -98,7 +98,12 @@ export default function SettingsPage() {
         setValues((prev) => ({ ...prev, ...res.data }));
       }
       if (!cancelled) setLoaded(true);
-    }).catch(() => { if (!cancelled) setLoaded(true); });
+    }).catch(() => {
+      if (!cancelled) {
+        setLoaded(true);
+        toast.error('Could not load settings — using defaults');
+      }
+    });
     return () => { cancelled = true; };
   }, []);
 
@@ -109,7 +114,7 @@ export default function SettingsPage() {
     // Debounce save to backend (400ms)
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      apiService.put('/users/settings', next).catch(() => {/* silent */});
+      apiService.put('/users/settings', next).catch(() => { toast.error('Failed to save setting'); });
     }, 400);
   };
 
@@ -248,12 +253,16 @@ export default function SettingsPage() {
                   >Cancel</button>
                   <button
                     onClick={async () => {
-                      const res = await apiService.delete('/users/delete-account');
-                      if (res.success) {
-                        toast.success('Account deleted');
-                        navigate('/login');
-                      } else {
-                        toast.info('Account deletion is not yet available on the server.');
+                      try {
+                        const res = await apiService.delete('/users/delete-account');
+                        if (res.success) {
+                          toast.success('Account deleted');
+                          navigate('/login');
+                        } else {
+                          toast.info('Account deletion is not yet available on the server.');
+                        }
+                      } catch {
+                        toast.error('Failed to delete account');
                       }
                       setShowDeleteConfirm(false);
                     }}

@@ -221,7 +221,7 @@ export function useConstellation(): UseConstellationReturn {
         insights: prev.insights.map((i) => (i.id === insightId ? { ...i, isRead: true } : i)),
       }));
     } catch {
-      // Silent fail for read marking
+      toast.error('Could not mark insight as read');
     }
   }, []);
 

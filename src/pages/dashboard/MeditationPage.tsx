@@ -124,9 +124,11 @@ export default function MeditationPage() {
   const [logs, setLogs] = useState<MeditationLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalMinutes, setTotalMinutes] = useState(0);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const loadLogs = useCallback(async () => {
     setIsLoading(true);
+    setLoadError(null);
     try {
       const res = await apiService.get<{ logs: MeditationLog[]; totalMinutes: number }>('/health-tools/meditation');
       if (res.success && res.data) {
@@ -134,6 +136,7 @@ export default function MeditationPage() {
         setTotalMinutes(res.data.totalMinutes);
       }
     } catch {
+      setLoadError('Failed to load meditation logs');
       toast.error('Failed to load meditation logs');
     } finally {
       setIsLoading(false);
@@ -173,7 +176,7 @@ export default function MeditationPage() {
         void loadLogs();
       }
     } catch {
-      // entry already shown optimistically
+      toast.error('Session may not have saved to server');
     }
   };
 
@@ -274,6 +277,11 @@ export default function MeditationPage() {
       <div aria-live="polite">
       {isLoading ? (
         <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 text-white/40 animate-spin" /></div>
+      ) : loadError ? (
+        <div className="text-center py-20">
+          <p className="text-white/50 mb-3">{loadError}</p>
+          <button onClick={() => void loadLogs()} className="text-sm text-accent underline">Try again</button>
+        </div>
       ) : logs.length === 0 ? (
         <div className="text-center py-20">
           <Brain className="w-12 h-12 text-white/20 mx-auto mb-4" />

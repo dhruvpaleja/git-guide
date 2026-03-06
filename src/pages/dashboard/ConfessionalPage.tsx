@@ -32,7 +32,7 @@ export default function ConfessionalPage() {
           setEntries(confessions);
         }
       })
-      .catch(() => {/* silent */})
+      .catch(() => { if (!cancelled) toast.error('Could not load previous confessions'); })
       .finally(() => { if (!cancelled) { /* done */ } });
     return () => { cancelled = true; };
   }, []);
@@ -54,7 +54,7 @@ export default function ConfessionalPage() {
       setText('');
       setTimeout(() => setSubmitted(false), 2500);
     } catch {
-      // silently handle — the safe room never judges
+      toast.error('Could not save confession — please try again');
     } finally {
       setIsSubmitting(false);
     }

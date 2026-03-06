@@ -37,10 +37,13 @@ export default function SignupPage() {
     const [astrologyData, setAstrologyData] = useState<AstrologyProfileData | null>(null);
 
     const persistAstrologyProfile = async (payload: Record<string, unknown>) => {
-        const response = await apiService.post('/users/astrology-profile', payload);
-
-        if (!response.success) {
-            toast.error(response.error?.message || 'Could not save astrology profile. Continuing anyway.');
+        try {
+            const response = await apiService.post('/users/astrology-profile', payload);
+            if (!response.success) {
+                toast.error(response.error?.message || 'Could not save astrology profile. Continuing anyway.');
+            }
+        } catch {
+            toast.error('Could not save astrology profile. Continuing anyway.');
         }
     };
 

@@ -93,13 +93,16 @@ export default function MoodPage() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [isLoadingEntries, setIsLoadingEntries] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const loadEntries = useCallback(async () => {
     setIsLoadingEntries(true);
+    setLoadError(null);
     try {
       const res = await apiService.get<{ entries: MoodEntry[] }>('/health-tools/mood');
       if (res.success && res.data) setEntries(res.data.entries);
     } catch {
+      setLoadError('Failed to load mood entries');
       toast.error('Failed to load mood entries');
     } finally {
       setIsLoadingEntries(false);
@@ -146,7 +149,7 @@ export default function MoodPage() {
         void loadEntries();
       }
     } catch {
-      // entry already shown optimistically
+      toast.error('Mood entry may not have saved to server');
     }
   };
 
@@ -245,6 +248,11 @@ export default function MoodPage() {
       <div aria-live="polite">
       {isLoadingEntries ? (
         <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 text-white/40 animate-spin" /></div>
+      ) : loadError ? (
+        <div className="text-center py-20">
+          <p className="text-white/50 mb-3">{loadError}</p>
+          <button onClick={() => void loadEntries()} className="text-sm text-accent underline">Try again</button>
+        </div>
       ) : entries.length === 0 ? (
         <div className="text-center py-20">
           <Smile className="w-12 h-12 text-white/20 mx-auto mb-4" />

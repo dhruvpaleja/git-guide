@@ -1,45 +1,56 @@
 method,route,handler_file,auth,validation,db_touchpoints,response_type,implementation_state,notes
-POST,/auth/register,auth.controller.ts,No,Zod,User create,JSON {user accessToken},implemented_live,Full registration with bcrypt
-POST,/auth/login,auth.controller.ts,No,Zod,User read,JSON {user accessToken},implemented_live,JWT + lockout logic
-POST,/auth/logout,auth.controller.ts,No,-,RefreshToken revoke,JSON {message},implemented_live,Cookie-based refresh
-POST,/auth/refresh,auth.controller.ts,No,-,RefreshToken rotate,JSON {accessToken},implemented_live,Token rotation with family ID
-GET,/auth/me,auth.controller.ts,Yes,-,User read,JSON {user},implemented_live,Get current user
-GET,/users,users.controller.ts,Yes,-,User read,JSON {users},implemented_live,List users
-GET,/users/:id,users.controller.ts,Yes,-,User read,JSON {user},implemented_live,Get user by ID
-PATCH,/users/:id,users.controller.ts,Yes,Zod,User update,JSON {user},implemented_live,Update user
-GET,/health-tools/mood,health-tools.controller.ts,Yes,-,MoodEntry read,JSON {entries averageMood},implemented_live,Paginated with average
-POST,/health-tools/mood,health-tools.controller.ts,Yes,Zod,MoodEntry create,JSON {entry},implemented_live,Record mood
-GET,/health-tools/journal,health-tools.controller.ts,Yes,-,JournalEntry read,JSON {entries},implemented_live,Paginated list
-POST,/health-tools/journal,health-tools.controller.ts,Yes,Zod,JournalEntry create,JSON {entry},implemented_live,Create entry
-PATCH,/health-tools/journal/:id,health-tools.controller.ts,Yes,Zod,JournalEntry update,JSON {entry},implemented_live,Update entry
-GET,/health-tools/meditation,health-tools.controller.ts,Yes,-,MeditationLog read,JSON {logs totalMinutes},implemented_live,Paginated with stats
-POST,/health-tools/meditation,health-tools.controller.ts,Yes,Zod,MeditationLog create,JSON {log},implemented_live,Log session
-GET,/therapy/sessions,therapy.controller.ts,Yes,-,None,JSON {sessions: []},stubbed,Returns empty array
-POST,/therapy/sessions,therapy.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
-GET,/therapy/sessions/:id,therapy.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
-PATCH,/therapy/sessions/:id,therapy.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
-POST,/ai/chat,ai.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
-POST,/ai/message,ai.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
-GET,/ai/recommendations,ai.controller.ts,Yes,-,None,JSON {recommendations: []},stubbed,Returns empty array
-POST,/payments/process,payments.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
-POST,/payments/verify,payments.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
-GET,/payments/subscription,payments.controller.ts,Yes,-,None,JSON {plan: FREE},stubbed,Returns hardcoded FREE
-GET,/payments/history,payments.controller.ts,Yes,-,None,JSON {payments: []},stubbed,Returns empty array
-GET,/blog/posts,blog.controller.ts,No,-,None,JSON {posts: []},stubbed,Returns empty array
-GET,/blog/posts/:id,blog.controller.ts,No,-,None,Error 501,stubbed,Throws notImplemented
-GET,/courses,courses.controller.ts,No,-,None,JSON {courses: []},stubbed,Returns empty array
-GET,/courses/:id,courses.controller.ts,No,-,None,Error 501,stubbed,Throws notImplemented
-POST,/courses/enroll,courses.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
-GET,/courses/progress,courses.controller.ts,Yes,-,None,JSON {progress: 0},stubbed,Returns hardcoded
-GET,/notifications,notifications.controller.ts,Yes,-,Notification read,JSON {notifications},partially_wired,Route exists needs verification
-POST,/admin/*,admin.controller.ts,Yes (Admin),-,Various,JSON,stubbed,Admin operations not implemented
-GET,/astrology/*,astrology.routes.ts,Yes,-,None,JSON,stubbed,Astrology endpoints return empty
-GET,/community/*,community.controller.ts,Yes,-,None,JSON,stubbed,Community features stubbed
-POST,/shop/*,shop.controller.ts,Yes,-,None,JSON,stubbed,Shop not implemented
-POST,/events/*,events.controller.ts,Yes,-,None,JSON,stubbed,Events not implemented
-GET,/corporate/*,corporate.controller.ts,No,-,None,JSON,stubbed,Corporate pages static
-GET,/careers/*,careers.controller.ts,No,-,None,JSON,stubbed,Careers static
-POST,/ngo/*,ngo.controller.ts,Yes,-,None,JSON,stubbed,NGO features not implemented
-GET,/health,health.routes.ts,No,-,None,JSON {status: ok},implemented_live,Health check endpoint
-GET,/dev-login,dev-login.routes.ts,No,-,None,HTML,implemented_live,Dev login helper (dev only)
-GET,/dev-helper,dev-helper.routes.ts,No,-,None,JSON,implemented_live,Dev utilities (dev only)
+POST,/api/v1/auth/register,controllers/auth.controller.ts,none,zod,User+RefreshToken+AuditLog,json,implemented,bcrypt hash; token pair issued
+POST,/api/v1/auth/login,controllers/auth.controller.ts,none,zod,User+RefreshToken+AuditLog,json,implemented,lockout after 5 failures; role-based
+POST,/api/v1/auth/refresh,controllers/auth.controller.ts,none,zod,RefreshToken,json,implemented,token family rotation; hijack detection
+POST,/api/v1/auth/logout,controllers/auth.controller.ts,requireAuth,none,RefreshToken,json,implemented,revokes refresh token
+GET,/api/v1/auth/me,controllers/auth.controller.ts,requireAuth,none,User,json,implemented,returns current user
+GET,/api/v1/users/profile,controllers/users.controller.ts,requireAuth,none,User+UserProfile,json,implemented,user profile data
+PUT,/api/v1/users/profile,controllers/users.controller.ts,requireAuth,zod,User+UserProfile,json,implemented,update name/email
+POST,/api/v1/users/avatar,controllers/users.controller.ts,requireAuth,multer,User,json,implemented,Sharp image processing; 5MB limit
+PUT,/api/v1/users/onboarding/step/:step,controllers/users.controller.ts,requireAuth,zod,UserProfile,json,implemented,10-step onboarding persistence
+GET,/api/v1/users/settings,controllers/users.controller.ts,requireAuth,none,UserSettings,json,implemented,user settings
+PUT,/api/v1/users/settings,controllers/users.controller.ts,requireAuth,zod,UserSettings,json,implemented,update settings
+GET,/api/v1/users/dashboard,controllers/users.controller.ts,requireAuth,none,multiple,json,implemented,aggregated dashboard stats
+POST,/api/v1/users/astrology-profile,controllers/users.controller.ts,requireAuth,zod,UserProfile,json,implemented,astrology data persistence
+GET,/api/v1/health-tools/mood,controllers/health-tools.controller.ts,requireAuth,none,MoodEntry,json,implemented,mood entries with pagination
+POST,/api/v1/health-tools/mood,controllers/health-tools.controller.ts,requireAuth,zod,MoodEntry,json,implemented,create mood entry
+GET,/api/v1/health-tools/journal,controllers/health-tools.controller.ts,requireAuth,none,JournalEntry,json,implemented,journal entries with pagination
+POST,/api/v1/health-tools/journal,controllers/health-tools.controller.ts,requireAuth,zod,JournalEntry,json,implemented,create journal entry
+GET,/api/v1/health-tools/meditation,controllers/health-tools.controller.ts,requireAuth,none,MeditationLog,json,implemented,meditation logs + total
+POST,/api/v1/health-tools/meditation,controllers/health-tools.controller.ts,requireAuth,zod,MeditationLog,json,implemented,log meditation session
+GET,/api/v1/notifications,routes/notifications.routes.ts,requireAuth,none,Notification,json,stub-501,returns 501 Not Implemented
+PUT,/api/v1/notifications/read-all,routes/notifications.routes.ts,requireAuth,none,Notification,json,stub-501,returns 501
+PUT,/api/v1/notifications/:id/read,routes/notifications.routes.ts,requireAuth,none,Notification,json,stub-501,returns 501
+GET,/api/v1/health,routes/health.routes.ts,none,none,prisma.$queryRaw,json,implemented,DB connectivity check
+POST,/api/v1/therapy/sessions,routes/therapy.routes.ts,requireAuth,none,none,json,stub-501,session booking stub
+GET,/api/v1/therapy/sessions,routes/therapy.routes.ts,requireAuth,none,none,json,stub-501,list sessions stub
+GET,/api/v1/therapy/therapists,routes/therapy.routes.ts,requireAuth,none,none,json,stub-501,browse therapists stub
+POST,/api/v1/therapy/match,routes/therapy.routes.ts,requireAuth,none,none,json,stub-501,therapist matching stub
+POST,/api/v1/payments/create,routes/payments.routes.ts,requireAuth,none,none,json,stub-501,payment creation stub
+POST,/api/v1/payments/verify,routes/payments.routes.ts,requireAuth,none,none,json,stub-501,payment verification stub
+GET,/api/v1/payments/history,routes/payments.routes.ts,requireAuth,none,none,json,stub-501,payment history stub
+POST,/api/v1/ai/chat,routes/ai.routes.ts,requireAuth,none,none,json,stub-501,AI chat stub
+POST,/api/v1/ai/analyze,routes/ai.routes.ts,requireAuth,none,none,json,stub-501,AI analysis stub
+GET,/api/v1/ai/insights,routes/ai.routes.ts,requireAuth,none,none,json,stub-501,AI insights stub
+GET,/api/v1/courses,routes/courses.routes.ts,none,none,none,json,stub-501,course listing stub
+GET,/api/v1/courses/:id,routes/courses.routes.ts,none,none,none,json,stub-501,course detail stub
+POST,/api/v1/courses/:id/enroll,routes/courses.routes.ts,requireAuth,none,none,json,stub-501,enrollment stub
+GET,/api/v1/blog/posts,routes/blog.routes.ts,none,none,none,json,stub-501,blog listing stub
+GET,/api/v1/blog/posts/:id,routes/blog.routes.ts,none,none,none,json,stub-501,blog detail stub
+POST,/api/v1/blog/posts,routes/blog.routes.ts,requireAuth+admin,none,none,json,stub-501,blog create stub
+GET,/api/v1/community/groups,routes/community.routes.ts,requireAuth,none,none,json,stub-501,community groups stub
+POST,/api/v1/community/posts,routes/community.routes.ts,requireAuth,none,none,json,stub-501,community post stub
+GET,/api/v1/astrology/profile,routes/astrology.routes.ts,requireAuth,none,none,json,stub-501,astrology profile stub
+POST,/api/v1/astrology/reading,routes/astrology.routes.ts,requireAuth,none,none,json,stub-501,reading request stub
+GET,/api/v1/shop/products,routes/shop.routes.ts,none,none,none,json,stub-501,shop listing stub
+POST,/api/v1/shop/cart,routes/shop.routes.ts,requireAuth,none,none,json,stub-501,cart stub
+GET,/api/v1/events,routes/events.routes.ts,none,none,none,json,stub-501,events listing stub
+POST,/api/v1/events/:id/register,routes/events.routes.ts,requireAuth,none,none,json,stub-501,event registration stub
+GET,/api/v1/admin/stats,routes/admin.routes.ts,requireAuth+admin,none,none,json,stub-501,admin stats stub
+GET,/api/v1/admin/users,routes/admin.routes.ts,requireAuth+admin,none,none,json,stub-501,admin user list stub
+PUT,/api/v1/admin/users/:id,routes/admin.routes.ts,requireAuth+admin,none,none,json,stub-501,admin user update stub
+GET,/api/v1/corporate/plans,routes/corporate.routes.ts,none,none,none,json,stub-501,corporate plans stub
+POST,/api/v1/corporate/inquiry,routes/corporate.routes.ts,none,none,none,json,stub-501,corporate inquiry stub
+GET,/api/v1/careers/positions,routes/careers.routes.ts,none,none,none,json,stub-501,careers listing stub
+POST,/api/v1/careers/apply,routes/careers.routes.ts,none,none,none,json,stub-501,application stub
+GET,/api/v1/ngo/programs,routes/ngo.routes.ts,none,none,none,json,stub-501,NGO programs stub

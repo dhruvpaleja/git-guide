@@ -1,157 +1,205 @@
-# Gap Register
+# Gap Register — Soul Yatri Codebase Audit
 
-**Generated:** March 6, 2026  
-**Status:** Open items requiring implementation
+## CRITICAL Gaps
 
----
+### GAP-001: Auth Bypass Enabled by Default
+- **Severity**: CRITICAL
+- **Area**: Security
+- **Evidence**: `src/config/runtime.flags.ts` sets `VITE_AUTH_BYPASS=true` and `VITE_ENABLE_MOCK_AUTH=true` by default
+- **Impact**: All protected routes accessible without authentication in development; risk of deploying with bypass active
+- **Blocker**: Production deployment safety
+- **Fix**: Set defaults to `false`; require explicit `VITE_AUTH_BYPASS=true` only in `.env.local`
 
-## Missing Features
+### GAP-002: Mock Auth Credentials in Production Bundle
+- **Severity**: CRITICAL
+- **Area**: Security
+- **Evidence**: `src/context/AuthContext.tsx` contains hardcoded test emails, passwords, and mock token generation
+- **Impact**: Test credentials visible in minified JS; potential admin access via `admin@test.com`
+- **Fix**: Move mock auth behind build-time feature flag or dynamic import that tree-shakes in production
 
-### P0 - Critical (Security)
+### GAP-003: Base64 Tokens Not Cryptographically Signed
+- **Severity**: CRITICAL
+- **Area**: Security
+- **Evidence**: `src/context/AuthContext.tsx` line ~76 uses `btoa(JSON.stringify({...}))` for mock tokens
+- **Impact**: Tokens client-side forgeable; attacker can create admin tokens
+- **Fix**: When mock auth is disabled, only real JWT from backend should be accepted; remove btoa token path
 
-| ID | Feature | Gap | Risk | Effort | Owner |
-|----|---------|-----|------|--------|-------|
-| GAP-001 | Auth Bypass Removal | `ProtectedRoute` has `authBypassEnabled` flag | CRITICAL - Anyone can access protected routes | 1 hour | Backend Lead |
-| GAP-002 | Mock Auth Disable | `VITE_ENABLE_MOCK_AUTH=true` by default | HIGH - Test accounts work in production | 1 hour | Backend Lead |
+### GAP-004: Dev-Login Endpoint Without Environment Guard
+- **Severity**: HIGH
+- **Area**: Security
+- **Evidence**: `server/src/lib/dev-login.ts` generates tokens without password verification
+- **Impact**: If deployed to production, anyone can GET an admin token via URL
+- **Fix**: Gate behind strict `isDevelopment || isTest` environment check; exclude from production builds
 
-### P1 - High (Core Functionality)
+### GAP-005: ~140 Backend Endpoints Return 501
+- **Severity**: HIGH
+- **Area**: Backend completeness
+- **Evidence**: `server/src/routes/*.routes.ts` — therapy, payments, AI, courses, blog, community, shop, events, admin, corporate, careers, ngo, astrology, notifications
+- **Impact**: Frontend pages for sessions, connections, admin, practitioner management, courses, blogs are non-functional
+- **Dependency**: Each domain needs full controller implementation + database queries
 
-| ID | Feature | Gap | Risk | Effort | Owner |
-|----|---------|-----|------|--------|-------|
-| GAP-010 | Razorpay Integration | No payment SDK; methods throw `notImplemented` | Cannot monetize | 3 days | Backend Dev |
-| GAP-011 | Therapy Backend | All therapy endpoints stubbed | Core feature broken | 2 days | Backend Dev |
-| GAP-012 | Email Service | No email provider integrated | No password reset/notifications | 1 day | Backend Dev |
-| GAP-013 | Video Integration | No Daily.co/Twilio SDK | Therapy sessions impossible | 2 days | Backend Dev |
-| GAP-014 | Therapist Availability | No CRUD for availability | Cannot manage schedule | 1 day | Backend Dev |
-| GAP-015 | Session Booking | No booking logic | Cannot book sessions | 2 days | Backend Dev |
+### GAP-006: No Payment Integration
+- **Severity**: HIGH
+- **Area**: Integrations
+- **Evidence**: `server/src/controllers/payments.controller.ts` returns 501; Payment model exists in Prisma but unused
+- **Impact**: Platform cannot monetize; therapy sessions cannot be paid for
+- **Dependency**: Razorpay/Stripe SDK integration; webhook handling; refund flows
 
-### P2 - Medium (Quality)
+### GAP-007: No Video/RTC Integration
+- **Severity**: HIGH
+- **Area**: Integrations
+- **Evidence**: Session model has `videoRoomUrl` and `videoProvider` fields but no Daily.co/100ms/Agora code
+- **Impact**: Therapy sessions cannot be conducted virtually
+- **Dependency**: Video SDK choice; room creation API; frontend video component
 
-| ID | Feature | Gap | Risk | Effort | Owner |
-|----|---------|-----|------|--------|-------|
-| GAP-020 | Unit Tests | No unit test coverage | Quality risk | 3 days | QA |
-| GAP-021 | Integration Tests | No API integration tests | Regression risk | 2 days | QA |
-| GAP-022 | SSR/SSG | Client-side rendering only | SEO limitation | 1 week | Frontend Lead |
-| GAP-023 | Structured Data | No schema.org markup | SEO limitation | 2 days | Frontend Dev |
-| GAP-024 | Sitemap | No sitemap.xml | SEO limitation | 1 day | Frontend Dev |
-| GAP-025 | robots.txt | No robots.txt | SEO limitation | 1 day | Frontend Dev |
-| GAP-026 | Password Reset | No reset flow | UX gap | 1 day | Full-stack |
-| GAP-027 | Email Verification | No email verification | Security gap | 1 day | Full-stack |
+## HIGH Gaps
 
-### P3 - Low (Polish)
+### GAP-008: No AI/LLM Integration
+- **Severity**: HIGH
+- **Area**: Integrations
+- **Evidence**: `server/src/controllers/ai.controller.ts` returns 501; no OpenAI SDK in package.json
+- **Impact**: AI chat, analysis, insights features non-functional
+- **Dependency**: OpenAI API key; prompt engineering; streaming response handling
 
-| ID | Feature | Gap | Risk | Effort | Owner |
-|----|---------|-----|------|--------|-------|
-| GAP-030 | Performance Optimization | Bundle sizes unverified | UX risk | 2 days | Frontend Dev |
-| GAP-031 | Accessibility Audit | No axe-core testing | Compliance risk | 2 days | QA |
-| GAP-032 | Image Optimization | Images unoptimized | Performance risk | 1 day | Frontend Dev |
-| GAP-033 | Service Worker | No offline support | UX gap | 2 days | Frontend Dev |
-| GAP-034 | Analytics | VITE_ENABLE_ANALYTICS=false | No usage insights | 1 day | Frontend Dev |
-| GAP-035 | Error Tracking | VITE_SENTRY_DSN= empty | No error visibility | 1 day | Backend Dev |
+### GAP-009: Frontend SessionsPage Fully Mocked
+- **Severity**: HIGH
+- **Area**: Frontend-backend mismatch
+- **Evidence**: `src/pages/dashboard/SessionsPage.tsx` uses hardcoded therapist data with `i.pravatar.cc` avatars
+- **Impact**: Users cannot book real therapy sessions
+- **Dependency**: GAP-005 (therapy endpoints)
 
----
+### GAP-010: Admin Dashboard Simulated
+- **Severity**: HIGH
+- **Area**: Frontend-backend mismatch
+- **Evidence**: `src/pages/dashboard/AdminDashboard.tsx` shows hardcoded 1,284 users, 156 sessions, ₹4.2L revenue
+- **Impact**: Admin cannot manage platform; all metrics fake
+- **Dependency**: GAP-005 (admin endpoints) + real aggregation queries
 
-## Weak Implementations
+### GAP-011: Practitioner Dashboard Data Simulated
+- **Severity**: HIGH
+- **Area**: Frontend-backend mismatch
+- **Evidence**: `TodaysSessionsPage.tsx`, `MyClientsPage.tsx`, `ManageAvailabilityPage.tsx` all use hardcoded data
+- **Impact**: Practitioners cannot manage real schedules, clients, or availability
+- **Dependency**: GAP-005 (therapy/session endpoints) + TherapistProfile backend
 
-| ID | Area | Current State | Required State | Priority |
-|----|------|---------------|----------------|----------|
-| WEAK-001 | Blog | Returns empty array | Full CMS with CRUD | P2 |
-| WEAK-002 | Courses | Hardcoded data | Course management system | P2 |
-| WEAK-003 | Notifications | Schema exists; no endpoints | Push/email/SMS notifications | P2 |
-| WEAK-004 | Admin Dashboard | Returns empty | Full admin panel | P2 |
-| WEAK-005 | Constellation | Frontend exists; backend unclear | Full feature with API | P3 |
-| WEAK-006 | Confessional | Frontend exists; backend unclear | Full feature with API | P3 |
+### GAP-012: No Email Service Integration
+- **Severity**: HIGH
+- **Area**: Integrations
+- **Evidence**: `server/src/services/email.service.ts` has template structure but TODO: Resend integration
+- **Impact**: No transactional emails (welcome, password reset, booking confirmations, notifications)
+- **Dependency**: Email provider SDK (Resend/SendGrid/SES)
 
----
+### GAP-013: Notification API Routes Stubbed
+- **Severity**: HIGH
+- **Area**: Backend
+- **Evidence**: Notification routes return 501 but frontend calls them; WebSocket partially works
+- **Impact**: NotificationsPage may show errors when trying to fetch/mark-read
+- **Dependency**: Implement notification controller CRUD
 
-## Risks
+## MEDIUM Gaps
 
-### Security Risks
+### GAP-014: Contact Form Non-Functional
+- **Severity**: MEDIUM
+- **Area**: Public pages
+- **Evidence**: `src/pages/ContactPage.tsx` — form state tracked but "Send Request" does nothing
+- **Impact**: Visitors cannot contact the team; lead capture broken
+- **Fix**: Wire to backend endpoint or email service
 
-| ID | Risk | Likelihood | Impact | Mitigation |
-|----|------|------------|--------|------------|
-| RISK-001 | Auth bypass via runtime flag | HIGH | CRITICAL | Remove flag immediately |
-| RISK-002 | Mock auth in production | MEDIUM | HIGH | Disable in production env |
-| RISK-003 | No rate limiting on sensitive endpoints | LOW | MEDIUM | Audit and add limits |
-| RISK-004 | Dev routes exposed in production | LOW | MEDIUM | Verify config.runtime.enableDevRoutes |
+### GAP-015: Blog System Hardcoded
+- **Severity**: MEDIUM
+- **Area**: Content system
+- **Evidence**: `src/pages/BlogsPage.tsx` has 9+ posts with inline HTML content
+- **Impact**: Cannot add/edit/remove blog posts without code deployment
+- **Fix**: Backend blog CRUD + CMS or admin blog editor
 
-### Business Risks
+### GAP-016: Course Enrollment Non-Functional
+- **Severity**: MEDIUM
+- **Area**: Feature completeness
+- **Evidence**: `src/pages/CourseDetailsPage.tsx` — "Enroll Now" button is placeholder
+- **Impact**: Course monetization impossible
+- **Dependency**: Course backend + payment integration
 
-| ID | Risk | Likelihood | Impact | Mitigation |
-|----|------|------------|--------|------------|
-| RISK-010 | Cannot monetize (no payments) | CERTAIN | CRITICAL | Implement Razorpay P1 |
-| RISK-011 | Core features non-functional | CERTAIN | HIGH | Complete therapy/video P1 |
-| RISK-012 | Poor SEO ranking | HIGH | MEDIUM | Implement SSR/structured data P2 |
-| RISK-013 | Low user trust (mock data visible) | MEDIUM | MEDIUM | Remove mock auth; use real data |
+### GAP-017: Career Application Non-Functional
+- **Severity**: MEDIUM
+- **Area**: Feature completeness
+- **Evidence**: `src/pages/CareerPage.tsx` — 15+ positions but no apply flow
+- **Impact**: Cannot recruit through platform
+- **Fix**: Application form + backend storage or email forwarding
 
-### Technical Risks
+### GAP-018: No SEO Meta/OG Tags
+- **Severity**: MEDIUM
+- **Area**: SEO
+- **Evidence**: `index.html` missing description, OG tags, Twitter cards, canonical URL, structured data
+- **Impact**: Poor search engine visibility; no social sharing previews
+- **Fix**: React Helmet or equivalent for per-page meta; Open Graph images
 
-| ID | Risk | Likelihood | Impact | Mitigation |
-|----|------|------------|--------|------------|
-| RISK-020 | Low test coverage | CERTAIN | MEDIUM | Add comprehensive tests P2 |
-| RISK-021 | Controller/module duplication | CERTAIN | LOW | Consolidate patterns P3 |
-| RISK-022 | Documentation drift | CERTAIN | LOW | Regular docs review P3 |
-| RISK-023 | No monitoring | MEDIUM | MEDIUM | Add Sentry/PostHog P2 |
+### GAP-019: No Sitemap/Robots.txt
+- **Severity**: MEDIUM
+- **Area**: SEO
+- **Evidence**: No sitemap.xml or robots.txt in public/
+- **Impact**: Search engines may not crawl efficiently
+- **Fix**: Generate sitemap from routes; add robots.txt
 
----
+### GAP-020: Footer Email Signup Not Wired
+- **Severity**: MEDIUM
+- **Area**: Lead capture
+- **Evidence**: `src/components/layout/Footer.tsx` tracks email input but no submission
+- **Impact**: Cannot capture email leads
+- **Fix**: Wire to email list service or backend
 
-## Blockers
+### GAP-021: OAuth Login Not Implemented
+- **Severity**: MEDIUM
+- **Area**: Auth
+- **Evidence**: `src/pages/auth/LoginPage.tsx` shows Google/Apple buttons but they're placeholders
+- **Impact**: Users cannot use social login
+- **Fix**: Google OAuth + Apple Sign-In integration
 
-| ID | Blocker | Blocked By | Resolution |
-|----|---------|------------|------------|
-| BLOCK-001 | Cannot test payment flow | GAP-010 (Razorpay) | Implement Razorpay |
-| BLOCK-002 | Cannot test therapy booking | GAP-011 (Therapy backend) | Implement therapy endpoints |
-| BLOCK-003 | Cannot test video calls | GAP-013 (Video integration) | Integrate Daily.co |
-| BLOCK-004 | Cannot verify email flow | GAP-012 (Email service) | Integrate Resend/SendGrid |
+### GAP-022: No Nginx Compression
+- **Severity**: MEDIUM
+- **Area**: Performance
+- **Evidence**: `nginx.conf` missing gzip/brotli configuration
+- **Impact**: Larger transfer sizes for all users
+- **Fix**: Add gzip on; gzip_types for text/css/js/json
 
----
+### GAP-023: No CSP Header
+- **Severity**: MEDIUM
+- **Area**: Security
+- **Evidence**: `nginx.conf` missing Content-Security-Policy header
+- **Impact**: XSS protection layer missing in production
+- **Fix**: Add CSP header with appropriate directives
 
-## Dependencies
+## Architectural Issues
 
-| ID | Feature | Depends On | Type |
-|----|---------|------------|------|
-| DEP-001 | Therapy Booking | GAP-011 (Therapy backend), GAP-013 (Video) | Technical |
-| DEP-002 | Payment Flow | GAP-010 (Razorpay) | Technical |
-| DEP-003 | Password Reset | GAP-012 (Email service) | Technical |
-| DEP-004 | SEO Improvements | GAP-022 (SSR), GAP-023 (Structured Data) | Technical |
+### ARCH-001: Duplicate Architecture — controllers/ vs modules/
+- **What**: `server/src/controllers/` has real implementations; `server/src/modules/` has 18 domains × 4 files each — ALL empty stubs with `// TODO: Implement`
+- **Impact**: 71 dead files; confusing for developers; import path ambiguity
+- **Recommendation**: Delete `server/src/modules/` entirely; expand `controllers/` pattern
 
----
+### ARCH-002: Modules Validators Have Schemas for Unimplemented Features
+- **What**: Validator files in modules/ define Zod schemas for therapy, payments, AI, etc. but no controller uses them
+- **Impact**: Wasted code; may diverge from actual requirements when implemented
+- **Recommendation**: Move useful validator schemas to `server/src/validators/` or delete
 
-## Dead/Abandoned Code
+### ARCH-003: Analytics Service Stub
+- **What**: `src/services/analytics.service.ts` logs to console only
+- **Impact**: No user behavior data collected
+- **Recommendation**: Integrate PostHog or Plausible for privacy-friendly analytics
 
-| ID | File/Feature | Evidence | Recommendation |
-|----|--------------|----------|----------------|
-| DEAD-001 | `.agent/`, `.agents/`, `.kiro/` | Duplicate AI agent configs | Consolidate or remove |
-| DEAD-002 | `server/src/modules/*` | Duplicates controllers | Consolidate into single pattern |
-| DEAD-003 | `UserSettings` model | No CRUD endpoints | Implement or remove |
-| DEAD-004 | `AuditLog` model | Only used by AIEventLogger | Expand usage or simplify |
+### ARCH-004: In-Memory Cache/Queue in Production
+- **What**: `server/src/services/cache.service.ts` and `queue.service.ts` use in-memory implementations
+- **Impact**: Data lost on server restart; not scalable
+- **Recommendation**: Swap to Redis for cache; BullMQ/Redis for queue
 
----
+## Dead Code / Duplicates
 
-## Duplicate Architecture
+| File/Area | Issue | Recommendation |
+|-----------|-------|----------------|
+| server/src/modules/* (71 files) | All empty stubs | Delete entirely |
+| src/pages/practitioner/PractitionerDashboard.tsx | Duplicate of dashboard version | Remove alias |
+| src/utils/security.ts hashPassword() | Uses btoa (not real hash) | Remove or replace with proper client-side hashing if ever needed |
+| Footer copyright year | Hardcoded "2025" | Use new Date().getFullYear() |
+| src/utils/testing.utils.ts | Test utilities in production source | Move to tests/ directory |
+| SplashScreen | May be orphaned from main router | Verify routing or remove |
 
-| ID | Duplication | Files | Recommendation |
-|----|-------------|-------|----------------|
-| DUP-001 | Auth Controller/Module | `controllers/auth.controller.ts` + `modules/auth/` | Keep modules pattern; remove controllers |
-| DUP-002 | Admin Controller/Module | `controllers/admin.controller.ts` + `modules/admin/` | Keep modules pattern; remove controllers |
-| DUP-003 | AI Agent Configs | `.agent/`, `.agents/`, `.kiro/` | Keep one; remove others |
-
----
-
-## Summary
-
-| Category | Count |
-|----------|-------|
-| P0 Critical Gaps | 2 |
-| P1 High Gaps | 6 |
-| P2 Medium Gaps | 8 |
-| P3 Low Gaps | 6 |
-| Weak Implementations | 6 |
-| Security Risks | 4 |
-| Business Risks | 4 |
-| Technical Risks | 4 |
-| Blockers | 4 |
-| Dead Code | 4 |
-| Duplicate Architecture | 3 |
-
-**Total Action Items:** 51
+## Documentation vs Code Mismatches
+See `07_documentation_drift.md` for comprehensive list.

@@ -1,106 +1,139 @@
-# Repository Inventory
+# Repository Inventory — Soul Yatri
 
-**Generated:** March 6, 2026  
-**Total Files:** 84,566  
-**Excluded (Vendor/Generated):** ~80,000 (node_modules, .git, dist, build)  
-**Reviewable Files:** ~4,500
+## Overview
+- **Product**: Soul Yatri — Wellness & mental health platform
+- **Repository Type**: Monorepo (frontend + backend + docs)
+- **Total Files** (excl. node_modules/.git): ~8,557
+- **Core Source Files**: ~740 (src: 257, server: 481, scripts: 2)
+- **Documentation Files**: 537 (docs/ directory)
+- **Static Assets**: 153 (public/)
+- **Test Files**: 1 (tests/example.spec.ts with 15 test cases)
+- **AI Agent Cache**: 6,676 files (.agent/ — excluded from review)
 
----
+## Extension Distribution (excluding vendor/generated)
 
-## File Extension Counts
+| Extension | Count | Notes |
+|-----------|-------|-------|
+| .md | 3,733 | Mostly in .agent/ cache; ~40 meaningful docs |
+| .patch | 1,298 | All in .agent/ cache |
+| .py | 918 | All in .agent/ cache |
+| .png | 594 | ~130 in public/, rest in .agent/ |
+| .ts | 276 | Core backend source |
+| .tsx | 212 | Core frontend source |
+| .json | 161 | Config + data files |
+| .xsd | 156 | All in .agent/ cache |
+| .ttf | 108 | All in .agent/ cache |
+| .js | 54 | Config + scripts |
+| .csv | 46 | Mostly in .agent/ |
+| .svg | 17 | public/ vector assets |
+| .css | 7 | Tailwind + component styles |
+| .html | 9 | Entry point + playwright reports |
+| .yml/.yaml | 22 | CI/CD + docker configs |
+| .sql | 4 | Database migrations |
+| .mjs | 4 | ES module scripts |
 
-| Extension | Count | Category |
-|-----------|-------|----------|
-| .ts/.tsx | ~1,200 | Source (Frontend) |
-| .ts (server) | ~400 | Source (Backend) |
-| .json | ~500 | Config/Data |
-| .md | ~100 | Documentation |
-| .svg/.png/.jpg | ~200 | Assets |
-| .sql | ~10 | Migrations |
-| .yml/.yaml | ~20 | CI/CD/Config |
-| Other | ~70 | Misc |
-
----
-
-## Directory Structure Map
+## Top-Level Structure
 
 ```
 soul-yatri-website/
-├── src/                          # Frontend Source (~1,200 files)
-│   ├── components/               # UI Components (shadcn/radix)
-│   ├── context/                  # React Context (Auth, Theme)
-│   ├── features/                 # Feature Modules
-│   ├── hooks/                    # Custom Hooks
-│   ├── layouts/                  # Layout Components
-│   ├── pages/                    # Page Components
-│   ├── router/                   # Routing Config
-│   ├── services/                 # API Clients
-│   ├── types/                    # TypeScript Types
-│   ├── utils/                    # Utilities
-│   ├── config/                   # App Configuration
-│   ├── constants/                # Constants
-│   └── middleware/               # API Middleware
-├── server/                       # Backend Source (~400 files)
+├── src/                    # Frontend React app (257 files)
+│   ├── components/         # 58 files (52 shadcn/ui + layout + error boundary)
+│   ├── config/             # 5 files (app config, permissions, routes, runtime flags, validation)
+│   ├── constants/          # 4 files (app, navigation, responsive)
+│   ├── context/            # 3 files (AuthContext, ThemeContext)
+│   ├── features/           # 95 files (12 feature modules)
+│   ├── hooks/              # 5 files (async, responsive, mobile, dashboard, document title)
+│   ├── layouts/            # 4 files (Auth, Dashboard, Main)
+│   ├── lib/                # 1 file (cn utility)
+│   ├── middleware/         # 2 files (API middleware)
+│   ├── pages/              # 36 files (18+ route pages)
+│   ├── router/             # 2 files (router + ProtectedRoute)
+│   ├── services/           # 5 files (API, analytics, storage, websocket)
+│   ├── types/              # 21 files (comprehensive type definitions)
+│   └── utils/              # 12 files (errors, helpers, validators, security, testing)
+│
+├── server/                 # Backend Express app (481 files)
 │   ├── src/
-│   │   ├── config/              # Server Config
-│   │   ├── controllers/         # Route Controllers
-│   │   ├── lib/                 # Utilities
-│   │   ├── middleware/          # Express Middleware
-│   │   ├── modules/             # Domain Modules (duplicate?)
-│   │   ├── routes/              # Route Definitions
-│   │   ├── services/            # Business Logic
-│   │   ├── shared/              # Shared Code
-│   │   └── validators/          # Zod Schemas
-│   ├── prisma/
-│   │   ├── schema.prisma        # Database Schema
-│   │   ├── migrations/          # DB Migrations
-│   │   └── seed-dev.ts         # Seed Data
-│   └── scripts/                 # Server Scripts
-├── docs/                         # Documentation (~50 files)
-│   ├── execution/               # Execution Tracking
-│   └── *.md                     # Various Docs
-├── tests/                        # E2E Tests (~20 files)
-├── public/                       # Static Assets (~100 files)
-│   └── images/                  # Image Assets
-├── scripts/                      # Build Scripts (~5 files)
-├── .github/workflows/            # CI/CD (~3 files)
-├── .agent/, .agents/, .kiro/     # AI Agent Configs (~500 files)
-└── Root Config Files            # (~20 files)
+│   │   ├── config/         # 2 files (env validation, config index)
+│   │   ├── controllers/    # 12 files (3 implemented, 9 stubbed)
+│   │   ├── lib/            # 8 files (async-handler, logger, prisma, errors, response, ws, dev-login, upload)
+│   │   ├── middleware/     # 7 files (auth, RBAC, security/rate-limit, request-context, error, upload, user-rate-limit)
+│   │   ├── modules/        # 71 files (18 modules × 4 files each, ALL EMPTY STUBS)
+│   │   ├── routes/         # 23 files (3 real, 20 stub routes)
+│   │   ├── services/       # 6 files (tokens, email, cache, queue, storage, audit)
+│   │   ├── shared/         # 13 files (contracts, constants, error codes)
+│   │   └── validators/     # 12 files (Zod schemas for all domains)
+│   └── prisma/             # Schema + 2 migrations
+│
+├── docs/                   # 537 files (documentation + execution tracking)
+│   ├── *.md                # 17 top-level docs
+│   ├── audit/              # THIS audit output
+│   └── execution/          # Batch execution tracking
+│
+├── public/                 # 153 static assets
+│   └── images/             # Organized by feature (auth, blogs, careers, contact, courses, etc.)
+│
+├── tests/                  # 1 file (example.spec.ts — 15 Playwright smoke tests)
+├── scripts/                # 2 files (bundle budgets, responsive audit)
+├── playwright-utils/       # 4 files (API testing, browser automation, web scraping, index)
+├── .github/workflows/      # 2 files (build.yml, quality.yml)
+├── .husky/                 # 2 files (pre-commit, commit-msg hooks)
+└── [config files]          # 15+ top-level config files
 ```
 
----
+## Excluded / Generated / Vendor Areas
 
-## Excluded/Generated/Vendor Areas
+| Area | Files | Reason |
+|------|-------|--------|
+| node_modules/ | ~thousands | NPM vendor dependencies |
+| .git/ | ~thousands | Version control |
+| dist/ | 256 | Build output (regenerated) |
+| .agent/ | 6,676 | AI assistant cache (md, patch, py, xsd, ttf) |
+| .agents/ | 117 | Marketing skills agent definitions |
+| playwright-report/ | 37 | Test report (generated) |
+| test-results/ | 1 | Test output |
 
-| Directory | Reason | Approx. Files |
-|-----------|--------|---------------|
-| node_modules/ | Vendor dependencies | ~60,000 |
-| server/node_modules/ | Backend vendor | ~15,000 |
-| .git/ | Version control | ~5,000 |
-| dist/ | Frontend build output | ~100 |
-| server/dist/ | Backend build output | ~200 |
-| build/ | Alternative build output | ~100 |
-| playwright-report/ | Test reports | ~50 |
-| test-results/ | Test results | ~10 |
+## Technology Stack (Verified from Code)
 
----
+### Frontend
+- React 19.2.0 + TypeScript 5.9.3
+- Vite 7.2.4 (build + dev server)
+- Tailwind CSS 3.4.19 + shadcn/ui (New York style)
+- React Router DOM 7.13.0 (SPA routing)
+- Framer Motion 12.34.3 + GSAP 3.14.2 + Anime.js 4.3.6 (animation)
+- Three.js 0.183.1 + @react-three/fiber + drei (3D, used for constellation)
+- Recharts 2.15.4 (data visualization)
+- React Hook Form 7.70.0 + Zod 4.3.5 (forms + validation)
+- 28 @radix-ui packages (accessible UI primitives)
 
-## High-Level Structure Quality: 70/100
+### Backend
+- Express.js (TypeScript)
+- Prisma 7.4 ORM
+- PostgreSQL 16
+- JWT (jsonwebtoken) + bcrypt (cost 12)
+- Winston (structured logging)
+- Helmet + cors + express-rate-limit (security)
+- Multer + Sharp (file uploads + image processing)
+- ws (native WebSocket, NOT Socket.io)
+- Zod (runtime validation)
 
-### Strengths
-- ✅ Clear separation of frontend/backend
-- ✅ Feature-based organization in frontend
-- ✅ Standard Express/Prisma backend structure
-- ✅ Comprehensive UI component library (shadcn/radix)
+### DevOps
+- Docker + docker-compose (multi-stage builds)
+- Nginx (frontend static server)
+- Vercel (SPA deployment config)
+- GitHub Actions (CI: build + quality)
+- Husky (pre-commit + commit-msg hooks)
+- Commitlint (conventional commits)
+- Playwright (E2E testing, 5 browser targets)
+- ESLint 9 (strict + accessibility rules)
 
-### Weaknesses
-- ⚠️ Controller/Module duplication in backend
-- ⚠️ Multiple AI agent config directories (.agent, .agents, .kiro)
-- ⚠️ Documentation overclaims implementation
-- ⚠️ No clear ownership of shared types
+## Build Verification Results
 
-### Recommendations
-1. Consolidate `server/src/controllers/*` and `server/src/modules/*` into single pattern
-2. Remove duplicate AI agent configurations
-3. Add clear README in each major directory
-4. Create architecture decision records (ADRs)
+| Command | Result | Notes |
+|---------|--------|-------|
+| `npm run type-check` | ✅ PASS | 0 TypeScript errors |
+| `npx eslint ./src/` | ✅ PASS | 0 errors, 0 warnings in source |
+| `npm run build` | ✅ PASS | 2261 modules, 41.59s |
+| `server: npm run build` | ✅ PASS | Compiles clean |
+| `prisma validate` | ✅ PASS | Schema valid |
+| `npm run lint:check` (all) | ❌ FAIL | 775 errors in playwright-report/ generated JS (not source) |

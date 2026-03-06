@@ -50,7 +50,7 @@ export default function ProfilePage() {
       if (!cancelled && res.success && res.data?.stats) {
         setStatsData(res.data.stats);
       }
-    }).catch(() => {/* silent */}).finally(() => { if (!cancelled) setStatsLoading(false); });
+    }).catch(() => { if (!cancelled) toast.error('Could not load profile stats'); }).finally(() => { if (!cancelled) setStatsLoading(false); });
     return () => { cancelled = true; };
   }, []);
 

@@ -55,6 +55,7 @@ export default function JournalPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   /* ── Derived ────────────────────────────────────────────────── */
   const filteredEntries = useMemo(() => {
@@ -83,10 +84,12 @@ export default function JournalPage() {
   /* ── API ────────────────────────────────────────────────────── */
   const loadEntries = useCallback(async () => {
     setIsLoading(true);
+    setLoadError(null);
     try {
       const res = await apiService.get<{ entries: JournalEntry[] }>('/health-tools/journal');
       if (res.success && res.data) setEntries(res.data.entries);
     } catch {
+      setLoadError('Failed to load journal entries');
       toast.error('Failed to load journal entries');
     } finally {
       setIsLoading(false);
@@ -270,6 +273,18 @@ export default function JournalPage() {
         {isLoading ? (
           <div className="flex-1 flex justify-center items-center">
             <Loader2 className="w-6 h-6 text-stone-400 animate-spin" />
+          </div>
+        ) : loadError ? (
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-4 py-16">
+            <p className="text-stone-500 italic text-lg mb-3" style={playfair}>
+              {loadError}
+            </p>
+            <button
+              onClick={() => void loadEntries()}
+              className="text-sm text-amber-700 hover:text-amber-600 underline underline-offset-4 decoration-amber-400/30 transition-colors"
+            >
+              Try again
+            </button>
           </div>
         ) : entries.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center px-4">

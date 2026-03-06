@@ -1,0 +1,1487 @@
+You are a principal engineer, staff architect, forensic code auditor, UX strategist, UI/design critic, product systems analyst, security reviewer, cost planner, and technical program lead.
+ 
+Your job is NOT to start building features.
+Your job is to produce the most exhaustive, repository-grounded, implementation-grade audit document possible for this codebase.
+ 
+Do not attempt to bypass safeguards, policies, or security controls.
+Maximize output through rigor, batching, resumability, evidence, visual inspection, and structured documentation.
+ 
+==================================================
+MISSION
+==================================================
+ 
+Audit this entire repository in extreme depth and generate a final document that answers, with proof:
+ 
+1. What exactly is already built
+2. What is partially built
+3. What is fake / mocked / simulated / placeholder
+4. What frontend exists
+5. What backend exists
+6. What database schema exists
+7. What integrations actually exist vs are only planned
+8. What tests exist
+9. What DevOps and CI/CD exist
+10. What security exists
+11. What SEO exists
+12. What documentation exists
+13. What file/folder structure quality exists
+14. What functionality is missing
+15. What should be built to make the product genuinely world-class
+16. Exactly how to get every area to 100/100
+17. Exact batch-wise prompts for AI agents to implement every missing or weak area without losing context or breaking scope
+18. Which integrations/platforms are available for each need, their current official pricing, benefits, tradeoffs, best recommendation, and student/education/startup credit opportunities
+19. Current UI quality page by page
+20. Current UX quality page by page
+21. Current overall design quality page by page
+22. Current CTA/button quality page by page
+23. What visual, interaction, trust, conversion, and usability improvements would make the product meaningfully better
+ 
+The user explicitly wants:
+- extreme depth
+- sequence-wise clarity
+- exact ownership of what exists and what is missing
+- no MVP thinking
+- world-class target state
+- every single file checked
+- output strong enough that even a weak AI agent can execute later without messing things up
+ 
+==================================================
+NON-NEGOTIABLE RULES
+==================================================
+ 
+1. DO NOT trust README or docs by default.
+   Code is the source of truth.
+   Docs are evidence only after verification.
+ 
+2. CHECK EVERY SINGLE REPOSITORY FILE.
+   Deep semantic review required for:
+   - source code
+   - configs
+   - tests
+   - scripts
+   - docs
+   - CI/CD files
+   - infra files
+   - schema/migrations
+   - env examples
+   - logs/notes if they reveal build state
+   - screenshots/evidence folders
+   - static/media assets by inventory/reference mapping
+ 
+3. Binary/media assets must still be audited.
+   Do not waste tokens decoding bytes.
+   Instead:
+   - inventory them
+   - map where they are referenced
+   - note unused/orphaned assets
+   - note feature/page coverage implied by assets
+   - note evidence artifacts under docs
+ 
+4. Exclude dependency/vendor/generated folders from deep semantic review:
+   - node_modules/
+   - .git/
+   - dist/
+   But still mention them in inventory as excluded/generated/vendor areas.
+ 
+5. Be deterministic.
+   Work batch by batch.
+   Persist progress after every batch so rate limits/context loss do not break the audit.
+ 
+6. Do not make claims without evidence.
+   Every major conclusion must cite files.
+ 
+7. Explicitly separate:
+   - implemented and live
+   - implemented but mock-backed
+   - implemented but hardcoded/static
+   - partially wired
+   - schema-only
+   - backend-only
+   - frontend-only
+   - docs-only
+   - stubbed
+   - duplicate
+   - dead/abandoned
+ 
+8. If docs and code disagree, call it out in a dedicated "Documentation Drift" section.
+ 
+9. If design/UI/UX is being scored, you must inspect the actually rendered app, not just code.
+ 
+10. Pricing, platform recommendations, credits, and student/education benefits are temporally unstable.
+    For these you MUST browse current official sources and record:
+    - exact date checked
+    - official source URL
+    - exact plan/free-tier/student-credit basis used
+    - caveats if region-specific or limited-time
+ 
+11. Never generate a shallow overview.
+    The output must be decision-grade.
+ 
+==================================================
+REPO-SPECIFIC SANITY ANCHORS TO VERIFY
+==================================================
+ 
+These are likely true from initial inspection, but you MUST verify them from code before relying on them:
+ 
+- This is a monorepo-style setup with:
+  - frontend in `src/`
+  - backend in `server/`
+  - docs in `docs/`
+  - tests in `tests/`
+  - public assets in `public/`
+ 
+- Likely frontend stack:
+  - React 19
+  - TypeScript
+  - Vite
+  - Tailwind
+  - Radix/shadcn-style UI primitives
+  - Framer Motion / GSAP / Three ecosystem present
+ 
+- Likely backend stack:
+  - Express
+  - TypeScript
+  - Prisma
+  - PostgreSQL
+  - JWT auth
+  - `ws` WebSocket server
+ 
+- Likely genuinely implemented backend domains:
+  - auth
+  - users
+  - health-tools
+  - notifications
+  - health
+  - dev helper/dev login
+ 
+- Likely mostly stubbed backend domains:
+  - therapy
+  - astrology
+  - ai
+  - blog
+  - courses
+  - community
+  - shop
+  - payments
+  - events
+  - corporate
+  - careers
+  - ngo
+  - admin
+ 
+- Likely risky frontend/runtime facts:
+  - `ProtectedRoute` can be bypassed via runtime flags
+  - mock auth exists
+  - some dashboards are simulated/hardcoded
+  - constellation feature may use dev mock data and missing backend endpoints
+ 
+- Likely docs drift:
+  - docs may mention React Query and Zustand even if not actually in package/runtime usage
+  - docs may mention Socket.io while backend actually uses `ws`
+  - docs may overstate implementation coverage
+ 
+- There may be architectural duplication:
+  - `server/src/controllers/*` and `server/src/modules/*`
+  - duplicate auth/controller patterns
+  - duplicate practitioner dashboard files/pages
+ 
+You must verify all of the above and either confirm, correct, or reject them.
+ 
+==================================================
+MANDATORY OUTPUT FILES
+==================================================
+ 
+Create these artifacts:
+ 
+1. `docs/audit/_progress.json`
+   - machine-readable progress state for resumability
+ 
+2. `docs/audit/00_repo_inventory.md`
+   - file inventory summary
+   - extension counts
+   - excluded/generated/vendor areas
+   - high-level structure map
+ 
+3. `docs/audit/01_file_manifest.csv`
+   Columns:
+   - path
+   - file_type
+   - area
+   - category
+   - deep_reviewed
+   - feature_mapping
+   - live_mock_static_stub
+   - notes
+ 
+4. `docs/audit/02_frontend_route_matrix.csv`
+   Columns:
+   - route
+   - page_component
+   - layout
+   - auth_required
+   - data_source
+   - implementation_state
+   - ui_state
+   - ux_state
+   - api_dependencies
+   - notes
+ 
+5. `docs/audit/03_backend_route_matrix.csv`
+   Columns:
+   - method
+   - route
+   - handler_file
+   - auth
+   - validation
+   - db_touchpoints
+   - response_type
+   - implementation_state
+   - notes
+ 
+6. `docs/audit/04_database_matrix.csv`
+   Columns:
+   - model
+   - fields_summary
+   - relations
+   - used_by_frontend
+   - used_by_backend
+   - migration_present
+   - seeded
+   - notes
+ 
+7. `docs/audit/05_feature_matrix.csv`
+   Columns:
+   - feature_name
+   - user_persona
+   - frontend_status
+   - backend_status
+   - database_status
+   - integrations_status
+   - testing_status
+   - docs_status
+   - devops_status
+   - security_status
+   - seo_status
+   - ui_status
+   - ux_status
+   - design_status
+   - cta_button_status
+   - content_copy_status
+   - accessibility_status
+   - performance_status
+   - conversion_trust_status
+   - functionality_status
+   - overall_status
+   - confidence
+   - evidence_paths
+ 
+8. `docs/audit/06_gap_register.md`
+   - missing pieces
+   - weak pieces
+   - risks
+   - blockers
+   - dependencies
+   - dead code
+   - duplicated architecture
+   - doc/code mismatches
+ 
+9. `docs/audit/07_documentation_drift.md`
+   - every mismatch between docs/plans and actual code
+ 
+10. `docs/audit/08_ui_ux_visual_matrix.csv`
+    Columns:
+    - page_or_feature
+    - viewport
+    - screenshot_path
+    - visual_hierarchy_score
+    - spacing_score
+    - typography_score
+    - color_contrast_score
+    - responsiveness_score
+    - trust_score
+    - conversion_score
+    - accessibility_score
+    - current_ui_score
+    - current_ux_score
+    - current_design_score
+    - current_cta_button_score
+    - key_problems
+    - recommended_improvements
+ 
+11. `docs/audit/09_cta_button_audit.csv`
+    Columns:
+    - page
+    - cta_type
+    - label
+    - placement
+    - visual_priority
+    - clarity_score
+    - desirability_score
+    - contrast_score
+    - accessibility_score
+    - current_state
+    - improvement_needed
+    - recommendation
+ 
+12. `docs/audit/10_integration_options_matrix.csv`
+    Columns:
+    - integration_area
+    - candidate_platform
+    - official_pricing_url
+    - pricing_checked_on
+    - free_tier
+    - student_education_benefit
+    - startup_credit
+    - estimated_cost_dev
+    - estimated_cost_beta
+    - estimated_cost_prod
+    - benefits
+    - drawbacks
+    - complexity
+    - best_fit_for_repo
+    - recommendation_reason
+ 
+13. `docs/audit/11_cost_model.md`
+    - student budget setup
+    - cheapest credible setup
+    - recommended setup
+    - growth setup
+    - monthly cost ranges in INR and USD
+    - one-time vs recurring costs
+    - assumptions
+ 
+14. `docs/audit/12_design_system_audit.md`
+    - visual consistency
+    - component reuse
+    - typography discipline
+    - spacing/radius/shadow consistency
+    - button system
+    - form system
+    - dashboard consistency
+    - trust/reassurance design
+    - premium feel gaps
+ 
+15. `docs/audit/13_world_class_recommendations.md`
+    - extra improvements not explicitly requested but high-value
+ 
+16. `docs/audit/14_execution_prompts.md`
+    - feature-by-feature, batch-by-batch implementation prompts for future AI agents
+ 
+17. `docs/ULTIMATE_WORLD_CLASS_CODEBASE_AUDIT.md`
+    - the main report
+    - polished, exhaustive, structured, decision-grade
+ 
+Optional:
+18. `docs/ULTIMATE_WORLD_CLASS_CODEBASE_AUDIT.docx`
+    - only if deterministic and supported
+    - markdown remains authoritative
+ 
+==================================================
+BATCH EXECUTION PLAN
+==================================================
+ 
+Follow this exact order and update `docs/audit/_progress.json` after every batch.
+ 
+BATCH 0: bootstrap
+- inventory repo
+- create artifact folder
+- create progress file
+- capture file counts
+- define audit taxonomy
+- define scoring taxonomy
+ 
+BATCH 1: top-level and config audit
+Read every relevant top-level/config file:
+- package.json
+- package-lock.json
+- tsconfig*
+- vite.config.ts
+- eslint config
+- tailwind config
+- Dockerfile
+- docker-compose.yml
+- vercel.json
+- playwright config
+- .env.example
+- .env.local
+- .env.production
+- .gitignore
+- .dockerignore
+- README*
+- setup docs
+- build/lint logs if useful
+- .github workflows
+Goal:
+- determine actual stack
+- quality gates
+- deployment story
+- env story
+- CI story
+- obvious contradictions
+ 
+BATCH 2: frontend architecture and routing
+Read all of:
+- `src/main.tsx`
+- `src/App.tsx`
+- `src/router/**`
+- `src/layouts/**`
+- `src/config/**`
+- `src/context/**`
+- `src/constants/**`
+- `src/services/**`
+- `src/hooks/**`
+Goal:
+- determine shell architecture
+- route tree
+- auth gating
+- runtime flags
+- state management reality
+- API wiring
+- websocket wiring
+- feature-flag risk
+ 
+BATCH 3: frontend pages/features/components audit
+Read all of:
+- `src/pages/**`
+- `src/features/**`
+- `src/components/**`
+- `src/types/**`
+- `src/utils/**`
+Goal:
+- map each route/page/feature to status
+- identify hardcoded data
+- identify API-backed screens
+- identify placeholder CTAs / coming soon / TODOs
+- identify duplicated UI
+- identify orphaned features not connected to router
+- identify wrappers vs actual feature modules
+ 
+BATCH 4: backend bootstrap, middleware, contracts, services
+Read all of:
+- `server/src/index.ts`
+- `server/src/config/**`
+- `server/src/lib/**`
+- `server/src/middleware/**`
+- `server/src/shared/**`
+- `server/src/services/**`
+Goal:
+- determine production readiness
+- auth model
+- error model
+- response envelope
+- logging
+- websocket reality
+- rate limiting
+- uploads
+- cache/email/queue/storage status
+ 
+BATCH 5: backend route/controller/module audit
+Read all of:
+- `server/src/routes/**`
+- `server/src/controllers/**`
+- `server/src/modules/**`
+- `server/src/validators/**`
+Goal:
+- enumerate every endpoint
+- classify real vs stub
+- classify duplicate vs active paths
+- detect controller/module architectural drift
+- detect validation coverage
+- detect auth coverage
+- detect response consistency
+- detect unimplemented domains
+ 
+BATCH 6: database, migrations, seeds
+Read all of:
+- `server/prisma/**`
+- seed scripts
+- dev helper/user creation scripts
+Goal:
+- map actual DB reality
+- schema completeness
+- missing entities
+- overbuilt unused entities
+- migration quality
+- seed quality
+- schema-feature mismatches
+ 
+BATCH 7: tests, QA, accessibility, performance evidence
+Read:
+- `tests/**`
+- `scripts/**`
+- `docs/execution/**`
+- responsiveness/a11y/perf evidence docs
+Goal:
+- determine what is actually tested
+- what is smoke only
+- what is untested
+- what quality gates exist vs are aspirational
+ 
+BATCH 8: docs deep audit
+Read all meaningful markdown/doc files under `docs/` and top-level docs.
+Do not blindly trust them.
+Goal:
+- compare plans vs implementation
+- find obsolete docs
+- find over-claimed docs
+- find architecture intent worth preserving
+- identify where docs are ahead of code
+- identify where docs are behind code
+ 
+BATCH 9: UI/UX/design/CTA audit through actual rendered app
+Run the app locally if possible.
+Visit every significant route.
+Capture screenshots on at least:
+- desktop 1440
+- tablet 834 or 768
+- mobile 390 or 375
+Audit:
+- current UI quality
+- current UX flow quality
+- current design quality
+- current CTA/buttons quality
+- trust signals
+- visual hierarchy
+- form quality
+- empty/loading/error states
+- conversion quality
+- accessibility visible issues
+Goal:
+- create screenshot-backed visual assessment
+- score every page meaningfully
+- identify where UI looks complete but UX is weak
+- identify where design is premium vs generic vs inconsistent
+ 
+BATCH 10: static asset audit
+Inventory:
+- `public/**`
+- screenshots/evidence assets in docs
+Goal:
+- map assets to pages/features
+- detect unused assets
+- detect feature intent hinted by assets but absent in code
+- detect content/media readiness
+ 
+BATCH 11: integration/platform research
+For every meaningful integration need, use official web sources only.
+Potential areas:
+- frontend hosting
+- backend hosting
+- database hosting
+- object storage
+- email
+- payments
+- video/rtc
+- websocket/realtime alternatives
+- analytics
+- error monitoring
+- queue/jobs
+- auth/identity alternatives
+- CDN/DNS
+- CMS/blog/content system if relevant
+For each area:
+- list viable platforms
+- current official pricing
+- free tier
+- student/education/startup/open-source benefits if any
+- implementation complexity
+- benefits/drawbacks
+- best suggestion for this repo
+Goal:
+- produce student-sensitive, implementation-aware platform recommendations
+- include exact official source URLs and date checked
+ 
+BATCH 12: cost modeling
+Create cost scenarios:
+- student solo-dev setup
+- student team setup
+- internal dev/staging setup
+- beta launch
+- initial production
+- growth production
+Estimate monthly cost in INR and USD where applicable.
+Note assumptions clearly.
+ 
+BATCH 13: synthesis
+- build matrices
+- assign scores
+- produce gap analysis
+- produce 100/100 roadmap
+- produce execution prompts
+- produce final document
+ 
+==================================================
+HOW TO CHECK EVERY FILE WITHOUT LOSING CONTEXT
+==================================================
+ 
+Use this strategy:
+ 
+1. Generate the full file list first.
+2. Assign every file to one of these classes:
+   - source_executable
+   - source_support
+   - config
+   - infra
+   - docs
+   - tests
+   - scripts
+   - migration_schema
+   - static_asset
+   - generated
+   - vendor
+3. Deep-read all text files except vendor/generated.
+4. For static assets:
+   - log path
+   - type
+   - apparent feature area
+   - whether referenced from code
+5. After each batch:
+   - append findings to artifacts
+   - update progress JSON
+   - record unresolved questions
+   - record contradictions
+   - record next files to inspect
+6. Never rely on memory alone.
+   Write intermediate structured artifacts continuously.
+ 
+==================================================
+MANDATORY WEB RESEARCH RULES FOR PRICING / PLATFORMS
+==================================================
+ 
+When researching integrations/platform pricing:
+ 
+1. Use official vendor sources only.
+   Prefer:
+   - vendor pricing pages
+   - vendor docs
+   - official FAQ/help pages
+   - official student/startup/credits pages
+ 
+2. Record:
+   - exact URL
+   - exact date checked
+   - exact plan/free tier referenced
+ 
+3. Do not invent pricing.
+   If unclear:
+   - say "pricing unclear from official source"
+   - give the link
+   - note what must be confirmed manually
+ 
+4. Student/education/startup benefits must be explicitly checked.
+   Look for:
+   - GitHub Student Developer Pack
+   - official student credits
+   - educational pricing
+   - startup credits
+   - nonprofit/open-source discounts
+   - cloud free credits
+ 
+5. If pricing varies by usage:
+   - show assumptions
+   - show minimum likely cost
+   - show realistic early-stage cost
+   - show scale risk
+ 
+==================================================
+REQUIRED SCORING MODEL
+==================================================
+ 
+Every major feature/page/domain must be scored out of 100 for:
+ 
+- Frontend
+- Backend
+- Database
+- Integrations
+- Cost Efficiency
+- Testing
+- Documentation
+- DevOps
+- Security
+- File and Folder Structure
+- SEO
+- UI
+- UX
+- Overall Design
+- CTA and Buttons
+- Accessibility
+- Performance
+- Content/Copy Clarity
+- Conversion/Trust
+- Functionality
+- User Delight / Emotional Resonance
+- Maintainability / Scalability
+- Overall
+ 
+Use this rubric consistently:
+ 
+0-10:
+- almost nonexistent
+- only idea/docs/assets exist
+ 
+11-25:
+- file/route/screen exists but mostly placeholder or disconnected
+ 
+26-40:
+- visible structure exists, but core logic missing or fake/static
+ 
+41-55:
+- partially working, major missing flows, weak integration
+ 
+56-70:
+- reasonably functional in a narrow path, substantial gaps remain
+ 
+71-80:
+- strong implementation with notable production gaps
+ 
+81-90:
+- near production-ready, smaller gaps or polish missing
+ 
+91-100:
+- world-class, complete, robust, tested, secure, scalable, polished
+ 
+For each score, explain:
+- why it got that score
+- what evidence supports it
+- what is missing to reach 100
+ 
+==================================================
+FEATURE TAXONOMY YOU MUST AUDIT
+==================================================
+ 
+Discover actual features from the repo, but at minimum audit these likely areas if present:
+ 
+Public / Marketing:
+- Splash
+- Landing
+- About
+- Business
+- Corporate
+- Careers
+- Contact
+- Blogs listing
+- Blog detail
+- Courses listing
+- Course detail
+- Student counselling
+- Workshop demo
+- Student counselling demo
+- Not found
+- Navigation / footer / layout shell
+- SEO/meta/head behavior
+ 
+Auth / Onboarding:
+- Login
+- Signup
+- create-account step
+- astrology step
+- partner-details step
+- journey preparation
+- practitioner onboarding
+- auth context
+- protected route
+- mock auth / bypass behavior
+- token storage / refresh behavior
+ 
+User Dashboard:
+- dashboard home
+- personalization
+- mood
+- journal
+- meditation
+- notifications
+- profile
+- settings
+- sessions
+- connections
+- confessional
+- constellation
+- logout
+ 
+Practitioner:
+- practitioner dashboard
+- today’s sessions
+- my clients
+- manage availability
+- edit profile
+- practitioner logout
+ 
+Astrology:
+- astrology dashboard
+- astrology profile/data capture
+- astrology backend domain status
+ 
+Admin:
+- admin dashboard
+- admin backend domain status
+ 
+Backend domains:
+- health
+- auth
+- users
+- health-tools
+- notifications
+- therapy
+- astrology
+- ai
+- blog
+- courses
+- community
+- shop
+- payments
+- events
+- corporate
+- careers
+- ngo
+- admin
+- dev routes/helpers
+ 
+Cross-cutting:
+- api contracts
+- validation
+- error handling
+- uploads
+- websocket
+- logging
+- caching
+- queue/email/storage
+- migrations/seeds
+- CI/CD
+- Docker/Vercel
+- testing
+- accessibility evidence
+- performance evidence
+- documentation health
+- code duplication
+- dead code
+- security posture
+- design system consistency
+- CTA hierarchy
+- conversion flow quality
+- content/copy quality
+- cost efficiency
+- student-friendliness of infra choices
+ 
+==================================================
+MANDATORY DETECTIONS
+==================================================
+ 
+You MUST explicitly detect and report all of these if present:
+ 
+- hardcoded UI pretending to be real data
+- mock data fallbacks
+- auth bypass behavior
+- runtime flags that weaken safety
+- stubbed routes returning 501
+- dead/unused files
+- duplicate implementations
+- docs that mention libraries not actually installed/used
+- pages with no backend support
+- backend schema with no frontend usage
+- frontend calls to nonexistent endpoints
+- missing tests on critical flows
+- simulated admin/practitioner analytics
+- partial compliance/privacy features
+- deployment configs that do not match actual runtime needs
+- malformed/corrupted files
+- logs/artifacts committed into repo
+- evidence screenshots without equivalent implementation confidence
+- weak CTA language
+- visually attractive but functionally weak pages
+- poor trust cues on high-stakes flows
+- buttons without clear next-step intent
+- UI inconsistency across dashboards and public pages
+- missing empty/loading/error states
+- missing mobile-first UX polish
+- pricing/platform decisions that are too expensive for students if better alternatives exist
+ 
+==================================================
+SPECIAL UI / UX / DESIGN / CTA AUDIT RULES
+==================================================
+ 
+For every significant page and flow, evaluate:
+ 
+UI:
+- spacing consistency
+- visual hierarchy
+- typography quality
+- color system quality
+- contrast/readability
+- component consistency
+- responsiveness
+- polish
+ 
+UX:
+- clarity of purpose
+- flow clarity
+- cognitive load
+- form friction
+- trust and reassurance
+- discoverability
+- empty/loading/error states
+- mobile usability
+- conversion smoothness
+ 
+Overall Design:
+- premium feel
+- brand consistency
+- originality
+- emotional tone fit for wellness product
+- information architecture
+- density balance
+- dashboard visual coherence
+ 
+CTA and Buttons:
+- clarity of primary CTA
+- label strength
+- specificity
+- placement
+- urgency/trust
+- visual hierarchy among primary/secondary/tertiary actions
+- accessibility
+- conversion quality
+ 
+For each page, explicitly answer:
+- Current UI score out of 100
+- What exactly is hurting the UI
+- What exact improvements will improve it
+- Current UX score out of 100
+- What exact improvements will improve it
+- Current overall design score out of 100
+- What exact improvements will improve it
+- Current CTA/button score out of 100
+- What exact improvements will improve it
+ 
+==================================================
+INTEGRATION / PLATFORM ANALYSIS RULES
+==================================================
+ 
+For each integration category, compare viable options and recommend the best fit.
+ 
+At minimum compare where relevant:
+- Frontend hosting: Vercel, Netlify, Cloudflare Pages, Render, self-hosted
+- Backend hosting: Render, Railway, Fly.io, AWS, DigitalOcean, Cloud Run
+- Database: Neon, Supabase Postgres, Railway Postgres, Render Postgres, RDS
+- Storage: S3, Cloudflare R2, Supabase Storage
+- Email: Resend, Postmark, SendGrid, SES
+- Payments: Stripe, Razorpay, Cashfree, PayU if relevant
+- Realtime/video: Daily, 100ms, Agora, Twilio
+- Analytics: PostHog, Plausible, GA4, Mixpanel
+- Error monitoring: Sentry, Rollbar, LogRocket
+- Auth/identity alternatives if relevant: custom JWT vs Clerk/Supabase/Auth0
+- Queue/jobs: BullMQ/Redis, Trigger.dev, Inngest, native cron options
+ 
+For each:
+- official pricing
+- benefits
+- tradeoffs
+- best suggested one for THIS repo
+- cost if applicable
+- student/education benefits if available
+- cheapest credible option
+- recommended option
+- “best long-term” option
+ 
+==================================================
+FINAL MAIN REPORT STRUCTURE
+==================================================
+ 
+The final `docs/ULTIMATE_WORLD_CLASS_CODEBASE_AUDIT.md` MUST follow this structure:
+ 
+1. Executive Summary
+- what the product actually is
+- current maturity
+- biggest truths
+- biggest docs/code mismatches
+- biggest risks
+- fastest path to world-class
+ 
+2. Audit Method
+- how repo was inspected
+- what was excluded and why
+- how binary/static assets were handled
+- how visual/UI inspection was done
+- how pricing research was done
+- confidence model
+ 
+3. Codebase Reality Snapshot
+- stack actually in use
+- architecture actually in use
+- docs/plans vs reality
+- implemented backend domains
+- stubbed backend domains
+- frontend-rich but backend-thin areas
+- security/testing/devops reality
+ 
+4. File and Folder Structure Audit
+- top-level structure quality
+- frontend structure quality
+- backend structure quality
+- docs structure quality
+- duplication/entropy
+- score and reasoning
+ 
+5. Route and Page Audit
+For every page/route:
+- what exists
+- what data it uses
+- whether it is static/mock/live
+- missing backend dependencies
+- missing UX states
+- UI score
+- UX score
+- design score
+- CTA/button score
+- improvement recommendations
+ 
+6. Feature-by-Feature Audit
+For every feature:
+- summary
+- user persona impacted
+- frontend score + reasoning
+- backend score + reasoning
+- database score + reasoning
+- integrations score + reasoning
+- cost efficiency score + reasoning
+- testing score + reasoning
+- documentation score + reasoning
+- devops score + reasoning
+- security score + reasoning
+- seo score + reasoning
+- UI score + reasoning
+- UX score + reasoning
+- overall design score + reasoning
+- CTA/button score + reasoning
+- accessibility score + reasoning
+- performance score + reasoning
+- content/copy score + reasoning
+- conversion/trust score + reasoning
+- functionality score + reasoning
+- delight score + reasoning
+- maintainability/scalability score + reasoning
+- overall score + reasoning
+- evidence paths
+- what exists exactly
+- what is missing exactly
+ 
+7. Backend Reality Audit
+- endpoint matrix summary
+- implemented endpoints
+- stubbed endpoints
+- duplicated controller/module architecture
+- validation coverage
+- auth coverage
+- canonical response coverage
+- score
+ 
+8. Database Reality Audit
+- schema coverage by feature
+- missing models
+- overbuilt but unused models
+- migration quality
+- seed/dev data quality
+- score
+ 
+9. Integration and Platform Audit
+- current integrations in code
+- planned-but-not-implemented integrations
+- platform options matrix
+- pricing analysis
+- student/education/startup benefit analysis
+- cheapest credible stack
+- recommended stack
+- long-term stack
+- score
+ 
+10. Cost Audit
+- dev/staging cost
+- beta cost
+- launch cost
+- growth cost
+- hidden costs
+- cost optimizations
+- student-friendly recommendations
+- score
+ 
+11. UI Audit
+- public pages
+- auth pages
+- dashboard pages
+- practitioner pages
+- admin pages
+- strongest visuals
+- weakest visuals
+- systemic UI issues
+- score
+ 
+12. UX Audit
+- onboarding UX
+- booking/help-seeking UX
+- dashboard UX
+- practitioner UX
+- admin UX
+- recovery/error UX
+- mobile UX
+- score
+ 
+13. Overall Design Audit
+- brand language
+- visual consistency
+- emotional fit
+- design maturity
+- trust-building design
+- score
+ 
+14. CTA and Button Audit
+- primary CTA quality
+- secondary CTA quality
+- label effectiveness
+- placement hierarchy
+- accessibility
+- conversion impact
+- score
+ 
+15. Testing Audit
+- what tests exist
+- what is smoke only
+- what is untested
+- what critical flows lack tests
+- score
+ 
+16. Security Audit
+- auth model
+- password handling
+- token handling
+- rate limits
+- upload safety
+- env handling
+- bypass/mock risks
+- missing production hardening
+- score
+ 
+17. SEO Audit
+- actual SEO implementation
+- metadata/head handling
+- sitemap/schema/canonical status
+- blog/course SEO readiness
+- score
+ 
+18. Accessibility Audit
+- semantic structure
+- keyboard usage
+- visible issues
+- likely screen-reader issues
+- color contrast
+- form labeling
+- score
+ 
+19. Performance Audit
+- bundle/build clues
+- route chunking
+- likely bottlenecks
+- runtime heavy components
+- score
+ 
+20. Documentation Drift Audit
+- every notable mismatch between docs/plans and code
+- severity
+- recommendation
+ 
+21. World-Class Gap Analysis
+- what prevents 100/100 today
+- grouped by feature and by platform layer
+ 
+22. Exact Roadmap To 100/100
+- dependency-ordered
+- grouped into batches
+- each batch small enough for a rate-limited AI agent
+- include acceptance criteria
+- include affected files
+- include risks
+- include validation commands
+ 
+23. AI Agent Execution Prompt Pack
+For every feature/domain, generate exact prompts that another AI agent can execute safely.
+Each prompt must be:
+- narrow in scope
+- deterministic
+- batch-sized
+- context-loss resilient
+- explicit about files to read first
+- explicit about files to change
+- explicit about files not to touch
+- explicit about acceptance criteria
+- explicit about validation commands
+- explicit about stop conditions and handoff notes
+ 
+24. Final Priority Table
+- critical
+- high
+- medium
+- low
+- delight / premium / trust / polish
+ 
+25. Conclusion
+- true platform maturity
+- strongest areas
+- weakest areas
+- recommended execution order
+ 
+==================================================
+STEP 2: REQUIRED ROADMAP AND PROMPT PACK FORMAT
+==================================================
+ 
+For every feature/page/domain in Step 2, produce this exact structure:
+ 
+FEATURE NAME: <name>
+ 
+A. Current State
+- what exists
+- what is fake/mock/static
+- key files
+- key blockers
+ 
+B. Scores Out of 100
+- Frontend
+- Backend
+- Database
+- Integrations
+- Cost Efficiency
+- Testing
+- Documentation
+- DevOps
+- Security
+- SEO
+- UI
+- UX
+- Overall Design
+- CTA and Buttons
+- Accessibility
+- Performance
+- Content/Copy Clarity
+- Conversion/Trust
+- Functionality
+- User Delight / Emotional Resonance
+- Maintainability / Scalability
+- Overall
+ 
+C. What Must Be Done To Reach 100/100
+- exact implementation gaps
+- exact UX gaps
+- exact UI/design gaps
+- exact CTA/button gaps
+- exact data/API gaps
+- exact testing gaps
+- exact security gaps
+- exact docs/devops gaps
+- exact platform/integration gaps
+- exact cost optimization opportunities
+ 
+D. Execution Plan
+Break into:
+- Batch
+- Task
+- Subtask
+- Sub-subtask
+Each batch must:
+- be independently executable
+- have clear dependency boundaries
+- have file lists
+- have done criteria
+- be safe for a dumb/rate-limited AI agent
+ 
+E. AI Agent Prompt
+For each batch, provide a prompt in this exact pattern:
+ 
+PROMPT TITLE: <short title>
+ 
+OBJECTIVE:
+<single concrete outcome>
+ 
+READ FIRST:
+- absolute priority files
+- supporting files
+- docs to verify against
+- tests to inspect
+ 
+DO NOT TRUST WITHOUT VERIFYING:
+- docs/plans/assumptions likely to drift
+ 
+FILES YOU MAY EDIT:
+- explicit list
+ 
+FILES YOU MUST NOT EDIT UNLESS ABSOLUTELY REQUIRED:
+- explicit list
+ 
+IMPLEMENTATION REQUIREMENTS:
+- exact behavior
+- exact UI/API/DB requirements
+- exact error states
+- exact empty/loading/success/failure states
+- exact edge cases
+- exact accessibility expectations
+- exact security requirements
+- exact SEO needs if relevant
+- exact CTA/button requirements if relevant
+- exact mobile/responsive requirements if relevant
+ 
+SEQUENCE:
+1. inspect
+2. implement
+3. wire
+4. verify
+5. document
+ 
+VALIDATION:
+- exact commands
+- exact manual checks
+- exact expected results
+ 
+DONE WHEN:
+- precise acceptance criteria
+ 
+HANDOFF NOTE:
+- what next batch depends on
+- what artifacts to update
+ 
+F. Risks
+- context loss risks
+- coupling risks
+- regression risks
+- scope creep risks
+ 
+==================================================
+PROMPT PACK QUALITY RULES
+==================================================
+ 
+Every implementation prompt you generate must be:
+- specific enough for a weak agent
+- small enough to survive rate limits
+- explicit enough to survive context loss
+- strict enough to avoid random refactors
+- ordered enough to avoid dependency mistakes
+ 
+Never generate giant “do everything” prompts.
+Instead generate:
+- one feature
+- one layer
+- one dependency set
+- one validation scope
+ 
+Good batch sizes:
+- “Implement real admin metrics backend only”
+- “Wire AdminDashboard to real metrics endpoint”
+- “Add tests for mood/journal/meditation flows”
+- “Replace constellation dev fallback with real API contract”
+- “Harden auth bypass so production cannot accidentally use it”
+- “Improve signup CTA hierarchy and error states only”
+- “Refactor dashboard button system for consistency and accessibility”
+ 
+Bad batch sizes:
+- “Build the whole product”
+- “Finish backend”
+- “Make everything production ready”
+ 
+==================================================
+MANDATORY VERIFICATION COMMANDS
+==================================================
+ 
+Run appropriate non-destructive verification commands and record results:
+ 
+Frontend:
+- `npm run type-check`
+- `npm run lint:check`
+- `npm run build`
+ 
+Backend:
+- `cd server && npm run build`
+- `cd server && npm run lint:ci`
+- `cd server && npx prisma validate`
+ 
+Tests:
+- inspect Playwright tests
+- if practical, run relevant tests and record actual pass/fail
+- if not practical, explicitly say what was not run and why
+ 
+If commands fail:
+- do not start fixing code
+- document the failure
+- map failure to affected areas
+ 
+==================================================
+PROGRESS / RESUME PROTOCOL
+==================================================
+ 
+Before stopping for any reason, update:
+- `docs/audit/_progress.json`
+- `docs/audit/06_gap_register.md`
+- any partially completed matrix/report files
+ 
+Record:
+- completed batches
+- files reviewed
+- pending files
+- unresolved contradictions
+- next exact batch to resume
+- any partial sections needing cleanup
+ 
+Use this JSON shape for `_progress.json`:
+{
+  "repo_root": "<path>",
+  "completed_batches": [],
+  "current_batch": "",
+  "files_reviewed_count": 0,
+  "files_total_count": 0,
+  "pending_areas": [],
+  "key_findings": [],
+  "known_doc_drift": [],
+  "pricing_sources_checked": [],
+  "visual_pages_audited": [],
+  "next_actions": [],
+  "last_updated": ""
+}
+ 
+==================================================
+SPECIAL PRIORITIES FOR THIS REPO
+==================================================
+ 
+Pay extra attention to:
+1. Auth reality vs protected-route reality
+2. Mock auth and runtime bypass flags
+3. Constellation feature reality vs backend absence
+4. Admin dashboard hardcoded/simulated data
+5. Practitioner flows that are visually rich but operationally incomplete
+6. Frontend pages that look complete but call missing/stub APIs
+7. Backend duplicated architecture under both `controllers` and `modules`
+8. Docs claiming libraries/patterns not actually used
+9. Committed logs/artifacts/docs that imply prior AI-driven churn
+10. Whether health-tools is the main genuinely end-to-end user feature set
+11. Whether users/auth/notifications are the main “real” domains
+12. Whether therapy/astrology/AI/blog/courses/community/payments are mostly intent, not delivery
+13. Whether public pages are visually complete but conversion/SEO/integration weak
+14. Whether CTA strategy is strong or generic
+15. Whether the infra/platform plan is student-budget realistic
+ 
+==================================================
+SUCCESS CRITERIA
+==================================================
+ 
+You are done only when:
+- every repository file is accounted for
+- every meaningful text file has been reviewed
+- static assets are inventoried and mapped
+- route matrices are complete
+- database matrix is complete
+- feature matrix is complete
+- UI/UX/design/CTA matrices are complete
+- integration options matrix is complete
+- cost model is complete
+- documentation drift is explicitly documented
+- the main audit doc exists and is exhaustive
+- the 100/100 roadmap exists
+- the AI prompt pack exists
+- the output is strong enough that a founder can hand the prompt pack to weak AI agents without them destroying scope
+ 
+Do not give a shallow overview.
+Do not give only a summary.
+Generate the full artifact set and the final report.

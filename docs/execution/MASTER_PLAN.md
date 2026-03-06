@@ -35,14 +35,15 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:015`
-- Phase target: `Phase 8 error handling and resilience`
+- `BATCH:016`
+- Phase target: `Phase 9 testing foundation and coverage ramp`
 - Objective:
-  - Unify canonical error-code strategy across server and client while preserving legacy code compatibility.
-  - Standardize error envelope fields (`success`, `error`, `requestId`, `timestamp`) across server core middleware and rate-limit paths.
-  - Add frontend resilience policy: idempotent GET retry on transient failure, no blind 4xx retries except safe token-refresh path.
-  - Harden websocket resilience with bounded backoff + jitter reconnect and explicit connection-state surfacing.
-  - Close notification payload typing risk (R-008) with shared websocket payload contract tightening.
+  - Create deterministic E2E testing foundation with Playwright smoke suite.
+  - Stabilize `playwright.config.ts` for failure-focused traces/screenshots and deterministic viewport.
+  - Replace placeholder tests with structured smoke coverage over public, auth, dashboard, and resilience areas.
+  - 15 smoke tests across 4 test groups: public (7), auth (2), dashboard (4), resilience (2).
+  - Validate mock-auth login flow works in E2E context.
+  - Validate app resilience to failing/slow API calls via route interception.
   - Preserve QA dev-login/mock-auth behavior.
-  - All quality gates passing: `type-check`, `lint:ci`, `build`, `(cd server && npm run build)`, `(cd server && npm run lint:ci)`, `quality:ci`.
+  - All quality gates passing: `type-check`, `lint:ci`, `build`, `(cd server && npm run build)`, `(cd server && npm run lint:ci)`, `quality:ci`, `test:e2e` smoke.
   - Update docs at batch end.

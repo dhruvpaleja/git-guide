@@ -251,3 +251,21 @@
 - Batch: BATCH:015
 - Decision: Extend websocket client with explicit connection-state events (`connecting`, `connected`, `reconnecting`, `disconnected`, `failed`) plus bounded jittered reconnect attempts.
 - Rationale: Eliminates reconnect hot-loop risk and gives dashboard consumers deterministic state for safe UX messaging without redesigning page layout.
+
+## D-043
+- Date: 2026-03-06
+- Batch: BATCH:016
+- Decision: Adopt smoke-first testing strategy with tag-based filtering (`@smoke @public`, `@smoke @auth`, `@smoke @dashboard`, `@smoke @resilience`) over comprehensive end-to-end flows.
+- Rationale: Establishes deterministic baseline coverage quickly, proves the testing pipeline works, and enables incremental coverage expansion without upfront complexity.
+
+## D-044
+- Date: 2026-03-06
+- Batch: BATCH:016
+- Decision: Use `#id` selectors for form inputs, `getByRole` for buttons/headings, and `main`/`[role="main"]` for page shell detection.
+- Rationale: HTML `id` attributes on form inputs are stable and semantic; role-based selectors for interactive elements align with accessibility and resist class name changes.
+
+## D-045
+- Date: 2026-03-06
+- Batch: BATCH:016
+- Decision: Target chromium-only for smoke command with `reuseExistingServer: true` in local dev; keep firefox/webkit/mobile projects configured but out of default smoke run.
+- Rationale: Maximizes determinism and speed for the initial testing foundation; cross-browser projects are ready when needed and can be enabled via `--project` flag.

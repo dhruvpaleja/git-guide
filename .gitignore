@@ -3,6 +3,7 @@ dist
 .env
 .env.local
 *.log
+!docs/execution/evidence/**/*.log
 nul
 
 # Claude/AI temp files
@@ -31,11 +32,8 @@ status.txt
 tc_output.txt
 server/build_out.txt
 
-# Playwright and E2E testing (dev only)
-playwright.config.ts
+# Playwright and E2E testing (dev-only helpers)
 playwright-utils/
-tests/
-/tests/
 
 # Agent skills and development tools
 .agents/

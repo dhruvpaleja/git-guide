@@ -350,6 +350,45 @@
         "matrix": "docs/execution/evidence/BATCH_015_ERROR_RESILIENCE/MATRIX.md"
       },
       "notes": "Unified canonical error handling across server/client, preserved legacy code compatibility via alias mapping, hardened retry/reconnect behavior, and closed notification payload typing risk R-008 without changing dev-login/mock-auth behavior."
+    },
+    {
+      "batch_id": "BATCH:016",
+      "phase": "9 testing foundation and coverage ramp",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint_ci": "pass",
+        "quality_ci": "pass",
+        "smoke_e2e_chromium": "pass"
+      },
+      "smoke_test_metrics": {
+        "total_tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0,
+        "pass_rate": "100%",
+        "suites": {
+          "public": 7,
+          "auth": 2,
+          "dashboard": 4,
+          "resilience": 2
+        },
+        "deferred_count": 6,
+        "deferred_reasons": [
+          "practitioner/astrologer/admin role dashboards (separate login flow needed)",
+          "signup end-to-end (requires backend)",
+          "cross-browser (firefox/webkit) smoke",
+          "mobile viewport smoke"
+        ]
+      },
+      "evidence_paths": {
+        "matrix": "docs/execution/evidence/BATCH_016_TESTING_FOUNDATION/MATRIX.md",
+        "notes": "docs/execution/evidence/BATCH_016_TESTING_FOUNDATION/NOTES.md",
+        "smoke_log": "docs/execution/evidence/BATCH_016_TESTING_FOUNDATION/SMOKE_RUN.log"
+      },
+      "notes": "Created deterministic E2E testing foundation with 15-test Playwright smoke suite covering public routes, mock-auth login flow, dashboard routes, and API resilience without changing dev-login/mock-auth behavior."
     }
   ]
 }

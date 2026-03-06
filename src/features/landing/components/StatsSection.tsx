@@ -90,7 +90,7 @@ function StatCard({
       }}
     >
       <p
-        className="text-[22px] lg:text-[24px] font-semibold text-white tracking-tight mb-2 whitespace-nowrap"
+        className="text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] font-semibold text-white tracking-tight mb-2 whitespace-normal md:whitespace-nowrap"
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
         {stat.prefix}
@@ -154,7 +154,7 @@ export default function StatsSection() {
     <section
       ref={sectionRef}
       className="relative bg-black overflow-hidden"
-      style={{ padding: '100px 0 120px' }}
+      style={{ padding: 'clamp(60px, 10vw, 100px) 0 clamp(80px, 12vw, 120px)' }}
     >
       {/* ── Unified Circular Background Effect ───────────── */}
       <div

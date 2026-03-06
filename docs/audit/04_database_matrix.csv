@@ -1,14 +1,27 @@
 model,fields_summary,relations,used_by_frontend,used_by_backend,migration_present,seeded,notes
-User,"id, email, passwordHash, name, phone, role, avatarUrl, isVerified, lastLoginAt, failedAttempts, lockedUntil, createdAt, updatedAt",RefreshToken[],AuditLog[],UserProfile?,UserSettings?,TherapistProfile?,Session[],MoodEntry[],JournalEntry[],MeditationLog[],Payment[],Notification[],yes,yes,Core auth model; fully implemented
-RefreshToken,"id, tokenHash, userId, userAgent, ipHash, familyId, isRevoked, expiresAt, createdAt, updatedAt",User,yes (AuthContext),yes (auth.controller.ts),yes,no,Token rotation with family ID for hijack detection
-AuditLog,"id, userId, category, action, metadata, ipHash, userAgent, createdAt",User?,no,yes (AIEventLogger),yes,no,AI monitoring foundation; underutilized
-UserProfile,"id, userId, dateOfBirth, gender, city, state, country, struggles, therapyHistory, goals, therapistGenderPref, therapistLanguages, therapistApproach, interests, emergencyName, emergencyPhone, emergencyRelation, onboardingStep, onboardingComplete, birthTime, birthPlace, zodiacSign, createdAt, updatedAt",User,yes (Onboarding),partially (users.controller.ts),yes,yes,Onboarding data; birthTime/zodiacSign for astrology
-UserSettings,"id, userId, darkMode, animations, compactMode, pushNotifs, soundEffects, patternAlerts, profileVisible, constellationPublic, twoFactor, createdAt, updatedAt",User,no,no,yes,no,Settings exist but no CRUD endpoints
-TherapistProfile,"id, userId, specializations, approach, languages, qualifications, experience, bio, photoUrl, pricePerSession, currency, rating, totalReviews, totalSessions, isVerified, isAvailable, verifiedAt, createdAt, updatedAt",User,TherapistAvailability[],Session[],no,no,Schema complete; no backend implementation
-TherapistAvailability,"id, therapistId, dayOfWeek, startTime, endTime, slotDuration, breakAfterSlot, isActive, createdAt, updatedAt",TherapistProfile,no,no,yes,no,Availability schema; no CRUD endpoints
-Session,"id, userId, therapistId, scheduledAt, duration, status, cancelledBy, cancelReason, cancelledAt, notes, summary, userRating, userFeedback, roomUrl, roomName, paymentId, createdAt, updatedAt",User,TherapistProfile,Payment?,no,no,Core therapy model; no implementation
-MoodEntry,"id, userId, score, note, tags, createdAt",User,yes (MoodPage),yes (health-tools.controller.ts),yes,no,Fully implemented with indexes
-JournalEntry,"id, userId, title, content, mood, tags, isPrivate, createdAt, updatedAt",User,yes (JournalPage),yes (health-tools.controller.ts),yes,no,Fully implemented with indexes
-MeditationLog,"id, userId, duration, type, trackName, completed, createdAt",User,yes (MeditationPage),yes (health-tools.controller.ts),yes,no,Fully implemented with indexes
-Payment,"id, userId, razorpayOrderId, razorpayPaymentId, razorpaySignature, amount, currency, status, description, type, refundAmount, refundReason, refundedAt, metadata, createdAt, updatedAt",User,Session?,no,no,yes,no,Razorpay fields ready; no integration
-Notification,"id, userId, type, title, body, data, isRead, readAt, channel, sentAt, deliveredAt, createdAt",User,no,no,yes,no,Schema complete; no send/receive endpoints
+User,"id email passwordHash name phone role avatarUrl isVerified lastLoginAt failedAttempts lockedUntil createdAt updatedAt","RefreshToken[] AuditLog[] UserProfile? UserSettings? TherapistProfile? Session[] MoodEntry[] JournalEntry[] MeditationLog[] Payment[] Notification[]",yes,yes,yes,yes,FULLY LIVE - core auth model
+RefreshToken,"id tokenHash userId userAgent ipHash familyId isRevoked expiresAt createdAt updatedAt","User",no,yes,yes,no,FULLY LIVE - token rotation + hijack detection
+AuditLog,"id userId category action metadata ipHash userAgent createdAt","User?",no,partially,yes,no,Schema exists but nothing written to it; audit trail non-functional
+UserProfile,"id userId dateOfBirth gender city state country struggles therapyHistory goals therapistGenderPref therapistLanguages therapistApproach interests emergencyName emergencyPhone emergencyRelation onboardingStep onboardingComplete birthTime birthPlace zodiacSign createdAt updatedAt","User",partially,write-only,yes,yes,Created during onboarding but not fetched/displayed in UI fully
+UserSettings,"id userId darkMode animations compactMode pushNotifs soundEffects patternAlerts profileVisible constellationPublic twoFactor createdAt updatedAt","User",yes,yes,yes,yes,Created at signup; settings page reads/writes via API
+TherapistProfile,"id userId specializations approach languages qualifications experience bio photoUrl pricePerSession currency rating totalReviews totalSessions isVerified isAvailable verifiedAt createdAt updatedAt","User TherapistAvailability[] Session[]",no,seed-only,yes,yes,Only created via seed script; no API to create/update
+TherapistAvailability,"id therapistId dayOfWeek startTime endTime slotDuration breakAfterSlot isActive createdAt updatedAt","TherapistProfile",no,no,yes,no,ORPHANED - never created or queried anywhere
+Session,"id userId therapistId scheduledAt duration status cancelledBy cancelReason cancelledAt notes summary userRating userFeedback roomUrl roomName paymentId createdAt updatedAt","User TherapistProfile Payment?",no,no,yes,no,ORPHANED - no endpoints to create/manage sessions
+MoodEntry,"id userId score note tags createdAt","User",yes,yes,yes,no,LIVE - frontend mood page talks to GET/POST /health-tools/mood
+JournalEntry,"id userId title content mood tags isPrivate createdAt updatedAt","User",yes,yes,yes,no,LIVE - journal + confessional pages use GET/POST /health-tools/journal
+MeditationLog,"id userId duration type trackName completed createdAt","User",yes,yes,yes,no,LIVE - meditation page uses GET/POST /health-tools/meditation
+Payment,"id userId razorpayOrderId razorpayPaymentId razorpaySignature amount currency status description type refundAmount refundReason refundedAt metadata createdAt updatedAt","User Session?",no,no,yes,no,ORPHANED - no Razorpay integration; 27 payment endpoints are 501 stubs
+Notification,"id userId type title body data isRead readAt channel sentAt deliveredAt createdAt","User",yes,yes,yes,no,LIVE - notifications page reads via API; WebSocket real-time push
+MISSING: BlogPost,N/A - model not in schema,N/A,frontend uses hardcoded data,no,no,no,Docs claim Phase 9 but no schema model exists
+MISSING: BlogCategory,N/A - model not in schema,N/A,no,no,no,no,Referenced in BUILD_PLAN.md Phase 9
+MISSING: Course,N/A - model not in schema,N/A,frontend uses hardcoded data,no,no,no,Docs claim Phase 11 but no schema model exists
+MISSING: CourseModule,N/A - model not in schema,N/A,no,no,no,no,Referenced in BUILD_PLAN.md Phase 11
+MISSING: Enrollment,N/A - model not in schema,N/A,no,no,no,no,Referenced in BUILD_PLAN.md Phase 11
+MISSING: Product,N/A - model not in schema,N/A,no,no,no,no,Shop Phase 12 - no schema
+MISSING: Order,N/A - model not in schema,N/A,no,no,no,no,Shop Phase 12 - no schema
+MISSING: CommunityPost,N/A - model not in schema,N/A,no,no,no,no,Community Phase 10 - no schema
+MISSING: Event,N/A - model not in schema,N/A,no,no,no,no,Events Phase 22 - no schema
+MISSING: Membership,N/A - model not in schema,N/A,no,no,no,no,Phase 23 - no schema
+MISSING: CorporateAccount,N/A - model not in schema,N/A,no,no,no,no,Phase 15 - no schema
+MISSING: AIConversation,N/A - model not in schema,N/A,no,no,no,no,AI chat Phase 6 - no schema despite docs
+MISSING: AIMessage,N/A - model not in schema,N/A,no,no,no,no,AI chat Phase 6 - no schema despite docs

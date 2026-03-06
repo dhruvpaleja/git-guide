@@ -71,7 +71,7 @@ export default function WellnessSection() {
       id="about"
       ref={sectionRef}
       className="relative overflow-hidden bg-black flex flex-col items-center justify-center pt-24 pb-16"
-      style={{ minHeight: '1100px' }}
+      style={{ minHeight: 'clamp(800px, 140vh, 1100px)' }}
     >
       {/* Dynamic Background Brightness Illusion */}
       <div
@@ -90,8 +90,8 @@ export default function WellnessSection() {
           ref={leftCircleRef}
           className="absolute"
           style={{
-            width: '500px',
-            height: '1000px',
+            width: 'clamp(250px, 70vw, 500px)',
+            height: 'clamp(500px, 140vw, 1000px)',
             borderRadius: '500px 0 0 500px',
             background: 'linear-gradient(to bottom, #ffa755, #ff7b00 50%)',
             filter: 'blur(50px)',
@@ -105,8 +105,8 @@ export default function WellnessSection() {
           ref={rightCircleRef}
           className="absolute"
           style={{
-            width: '500px',
-            height: '1000px',
+            width: 'clamp(250px, 70vw, 500px)',
+            height: 'clamp(500px, 140vw, 1000px)',
             borderRadius: '0 500px 500px 0',
             background: 'linear-gradient(to bottom, #ffa755, #ff7b00 50%)',
             filter: 'blur(50px)',
@@ -120,8 +120,8 @@ export default function WellnessSection() {
           ref={strokeRingRef}
           className="absolute pointer-events-none flex items-center justify-center"
           style={{
-            width: '1200px',
-            height: '1200px',
+            width: 'clamp(600px, 160vw, 1200px)',
+            height: 'clamp(600px, 160vw, 1200px)',
           }}
         >
           <img src="/images/orange-stroke.svg" alt="" className="block w-full h-full object-contain" />
@@ -133,7 +133,7 @@ export default function WellnessSection() {
 
         {/* Title */}
         <div ref={titleRef} className="text-center">
-          <h2 className="text-3xl md:text-5xl font-semibold text-white tracking-[-0.32px] text-center px-4 mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-white tracking-[-0.32px] text-center px-4 mb-6">
             Wellness Feels Fragmented
           </h2>
         </div>
@@ -152,7 +152,7 @@ export default function WellnessSection() {
           <div
             className="relative overflow-hidden w-full max-w-[540px] aspect-[4/5] object-cover"
             style={{
-              borderRadius: '0 0 0 120px',
+              borderRadius: '0 0 0 clamp(40px, 10vw, 120px)',
             }}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none" />

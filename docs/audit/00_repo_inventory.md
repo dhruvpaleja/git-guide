@@ -1,106 +1,131 @@
-# Repository Inventory
+# Repository Inventory — Soul Yatri Website
 
-**Generated:** March 6, 2026  
-**Total Files:** 84,566  
-**Excluded (Vendor/Generated):** ~80,000 (node_modules, .git, dist, build)  
-**Reviewable Files:** ~4,500
+## Overview
 
----
+| Metric | Value |
+|--------|-------|
+| Total files | 4,684 |
+| Semantic-reviewed (code/config/docs) | 416 |
+| Inventoried only (images/SVG/binary) | 4,268 |
+| Excluded from deep review | node_modules/, .git/, dist/ (not present) |
 
-## File Extension Counts
+## Extension Breakdown
 
 | Extension | Count | Category |
 |-----------|-------|----------|
-| .ts/.tsx | ~1,200 | Source (Frontend) |
-| .ts (server) | ~400 | Source (Backend) |
-| .json | ~500 | Config/Data |
-| .md | ~100 | Documentation |
-| .svg/.png/.jpg | ~200 | Assets |
-| .sql | ~10 | Migrations |
-| .yml/.yaml | ~20 | CI/CD/Config |
-| Other | ~70 | Misc |
+| .svg | 3,290 | Static Asset |
+| .png | 593 | Static Asset |
+| .ts | 238 | Source Code |
+| .md | 201 | Documentation |
+| .tsx | 178 | Source Code |
+| .json | 81 | Config/Data |
+| .jpg | 58 | Static Asset |
+| .js | 9 | Config/Script |
+| .mjs | 4 | Script |
+| .yml | 3 | CI/CD |
+| .cjs | 3 | Config/Script |
+| .sql | 2 | Migration |
+| .css | 1 | Stylesheet |
+| .prisma | 1 | Schema |
+| .html | 1 | Entry Point |
+| .conf | 1 | Infra Config |
+| .woff2 | 1 | Font |
+| .log | 1 | Artifact (should not be committed) |
 
----
-
-## Directory Structure Map
+## High-Level Structure Map
 
 ```
 soul-yatri-website/
-├── src/                          # Frontend Source (~1,200 files)
-│   ├── components/               # UI Components (shadcn/radix)
-│   ├── context/                  # React Context (Auth, Theme)
-│   ├── features/                 # Feature Modules
-│   ├── hooks/                    # Custom Hooks
-│   ├── layouts/                  # Layout Components
-│   ├── pages/                    # Page Components
-│   ├── router/                   # Routing Config
-│   ├── services/                 # API Clients
-│   ├── types/                    # TypeScript Types
-│   ├── utils/                    # Utilities
-│   ├── config/                   # App Configuration
-│   ├── constants/                # Constants
-│   └── middleware/               # API Middleware
-├── server/                       # Backend Source (~400 files)
+├── src/                    # Frontend (React 19 + TypeScript + Vite)
+│   ├── components/         # Shared UI (shadcn/ui + custom)
+│   ├── config/             # App config, routes, runtime flags
+│   ├── constants/          # App-wide constants
+│   ├── context/            # React Context (Auth, Theme)
+│   ├── features/           # Feature modules (landing, auth, dashboard, etc.)
+│   ├── hooks/              # Custom React hooks
+│   ├── layouts/            # MainLayout, DashboardLayout, AuthLayout
+│   ├── middleware/         # API request middleware
+│   ├── pages/              # Route page components
+│   ├── router/             # React Router config + ProtectedRoute
+│   ├── services/           # API, WebSocket, Analytics, Storage services
+│   ├── types/              # TypeScript type definitions
+│   └── utils/              # Helpers, validators, security, errors
+│
+├── server/                 # Backend (Express + TypeScript + Prisma)
 │   ├── src/
-│   │   ├── config/              # Server Config
-│   │   ├── controllers/         # Route Controllers
-│   │   ├── lib/                 # Utilities
-│   │   ├── middleware/          # Express Middleware
-│   │   ├── modules/             # Domain Modules (duplicate?)
-│   │   ├── routes/              # Route Definitions
-│   │   ├── services/            # Business Logic
-│   │   ├── shared/              # Shared Code
-│   │   └── validators/          # Zod Schemas
-│   ├── prisma/
-│   │   ├── schema.prisma        # Database Schema
-│   │   ├── migrations/          # DB Migrations
-│   │   └── seed-dev.ts         # Seed Data
-│   └── scripts/                 # Server Scripts
-├── docs/                         # Documentation (~50 files)
-│   ├── execution/               # Execution Tracking
-│   └── *.md                     # Various Docs
-├── tests/                        # E2E Tests (~20 files)
-├── public/                       # Static Assets (~100 files)
-│   └── images/                  # Image Assets
-├── scripts/                      # Build Scripts (~5 files)
-├── .github/workflows/            # CI/CD (~3 files)
-├── .agent/, .agents/, .kiro/     # AI Agent Configs (~500 files)
-└── Root Config Files            # (~20 files)
+│   │   ├── config/         # Server config + env validation
+│   │   ├── controllers/    # Route handlers (ACTIVE - 12 files)
+│   │   ├── lib/            # Core libs (prisma, logger, websocket, errors)
+│   │   ├── middleware/     # Auth, RBAC, security, upload, rate-limit
+│   │   ├── modules/        # Feature modules (ABANDONED - 18 dirs, all stubs)
+│   │   ├── routes/         # Express route definitions (23 files)
+│   │   ├── services/       # Cache, email, queue, storage (mostly stubs)
+│   │   ├── shared/         # Contracts, types, utils
+│   │   └── validators/     # Zod validation schemas
+│   └── prisma/
+│       ├── schema.prisma   # 20 models, 2 migrations
+│       └── migrations/     # 2 SQL migrations
+│
+├── public/                 # Static assets
+│   ├── images/             # 130+ feature-mapped images
+│   └── plugins/            # Situ design plugin bundles
+│
+├── docs/                   # Project documentation (20+ markdown files)
+│   ├── audit/              # THIS audit output
+│   └── execution/          # Build plan execution tracking
+│
+├── tests/                  # Playwright E2E tests (1 file)
+├── scripts/                # Build scripts (bundle budget, responsive audit)
+├── .github/workflows/      # CI/CD (build + quality pipelines)
+├── .kiro/skills/           # Kiro AI marketing skill definitions
+└── .qwen/skills/           # Qwen AI marketing skill definitions
 ```
 
----
+## Actual Stack (Verified from package.json + code)
+
+### Frontend
+| Technology | Version | Status |
+|-----------|---------|--------|
+| React | 19.2.0 | ✅ Installed |
+| TypeScript | ~5.9.3 | ✅ Installed |
+| Vite | ^7.2.4 | ✅ Installed |
+| Tailwind CSS | ^3.4.19 | ✅ Installed |
+| React Router DOM | ^7.13.0 | ✅ Installed |
+| Framer Motion | ^12.34.3 | ✅ Installed |
+| GSAP | ^3.14.2 | ✅ Installed |
+| Three.js | ^0.183.1 | ✅ Installed |
+| Radix UI (15 primitives) | Various | ✅ Installed |
+| shadcn/ui | N/A (copy-paste) | ✅ Present |
+| Recharts | ^2.15.4 | ✅ Installed |
+| React Hook Form + Zod | Latest | ✅ Installed |
+| zxcvbn | ^4.4.2 | ✅ Installed |
+| Zustand | — | ❌ NOT INSTALLED (docs claim it) |
+| React Query | — | ❌ NOT INSTALLED (docs claim it) |
+
+### Backend
+| Technology | Version | Status |
+|-----------|---------|--------|
+| Express | 4.21.2 | ✅ Installed |
+| TypeScript | ~5.9.3 | ✅ Installed |
+| Prisma | 7.4.2 | ✅ Installed |
+| PostgreSQL (adapter) | — | ✅ Via Prisma |
+| jsonwebtoken | 9.0.3 | ✅ Installed |
+| bcrypt | 6.0.0 | ✅ Installed |
+| ws (WebSocket) | 8.19.0 | ✅ Installed |
+| Winston (logging) | 3.19.0 | ✅ Installed |
+| Multer + Sharp | Latest | ✅ Installed |
+| Helmet + CORS | Latest | ✅ Installed |
+| express-rate-limit | 8.2.1 | ✅ Installed |
+| Zod + zxcvbn | Latest | ✅ Installed |
+| Socket.io | — | ❌ NOT INSTALLED (docs claim it) |
 
 ## Excluded/Generated/Vendor Areas
 
-| Directory | Reason | Approx. Files |
-|-----------|--------|---------------|
-| node_modules/ | Vendor dependencies | ~60,000 |
-| server/node_modules/ | Backend vendor | ~15,000 |
-| .git/ | Version control | ~5,000 |
-| dist/ | Frontend build output | ~100 |
-| server/dist/ | Backend build output | ~200 |
-| build/ | Alternative build output | ~100 |
-| playwright-report/ | Test reports | ~50 |
-| test-results/ | Test results | ~10 |
-
----
-
-## High-Level Structure Quality: 70/100
-
-### Strengths
-- ✅ Clear separation of frontend/backend
-- ✅ Feature-based organization in frontend
-- ✅ Standard Express/Prisma backend structure
-- ✅ Comprehensive UI component library (shadcn/radix)
-
-### Weaknesses
-- ⚠️ Controller/Module duplication in backend
-- ⚠️ Multiple AI agent config directories (.agent, .agents, .kiro)
-- ⚠️ Documentation overclaims implementation
-- ⚠️ No clear ownership of shared types
-
-### Recommendations
-1. Consolidate `server/src/controllers/*` and `server/src/modules/*` into single pattern
-2. Remove duplicate AI agent configurations
-3. Add clear README in each major directory
-4. Create architecture decision records (ADRs)
+| Area | Status | Reason |
+|------|--------|--------|
+| node_modules/ | NOT PRESENT | Dependencies not installed |
+| dist/ | NOT PRESENT | No build output |
+| .git/ | Excluded | Version control internal |
+| .kiro/skills/ | Inventoried only | AI tool config, not app code |
+| .qwen/skills/ | Inventoried only | AI tool config, not app code |
+| public/plugins/situ-design/ | Inventoried only | Third-party design plugin bundles |

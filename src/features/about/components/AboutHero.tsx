@@ -24,7 +24,7 @@ export default function AboutHero() {
     return (
         <section
             ref={heroRef}
-            className="relative w-full pt-[140px] pb-[80px] flex flex-col items-center justify-center bg-white"
+            className="relative w-full pt-[80px] sm:pt-[100px] md:pt-[120px] lg:pt-[140px] pb-[40px] sm:pb-[60px] md:pb-[80px] flex flex-col items-center justify-center bg-white"
         >
             <div
                 className="w-full text-center px-4"
@@ -35,7 +35,7 @@ export default function AboutHero() {
                 }}
             >
                 <h1
-                    className="text-[32px] md:text-[42px] font-semibold leading-tight md:leading-[80px] tracking-[-0.42px]"
+                    className="text-[24px] sm:text-[32px] md:text-[42px] font-semibold leading-tight md:leading-[80px] tracking-[-0.42px]"
                     style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                     <span style={{ color: '#FF7B00' }}>We see you. </span>

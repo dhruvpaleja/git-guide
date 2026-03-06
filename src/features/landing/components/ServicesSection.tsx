@@ -22,11 +22,11 @@ export default function ServicesSection() {
 
   return (
     <section id="services" ref={sectionRef} className="relative bg-white py-[60px]">
-      <div className="max-w-[1440px] mx-auto px-[82px]">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[82px]">
         {/* Title - Figma: text-32px */}
         <div className="text-center mb-2">
           <h2
-            className={`text-[32px] font-semibold text-black tracking-[-0.32px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+            className={`text-[24px] sm:text-[28px] md:text-[32px] font-semibold text-black tracking-[-0.32px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
           >
             What Soul Yatri Offers To You
@@ -53,7 +53,7 @@ export default function ServicesSection() {
                 style={{ transitionDelay: `${0.15 + i * 0.08}s` }}
               >
                 <div
-                  className="relative overflow-hidden rounded-[25px] group cursor-pointer bg-white w-full h-[400px] md:h-[450px] shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col"
+                  className="relative overflow-hidden rounded-[25px] group cursor-pointer bg-white w-full min-h-[350px] md:min-h-[400px] lg:min-h-[450px] shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col"
                   style={{
                     boxShadow: service.featured ? '0px 30px 60px 0px rgba(0,0,0,0.25)' : 'none',
                   }}

@@ -2,7 +2,7 @@ import { Search } from 'lucide-react';
 
 export default function BusinessHero() {
     return (
-        <section className="w-full flex justify-center pt-[140px] pb-[80px] px-6">
+        <section className="w-full flex justify-center pt-[80px] sm:pt-[100px] md:pt-[120px] lg:pt-[140px] pb-[40px] sm:pb-[60px] md:pb-[80px] px-4 sm:px-6">
             <div className="max-w-[800px] w-full flex flex-col items-center text-center">
                 <h1
                     className="text-[40px] md:text-[54px] font-semibold text-black leading-[1.2] tracking-[-1.08px] mb-6"
@@ -22,7 +22,7 @@ export default function BusinessHero() {
                     <input
                         type="text"
                         placeholder="Search for Services..."
-                        className="w-full h-[60px] pl-6 pr-14 rounded-full bg-[#F3F3F3] border border-black/5 text-[16px] outline-none placeholder:text-black/40 focus:bg-white focus:border-black/20 focus:ring-4 focus:ring-black/5 transition-all"
+                        className="w-full h-[48px] md:h-[60px] pl-4 sm:pl-6 pr-12 sm:pr-14 rounded-full bg-[#F3F3F3] border border-black/5 text-[14px] sm:text-[16px] outline-none placeholder:text-black/40 focus:bg-white focus:border-black/20 focus:ring-4 focus:ring-black/5 transition-all"
                         style={{ fontFamily: "'Manrope', sans-serif" }}
                     />
                     <button

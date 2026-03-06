@@ -5,10 +5,10 @@ export default function ContactPage() {
   useDocumentTitle('Contact Us');
   return (
     <div className="w-full bg-[#f3f3f3] text-black">
-      <section className="mx-auto min-h-[1510px] w-full max-w-[1440px] px-6 pb-24 pt-[120px] sm:px-10 lg:px-[82px]">
+      <section className="mx-auto min-h-screen w-full max-w-[1440px] px-4 pb-24 pt-[80px] sm:px-6 sm:pt-[100px] md:px-10 md:pt-[120px] lg:px-[82px]">
 
         <div className="mt-6 text-center">
-          <h1 className="text-[32px] font-semibold tracking-[-0.32px] text-black">Get In Touch With Soul Yatri</h1>
+          <h1 className="text-[24px] sm:text-[28px] md:text-[32px] font-semibold tracking-[-0.32px] text-black">Get In Touch With Soul Yatri</h1>
           <p className="mt-4 text-[16px] tracking-[-0.16px] text-black/50">
             Fill out the form below or schedule a meeting with us at your convenience
           </p>
@@ -19,17 +19,17 @@ export default function ContactPage() {
             <form className="space-y-7">
               <label className="block">
                 <span className="mb-3 block text-[16px] tracking-[-0.16px] text-black">Enter Full Name <span className="text-[#d93025]">*</span></span>
-                <input autoComplete="name" className="h-[60px] w-full rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="Ex. Dhruv Paleja" />
+                <input autoComplete="name" className="h-[48px] sm:h-[54px] md:h-[60px] w-full rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[20px] sm:px-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="Ex. Dhruv Paleja" />
               </label>
 
               <label className="block">
                 <span className="mb-3 block text-[16px] tracking-[-0.16px] text-black">Enter Mail <span className="text-[#d93025]">*</span></span>
-                <input autoComplete="email" className="h-[60px] w-full rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="Ex. dhruvpaleja10@hotmail.com" />
+                <input autoComplete="email" className="h-[48px] sm:h-[54px] md:h-[60px] w-full rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[20px] sm:px-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="Ex. dhruvpaleja10@hotmail.com" />
               </label>
 
               <label className="block">
                 <span className="mb-3 block text-[16px] tracking-[-0.16px] text-black">Enter Mobile Number <span className="text-[#d93025]">*</span></span>
-                <div className="flex h-[60px] items-center rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[14px]">
+                <div className="flex h-[48px] sm:h-[54px] md:h-[60px] items-center rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[14px]">
                   <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-black/50 bg-white text-[#ff8b00]">
                     <img src="/images/contact/contact-flag-icon.png" alt="India" className="h-[16px] w-[16px] rounded-full object-cover" />
                   </span>
@@ -40,12 +40,12 @@ export default function ContactPage() {
 
               <label className="block">
                 <span className="mb-3 block text-[16px] tracking-[-0.16px] text-black">Message you want to convey</span>
-                <textarea className="h-[250px] w-full resize-none rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[30px] py-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="write your message..." />
+                <textarea className="h-[180px] sm:h-[220px] md:h-[250px] w-full resize-none rounded-[25px] border border-black/10 bg-[#f9f9f9] px-[20px] sm:px-[30px] py-[20px] sm:py-[30px] text-[14px] tracking-[-0.14px] placeholder:text-black/50 focus:outline-none" placeholder="write your message..." />
               </label>
 
-              <label className="inline-flex items-center gap-3">
+              <label className="inline-flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" className="h-[24px] w-[24px] rounded-[5px] border border-black/50 accent-black" />
-                <span className="text-[16px] tracking-[-0.16px] text-black">
+                <span className="text-[14px] sm:text-[16px] tracking-[-0.16px] text-black">
                   I agree with the <span className="underline">Terms & Conditions</span>
                 </span>
               </label>
@@ -75,7 +75,7 @@ export default function ContactPage() {
 
           <div>
             <h2 className="text-[24px] font-semibold tracking-[-0.24px]">Terms & Conditions</h2>
-            <div className="mt-7 h-[750px] overflow-hidden rounded-[25px] border border-black/10 bg-white p-[30px]">
+            <div className="mt-7 h-[400px] sm:h-[550px] md:h-[750px] overflow-hidden rounded-[25px] border border-black/10 bg-white p-4 sm:p-[30px]">
               <div className="h-full overflow-auto pr-2 text-[14px] leading-[30px] tracking-[-0.14px] text-black">
                 <p className="text-[16px] font-semibold">Terms of Service – Soul Yatri</p>
                 <p>&nbsp;</p>

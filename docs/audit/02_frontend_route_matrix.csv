@@ -1,37 +1,41 @@
 route,page_component,layout,auth_required,data_source,implementation_state,ui_state,ux_state,api_dependencies,notes
-/,SplashScreen,None,No,Static,live,complete,good,none,Entry point
-/login,LoginPage,AuthLayout,No,API + Mock,implemented_mock_backed,complete,good,/auth/login,Mock auth works without backend
-/signup,SignupPage,AuthLayout,No,API + Mock Fallback,implemented_mock_backed,complete,good,/auth/register,Dev mode creates mock user
-/journey-preparation,JourneyPreparationPage,Protected,Yes,Unknown,unknown,unknown,unknown,unknown,Post-login onboarding
-/dashboard,DashboardPage,DashboardLayout,Yes,API (health-tools),implemented_live,complete,good,/health-tools/*,Main user dashboard
-/dashboard/mood,MoodPage,DashboardLayout,Yes,API,implemented_live,complete,good,/health-tools/mood,Real CRUD operations
-/dashboard/journal,JournalPage,DashboardLayout,Yes,API,implemented_live,complete,good,/health-tools/journal,Real CRUD operations
-/dashboard/meditate,MeditationPage,DashboardLayout,Yes,API,implemented_live,complete,good,/health-tools/meditation,Real CRUD operations
-/dashboard/notifications,NotificationsPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,/notifications,Unverified
-/dashboard/profile,ProfilePage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,/users,Unverified
-/dashboard/settings,SettingsPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,none,Unverified
-/dashboard/constellation,ConstellationPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,none,Feature exists but backend unclear
-/dashboard/confessional,ConfessionalPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,none,Feature exists but backend unclear
-/dashboard/connections,ConnectionsPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,none,Feature exists but backend unclear
-/dashboard/sessions,SessionsPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,/therapy/sessions,Backend stubbed
-/practitioner,PractitionerDashboard,Protected,Yes,Unknown,unknown,unknown,unknown,unknown,Practitioner entry point
-/practitioner/sessions,TodaysSessionsPage,Protected,Yes,Unknown,unknown,unknown,unknown,/therapy/sessions,Backend stubbed
-/practitioner/clients,MyClientsPage,Protected,Yes,Unknown,unknown,unknown,unknown,/users,Backend unclear
-/practitioner/availability,ManageAvailabilityPage,Protected,Yes,Unknown,unknown,unknown,unknown,/therapy/availability,Backend unclear
-/practitioner/profile,EditProfilePage,Protected,Yes,Unknown,unknown,unknown,unknown,/users,Backend unclear
-/astrology,AstrologyDashboard,Protected,Yes,Stubbed API,stubbed,complete,unknown,/astrology/*,Backend returns empty
-/admin,AdminDashboard,Protected,Yes,Stubbed API,stubbed,complete,unknown,/admin/*,Backend returns empty
-/home,LandingPage,MainLayout,No,Static,live,complete,good,none,Marketing landing
-/about,AboutPage,MainLayout,No,Static,live,complete,good,none,Company info
-/business,BusinessPage,MainLayout,No,Static,live,complete,good,none,B2B offerings
-/business/corporate,CorporatePage,MainLayout,No,Static,live,complete,good,none,Corporate wellness
-/blogs,BlogsPage,MainLayout,No,Stubbed API,stubbed,complete,good,/blog/posts,Backend returns empty array
-/blog/:id,BlogPostPage,MainLayout,No,Stubbed API,stubbed,complete,good,/blog/posts/:id,Backend not implemented
-/courses,CoursesPage,MainLayout,No,Static/Hardcoded,implemented_hardcoded_static,complete,good,none,Hardcoded course data
-/courses/:id,CourseDetailsPage,MainLayout,No,Stubbed API,stubbed,complete,good,/courses/:id,Backend not implemented
-/contact,ContactPage,MainLayout,No,Static,live,complete,good,none,Contact form
-/careers,CareerPage,MainLayout,No,Static,live,complete,good,none,Career listings
-/student-counselling,StudentCounsellingPage,MainLayout,No,Static,live,complete,good,none,Student services
-/business/workshop-demo,WorkshopDemoPage,MainLayout,No,Static,live,complete,good,none,Workshop demo
-/business/student-counselling-demo,StudentCounsellingDemoPage,MainLayout,No,Static,live,complete,good,none,Demo page
-/*,NotFoundPage,MainLayout,No,Static,live,complete,good,none,404 handler
+/,SplashScreen,none,no,static,implemented,polished,good,none,Multi-language greetings with animation
+/login,LoginPage,none,no,api+mock,implemented,polished,good,POST /auth/login,OAuth Google/Apple stubbed
+/signup,SignupPage,none,no,api+mock,implemented,polished,good,POST /auth/register,Multi-step onboarding flow
+/practitioner-onboarding/*,PractitionerOnboardingPage,none,no,api,implemented,good,good,POST /users/register,Professional details collection
+/journey-preparation,JourneyPreparationPage,none,yes(bypassed),static,implemented,polished,good,none,Mandala background + journey cards
+/personalize,Redirect,none,yes(bypassed),redirect,implemented,n/a,n/a,none,Redirects to /dashboard/personalization?s=4
+/home,LandingPage,MainLayout,no,static,implemented,polished,good,none,Hero + GSAP animations + sections
+/about,AboutPage,MainLayout,no,static,implemented,polished,good,none,Company info + founders
+/business,BusinessPage,MainLayout,no,static,implemented,good,good,none,B2B solutions overview
+/business/corporate,CorporatePage,MainLayout,no,static,implemented,good,good,none,Corporate wellness packages
+/blogs,BlogsPage,MainLayout,no,hardcoded,implemented,polished,good,none,15+ hardcoded posts with search
+/blog/:id,BlogPostPage,MainLayout,no,hardcoded,implemented,polished,good,none,Full blog content + comments UI (no persistence)
+/careers,CareerPage,MainLayout,no,hardcoded,implemented,good,good,none,12+ hardcoded job listings
+/contact,ContactPage,MainLayout,no,static,implemented,good,weak,none,Form exists but doesn't submit
+/courses,CoursesPage,MainLayout,no,hardcoded,implemented,good,good,none,50+ hardcoded courses with filters
+/courses/:id,CourseDetailsPage,MainLayout,no,hardcoded,implemented,good,good,none,Tabs + curriculum (mock data)
+/student-counselling,StudentCounsellingPage,MainLayout,no,hardcoded,implemented,good,good,none,Auto-scroll carousel
+/business/workshop-demo,WorkshopDemoPage,MainLayout,no,hardcoded,implemented,good,good,none,Workshop cards
+/business/student-counselling-demo,StudentCounsellingDemoPage,MainLayout,no,hardcoded,implemented,good,good,none,Demo variant
+/dashboard,DashboardPage,DashboardLayout,yes(bypassed),api+mock,implemented,polished,good,GET /users/dashboard,Widgets with API integration
+/dashboard/personalization,PersonalizationPage,DashboardLayout,yes(bypassed),api,implemented,good,good,various,Onboarding step continuation
+/dashboard/mood,MoodPage,DashboardLayout,yes(bypassed),api,implemented,polished,good,GET/POST /health-tools/mood,1-10 scale + tags + chart
+/dashboard/journal,JournalPage,DashboardLayout,yes(bypassed),api,implemented,polished,good,GET/POST /health-tools/journal,Write/read tabs + mood tracking
+/dashboard/meditate,MeditationPage,DashboardLayout,yes(bypassed),api,implemented,good,good,GET/POST /health-tools/meditation,Timer + guided library
+/dashboard/notifications,NotificationsPage,DashboardLayout,yes(bypassed),api+ws,implemented,good,good,GET /notifications + WebSocket,Real-time notification center
+/dashboard/profile,ProfilePage,DashboardLayout,yes(bypassed),api,implemented,good,good,GET/PUT /users/profile + avatar upload,Stats + edit + avatar
+/dashboard/settings,SettingsPage,DashboardLayout,yes(bypassed),api,implemented,good,good,GET/PUT /users/settings + export + delete,Appearance + notifications + privacy
+/dashboard/constellation,ConstellationPage,DashboardLayout,yes(bypassed),api+mock_fallback,implemented,polished,good,/constellation/* endpoints,CRUD nodes + canvas; mock fallback
+/dashboard/confessional,ConfessionalPage,DashboardLayout,yes(bypassed),api,implemented,good,good,POST/GET /health-tools/journal,Anonymous confessional journal
+/dashboard/connections,ConnectionsPage,DashboardLayout,yes(bypassed),hardcoded,implemented,good,good,none,MOCK_MATCHES hardcoded
+/dashboard/sessions,SessionsPage,DashboardLayout,yes(bypassed),hardcoded,implemented,good,good,none,Mock therapist list + sessions
+/practitioner,PractitionerDashboard,none,yes(bypassed),hardcoded,implemented,good,weak,none,Animated mock analytics
+/practitioner/sessions,TodaysSessionsPage,none,yes(bypassed),hardcoded,implemented,good,weak,none,Hardcoded sessions + chart
+/practitioner/clients,MyClientsPage,none,yes(bypassed),hardcoded,implemented,good,weak,none,5 hardcoded clients
+/practitioner/availability,ManageAvailabilityPage,none,yes(bypassed),hardcoded,implemented,good,weak,none,Hardcoded schedule; no Google Calendar
+/practitioner/profile,EditProfilePage,none,yes(bypassed),hardcoded,implemented,good,weak,none,Fake 1.2s save delay
+/practitioner/logout,LogoutPage,none,yes(bypassed),api,implemented,good,good,logout(),Countdown + stats display
+/astrology,AstrologyDashboard,none,yes(bypassed),hardcoded,implemented,good,weak,none,ALL data hardcoded (fake stats)
+/admin,AdminDashboard,none,yes(bypassed),hardcoded,implemented,good,weak,none,ALL data hardcoded (fake 1284 users etc.)
+*,NotFoundPage,MainLayout,no,static,implemented,good,good,none,404 with search integration

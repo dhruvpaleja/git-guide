@@ -198,7 +198,7 @@ export default function JournalPage() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Dear diary..."
-          className="flex-1 w-full bg-transparent border-none outline-none text-stone-700/90 placeholder:text-stone-300/60 text-[15px] leading-[32px] resize-none min-h-[260px]"
+          className="flex-1 w-full bg-transparent border-none outline-none text-stone-700/90 placeholder:text-stone-300/60 text-[15px] leading-[32px] resize-none min-h-[180px] sm:min-h-[260px]"
         />
 
         {/* Footer: Mood + Word count + Save */}

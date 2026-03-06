@@ -1,45 +1,59 @@
 /**
  * NodeDetailPanel
- * Slide-out panel showing selected node details, emotion history,
- * connections, and actions (edit/delete/connect)
+ * Slide-out panel showing AI-generated node details, origin provenance,
+ * intensity nudge controls, connections, and user actions.
+ * Note: Nodes are AI-generated. Users can adjust intensity (+/-1), pin,
+ * hide, add a note, or provide accuracy feedback — but cannot "edit" the node
+ * in the traditional CRUD sense.
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
-  Edit3,
-  Trash2,
   Pin,
   PinOff,
   Clock,
   Tag,
   MessageSquare,
   ChevronRight,
+  ThumbsUp,
+  ThumbsDown,
+  EyeOff,
+  Minus,
+  Plus,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils.js';
-import type { ConstellationNode, ConstellationConnection } from '../types/index.js';
-import { CATEGORY_CONFIGS, EMOTION_CONFIGS } from '../types/index.js';
+import type { ConstellationNode, ConstellationConnection, NodeGenerationSource, NodeSourceLabel } from '../types/index.js';
+import { CATEGORY_CONFIGS, EMOTION_CONFIGS, NODE_SOURCE_LABELS } from '../types/index.js';
 
 interface NodeDetailPanelProps {
   node: ConstellationNode | null;
   connections: ConstellationConnection[];
   allNodes: ConstellationNode[];
+  /** Optional override for source label map — defaults to NODE_SOURCE_LABELS */
+  sourceLabels?: Partial<Record<NodeGenerationSource, NodeSourceLabel>>;
   onClose: () => void;
-  onEdit: (node: ConstellationNode) => void;
   onDelete: (nodeId: string) => void;
   onTogglePin: (nodeId: string, pinned: boolean) => void;
   onSelectNode: (nodeId: string) => void;
+  /** Adjust node intensity by ±1 (AI-first: users nudge, not free-set) */
+  onNudgeIntensity?: (nodeId: string, delta: 1 | -1) => void;
+  /** Submit RLHF feedback on a node's accuracy */
+  onFeedback?: (nodeId: string, accurate: boolean) => void;
 }
 
 export default function NodeDetailPanel({
   node,
   connections,
   allNodes,
+  sourceLabels,
   onClose,
-  onEdit,
   onDelete,
   onTogglePin,
   onSelectNode,
+  onNudgeIntensity,
+  onFeedback,
 }: NodeDetailPanelProps) {
   if (!node) return null;
 
@@ -55,6 +69,15 @@ export default function NodeDetailPanel({
 
   const harmonyCount = connectedNodes.filter((c) => c.connection.type === 'harmony').length;
   const frictionCount = connectedNodes.filter((c) => c.connection.type === 'friction').length;
+
+  // Display label (user may have renamed the AI label)
+  const displayLabel = node.userRenamedLabel ?? node.label;
+
+  // Generation source — merge canonical labels with any caller overrides
+  const mergedSourceLabels = { ...NODE_SOURCE_LABELS, ...sourceLabels };
+  const sourceInfo = node.generationSource
+    ? (mergedSourceLabels[node.generationSource] ?? { emoji: '✨', label: 'AI' })
+    : { emoji: '✨', label: 'AI' };
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -77,7 +100,7 @@ export default function NodeDetailPanel({
         className="w-full h-full flex flex-col"
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 mb-6">
+        <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2.5 mb-2">
               <div
@@ -87,7 +110,7 @@ export default function NodeDetailPanel({
                 <span className="text-lg">{emotionConfig.emoji}</span>
               </div>
               <div className="min-w-0">
-                <h2 className="text-lg font-semibold text-white tracking-tight truncate">{node.label}</h2>
+                <h2 className="text-lg font-semibold text-white tracking-tight truncate">{displayLabel}</h2>
                 <div className="flex items-center gap-2">
                   <span className="text-xs uppercase tracking-wider font-medium" style={{ color: config.color }}>
                     {config.label}
@@ -107,10 +130,24 @@ export default function NodeDetailPanel({
           </button>
         </div>
 
+        {/* AI origin badge */}
+        <div className="flex items-center gap-1.5 mb-4">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/5 border border-accent/10">
+            <Sparkles className="w-3 h-3 text-accent/60" />
+            <span className="text-[10px] font-medium text-accent/70 uppercase tracking-wider">AI-generated</span>
+          </div>
+          {generationSource && (
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/[0.06]">
+              <span className="text-[11px]">{sourceInfo.emoji}</span>
+              <span className="text-[10px] text-white/40">{sourceInfo.label}</span>
+            </div>
+          )}
+        </div>
+
         {/* Description */}
         <p className="text-[15px] text-white/70 leading-relaxed mb-5">{node.description}</p>
 
-        {/* Intensity meter */}
+        {/* Intensity meter + nudge controls */}
         <div className="mb-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-white/50 uppercase tracking-wider font-medium">Intensity</span>
@@ -118,7 +155,7 @@ export default function NodeDetailPanel({
               {node.intensity}/5
             </span>
           </div>
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5 mb-2.5">
             {Array.from({ length: 5 }).map((_, i) => (
               <div
                 key={i}
@@ -130,6 +167,26 @@ export default function NodeDetailPanel({
               />
             ))}
           </div>
+          {/* Nudge buttons — user can adjust AI intensity by ±1 */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-white/30 flex-1">Adjust AI estimate:</span>
+            <button
+              aria-label="Decrease intensity"
+              disabled={node.intensity <= 1}
+              onClick={() => onNudgeIntensity?.(node.id, -1)}
+              className="w-6 h-6 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-25 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+            >
+              <Minus className="w-3 h-3 text-white/60" />
+            </button>
+            <button
+              aria-label="Increase intensity"
+              disabled={node.intensity >= 5}
+              onClick={() => onNudgeIntensity?.(node.id, 1)}
+              className="w-6 h-6 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-25 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+            >
+              <Plus className="w-3 h-3 text-white/60" />
+            </button>
+          </div>
         </div>
 
         {/* Note */}
@@ -137,7 +194,7 @@ export default function NodeDetailPanel({
           <div className="mb-5 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
             <div className="flex items-center gap-2 mb-2">
               <MessageSquare className="w-3.5 h-3.5 text-white/50" />
-              <span className="text-xs text-white/50 uppercase tracking-wider">Note</span>
+              <span className="text-xs text-white/50 uppercase tracking-wider">Your note</span>
             </div>
             <p className="text-sm text-white/60 leading-relaxed italic">"{node.note}"</p>
           </div>
@@ -217,45 +274,74 @@ export default function NodeDetailPanel({
         )}
 
         {/* Timestamps */}
-        <div className="flex items-center gap-4 mb-6 text-xs text-white/50">
+        <div className="flex items-center gap-4 mb-5 text-xs text-white/50">
           <div className="flex items-center gap-1.5">
             <Clock className="w-3 h-3" />
-            <span>Created {formatDate(node.createdAt)}</span>
+            <span>Detected {formatDate(node.createdAt)}</span>
           </div>
           <span>·</span>
           <span>Updated {formatDate(node.updatedAt)}</span>
         </div>
 
-        {/* Action buttons */}
+        {/* RLHF feedback — "Was this accurate?" */}
+        <div className="mb-5 p-3 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
+          <p className="text-xs text-white/40 mb-2.5">Was this node accurately detected?</p>
+          <div className="flex gap-2">
+            <button
+              aria-label="Yes, accurate"
+              onClick={() => onFeedback?.(node.id, true)}
+              className={cn(
+                'flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl border text-xs font-medium transition-all',
+                node.feedbackAccurate === true
+                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                  : 'bg-white/3 border-white/[0.05] text-white/40 hover:text-white/70 hover:bg-white/5',
+              )}
+            >
+              <ThumbsUp className="w-3.5 h-3.5" />
+              Accurate
+            </button>
+            <button
+              aria-label="Not accurate"
+              onClick={() => onFeedback?.(node.id, false)}
+              className={cn(
+                'flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl border text-xs font-medium transition-all',
+                node.feedbackAccurate === false
+                  ? 'bg-red-500/10 border-red-500/20 text-red-400'
+                  : 'bg-white/3 border-white/[0.05] text-white/40 hover:text-white/70 hover:bg-white/5',
+              )}
+            >
+              <ThumbsDown className="w-3.5 h-3.5" />
+              Not quite
+            </button>
+          </div>
+        </div>
+
+        {/* Secondary actions */}
         <div className="mt-auto flex gap-2">
-          <button
-            onClick={() => onEdit(node)}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-all text-sm font-medium"
-          >
-            <Edit3 className="w-4 h-4" />
-            Edit
-          </button>
           <button
             onClick={() => onTogglePin(node.id, !node.isPinned)}
             aria-label={node.isPinned ? 'Unpin node' : 'Pin node'}
             className={cn(
-              'flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border text-sm font-medium transition-all',
+              'flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl border text-sm font-medium transition-all',
               node.isPinned
                 ? 'bg-accent/10 border-accent/20 text-accent hover:bg-accent/20'
                 : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10',
             )}
           >
             {node.isPinned ? <PinOff className="w-4 h-4" /> : <Pin className="w-4 h-4" />}
+            {node.isPinned ? 'Unpin' : 'Pin'}
           </button>
           <button
             onClick={() => onDelete(node.id)}
-            aria-label="Delete node"
-            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-red-500/5 border border-red-500/10 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 transition-all text-sm font-medium"
+            aria-label="Hide node"
+            title="Hide this node from view (AI may re-detect it if the pattern persists)"
+            className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-white/40 hover:text-white/60 hover:bg-white/10 transition-all text-sm font-medium"
           >
-            <Trash2 className="w-4 h-4" />
+            <EyeOff className="w-4 h-4" />
           </button>
         </div>
       </motion.div>
     </AnimatePresence>
   );
 }
+

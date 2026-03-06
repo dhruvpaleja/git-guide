@@ -48,19 +48,19 @@ Soul Constellation is Soul Yatri's most original and defensible feature. No comp
 - ✅ `ConstellationCanvas.tsx` — interactive SVG canvas with drag/zoom/pan
 - ✅ `useConstellation.ts` — state management hook (CRUD operations wired to service layer)
 - ✅ `constellation.service.ts` — API service with **dev mock fallback** (fetches from real API first, falls back to mock if 404/501)
-- ✅ Node CRUD: create, update, delete, move
-- ✅ Connection CRUD: create, delete
+- ✅ Node display, connection display, animated connection lines
 - ✅ Insight cards panel (UI only)
-- ✅ NodeDetailPanel, AddNodeModal, InsightsPanel components exist
+- ✅ NodeDetailPanel, InsightsPanel components exist
 - ✅ Loading + Error states implemented correctly
 - ✅ Category configs (8 categories) + Emotion configs (30+ emotions)
 - ✅ Filter by category
 - ✅ Zoom + pan with mouse/touch
-- ✅ Animated connection lines (harmony/friction/neutral/evolving types)
 
 ### What's Missing (to reach 100/100)
 - ❌ **Backend routes return 501** — ALL constellation data is mock; nothing persists to DB
 - ❌ **No Prisma models** — ConstellationNode/Connection/Insight don't exist in schema
+- ❌ **No AI node generation engine** — nodes should be created by AI from mood logs, journals, chat, onboarding, therapy transcripts; NOT by users manually
+- ❌ **Manual AddNodeModal must be removed** — replaced with AI generation entry points (journal, chat, daily prompt)
 - ❌ **No AI insight generation** — insights are hardcoded in mock data
 - ❌ **No temporal history** — can't see how constellation evolved over time
 - ❌ **No practitioner view** — therapist cannot see client's constellation
@@ -73,9 +73,162 @@ Soul Constellation is Soul Yatri's most original and defensible feature. No comp
 
 ---
 
-## 2. Node Architecture
+## 2. AI-First Node Generation — Core Architecture Principle
 
-### 2a. Node Categories (8)
+> **"Users do not add nodes. The AI does. The constellation is a mirror, not a canvas."**
+
+This is the single most important architectural decision in the feature. Every node in a user's constellation is created, labelled, and positioned by AI. Users interact with a reflection of their inner world — they don't construct it manually.
+
+### 2a. Why AI-First (not user-created)
+
+**The problem with user-created nodes:**
+- Cognitive overhead: users don't know what to add, how to categorize, what intensity means
+- Sampling bias: users only add what they consciously recognize — AI catches patterns they miss
+- Abandonment: empty "add your first node" states have high drop-off
+- Inaccuracy: users rarely name their own emotions correctly (it's called the "affect labelling" problem in psychology)
+- No longitudinal growth: a manually-maintained map requires discipline; an AI-maintained map grows automatically as the user lives their life on the platform
+
+**The AI-first advantage:**
+- Zero friction: the constellation grows silently every time the user journals, logs a mood, chats with SoulBot, or completes a session
+- Richer insight: AI detects sub-patterns the user would never consciously surface
+- Delightful surprise: users open the app and discover "the AI noticed your anxiety spike 3 days ago — it added a node for it"
+- Better data: structured, consistent, normalised emotional data (vs. inconsistent user-typed labels)
+
+### 2b. The 6 Node Generation Sources
+
+Nodes are generated from 6 data pipelines, each running after a user interaction:
+
+| Source | Trigger | AI Prompt Style | Latency | Example Output |
+|---|---|---|---|---|
+| **Mood Log** | `POST /health-tools/mood` | Emotion classification + intensity mapping | < 3 seconds (async) | "Anxiety (career)" node at intensity 6 |
+| **Journal Entry** | `POST /health-tools/journal` | Deep NLP: topic extraction + emotion tagging | < 10 seconds (async) | 3-4 nodes: "Mother Conflict", "Financial Fear", "Creative Longing" |
+| **SoulBot Chat** | After each conversation turn | Continuous pattern extraction | < 5 seconds (async, batched) | Updates existing nodes or creates new ones based on topics raised |
+| **Onboarding Answers** | `/personalize` form completion | One-time full-context extraction | < 15 seconds | 6-10 seed nodes covering all life areas mentioned |
+| **Therapy Session Transcript** | Post-session Whisper transcription | Deepest extraction: Jungian themes, attachment patterns, core wounds | < 60 seconds (post-session) | High-quality nodes like "Avoidant Attachment Pattern", "Inner Critic" |
+| **Vedic Astrology Profile** | On birth-chart computation | House-to-category mapping + current dasha/transit | < 5 seconds | Auto-generates planetary nodes like "Saturn (Career House)", "Rahu (Transformation)" |
+
+### 2c. AI Node Extraction Pipeline
+
+Each source runs through the same 4-step pipeline:
+
+```
+Step 1: Source Preprocessing
+  → Normalise text (fix typos, expand abbreviations)
+  → Remove PII (phone numbers, email addresses, names → replace with [person])
+  → Chunk if needed (long journal entries split into 500-token chunks)
+
+Step 2: GPT-4o Extraction Pass
+  → System prompt: role as clinical psychologist + emotion taxonomy
+  → Extract: {label, category, emotion, intensity, description, tags, nodeType}
+  → Return: JSON array of candidate nodes (0-5 nodes per source event)
+  → Constraint: label max 30 chars, description max 150 chars, intensity 1-10
+
+Step 3: Merge / Deduplicate Against Existing Nodes
+  → Embed new candidates + existing nodes (text-embedding-3-small)
+  → Cosine similarity: if new candidate matches existing node (similarity > 0.85):
+      → UPDATE existing node's intensity (weighted average)
+      → Append to node's note history
+      → Do NOT create a duplicate node
+  → If no match: CREATE new node
+
+Step 4: Position Assignment
+  → New nodes placed with force-directed layout to avoid overlap
+  → Category-based clustering: nodes of same category gravitate together
+  → Orbit radius from "Self" core node based on intensity (higher = closer)
+```
+
+### 2d. Node Extraction Prompt (exact)
+
+```typescript
+const NODE_EXTRACTION_SYSTEM = `You are a clinical psychologist AI analyzing a user's emotional state.
+Extract 0-5 emotional constellation nodes from the input text.
+Each node represents ONE significant emotional theme, pattern, person, event, or internal experience.
+
+Return ONLY a JSON array. Each object:
+{
+  "label": "string (max 30 chars, specific, no generic words like 'emotions')",
+  "category": "self|career|relationship|health|family|spiritual|creative|external",
+  "emotion": "joy|sadness|anger|fear|anxiety|peace|confusion|hope|grief|excitement|burnout|neutral|shame|guilt|loneliness|overwhelm|frustration|resentment|numb|curious",
+  "intensity": integer 1-10,
+  "description": "string (max 150 chars, factual, not interpretive)",
+  "nodeType": "emotion|person|event|pattern|goal|fear|value|memory|archetype",
+  "tags": ["array", "of", "2-4", "tags"]
+}
+
+Rules:
+- Extract only CLEARLY present themes (not speculative)
+- Prefer specific over generic: "Mother's Criticism" > "Family Issues"
+- Set intensity based on frequency/emphasis: passing mention=2, repeated=5, central theme=8
+- Do NOT extract: PII, location data, or content about other people's mental health
+- If the text contains crisis signals (self-harm, suicidal ideation): return [] and flag separately
+- Return [] if no meaningful emotional content`;
+```
+
+### 2e. User Controls Over AI-Generated Nodes
+
+Users CANNOT create nodes from scratch. They CAN:
+
+| Control | UX Action | Effect |
+|---|---|---|
+| **Adjust intensity** | Drag slider in NodeDetailPanel | Updates node intensity +/- 2 points from AI value |
+| **Pin node** | Tap pin icon | Node stays prominent; excluded from auto-archive |
+| **Hide node** | Tap hide icon | Node removed from view but retained in DB (useful for irrelevant AI guesses) |
+| **React to node** | "This resonates" / "Not accurate" | Feeds back into AI extraction quality; RLHF signal |
+| **Add a note** | Text field in NodeDetailPanel | Private annotation on AI-created node |
+| **Rename node** | Edit label in NodeDetailPanel | Can correct AI's label (e.g., "Mother's Criticism" → "Mum's Expectations") |
+| **Share node** | Share to Connections feed | Creates a post from the node |
+
+Users CANNOT:
+- Create a node from scratch with a blank form
+- Set the category or emotion type directly (can only provide feedback on AI's classification)
+- Delete a node permanently (can only hide; deletion requires Settings > Privacy > Node Management)
+
+### 2f. First-Run Experience (Empty Constellation)
+
+When a new user opens the constellation for the first time (0 nodes):
+
+**Instead of "Add your first node +" button**, they see:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│   ✨ Your constellation is being mapped                         │
+│                                                                 │
+│   Your emotional universe takes shape as you:                   │
+│   📓 Write in your journal                                       │
+│   😊 Log your daily mood                                         │
+│   💬 Chat with SoulBot                                           │
+│   🔭 Complete your onboarding                                    │
+│                                                                 │
+│   [ Start Journaling → ]    [ Chat with SoulBot → ]             │
+│                                                                 │
+│   Or, if you've already set up your profile:                    │
+│   [ Generate from my profile → ]  (triggers onboarding re-run) │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 2g. Node Origin Badge
+
+Every node shows a small origin badge indicating which source created it:
+
+| Source | Badge | Icon | Tooltip |
+|---|---|---|---|
+| Mood log | `mood` | 😊 | "Detected from your mood log on [date]" |
+| Journal | `journal` | 📓 | "Extracted from your journal entry" |
+| SoulBot chat | `chat` | 💬 | "Noticed during your SoulBot conversation" |
+| Onboarding | `profile` | 🌟 | "Mapped from your onboarding profile" |
+| Therapy session | `session` | 🎙️ | "From your therapy session on [date]" |
+| Astrology | `astro` | 🔮 | "From your Vedic astrology profile" |
+| Pattern (recurring) | `pattern` | 🔁 | "AI detected a recurring pattern across [N] sessions" |
+
+These badges are displayed as small chips on each node in the canvas and in the NodeDetailPanel.
+
+---
+
+## 3. Node Architecture (Technical Details)
+
+### 3a. Node Categories (8)
 
 | Category | Color | Icon | Description |
 |---|---|---|---|
@@ -88,7 +241,7 @@ Soul Constellation is Soul Yatri's most original and defensible feature. No comp
 | `creative` | `#06b6d4` (cyan) | Palette | Creative expression, hobbies, passions |
 | `external` | `#64748b` (slate) | Globe | World events, environment, societal pressures |
 
-### 2b. Emotion Taxonomy (40 emotions across 5 dimensions)
+### 3b. Emotion Taxonomy (40 emotions across 5 dimensions)
 
 ```typescript
 const EMOTION_TAXONOMY = {
@@ -130,7 +283,7 @@ const EMOTION_TAXONOMY = {
 
 Each emotion maps to `(valence, arousal)` — the 2D emotion space used by Russell's Circumplex Model of Affect. This enables mathematical computation of emotional distance between nodes.
 
-### 2c. Node Intensity (1-10 scale)
+### 3c. Node Intensity (1-10 scale)
 
 The intensity scale has semantic labels at key thresholds:
 - **1-2**: "Barely present" — subtle background awareness
@@ -145,7 +298,7 @@ When a node reaches intensity ≥ 8, the system:
 3. If `health` or `self` category at ≥ 9: creates a therapy booking nudge notification
 4. If `crisis` keywords in node description + intensity ≥ 8: triggers crisis protocol
 
-### 2d. Node Types (extended)
+### 3d. Node Types (extended)
 
 ```typescript
 type NodeType =
@@ -161,7 +314,7 @@ type NodeType =
   | 'planet'       // Auto-created from astrology profile (Rahu, Ketu, Saturn, etc.)
 ```
 
-### 2e. Node Size Algorithm
+### 3e. Node Size Algorithm
 
 Node size is dynamically computed (not just stored) from:
 ```typescript
@@ -176,10 +329,6 @@ computeNodeSize(node: ConstellationNode): number {
   ));
 }
 ```
-
----
-
-## 3. Connection Architecture
 
 ### 3a. Connection Types (4)
 
@@ -521,7 +670,7 @@ The current canvas is desktop-first. For mobile (60%+ of traffic will be mobile)
 
 - Canvas fills full screen with minimal chrome
 - Node labels collapse to emoji/icon at zoom-out (text only at zoom ≥ 1.5)
-- "Quick add" FAB at bottom-right (already exists)
+- **No manual add FAB** — replaced by floating "Add to Journal" button that opens the journal entry screen (which triggers AI node generation)
 - Swipe left/right to switch between Canvas / Insights / Timeline views
 - Bottom sheet for node detail (instead of right sidebar)
 - Touch-optimized: pinch-to-zoom, two-finger pan, long-press to select node
@@ -612,10 +761,21 @@ model ConstellationNode {
   y                   Float                     @default(50)
   size                Float?                    // computed by server, optional override
   isPinned            Boolean                   @default(false)
-  isAutoGenerated     Boolean                   @default(false) // true for astro planet nodes
+  isHidden            Boolean                   @default(false)  // user hid this node from view
+  // ── AI generation provenance ──────────────────────────────
+  isAutoGenerated     Boolean                   @default(true)   // all nodes are AI-generated
+  generationSource    String                    // 'mood_log'|'journal'|'chat'|'onboarding'|'session_transcript'|'astro'|'pattern'
+  sourceId            String?                   // ID of the source record (e.g., MoodEntry.id)
+  generationConfidence Float?                   // 0-1, confidence of extraction
+  // ── Astrology fields ──────────────────────────────────────
   astroHouse          Int?                      // 1-12 if auto-generated from natal chart
   planet              String?                   // "Saturn", "Rahu", etc. if astro node
-  note                String?                   @db.Text
+  // ── User annotations ─────────────────────────────────────
+  userNote            String?                   @db.Text  // user can add a note but cannot create the node
+  userRenamedLabel    String?                   // user's corrected label if they renamed the AI label
+  // ── Feedback ──────────────────────────────────────────────
+  feedbackAccurate    Boolean?                  // null=not rated, true=accurate, false=inaccurate
+  feedbackNote        String?
   tags                String[]
   isPublic            Boolean                   @default(false)
   sourceConnections   ConstellationEdge[]       @relation("EdgeSource")
@@ -627,6 +787,8 @@ model ConstellationNode {
 
   @@index([userId, category])
   @@index([userId, createdAt])
+  @@index([userId, isHidden])
+  @@index([sourceId])
 }
 
 model ConstellationEdge {
@@ -734,26 +896,31 @@ model PractitionerAnnotation {
 ### Base: `/api/v1/constellation`
 
 ```
-# Node CRUD
+# Node read/update (no manual create — AI only)
 GET    /                                    # Get full constellation (nodes + edges + insights)
-POST   /nodes                              # Create node
 GET    /nodes/:id                          # Get single node with history
-PATCH  /nodes/:id                          # Update node (intensity, emotion, position, etc.)
-DELETE /nodes/:id                          # Delete node
-PATCH  /nodes/:id/move                     # Update x/y position (debounced)
-PATCH  /nodes/:id/intensity                # Update intensity + record history entry
+PATCH  /nodes/:id                          # User-adjustable fields only: intensity (+/-2), label rename, pin, hide, note
+PATCH  /nodes/:id/move                     # Update x/y position (debounced canvas drag)
 
-# Edge CRUD
-POST   /edges                              # Create connection between nodes
-PATCH  /edges/:id                          # Update connection type/strength
-DELETE /edges/:id                          # Delete connection
+# AI Node Generation (internal + from frontend triggers)
+POST   /generate/from-source               # Trigger AI extraction from a specific source
+  body: { sourceType: 'mood_log'|'journal'|'chat'|'onboarding'|'session_transcript'|'astro', sourceId: string }
+
+# Edges (AI creates; user can accept/dismiss suggestions)
+GET    /suggestions/connections            # Get AI-suggested connections
+PATCH  /suggestions/:id/accept             # Accept → creates the edge
+PATCH  /suggestions/:id/dismiss            # Dismiss suggestion
+
+# Node feedback (RLHF)
+POST   /nodes/:id/feedback                 # { accurate: boolean, correctedLabel?: string }
+PATCH  /nodes/:id/hide                     # Hide node from canvas (archived)
+PATCH  /nodes/:id/unhide                   # Restore hidden node
 
 # Insights
 GET    /insights                           # Get all insights (paginated)
 GET    /insights/unread-count              # Get unread count
 PATCH  /insights/:id/read                  # Mark as read
 PATCH  /insights/:id/rate                  # Rate an insight (1/-1)
-POST   /insights/generate                  # Manually trigger AI insight generation
 
 # Temporal
 GET    /snapshots                          # Get list of snapshot dates (calendar heatmap)
@@ -773,11 +940,6 @@ GET    /practitioner/:clientUserId         # View client's constellation (requir
 POST   /practitioner/:clientUserId/annotate # Add annotation to a node
 GET    /practitioner/:clientUserId/brief   # Get session prep brief
 
-# Suggestions
-GET    /suggestions/connections            # Get AI-suggested connections
-PATCH  /suggestions/:id/accept             # Accept a suggested connection
-PATCH  /suggestions/:id/dismiss            # Dismiss a suggestion
-
 # Astrology integration
 POST   /astro/sync                         # Re-sync astrology planet nodes from natal chart
 GET    /astro/transits                     # Get current active transit overlays
@@ -792,12 +954,12 @@ GET    /astro/transits                     # Get current active transit overlays
 **Modify (already exist):**
 ```
 src/features/constellation/
-├── services/constellation.service.ts    # Remove mock fallback; wire to real API
-├── hooks/useConstellation.ts            # Add snapshot/timeline/history methods
-├── pages/ConstellationPage.tsx          # Add timeline scrubber, sharing, astro overlay
+├── services/constellation.service.ts    # Remove mock fallback; remove createNode; add generateFromSource
+├── hooks/useConstellation.ts            # Remove createNode/isAddingNode; add snapshot/timeline/feedback/hide
+├── pages/ConstellationPage.tsx          # MAJOR: remove FAB+AddNodeModal; add AI empty state, generation prompts, origin badges
 ├── components/
-│   ├── ConstellationCanvas.tsx          # Add timeline animation, mobile touch
-│   ├── NodeDetailPanel.tsx              # Add share button, intensity history chart
+│   ├── ConstellationCanvas.tsx          # Add timeline animation, mobile touch, origin badge overlay
+│   ├── NodeDetailPanel.tsx              # Remove Edit button; add origin badge, feedback, hide, intensity nudge
 │   └── InsightsPanel.tsx               # Add rating UI, share insight button
 ```
 
@@ -805,36 +967,61 @@ src/features/constellation/
 ```
 src/features/constellation/
 ├── components/
+│   ├── AiNodePrompt.tsx                 # Empty-state card: "Journal or chat to grow your constellation"
+│   ├── NodeOriginBadge.tsx             # Small chip showing source (journal/mood/chat/session/astro)
+│   ├── NodeFeedbackModal.tsx           # "Was this node accurate?" RLHF feedback UI
 │   ├── TimelineScrubber.tsx             # Timeline slider at bottom of canvas
 │   ├── AstroOverlay.tsx                # Planetary house overlay toggle
 │   ├── PractitionerViewBanner.tsx       # "Dr. X has access to your constellation"
 │   ├── ConstellationShareCard.tsx       # Card generator for sharing
 │   ├── NodeIntensityHistory.tsx         # Sparkline chart for a node's history
-│   ├── ConnectionSuggestion.tsx         # Dashed suggested connection with +/× buttons
+│   ├── ConnectionSuggestion.tsx         # Dashed suggested connection with accept/dismiss buttons
 │   ├── WeeklySummaryCard.tsx            # Monday summary card
 │   └── MobileNodeList.tsx              # Mobile list-mode alternative
 ├── pages/
 │   ├── ConstellationTimelinePage.tsx    # Full-page time travel view
-│   └── ConstellationSettingsPage.tsx    # Access grants, astro sync, privacy
+│   └── ConstellationSettingsPage.tsx    # Access grants, astro sync, privacy, hidden nodes
 ```
 
 ### 13b. TypeScript Types (extend existing `types/index.ts`)
 
 ```typescript
 // Add to existing types
+
+// Generation source for AI-created nodes
+export type NodeGenerationSource =
+  | 'mood_log'
+  | 'journal'
+  | 'chat'
+  | 'onboarding'
+  | 'session_transcript'
+  | 'astro'
+  | 'pattern';  // recurring cross-source pattern
+
 interface ConstellationNode {
   // ... existing fields ...
   nodeType: NodeType;
-  isAutoGenerated: boolean;
+  // AI provenance (all nodes are AI-generated)
+  isAutoGenerated: true;
+  generationSource: NodeGenerationSource;
+  sourceId?: string;
+  generationConfidence?: number;
+  // User micro-controls
+  isHidden: boolean;
+  userNote?: string;
+  userRenamedLabel?: string;
+  feedbackAccurate?: boolean;
+  // Astro
   astroHouse?: number;
   planet?: string;
-  intensityHistory: IntensityDataPoint[];  // loaded separately
+  // History (loaded on-demand)
+  intensityHistory?: IntensityDataPoint[];
 }
 
 interface IntensityDataPoint {
   intensity: number;
   note?: string;
-  changedBy: 'user' | 'ai_suggestion' | 'daily_prompt';
+  changedBy: 'user_nudge' | 'ai_reanalysis' | 'daily_prompt';
   recordedAt: string;
 }
 
@@ -905,48 +1092,88 @@ interface UseConstellationReturn {
 
 ## 14. Implementation Roadmap
 
-### Phase 1 — Backend Foundation (Week 1-2, ~32h)
-- [ ] Add all Prisma models (ConstellationNode, Edge, Insight, Snapshot, Access)
-- [ ] Run migrations
-- [ ] Implement full CRUD API (nodes + edges)
-- [ ] Implement snapshot creation (nightly job)
-- [ ] Remove mock fallback from `constellation.service.ts`
-- [ ] Test: create/read/update/delete all entities
+> **All phases verified against existing codebase state and dependencies.**
 
-### Phase 2 — AI Insight Engine (Week 3, ~20h)
-- [ ] Implement all 12 insight trigger types as server-side functions
+### Phase 1 — Backend Foundation + Prisma (Week 1-2, ~32h)
+- [ ] Add all Prisma models: `ConstellationNode`, `ConstellationEdge`, `ConstellationInsight`, `NodeIntensityHistory`, `ConstellationSnapshot`, `ConstellationAccess`, `PractitionerAnnotation` (see §11)
+- [ ] Run migrations against dev Postgres
+- [ ] Implement read/update API (`GET /`, `PATCH /nodes/:id`, `PATCH /nodes/:id/move`, `PATCH /nodes/:id/hide`)
+- [ ] Implement snapshot creation (nightly cron job — runs at midnight IST)
+- [ ] Remove mock fallback from `constellation.service.ts`; show empty constellation on first use
+- [ ] Test: all read/update/hide operations
+
+### Phase 2 — AI Node Generation Engine (Week 3-4, ~28h)
+- [ ] Implement `POST /constellation/generate/from-source` endpoint
+- [ ] Build GPT-4o node extraction pipeline (system prompt from §2d)
+- [ ] Implement deduplication via `text-embedding-3-small` cosine similarity
+- [ ] Implement force-directed position assignment for new nodes
+- [ ] Wire to existing health-tools endpoints: after `POST /health-tools/mood` → fire generation job
+- [ ] Wire to existing health-tools endpoints: after `POST /health-tools/journal` → fire generation job
+- [ ] Wire to SoulBot chat post-response: extract from conversation
+- [ ] Wire to onboarding completion: seed initial nodes from `UserProfile.struggles + goals`
+- [ ] Background job every 5 minutes: process pending generation queue
+- [ ] WebSocket push: when nodes are created, push `constellation.nodes_updated` event to active clients
+- [ ] Remove `AddNodeModal.tsx` from ConstellationPage (no longer needed)
+- [ ] Remove FAB `+` button from ConstellationPage
+
+### Phase 3 — AI Insight Engine (Week 5, ~20h)
+- [ ] Implement all 12 insight trigger types as server-side detection functions (see §4a)
 - [ ] Wire to nightly background job (runs after snapshot creation)
-- [ ] Implement GPT-4o-mini insight generation with prompt engineering
-- [ ] Store insights in DB
+- [ ] Implement GPT-4o-mini insight generation with full prompt (see §4b)
+- [ ] Store insights in DB with `generatedByAI: true`
 - [ ] Wire `GET /insights` + mark-read + rate APIs to existing InsightsPanel
+- [ ] Implement RLHF feedback storage (`POST /nodes/:id/feedback`)
 
-### Phase 3 — Timeline Feature (Week 4, ~24h)
+### Phase 4 — AI-First Frontend UX (Week 6, ~20h)
+- [ ] Build `AiNodePrompt.tsx` — empty state component with Journal/Chat/Profile CTAs
+- [ ] Build `NodeOriginBadge.tsx` — small origin chip (😊 journal / 📓 mood / 💬 chat / etc.)
+- [ ] Build `NodeFeedbackModal.tsx` — "Was this accurate?" two-button RLHF UI
+- [ ] Update `NodeDetailPanel.tsx`: remove Edit button; add origin badge + feedback + hide + intensity nudge (+1/-1 range)
+- [ ] Update `ConstellationPage.tsx`: AI empty state, WebSocket live-update listener, "AI is mapping…" loading indicator
+- [ ] Update `InsightsPanel.tsx`: add rating thumbs + share button
+
+### Phase 5 — Timeline Feature (Week 7, ~24h)
 - [ ] Implement `GET /snapshots` and `GET /snapshots/:date` APIs
 - [ ] Build `TimelineScrubber.tsx` component
-- [ ] Add animation to canvas: transition nodes between historical positions/intensities
+- [ ] Add canvas animation: transition nodes between historical positions/intensities via framer-motion
 - [ ] Build trajectory score graph (recharts LineChart)
-- [ ] Wire to `useConstellation` hook
+- [ ] Wire to `useConstellation` hook state
 
-### Phase 4 — Practitioner View (Week 5, ~20h)
-- [ ] Implement access grant/revoke API
-- [ ] Build practitioner brief generation (AI + DB query)
-- [ ] Build practitioner constellation view (read-only canvas)
-- [ ] Implement annotation API + UI (sticky notes on nodes)
-- [ ] Wire to therapy booking: offer access grant during booking
+### Phase 6 — Practitioner View (Week 8, ~20h)
+- [ ] Implement access grant/revoke API (`POST /access`, `DELETE /access/:practitionerId`)
+- [ ] Build practitioner brief generation (AI + DB query for changed nodes)
+- [ ] Build practitioner constellation view (read-only canvas with annotation layer)
+- [ ] Implement annotation API + sticky note UI
+- [ ] Wire to therapy booking: offer access grant during booking confirmation
 
-### Phase 5 — Social & Astro (Week 6, ~16h)
-- [ ] Implement node/insight sharing to Connections feed
-- [ ] Implement Prokerala API integration for natal chart
-- [ ] Map houses to categories, create planet nodes
-- [ ] Build transit overlay (daily cron job)
+### Phase 7 — Social & Astro (Week 9, ~16h)
+- [ ] Implement node/insight sharing to Connections feed (`POST /nodes/:id/share`)
+- [ ] Integrate Prokerala API for natal chart computation
+- [ ] Map 12 houses to categories; auto-create planetary nodes with `isAutoGenerated: true`
+- [ ] Build transit overlay (daily cron job + `GET /astro/transits`)
 
-### Phase 6 — Mobile & Polish (Week 7, ~20h)
-- [ ] Build `MobileNodeList.tsx` list-mode alternative
-- [ ] Optimize canvas for touch (pinch/swipe/long-press)
-- [ ] Build `WeeklySummaryCard.tsx` + sharing
-- [ ] Build `ConstellationSettingsPage.tsx`
-- [ ] Daily prompt notification (morning contextual push)
-- [ ] Full QA: all 12 insight types, all edge cases
+### Phase 8 — Mobile & Polish (Week 10, ~20h)
+- [ ] Build `MobileNodeList.tsx` list-mode alternative (toggle in header)
+- [ ] Optimize canvas for touch: pinch-to-zoom, two-finger pan, long-press-to-select
+- [ ] Build `WeeklySummaryCard.tsx` + Monday morning push notification
+- [ ] Build `ConstellationSettingsPage.tsx`: access grants, hidden nodes, astro sync, privacy
+- [ ] Daily morning prompt notification with personalised node focus
+- [ ] Full QA: all 12 insight types, all 6 generation sources, all edge cases
+
+### Dependency Map
+
+```
+Phase 1 (DB)
+  └── Phase 2 (AI Generation)  ← must have DB to persist nodes
+        └── Phase 3 (Insights) ← needs nodes to generate insights about
+        └── Phase 4 (UI)       ← needs generated nodes to display in canvas
+              └── Phase 5 (Timeline) ← needs snapshots which need nodes
+Phase 6 (Practitioner) ← needs Phase 1 + Phase 4
+Phase 7 (Social)       ← needs Phase 4 frontend + Connections feature
+Phase 8 (Mobile)       ← can start in parallel from Phase 4 onwards
+```
+
+### Total Estimate: ~180 hours (~22 dev days, ~4.5 weeks solo, ~2.5 weeks 2-person)
 
 ---
 

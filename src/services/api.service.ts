@@ -1,15 +1,21 @@
 /**
  * API Service
- * Centralized API communication with circuit-breaker for fast failure
+ * Centralized API communication with circuit-breaker and resilience policies.
  */
 
 import { API_CONSTANTS, STORAGE_KEYS } from '@/constants';
-import type { ApiResponse, RequestConfig } from '@/types';
+import type { ApiError, ApiResponse, RequestConfig } from '@/types';
+import {
+  CANONICAL_ERROR_CODES,
+  getCanonicalErrorCode,
+  isTransientFetchError,
+  resolveErrorAction,
+} from '@/utils/errors';
 import { isApiEnvelope } from '@contracts/api.contracts';
 
-/** Simple circuit-breaker: after a network failure, skip retries for a cooldown period. */
+/** Simple circuit-breaker: after a transient network failure, skip attempts for a cooldown period. */
 let circuitOpenUntil = 0;
-const CIRCUIT_COOLDOWN = 10_000; // 10 s
+const CIRCUIT_COOLDOWN = 10_000; // 10s
 
 function hasObjectShape(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object';
@@ -25,40 +31,63 @@ function extractTimestamp(payload: unknown): string {
   return new Date().toISOString();
 }
 
-function extractRequestId(payload: unknown): string | undefined {
+function extractRequestId(payload: unknown, response?: Response): string | undefined {
   if (isApiEnvelope(payload)) {
     return payload.requestId;
   }
   if (hasObjectShape(payload) && typeof payload.requestId === 'string') {
     return payload.requestId;
   }
-  return undefined;
+
+  const headerRequestId = response?.headers.get('x-request-id') ?? response?.headers.get('X-Request-ID');
+  return headerRequestId ?? undefined;
 }
 
-function extractError(payload: unknown, status: number, statusText: string) {
+function extractSuccessData(payload: unknown): unknown {
+  if (!hasObjectShape(payload)) {
+    return payload;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(payload, 'data')) {
+    return payload.data;
+  }
+
+  return payload;
+}
+
+function extractError(payload: unknown, status: number, statusText: string): ApiError {
   if (isApiEnvelope(payload) && payload.error) {
-    return payload.error;
+    return {
+      ...payload.error,
+      code: getCanonicalErrorCode(payload.error.code, status),
+    };
   }
 
   if (hasObjectShape(payload)) {
     const nestedError = hasObjectShape(payload.error) ? payload.error : payload;
-    const code = typeof nestedError.code === 'string' ? nestedError.code : `HTTP_${status}`;
+    const rawCode = typeof nestedError.code === 'string' ? nestedError.code : `HTTP_${status}`;
     const message = typeof nestedError.message === 'string'
       ? nestedError.message
       : `HTTP ${status}: ${statusText}`;
     const details = hasObjectShape(nestedError.details) ? nestedError.details : undefined;
-    return { code, message, details };
+
+    return {
+      code: getCanonicalErrorCode(rawCode, status),
+      message,
+      ...(details && { details }),
+    };
   }
 
   return {
-    code: `HTTP_${status}`,
+    code: getCanonicalErrorCode(`HTTP_${status}`, status),
     message: `HTTP ${status}: ${statusText}`,
   };
 }
 
 class ApiService {
-  private baseUrl: string;
-  private defaultConfig: RequestConfig;
+  private readonly baseUrl: string;
+  private readonly defaultConfig: RequestConfig;
+  private refreshTokenPromise: Promise<boolean> | null = null;
 
   constructor(baseUrl: string = API_CONSTANTS.BASE_URL) {
     this.baseUrl = baseUrl;
@@ -84,6 +113,70 @@ class ApiService {
   private getAuthHeaders(): Record<string, string> {
     const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
     return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  private resolveRetryAttempts(method: string, requestedRetries?: number): number {
+    const normalizedMethod = method.toUpperCase();
+
+    // No blind retries on non-idempotent requests.
+    if (normalizedMethod !== 'GET') {
+      return 1;
+    }
+
+    const configuredRetries = requestedRetries ?? API_CONSTANTS.RETRY_ATTEMPTS;
+    return Math.max(2, configuredRetries);
+  }
+
+  private computeRetryDelay(attempt: number): number {
+    const baseDelay = API_CONSTANTS.RETRY_DELAY * Math.pow(2, attempt);
+    const boundedDelay = Math.min(4000, baseDelay);
+    const jitterFactor = 0.8 + Math.random() * 0.4;
+    return Math.round(boundedDelay * jitterFactor);
+  }
+
+  private async delay(ms: number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  private async refreshAccessToken(): Promise<boolean> {
+    if (this.refreshTokenPromise) {
+      return this.refreshTokenPromise;
+    }
+
+    this.refreshTokenPromise = (async () => {
+      try {
+        const response = await fetch(`${this.baseUrl}/auth/refresh`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          signal: AbortSignal.timeout(API_CONSTANTS.TIMEOUT),
+        });
+
+        const payload = await this.parseResponseBody(response);
+
+        if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+          }
+          return false;
+        }
+
+        if (hasObjectShape(payload) && hasObjectShape(payload.data) && typeof payload.data.accessToken === 'string') {
+          localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, payload.data.accessToken);
+          return true;
+        }
+
+        return false;
+      } catch {
+        return false;
+      } finally {
+        this.refreshTokenPromise = null;
+      }
+    })();
+
+    return this.refreshTokenPromise;
   }
 
   /**
@@ -129,7 +222,7 @@ class ApiService {
         headers: {
           ...this.getAuthHeaders(),
           ...mergedConfig.headers,
-          // Don't set Content-Type - browser will set it with boundary
+          // Do not set Content-Type - browser will set it with boundary.
         },
         body: formData,
         signal,
@@ -142,7 +235,7 @@ class ApiService {
           success: false,
           error: extractError(result, response.status, response.statusText),
           timestamp: extractTimestamp(result),
-          requestId: extractRequestId(result),
+          requestId: extractRequestId(result, response),
         };
       }
 
@@ -152,17 +245,20 @@ class ApiService {
 
       return {
         success: true,
-        data: (hasObjectShape(result) && Object.prototype.hasOwnProperty.call(result, 'data')
-          ? result.data
-          : result) as T,
+        data: extractSuccessData(result) as T,
         timestamp: extractTimestamp(result),
-        requestId: extractRequestId(result),
+        requestId: extractRequestId(result, response),
       };
     } catch (error) {
+      const transient = isTransientFetchError(error);
+      const code = transient
+        ? CANONICAL_ERROR_CODES.SERVICE_UNAVAILABLE
+        : CANONICAL_ERROR_CODES.INTERNAL;
+
       return {
         success: false,
         error: {
-          code: 'UPLOAD_ERROR',
+          code,
           message: error instanceof Error ? error.message : 'Upload failed',
         },
         timestamp: new Date().toISOString(),
@@ -171,30 +267,34 @@ class ApiService {
   }
 
   /**
-   * Generic request method with retry logic
+   * Generic request method with retry and token-refresh policies.
    */
   private async request<T = unknown>(
     method: string,
     endpoint: string,
     data?: unknown,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<ApiResponse<T>> {
     const mergedConfig = { ...this.defaultConfig, ...config };
-    const maxAttempts = mergedConfig.retries || 1;
-    let lastError: Error | null = null;
+    const maxAttempts = this.resolveRetryAttempts(method, mergedConfig.retries);
 
     // Circuit-breaker: if the backend was recently unreachable, fail instantly.
     if (Date.now() < circuitOpenUntil) {
       return {
         success: false,
-        error: { code: 'CIRCUIT_OPEN', message: 'Server unreachable — retrying shortly' },
+        error: {
+          code: CANONICAL_ERROR_CODES.SERVICE_UNAVAILABLE,
+          message: 'Server unreachable - retrying shortly',
+        },
         timestamp: new Date().toISOString(),
       };
     }
 
+    let tokenRefreshAttempted = false;
+    let lastError: Error | null = null;
+
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
-        // Build abort signal: prefer caller-provided, else use a timeout signal.
         const timeoutMs = mergedConfig.timeout ?? API_CONSTANTS.TIMEOUT;
         const signal = mergedConfig.cancelToken ?? AbortSignal.timeout(timeoutMs);
 
@@ -210,17 +310,42 @@ class ApiService {
           signal,
         });
 
-        // Successful network call — reset circuit-breaker.
+        // Successful network call - reset circuit-breaker.
         circuitOpenUntil = 0;
 
         const result = await this.parseResponseBody(response);
 
         if (!response.ok) {
+          const parsedError = extractError(result, response.status, response.statusText);
+
+          const action = resolveErrorAction({
+            code: parsedError.code,
+            statusCode: response.status,
+            endpoint,
+            method,
+            hasToken: Boolean(localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)),
+            attempt,
+            maxAttempts,
+          });
+
+          if (action === 'refresh' && !tokenRefreshAttempted) {
+            tokenRefreshAttempted = true;
+            const refreshed = await this.refreshAccessToken();
+            if (refreshed) {
+              continue;
+            }
+          }
+
+          if (action === 'retry') {
+            await this.delay(this.computeRetryDelay(attempt));
+            continue;
+          }
+
           return {
             success: false,
-            error: extractError(result, response.status, response.statusText),
+            error: parsedError,
             timestamp: extractTimestamp(result),
-            requestId: extractRequestId(result),
+            requestId: extractRequestId(result, response),
           };
         }
 
@@ -230,32 +355,41 @@ class ApiService {
 
         return {
           success: true,
-          data: result as T,
+          data: extractSuccessData(result) as T,
           timestamp: extractTimestamp(result),
-          requestId: extractRequestId(result),
+          requestId: extractRequestId(result, response),
         };
       } catch (error) {
         lastError = error instanceof Error ? error : new Error('Unknown error');
+        const transientNetworkError = isTransientFetchError(lastError);
 
-        // If it's a network / timeout error, open the circuit-breaker.
-        if (
-          lastError.name === 'TypeError' ||
-          lastError.name === 'TimeoutError' ||
-          lastError.name === 'AbortError'
-        ) {
+        if (transientNetworkError) {
           circuitOpenUntil = Date.now() + CIRCUIT_COOLDOWN;
         }
 
-        if (attempt < maxAttempts - 1) {
-          await new Promise(resolve => setTimeout(resolve, API_CONSTANTS.RETRY_DELAY));
+        const action = resolveErrorAction({
+          method,
+          attempt,
+          maxAttempts,
+          hasToken: Boolean(localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)),
+          isTransientNetworkError: transientNetworkError,
+        });
+
+        if (action === 'retry') {
+          await this.delay(this.computeRetryDelay(attempt));
+          continue;
         }
       }
     }
 
+    const transientNetworkError = isTransientFetchError(lastError);
+
     return {
       success: false,
       error: {
-        code: 'API_ERROR',
+        code: transientNetworkError
+          ? CANONICAL_ERROR_CODES.SERVICE_UNAVAILABLE
+          : CANONICAL_ERROR_CODES.INTERNAL,
         message: lastError?.message || 'Request failed',
       },
       timestamp: new Date().toISOString(),

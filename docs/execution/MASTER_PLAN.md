@@ -35,11 +35,14 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:014`
-- Phase target: `Phase 7 accessibility pass (WCAG 2.1 AA)`
+- `BATCH:015`
+- Phase target: `Phase 8 error handling and resilience`
 - Objective:
-  - Bring frontend to WCAG 2.1 Level AA compliance without visual/behavioral changes.
-  - 15 sub-tasks: eslint-plugin-jsx-a11y, skip-nav, landmarks, ARIA, alt text, form labels, headings, page titles, keyboard nav, color contrast, reduced motion, ARIA live regions, button/link semantics, SVG accessibility.
+  - Unify canonical error-code strategy across server and client while preserving legacy code compatibility.
+  - Standardize error envelope fields (`success`, `error`, `requestId`, `timestamp`) across server core middleware and rate-limit paths.
+  - Add frontend resilience policy: idempotent GET retry on transient failure, no blind 4xx retries except safe token-refresh path.
+  - Harden websocket resilience with bounded backoff + jitter reconnect and explicit connection-state surfacing.
+  - Close notification payload typing risk (R-008) with shared websocket payload contract tightening.
   - Preserve QA dev-login/mock-auth behavior.
   - All quality gates passing: `type-check`, `lint:ci`, `build`, `(cd server && npm run build)`, `(cd server && npm run lint:ci)`, `quality:ci`.
   - Update docs at batch end.

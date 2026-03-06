@@ -4,6 +4,18 @@ export type ClientToServerEventType = (typeof CLIENT_TO_SERVER_EVENTS)[number];
 export const SERVER_TO_CLIENT_EVENTS = ['connected', 'notification', 'ack', 'pong', 'error'] as const;
 export type ServerToClientEventType = (typeof SERVER_TO_CLIENT_EVENTS)[number];
 
+export interface NotificationWebSocketPayload {
+  id: string;
+  userId: string;
+  type: string;
+  title: string;
+  body: string;
+  isRead: boolean;
+  createdAt: string;
+  readAt?: string | null;
+  data?: string | Record<string, unknown> | null;
+}
+
 export interface ClientToServerPayloadMap {
   ping: { timestamp?: number };
   mark_read: { id: string } | Record<string, unknown>;
@@ -11,7 +23,7 @@ export interface ClientToServerPayloadMap {
 
 export interface ServerToClientPayloadMap {
   connected: { message: string; timestamp: string };
-  notification: Record<string, unknown>;
+  notification: NotificationWebSocketPayload;
   ack: unknown;
   pong: { timestamp: number };
   error: { message: string; code?: string };

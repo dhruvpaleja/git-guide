@@ -1,6 +1,8 @@
 // ---------------------------------------------------------------------------
-// AppError — Industry-standard typed error class with error codes
+// AppError - Industry-standard typed error class with canonical error codes
 // ---------------------------------------------------------------------------
+
+import { ERROR_CODE_ALIASES_TO_CANONICAL } from '../shared/constants/error-codes.js';
 
 export const ErrorCode = {
   // Auth (1xxx)
@@ -55,6 +57,77 @@ export const ErrorCode = {
 
 export type ErrorCodeValue = (typeof ErrorCode)[keyof typeof ErrorCode];
 
+const canonicalCodeSet = new Set<string>(Object.values(ErrorCode));
+
+export function isCanonicalErrorCode(code: unknown): code is ErrorCodeValue {
+  return typeof code === 'string' && canonicalCodeSet.has(code);
+}
+
+export function defaultErrorCodeForStatus(statusCode: number): ErrorCodeValue {
+  if (statusCode === 400 || statusCode === 422) {
+    return ErrorCode.VALIDATION_FAILED;
+  }
+  if (statusCode === 401) {
+    return ErrorCode.UNAUTHORIZED;
+  }
+  if (statusCode === 403) {
+    return ErrorCode.FORBIDDEN;
+  }
+  if (statusCode === 404) {
+    return ErrorCode.NOT_FOUND;
+  }
+  if (statusCode === 409) {
+    return ErrorCode.CONFLICT;
+  }
+  if (statusCode === 413) {
+    return ErrorCode.PAYLOAD_TOO_LARGE;
+  }
+  if (statusCode === 429) {
+    return ErrorCode.RATE_LIMITED;
+  }
+  if (statusCode === 501) {
+    return ErrorCode.NOT_IMPLEMENTED;
+  }
+  if (statusCode === 503) {
+    return ErrorCode.SERVICE_UNAVAILABLE;
+  }
+
+  return ErrorCode.INTERNAL;
+}
+
+function statusFromHttpAlias(code: string): number | undefined {
+  const match = /^HTTP_(\d{3})$/i.exec(code);
+  if (!match) {
+    return undefined;
+  }
+
+  const parsed = Number(match[1]);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+export function resolveCanonicalErrorCode(
+  code: unknown,
+  fallback: ErrorCodeValue = ErrorCode.INTERNAL,
+): ErrorCodeValue {
+  if (isCanonicalErrorCode(code)) {
+    return code;
+  }
+
+  if (typeof code === 'string') {
+    const mapped = ERROR_CODE_ALIASES_TO_CANONICAL[code];
+    if (mapped && isCanonicalErrorCode(mapped)) {
+      return mapped;
+    }
+
+    const aliasedStatus = statusFromHttpAlias(code);
+    if (typeof aliasedStatus === 'number') {
+      return defaultErrorCodeForStatus(aliasedStatus);
+    }
+  }
+
+  return fallback;
+}
+
 export class AppError extends Error {
   public readonly statusCode: number;
   public readonly code: ErrorCodeValue;
@@ -65,7 +138,7 @@ export class AppError extends Error {
   constructor(options: {
     message: string;
     statusCode?: number;
-    code?: ErrorCodeValue;
+    code?: string;
     isOperational?: boolean;
     details?: Record<string, unknown>;
     cause?: Error;
@@ -73,7 +146,7 @@ export class AppError extends Error {
     super(options.message, { cause: options.cause });
     this.name = 'AppError';
     this.statusCode = options.statusCode ?? 500;
-    this.code = options.code ?? ErrorCode.INTERNAL;
+    this.code = resolveCanonicalErrorCode(options.code, defaultErrorCodeForStatus(this.statusCode));
     this.isOperational = options.isOperational ?? true;
     this.details = options.details;
     this.timestamp = new Date().toISOString();
@@ -90,13 +163,13 @@ export class AppError extends Error {
     };
   }
 
-  // ------- Factory methods for common errors -------
+  // Factory methods for common errors
 
   static badRequest(message: string, details?: Record<string, unknown>) {
     return new AppError({ message, statusCode: 400, code: ErrorCode.VALIDATION_FAILED, details });
   }
 
-  static unauthorized(message = 'Unauthorized', code: ErrorCodeValue = ErrorCode.UNAUTHORIZED) {
+  static unauthorized(message = 'Unauthorized', code: string = ErrorCode.UNAUTHORIZED) {
     return new AppError({ message, statusCode: 401, code });
   }
 
@@ -108,7 +181,7 @@ export class AppError extends Error {
     return new AppError({ message: `${resource} not found`, statusCode: 404, code: ErrorCode.NOT_FOUND });
   }
 
-  static conflict(message: string, code: ErrorCodeValue = ErrorCode.CONFLICT) {
+  static conflict(message: string, code: string = ErrorCode.CONFLICT) {
     return new AppError({ message, statusCode: 409, code });
   }
 

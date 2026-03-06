@@ -1,11 +1,12 @@
 // ---------------------------------------------------------------------------
-// RBAC Middleware — Role-based access control
+// RBAC Middleware - Role-based access control
 // ---------------------------------------------------------------------------
 
 import type { Response, NextFunction } from 'express';
 import type { AuthenticatedRequest } from './auth.middleware.js';
 import { ErrorCode } from '../lib/errors.js';
 import type { ServerRole } from '../shared/contracts/auth.contracts.js';
+import { sendError } from '../lib/response.js';
 
 /**
  * Middleware factory that restricts access to specific roles.
@@ -16,25 +17,14 @@ import type { ServerRole } from '../shared/contracts/auth.contracts.js';
 export function requireRole(...allowedRoles: ServerRole[]) {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.auth?.role) {
-      res.status(401).json({
-        success: false,
-        error: { code: ErrorCode.UNAUTHORIZED, message: 'Authentication required' },
-        timestamp: new Date().toISOString(),
-      });
+      sendError(res, 401, ErrorCode.UNAUTHORIZED, 'Authentication required');
       return;
     }
 
     const userRole = req.auth.role.toUpperCase() as ServerRole;
 
     if (!allowedRoles.includes(userRole)) {
-      res.status(403).json({
-        success: false,
-        error: {
-          code: ErrorCode.FORBIDDEN,
-          message: 'Insufficient permissions',
-        },
-        timestamp: new Date().toISOString(),
-      });
+      sendError(res, 403, ErrorCode.FORBIDDEN, 'Insufficient permissions');
       return;
     }
 
@@ -52,26 +42,18 @@ export function requireRole(...allowedRoles: ServerRole[]) {
 export function requireOwnership(paramName = 'userId') {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.auth?.userId) {
-      res.status(401).json({
-        success: false,
-        error: { code: ErrorCode.UNAUTHORIZED, message: 'Authentication required' },
-        timestamp: new Date().toISOString(),
-      });
+      sendError(res, 401, ErrorCode.UNAUTHORIZED, 'Authentication required');
       return;
     }
 
     const resourceOwnerId = req.params[paramName];
 
-    // Allow admins to access any resource
+    // Allow admins to access any resource.
     const adminRoles: ServerRole[] = ['ADMIN', 'SUPER_ADMIN'];
     const userRole = req.auth.role.toUpperCase() as ServerRole;
 
     if (resourceOwnerId !== req.auth.userId && !adminRoles.includes(userRole)) {
-      res.status(403).json({
-        success: false,
-        error: { code: ErrorCode.FORBIDDEN, message: 'Access denied to this resource' },
-        timestamp: new Date().toISOString(),
-      });
+      sendError(res, 403, ErrorCode.FORBIDDEN, 'Access denied to this resource');
       return;
     }
 

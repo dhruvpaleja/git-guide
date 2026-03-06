@@ -1,29 +1,35 @@
 // ---------------------------------------------------------------------------
-// Error Middleware — Production-grade error handling with structured logging
+// Error Middleware - Production-grade error handling with structured logging
 // ---------------------------------------------------------------------------
 
 import type { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
-import { AppError, ErrorCode } from '../lib/errors.js';
+import {
+  AppError,
+  ErrorCode,
+  defaultErrorCodeForStatus,
+  resolveCanonicalErrorCode,
+} from '../lib/errors.js';
 import { logger } from '../lib/logger.js';
+import { sendError } from '../lib/response.js';
+import { getRequestId } from './request-context.js';
 
 /**
  * Global error handler.
  * Catches all errors, normalizes them, logs them, and returns a standardized response.
  */
 export function errorHandler(
-  err: Error,
+  err: unknown,
   req: Request,
   res: Response,
   _next: NextFunction,
 ): void {
-  const requestId = (req as unknown as Record<string, unknown>).requestId as string | undefined;
+  const requestId = getRequestId(req);
 
-  // Normalize error into AppError
+  // Normalize error into AppError.
   const appError = normalizeError(err);
 
-  // Log with appropriate severity
   const logPayload = {
     requestId,
     method: req.method,
@@ -35,65 +41,56 @@ export function errorHandler(
   };
 
   if (appError.statusCode >= 500) {
-    logger.error('unhandled_error', { ...logPayload, stack: err.stack });
+    logger.error('unhandled_error', {
+      ...logPayload,
+      stack: err instanceof Error ? err.stack : undefined,
+    });
   } else if (appError.statusCode >= 400) {
     logger.warn('client_error', logPayload);
   }
 
-  // Never leak internals in production
+  // Never leak internals in production.
   const isProduction = process.env.NODE_ENV === 'production';
   const message = appError.isOperational || !isProduction
     ? appError.message
     : 'Internal server error';
 
-  res.status(appError.statusCode).json({
-    success: false,
-    error: {
-      code: appError.code,
-      message,
-      ...(appError.details && !isProduction && { details: appError.details }),
-    },
-    timestamp: new Date().toISOString(),
-    ...(requestId && { requestId }),
-  });
+  const details = !isProduction ? appError.details : undefined;
+  sendError(res, appError.statusCode, appError.code, message, details);
 }
 
 /**
  * 404 handler for unmatched routes
  */
 export function notFound(req: Request, res: Response): void {
-  const requestId = (req as unknown as Record<string, unknown>).requestId as string | undefined;
-
-  res.status(404).json({
-    success: false,
-    error: {
-      code: ErrorCode.NOT_FOUND,
-      message: `Route ${req.method} ${req.originalUrl} not found`,
-    },
-    timestamp: new Date().toISOString(),
-    ...(requestId && { requestId }),
-  });
+  sendError(
+    res,
+    404,
+    ErrorCode.NOT_FOUND,
+    `Route ${req.method} ${req.originalUrl} not found`,
+  );
 }
 
 // ---------------------------------------------------------------------------
-// Error Normalization — Convert any error type to AppError
+// Error Normalization - Convert any error type to AppError
 // ---------------------------------------------------------------------------
 
-function normalizeError(err: Error): AppError {
-  // Already an AppError
+function normalizeError(err: unknown): AppError {
+  // Already an AppError.
   if (err instanceof AppError) {
     return err;
   }
 
-  // Zod validation errors
+  // Zod validation errors.
   if (err instanceof ZodError) {
     const details: Record<string, unknown> = {
-      fields: err.errors.map(e => ({
-        path: e.path.join('.'),
-        message: e.message,
-        code: e.code,
+      fields: err.errors.map((issue) => ({
+        path: issue.path.join('.'),
+        message: issue.message,
+        code: issue.code,
       })),
     };
+
     return new AppError({
       message: 'Validation failed',
       statusCode: 400,
@@ -102,12 +99,12 @@ function normalizeError(err: Error): AppError {
     });
   }
 
-  // Prisma known request errors (unique constraint, not found, etc.)
+  // Prisma known request errors (unique constraint, not found, etc.).
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     return handlePrismaError(err);
   }
 
-  // Prisma validation errors
+  // Prisma validation errors.
   if (err instanceof Prisma.PrismaClientValidationError) {
     return new AppError({
       message: 'Invalid database query',
@@ -117,8 +114,8 @@ function normalizeError(err: Error): AppError {
     });
   }
 
-  // JWT errors
-  if (err.name === 'JsonWebTokenError') {
+  // JWT errors.
+  if (err instanceof Error && err.name === 'JsonWebTokenError') {
     return new AppError({
       message: 'Invalid token',
       statusCode: 401,
@@ -126,7 +123,7 @@ function normalizeError(err: Error): AppError {
     });
   }
 
-  if (err.name === 'TokenExpiredError') {
+  if (err instanceof Error && err.name === 'TokenExpiredError') {
     return new AppError({
       message: 'Token expired',
       statusCode: 401,
@@ -134,8 +131,8 @@ function normalizeError(err: Error): AppError {
     });
   }
 
-  // SyntaxError (malformed JSON body)
-  if (err instanceof SyntaxError && 'body' in err) {
+  // SyntaxError (malformed JSON body).
+  if (err instanceof SyntaxError && hasKey(err, 'body')) {
     return new AppError({
       message: 'Malformed JSON in request body',
       statusCode: 400,
@@ -143,8 +140,11 @@ function normalizeError(err: Error): AppError {
     });
   }
 
-  // PayloadTooLargeError
-  if (err.name === 'PayloadTooLargeError' || ('type' in err && (err as unknown as Record<string, unknown>).type === 'entity.too.large')) {
+  // PayloadTooLargeError.
+  if (
+    err instanceof Error
+    && (err.name === 'PayloadTooLargeError' || (hasKey(err, 'type') && err.type === 'entity.too.large'))
+  ) {
     return new AppError({
       message: 'Request body too large',
       statusCode: 413,
@@ -152,30 +152,43 @@ function normalizeError(err: Error): AppError {
     });
   }
 
-  // Generic Express status error
-  const status = (err as unknown as Record<string, unknown>).status as number | undefined;
-  if (status && status >= 400 && status < 600) {
+  // Generic express-style status/code error object.
+  if (hasStatus(err)) {
+    const statusCode = err.status;
+    const message = typeof err.message === 'string' && err.message.trim()
+      ? err.message
+      : defaultMessageForStatus(statusCode);
+    const details = asDetails(err.details);
+    const code = resolveCanonicalErrorCode(err.code, defaultErrorCodeForStatus(statusCode));
+
     return new AppError({
-      message: err.message,
-      statusCode: status,
-      code: status === 429 ? ErrorCode.RATE_LIMITED : ErrorCode.INTERNAL,
+      message,
+      statusCode,
+      code,
+      details,
+      isOperational: statusCode < 500,
+      cause: err.originalError,
     });
   }
 
-  // Unknown error — treat as 500
+  // Unknown error - treat as canonical internal server error.
+  const fallbackMessage = err instanceof Error && err.message
+    ? err.message
+    : 'Internal server error';
+
   return new AppError({
-    message: err.message || 'Internal server error',
+    message: fallbackMessage,
     statusCode: 500,
     code: ErrorCode.INTERNAL,
     isOperational: false,
-    cause: err,
+    cause: err instanceof Error ? err : undefined,
   });
 }
 
 function handlePrismaError(err: Prisma.PrismaClientKnownRequestError): AppError {
   switch (err.code) {
     case 'P2002': {
-      const target = (err.meta?.target as string[])?.join(', ') || 'field';
+      const target = (err.meta?.target as string[] | undefined)?.join(', ') || 'field';
       return new AppError({
         message: `A record with this ${target} already exists`,
         statusCode: 409,
@@ -209,4 +222,69 @@ function handlePrismaError(err: Prisma.PrismaClientKnownRequestError): AppError 
         isOperational: false,
       });
   }
+}
+
+function defaultMessageForStatus(statusCode: number): string {
+  if (statusCode === 400) {
+    return 'Bad request';
+  }
+  if (statusCode === 401) {
+    return 'Unauthorized';
+  }
+  if (statusCode === 403) {
+    return 'Forbidden';
+  }
+  if (statusCode === 404) {
+    return 'Not found';
+  }
+  if (statusCode === 409) {
+    return 'Conflict';
+  }
+  if (statusCode === 413) {
+    return 'Payload too large';
+  }
+  if (statusCode === 429) {
+    return 'Too many requests';
+  }
+  if (statusCode === 503) {
+    return 'Service unavailable';
+  }
+  return 'Internal server error';
+}
+
+type StatusLikeError = {
+  status: number;
+  message?: string;
+  code?: string;
+  details?: unknown;
+  originalError?: Error;
+};
+
+function hasKey(value: unknown, key: string): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && key in value;
+}
+
+function asDetails(value: unknown): Record<string, unknown> | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return undefined;
+  }
+  return value as Record<string, unknown>;
+}
+
+function hasStatus(value: unknown): value is StatusLikeError {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  const rawStatus = typeof candidate.statusCode === 'number'
+    ? candidate.statusCode
+    : candidate.status;
+
+  if (typeof rawStatus !== 'number' || Number.isNaN(rawStatus)) {
+    return false;
+  }
+
+  candidate.status = rawStatus;
+  return rawStatus >= 400 && rawStatus < 600;
 }

@@ -1,6 +1,6 @@
 /**
  * WebSocket Service for Real-Time Notifications
- * Manages WebSocket connection for push notifications, live updates, and real-time features
+ * Manages WebSocket connection for push notifications, live updates, and real-time features.
  */
 
 import {
@@ -11,18 +11,57 @@ import {
   type ServerToClientPayloadMap,
 } from '@contracts/websocket.contracts';
 
-type MessageHandler<T = unknown> = (data: T) => void;
-type HandlerKey = ServerToClientEventType | '*';
+export const WEBSOCKET_CONNECTION_STATES = [
+  'idle',
+  'connecting',
+  'connected',
+  'reconnecting',
+  'disconnected',
+  'failed',
+] as const;
+
+export type WebSocketConnectionState = (typeof WEBSOCKET_CONNECTION_STATES)[number];
+
+export interface WebSocketConnectionStatePayload {
+  state: WebSocketConnectionState;
+  attempt: number;
+  maxAttempts: number;
+  nextRetryInMs?: number;
+  reason?: string;
+}
+
+type WildcardPayload = {
+  type: ServerToClientEventType;
+  data: ServerToClientPayloadMap[ServerToClientEventType];
+};
+
+type HandlerKey = ServerToClientEventType | '*' | 'connection_state';
+
+type HandlerPayloadMap = {
+  connected: ServerToClientPayloadMap['connected'];
+  notification: ServerToClientPayloadMap['notification'];
+  ack: ServerToClientPayloadMap['ack'];
+  pong: ServerToClientPayloadMap['pong'];
+  error: ServerToClientPayloadMap['error'];
+  '*': WildcardPayload;
+  connection_state: WebSocketConnectionStatePayload;
+};
+
+type MessageHandler<K extends HandlerKey = HandlerKey> = (data: HandlerPayloadMap[K]) => void;
 
 class WebSocketService {
   private ws: WebSocket | null = null;
   private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
-  private reconnectDelay = 1000; // Start with 1s
+  private readonly maxReconnectAttempts = 8;
+  private readonly reconnectBaseDelayMs = 1000;
+  private readonly reconnectMaxDelayMs = 30_000;
   private handlers: Map<HandlerKey, Set<MessageHandler>> = new Map();
   private isConnecting = false;
-  private url: string;
+  private readonly url: string;
   private token: string | null = null;
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private manualDisconnect = false;
+  private connectionState: WebSocketConnectionState = 'idle';
 
   constructor() {
     this.url = this.resolveWebSocketUrl();
@@ -50,100 +89,202 @@ class WebSocketService {
     return `${protocol}//${window.location.host}/ws`;
   }
 
+  private emit<K extends HandlerKey>(eventType: K, data: HandlerPayloadMap[K]): void {
+    const handlers = this.handlers.get(eventType);
+    if (!handlers) {
+      return;
+    }
+
+    handlers.forEach((handler) => {
+      (handler as MessageHandler<K>)(data);
+    });
+  }
+
+  private setConnectionState(state: WebSocketConnectionState, options?: {
+    reason?: string;
+    attempt?: number;
+    nextRetryInMs?: number;
+  }): void {
+    this.connectionState = state;
+
+    this.emit('connection_state', {
+      state,
+      attempt: options?.attempt ?? this.reconnectAttempts,
+      maxAttempts: this.maxReconnectAttempts,
+      nextRetryInMs: options?.nextRetryInMs,
+      reason: options?.reason,
+    });
+  }
+
+  private clearReconnectTimer(): void {
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+  }
+
+  private computeReconnectDelayMs(attempt: number): number {
+    const exponentialDelay = Math.min(
+      this.reconnectMaxDelayMs,
+      this.reconnectBaseDelayMs * Math.pow(2, attempt - 1),
+    );
+    const jitterFactor = 0.7 + Math.random() * 0.6;
+    return Math.round(exponentialDelay * jitterFactor);
+  }
+
+  private scheduleReconnect(reason: string): void {
+    if (this.manualDisconnect || !this.token) {
+      return;
+    }
+
+    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+      this.setConnectionState('failed', {
+        reason,
+        attempt: this.reconnectAttempts,
+      });
+      return;
+    }
+
+    this.reconnectAttempts += 1;
+    const delayMs = this.computeReconnectDelayMs(this.reconnectAttempts);
+
+    this.setConnectionState('reconnecting', {
+      reason,
+      attempt: this.reconnectAttempts,
+      nextRetryInMs: delayMs,
+    });
+
+    this.clearReconnectTimer();
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = null;
+
+      if (!this.token || this.manualDisconnect) {
+        return;
+      }
+
+      this.connect(this.token);
+    }, delayMs);
+  }
+
   /**
-   * Connect to WebSocket server with authentication token
+   * Connect to WebSocket server with authentication token.
    */
   connect(authToken: string): void {
     if (this.ws?.readyState === WebSocket.OPEN || this.isConnecting) {
-      return; // Already connected or connecting
+      return;
     }
 
     this.token = authToken;
+    this.manualDisconnect = false;
     this.isConnecting = true;
+    this.clearReconnectTimer();
+
+    this.setConnectionState(this.reconnectAttempts > 0 ? 'reconnecting' : 'connecting', {
+      attempt: this.reconnectAttempts,
+      reason: this.reconnectAttempts > 0 ? 'reconnect_attempt' : 'connect_attempt',
+    });
 
     try {
       this.ws = new WebSocket(`${this.url}?token=${encodeURIComponent(authToken)}`);
 
       this.ws.onopen = () => {
-        // eslint-disable-next-line no-console
-        console.log('[WebSocket] Connected');
         this.isConnecting = false;
         this.reconnectAttempts = 0;
-        this.reconnectDelay = 1000;
+        this.setConnectionState('connected', {
+          reason: 'connected',
+          attempt: 0,
+        });
       };
 
       this.ws.onmessage = (event: MessageEvent) => {
-        try {
-          if (typeof event.data !== 'string') {
-            console.warn('[WebSocket] Ignoring non-text message');
-            return;
-          }
+        if (typeof event.data !== 'string') {
+          return;
+        }
 
+        try {
           const message = JSON.parse(event.data) as unknown;
           if (!isServerToClientWebSocketMessage(message)) {
-            console.warn('[WebSocket] Ignoring unsupported message shape');
             return;
           }
 
           this.handleMessage(message.type, message.data);
-        } catch (error) {
-           
-          console.error('[WebSocket] Failed to parse message:', error);
+        } catch {
+          // Invalid message payloads are ignored.
         }
       };
 
-      this.ws.onclose = () => {
-        // eslint-disable-next-line no-console
-        console.log('[WebSocket] Disconnected');
+      this.ws.onclose = (event: CloseEvent) => {
         this.isConnecting = false;
         this.ws = null;
-        this.attemptReconnect();
+
+        if (this.manualDisconnect) {
+          this.setConnectionState('disconnected', { reason: 'manual_disconnect', attempt: 0 });
+          return;
+        }
+
+        const reason = event.reason || `close_code_${event.code}`;
+        this.setConnectionState('disconnected', {
+          reason,
+          attempt: this.reconnectAttempts,
+        });
+        this.scheduleReconnect(reason);
       };
 
-      this.ws.onerror = (error) => {
-         
-        console.error('[WebSocket] Error:', error);
+      this.ws.onerror = () => {
         this.isConnecting = false;
       };
-    } catch (error) {
-       
-      console.error('[WebSocket] Connection failed:', error);
+    } catch {
       this.isConnecting = false;
-      this.attemptReconnect();
+      this.scheduleReconnect('connection_error');
     }
   }
 
   /**
-   * Disconnect from WebSocket server
+   * Disconnect from WebSocket server.
    */
   disconnect(): void {
+    this.manualDisconnect = true;
     this.token = null;
     this.isConnecting = false;
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
+    this.reconnectAttempts = 0;
+    this.clearReconnectTimer();
+
+    if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
+      this.ws.close(1000, 'Client disconnect');
     }
-    this.reconnectAttempts = this.maxReconnectAttempts; // Prevent reconnection
+
+    this.ws = null;
+    this.setConnectionState('disconnected', { reason: 'manual_disconnect', attempt: 0 });
   }
 
   /**
-   * Subscribe to a specific event type
+   * Subscribe to a specific event type.
    */
-  on(eventType: HandlerKey, handler: MessageHandler): () => void {
+  on<K extends HandlerKey>(eventType: K, handler: MessageHandler<K>): () => void {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
     }
-    const handlers = this.handlers.get(eventType);
-    if (handlers) {
-      handlers.add(handler);
+
+    const eventHandlers = this.handlers.get(eventType);
+    if (eventHandlers) {
+      eventHandlers.add(handler as MessageHandler);
     }
 
-    // Return unsubscribe function
+    // Emit current connection state immediately for state listeners.
+    if (eventType === 'connection_state') {
+      (handler as MessageHandler<'connection_state'>)({
+        state: this.connectionState,
+        attempt: this.reconnectAttempts,
+        maxAttempts: this.maxReconnectAttempts,
+      });
+    }
+
+    // Return unsubscribe function.
     return () => {
-      const handlers = this.handlers.get(eventType);
-      if (handlers) {
-        handlers.delete(handler);
-        if (handlers.size === 0) {
+      const handlersForType = this.handlers.get(eventType);
+      if (handlersForType) {
+        handlersForType.delete(handler as MessageHandler);
+        if (handlersForType.size === 0) {
           this.handlers.delete(eventType);
         }
       }
@@ -151,56 +292,26 @@ class WebSocketService {
   }
 
   /**
-   * Send a message to the server
+   * Send a message to the server.
    */
   send<T extends ClientToServerEventType>(type: T, data: ClientToServerPayloadMap[T]): void {
     if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify({ type, data }));
-    } else {
-      console.warn('[WebSocket] Cannot send message - not connected');
     }
   }
 
   /**
-   * Get current connection status
+   * Get current connection status.
    */
   isConnected(): boolean {
     return this.ws?.readyState === WebSocket.OPEN;
   }
 
   private handleMessage<T extends ServerToClientEventType>(type: T, data: ServerToClientPayloadMap[T]): void {
-    const handlers = this.handlers.get(type);
-    if (handlers) {
-      handlers.forEach((handler) => handler(data));
-    }
-
-    // Also trigger wildcard handlers
-    const wildcardHandlers = this.handlers.get('*');
-    if (wildcardHandlers) {
-      wildcardHandlers.forEach((handler) => handler({ type, data }));
-    }
-  }
-
-  private attemptReconnect(): void {
-    if (this.reconnectAttempts >= this.maxReconnectAttempts || !this.token) {
-      // eslint-disable-next-line no-console
-      console.log('[WebSocket] Max reconnect attempts reached or no token');
-      return;
-    }
-
-    this.reconnectAttempts++;
-    const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1); // Exponential backoff
-
-    // eslint-disable-next-line no-console
-    console.log(`[WebSocket] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
-
-    setTimeout(() => {
-      if (this.token) {
-        this.connect(this.token);
-      }
-    }, delay);
+    this.emit(type, data as HandlerPayloadMap[T]);
+    this.emit('*', { type, data });
   }
 }
 
-// Export singleton instance
+// Export singleton instance.
 export const websocketService = new WebSocketService();

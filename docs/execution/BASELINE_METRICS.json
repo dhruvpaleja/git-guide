@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-06T01:45:00+05:30",
+  "generated_at": "2026-03-06T10:20:00+05:30",
   "notes": "Phase 0 baseline preserved with incremental batch updates for handoff continuity.",
   "baseline": {
     "frontend": {
@@ -311,6 +311,45 @@
         "matrix": "docs/execution/evidence/BATCH_014_ACCESSIBILITY/MATRIX.md"
       },
       "notes": "Phase 7 accessibility pass completed with post-review gate repair (SmoothScrollProvider lint fix), artifact cleanup, and execution-doc consistency updates while preserving dev-login/mock-auth behavior."
+    },
+    {
+      "batch_id": "BATCH:015",
+      "phase": "8 error handling and resilience",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "pass",
+        "frontend_build": "pass",
+        "server_build": "pass",
+        "server_lint_ci": "pass",
+        "quality_ci": "pass"
+      },
+      "bundle_snapshot": {
+        "core_app_shell_kb": 117.82,
+        "vendor_chunk_kb": 98.46,
+        "animation_chunk_kb": 193.91,
+        "three_core_chunk_kb": 181.68,
+        "notifications_page_chunk_kb": 13.51
+      },
+      "resilience_metrics": {
+        "canonical_error_codes_defined": 38,
+        "legacy_error_aliases_mapped": 31,
+        "server_error_envelope_standardized_paths": [
+          "error.middleware",
+          "auth.middleware",
+          "rbac.middleware",
+          "security.middleware",
+          "user-rate-limit.middleware",
+          "response.sendError"
+        ],
+        "client_retry_policy": "GET_only_transient_retry",
+        "client_auth_refresh_replay": "single_safe_retry_path",
+        "websocket_reconnect_policy": "bounded_exponential_backoff_with_jitter_max_8_attempts",
+        "notification_payload_typing": "tightened_shared_contract_with_runtime_normalization"
+      },
+      "evidence_paths": {
+        "matrix": "docs/execution/evidence/BATCH_015_ERROR_RESILIENCE/MATRIX.md"
+      },
+      "notes": "Unified canonical error handling across server/client, preserved legacy code compatibility via alias mapping, hardened retry/reconnect behavior, and closed notification payload typing risk R-008 without changing dev-login/mock-auth behavior."
     }
   ]
 }

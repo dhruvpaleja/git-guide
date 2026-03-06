@@ -1,20 +1,33 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Loader2, CheckCheck, AlertTriangle, Sparkles, Users, Heart, Zap, Info, Wifi, WifiOff } from 'lucide-react';
+import {
+  Bell,
+  Loader2,
+  CheckCheck,
+  AlertTriangle,
+  Sparkles,
+  Users,
+  Heart,
+  Zap,
+  Info,
+  Wifi,
+  WifiOff,
+  RefreshCw,
+} from 'lucide-react';
 import apiService from '@/services/api.service';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { websocketService } from '@/services/websocket.service';
+import { websocketService, type WebSocketConnectionState } from '@/services/websocket.service';
 import { STORAGE_KEYS } from '@/constants';
+import type { ServerToClientPayloadMap } from '@contracts/websocket.contracts';
 
-interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  body: string;
-  isRead: boolean;
-  createdAt: string;
+type Notification = ServerToClientPayloadMap['notification'];
+
+interface NotificationsResponse {
+  notifications: Notification[];
+  unread?: number;
+  unreadCount?: number;
 }
 
 const typeConfig: Record<string, { icon: typeof Bell; color: string; bg: string }> = {
@@ -46,59 +59,54 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isConnected, setIsConnected] = useState(false);
+  const [connectionState, setConnectionState] = useState<WebSocketConnectionState>('idle');
 
   const load = useCallback(async () => {
     setIsLoading(true);
-    const res = await apiService.get<{ notifications: Notification[]; unreadCount: number }>('/notifications');
+    const res = await apiService.get<NotificationsResponse>('/notifications');
     if (res.success && res.data) {
       setNotifications(res.data.notifications);
-      setUnreadCount(res.data.unreadCount);
+      setUnreadCount(res.data.unreadCount ?? res.data.unread ?? 0);
     }
     setIsLoading(false);
   }, []);
 
-  useEffect(() => { 
-    // Use setTimeout to avoid setting state directly in effect
+  useEffect(() => {
+    // Use setTimeout to avoid synchronous setState-in-effect lint violations.
     setTimeout(() => {
-      void load(); 
+      void load();
     }, 0);
   }, [load]);
 
-  // Real-time WebSocket notifications
+  // Real-time WebSocket notifications.
   useEffect(() => {
     const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
-    if (!token) return;
+    if (!token) {
+      setTimeout(() => {
+        setConnectionState('disconnected');
+      }, 0);
+      return;
+    }
 
-    // Connect to WebSocket
     websocketService.connect(token);
-    // Use setTimeout to avoid setting state directly in effect
-    setTimeout(() => {
-      setIsConnected(websocketService.isConnected());
-    }, 0);
 
-    // Listen for new notifications
-    const unsubscribe = websocketService.on('notification', (data) => {
-      const newNotif = data as unknown as Notification;
+    const unsubscribeConnection = websocketService.on('connection_state', (state) => {
+      setConnectionState(state.state);
+    });
+
+    const unsubscribeNotification = websocketService.on('notification', (newNotif) => {
       setNotifications((prev) => [newNotif, ...prev]);
       setUnreadCount((prev) => prev + 1);
-      
-      // Show toast for new notification
+
       toast(newNotif.title, {
         description: newNotif.body,
-        icon: '🔔',
         duration: 4000,
       });
     });
 
-    // Check connection status periodically
-    const interval = setInterval(() => {
-      setIsConnected(websocketService.isConnected());
-    }, 3000);
-
     return () => {
-      unsubscribe();
-      clearInterval(interval);
+      unsubscribeNotification();
+      unsubscribeConnection();
       websocketService.disconnect();
     };
   }, []);
@@ -113,9 +121,12 @@ export default function NotificationsPage() {
 
   const markRead = async (id: string) => {
     await apiService.put(`/notifications/${id}/read`, {});
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
-    setUnreadCount(prev => Math.max(0, prev - 1));
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
+    setUnreadCount((prev) => Math.max(0, prev - 1));
   };
+
+  const isConnected = connectionState === 'connected';
+  const isReconnecting = connectionState === 'reconnecting' || connectionState === 'connecting';
 
   return (
     <div className="w-full pb-20">
@@ -145,6 +156,15 @@ export default function NotificationsPage() {
                   <Wifi className="w-2.5 h-2.5 text-green-400" />
                   <span className="text-[9px] text-green-400 font-medium uppercase tracking-wider">Live</span>
                 </motion.div>
+              ) : isReconnecting ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20"
+                >
+                  <RefreshCw className="w-2.5 h-2.5 text-amber-300 animate-spin" />
+                  <span className="text-[9px] text-amber-300 font-medium uppercase tracking-wider">Reconnecting</span>
+                </motion.div>
               ) : (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -171,54 +191,54 @@ export default function NotificationsPage() {
       </motion.div>
 
       <div aria-live="polite">
-      {isLoading ? (
-        <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 text-white/40 animate-spin" /></div>
-      ) : notifications.length === 0 ? (
-        <div className="text-center py-20">
-          <Bell className="w-12 h-12 text-white/20 mx-auto mb-4" />
-          <p className="text-white/50">No notifications yet.</p>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-3">
-          <AnimatePresence>
-            {notifications.map((n, i) => {
-              const cfg = getConfig(n.type);
-              const Icon = cfg.icon;
-              return (
-                <motion.div
-                  key={n.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.03 }}
-                  onClick={() => !n.isRead && markRead(n.id)}
-                  className={cn(
-                    'p-4 rounded-[24px] border transition-colors cursor-pointer',
-                    n.isRead
-                      ? 'bg-[#0c0c0c] border-[#1a1a1a] opacity-60'
-                      : 'bg-[#0c0c0c] border-[#2b2b2b]/60 hover:border-white/10',
-                  )}
-                >
-                  <div className="flex items-start gap-3.5">
-                    <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center shrink-0', cfg.bg)}>
-                      <Icon className={cn('w-4 h-4', cfg.color)} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2 mb-0.5">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-sm font-medium text-white/80 truncate">{n.title}</span>
-                          {!n.isRead && <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />}
-                        </div>
-                        <span className="text-xs text-white/50 shrink-0">{timeAgo(n.createdAt)}</span>
+        {isLoading ? (
+          <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 text-white/40 animate-spin" /></div>
+        ) : notifications.length === 0 ? (
+          <div className="text-center py-20">
+            <Bell className="w-12 h-12 text-white/20 mx-auto mb-4" />
+            <p className="text-white/50">No notifications yet.</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <AnimatePresence>
+              {notifications.map((n, i) => {
+                const cfg = getConfig(n.type);
+                const Icon = cfg.icon;
+                return (
+                  <motion.div
+                    key={n.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.03 }}
+                    onClick={() => !n.isRead && markRead(n.id)}
+                    className={cn(
+                      'p-4 rounded-[24px] border transition-colors cursor-pointer',
+                      n.isRead
+                        ? 'bg-[#0c0c0c] border-[#1a1a1a] opacity-60'
+                        : 'bg-[#0c0c0c] border-[#2b2b2b]/60 hover:border-white/10',
+                    )}
+                  >
+                    <div className="flex items-start gap-3.5">
+                      <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center shrink-0', cfg.bg)}>
+                        <Icon className={cn('w-4 h-4', cfg.color)} />
                       </div>
-                      <p className="text-sm text-white/45 line-clamp-2 mt-0.5">{n.body}</p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-0.5">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="text-sm font-medium text-white/80 truncate">{n.title}</span>
+                            {!n.isRead && <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />}
+                          </div>
+                          <span className="text-xs text-white/50 shrink-0">{timeAgo(n.createdAt)}</span>
+                        </div>
+                        <p className="text-sm text-white/45 line-clamp-2 mt-0.5">{n.body}</p>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
-      )}
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
     </div>
   );

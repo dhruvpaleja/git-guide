@@ -1,0 +1,45 @@
+method,route,handler_file,auth,validation,db_touchpoints,response_type,implementation_state,notes
+POST,/auth/register,auth.controller.ts,No,Zod,User create,JSON {user accessToken},implemented_live,Full registration with bcrypt
+POST,/auth/login,auth.controller.ts,No,Zod,User read,JSON {user accessToken},implemented_live,JWT + lockout logic
+POST,/auth/logout,auth.controller.ts,No,-,RefreshToken revoke,JSON {message},implemented_live,Cookie-based refresh
+POST,/auth/refresh,auth.controller.ts,No,-,RefreshToken rotate,JSON {accessToken},implemented_live,Token rotation with family ID
+GET,/auth/me,auth.controller.ts,Yes,-,User read,JSON {user},implemented_live,Get current user
+GET,/users,users.controller.ts,Yes,-,User read,JSON {users},implemented_live,List users
+GET,/users/:id,users.controller.ts,Yes,-,User read,JSON {user},implemented_live,Get user by ID
+PATCH,/users/:id,users.controller.ts,Yes,Zod,User update,JSON {user},implemented_live,Update user
+GET,/health-tools/mood,health-tools.controller.ts,Yes,-,MoodEntry read,JSON {entries averageMood},implemented_live,Paginated with average
+POST,/health-tools/mood,health-tools.controller.ts,Yes,Zod,MoodEntry create,JSON {entry},implemented_live,Record mood
+GET,/health-tools/journal,health-tools.controller.ts,Yes,-,JournalEntry read,JSON {entries},implemented_live,Paginated list
+POST,/health-tools/journal,health-tools.controller.ts,Yes,Zod,JournalEntry create,JSON {entry},implemented_live,Create entry
+PATCH,/health-tools/journal/:id,health-tools.controller.ts,Yes,Zod,JournalEntry update,JSON {entry},implemented_live,Update entry
+GET,/health-tools/meditation,health-tools.controller.ts,Yes,-,MeditationLog read,JSON {logs totalMinutes},implemented_live,Paginated with stats
+POST,/health-tools/meditation,health-tools.controller.ts,Yes,Zod,MeditationLog create,JSON {log},implemented_live,Log session
+GET,/therapy/sessions,therapy.controller.ts,Yes,-,None,JSON {sessions: []},stubbed,Returns empty array
+POST,/therapy/sessions,therapy.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
+GET,/therapy/sessions/:id,therapy.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
+PATCH,/therapy/sessions/:id,therapy.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
+POST,/ai/chat,ai.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
+POST,/ai/message,ai.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
+GET,/ai/recommendations,ai.controller.ts,Yes,-,None,JSON {recommendations: []},stubbed,Returns empty array
+POST,/payments/process,payments.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
+POST,/payments/verify,payments.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
+GET,/payments/subscription,payments.controller.ts,Yes,-,None,JSON {plan: FREE},stubbed,Returns hardcoded FREE
+GET,/payments/history,payments.controller.ts,Yes,-,None,JSON {payments: []},stubbed,Returns empty array
+GET,/blog/posts,blog.controller.ts,No,-,None,JSON {posts: []},stubbed,Returns empty array
+GET,/blog/posts/:id,blog.controller.ts,No,-,None,Error 501,stubbed,Throws notImplemented
+GET,/courses,courses.controller.ts,No,-,None,JSON {courses: []},stubbed,Returns empty array
+GET,/courses/:id,courses.controller.ts,No,-,None,Error 501,stubbed,Throws notImplemented
+POST,/courses/enroll,courses.controller.ts,Yes,-,None,Error 501,stubbed,Throws notImplemented
+GET,/courses/progress,courses.controller.ts,Yes,-,None,JSON {progress: 0},stubbed,Returns hardcoded
+GET,/notifications,notifications.controller.ts,Yes,-,Notification read,JSON {notifications},partially_wired,Route exists needs verification
+POST,/admin/*,admin.controller.ts,Yes (Admin),-,Various,JSON,stubbed,Admin operations not implemented
+GET,/astrology/*,astrology.routes.ts,Yes,-,None,JSON,stubbed,Astrology endpoints return empty
+GET,/community/*,community.controller.ts,Yes,-,None,JSON,stubbed,Community features stubbed
+POST,/shop/*,shop.controller.ts,Yes,-,None,JSON,stubbed,Shop not implemented
+POST,/events/*,events.controller.ts,Yes,-,None,JSON,stubbed,Events not implemented
+GET,/corporate/*,corporate.controller.ts,No,-,None,JSON,stubbed,Corporate pages static
+GET,/careers/*,careers.controller.ts,No,-,None,JSON,stubbed,Careers static
+POST,/ngo/*,ngo.controller.ts,Yes,-,None,JSON,stubbed,NGO features not implemented
+GET,/health,health.routes.ts,No,-,None,JSON {status: ok},implemented_live,Health check endpoint
+GET,/dev-login,dev-login.routes.ts,No,-,None,HTML,implemented_live,Dev login helper (dev only)
+GET,/dev-helper,dev-helper.routes.ts,No,-,None,JSON,implemented_live,Dev utilities (dev only)

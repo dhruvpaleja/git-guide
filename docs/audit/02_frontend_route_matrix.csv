@@ -1,0 +1,37 @@
+route,page_component,layout,auth_required,data_source,implementation_state,ui_state,ux_state,api_dependencies,notes
+/,SplashScreen,None,No,Static,live,complete,good,none,Entry point
+/login,LoginPage,AuthLayout,No,API + Mock,implemented_mock_backed,complete,good,/auth/login,Mock auth works without backend
+/signup,SignupPage,AuthLayout,No,API + Mock Fallback,implemented_mock_backed,complete,good,/auth/register,Dev mode creates mock user
+/journey-preparation,JourneyPreparationPage,Protected,Yes,Unknown,unknown,unknown,unknown,unknown,Post-login onboarding
+/dashboard,DashboardPage,DashboardLayout,Yes,API (health-tools),implemented_live,complete,good,/health-tools/*,Main user dashboard
+/dashboard/mood,MoodPage,DashboardLayout,Yes,API,implemented_live,complete,good,/health-tools/mood,Real CRUD operations
+/dashboard/journal,JournalPage,DashboardLayout,Yes,API,implemented_live,complete,good,/health-tools/journal,Real CRUD operations
+/dashboard/meditate,MeditationPage,DashboardLayout,Yes,API,implemented_live,complete,good,/health-tools/meditation,Real CRUD operations
+/dashboard/notifications,NotificationsPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,/notifications,Unverified
+/dashboard/profile,ProfilePage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,/users,Unverified
+/dashboard/settings,SettingsPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,none,Unverified
+/dashboard/constellation,ConstellationPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,none,Feature exists but backend unclear
+/dashboard/confessional,ConfessionalPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,none,Feature exists but backend unclear
+/dashboard/connections,ConnectionsPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,none,Feature exists but backend unclear
+/dashboard/sessions,SessionsPage,DashboardLayout,Yes,Unknown,unknown,unknown,unknown,/therapy/sessions,Backend stubbed
+/practitioner,PractitionerDashboard,Protected,Yes,Unknown,unknown,unknown,unknown,unknown,Practitioner entry point
+/practitioner/sessions,TodaysSessionsPage,Protected,Yes,Unknown,unknown,unknown,unknown,/therapy/sessions,Backend stubbed
+/practitioner/clients,MyClientsPage,Protected,Yes,Unknown,unknown,unknown,unknown,/users,Backend unclear
+/practitioner/availability,ManageAvailabilityPage,Protected,Yes,Unknown,unknown,unknown,unknown,/therapy/availability,Backend unclear
+/practitioner/profile,EditProfilePage,Protected,Yes,Unknown,unknown,unknown,unknown,/users,Backend unclear
+/astrology,AstrologyDashboard,Protected,Yes,Stubbed API,stubbed,complete,unknown,/astrology/*,Backend returns empty
+/admin,AdminDashboard,Protected,Yes,Stubbed API,stubbed,complete,unknown,/admin/*,Backend returns empty
+/home,LandingPage,MainLayout,No,Static,live,complete,good,none,Marketing landing
+/about,AboutPage,MainLayout,No,Static,live,complete,good,none,Company info
+/business,BusinessPage,MainLayout,No,Static,live,complete,good,none,B2B offerings
+/business/corporate,CorporatePage,MainLayout,No,Static,live,complete,good,none,Corporate wellness
+/blogs,BlogsPage,MainLayout,No,Stubbed API,stubbed,complete,good,/blog/posts,Backend returns empty array
+/blog/:id,BlogPostPage,MainLayout,No,Stubbed API,stubbed,complete,good,/blog/posts/:id,Backend not implemented
+/courses,CoursesPage,MainLayout,No,Static/Hardcoded,implemented_hardcoded_static,complete,good,none,Hardcoded course data
+/courses/:id,CourseDetailsPage,MainLayout,No,Stubbed API,stubbed,complete,good,/courses/:id,Backend not implemented
+/contact,ContactPage,MainLayout,No,Static,live,complete,good,none,Contact form
+/careers,CareerPage,MainLayout,No,Static,live,complete,good,none,Career listings
+/student-counselling,StudentCounsellingPage,MainLayout,No,Static,live,complete,good,none,Student services
+/business/workshop-demo,WorkshopDemoPage,MainLayout,No,Static,live,complete,good,none,Workshop demo
+/business/student-counselling-demo,StudentCounsellingDemoPage,MainLayout,No,Static,live,complete,good,none,Demo page
+/*,NotFoundPage,MainLayout,No,Static,live,complete,good,none,404 handler

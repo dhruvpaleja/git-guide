@@ -1,0 +1,40 @@
+path,file_type,area,category,deep_reviewed,feature_mapping,live_mock_static_stub,notes
+src/main.tsx,source_executable,frontend,entry,true,app initialization,live,React 19 entry point
+src/App.tsx,source_executable,frontend,root,true,app shell,live,ThemeProvider + AuthProvider + Router
+src/router/index.tsx,source_executable,frontend,routing,true,all routes,live,40+ routes defined
+src/router/ProtectedRoute.tsx,source_executable,frontend,security,true,auth guard,live,CRITICAL: has auth bypass flag
+src/context/AuthContext.tsx,source_executable,frontend,auth,true,authentication,live,Mock auth enabled by default
+src/context/ThemeContext.tsx,source_executable,frontend,ui,true,theme,live,Dark mode default
+src/pages/LandingPage.tsx,source_executable,frontend,public,true,landing page,live,Static content
+src/pages/LoginPage.tsx,source_executable,frontend,auth,true,login,live,LoginForm component
+src/pages/SignupPage.tsx,source_executable,frontend,auth,true,signup,live,SignupForm with mock fallback
+src/pages/DashboardPage.tsx,source_executable,frontend,dashboard,true,user dashboard,live,Connected to health-tools API
+src/pages/dashboard/MoodPage.tsx,source_executable,frontend,dashboard,true,mood tracking,live,Connected to API
+src/pages/dashboard/JournalPage.tsx,source_executable,frontend,dashboard,true,journaling,live,Connected to API
+src/pages/dashboard/MeditationPage.tsx,source_executable,frontend,dashboard,true,meditation,live,Connected to API
+src/pages/dashboard/ConstellationPage.tsx,source_executable,frontend,dashboard,false,constellation,unknown,Data source unverified
+src/pages/dashboard/ConfessionalPage.tsx,source_executable,frontend,dashboard,false,confessional,unknown,Data source unverified
+src/pages/PractitionerDashboard.tsx,source_executable,frontend,practitioner,false,practitioner dashboard,unknown,Backend status unclear
+src/pages/AstrologyDashboard.tsx,source_executable,frontend,astrology,false,astrology,stubbed,Backend returns empty
+src/pages/AdminDashboard.tsx,source_executable,frontend,admin,false,admin,stubbed,Backend returns empty
+src/features/constellation/,source_executable,frontend,feature,false,constellation,unknown,Full feature folder exists
+src/features/onboarding/,source_executable,frontend,feature,true,onboarding,live,Multi-step signup flow
+src/components/ui/,source_executable,frontend,ui,true,UI components,live,shadcn/radix components
+server/src/index.ts,source_executable,backend,entry,true,server bootstrap,live,Express + WebSocket init
+server/src/controllers/auth.controller.ts,source_executable,backend,auth,true,authentication,live,Full JWT implementation
+server/src/controllers/users.controller.ts,source_executable,backend,users,true,user management,live,CRUD operations
+server/src/controllers/health-tools.controller.ts,source_executable,backend,health,true,wellness tools,live,Mood/journal/meditation CRUD
+server/src/controllers/therapy.controller.ts,source_executable,backend,therapy,true,therapy,stubbed,All methods throw notImplemented
+server/src/controllers/ai.controller.ts,source_executable,backend,ai,true,AI features,stubbed,All methods throw notImplemented
+server/src/controllers/payments.controller.ts,source_executable,backend,payments,true,payments,stubbed,All methods throw notImplemented
+server/src/controllers/blog.controller.ts,source_executable,backend,blog,true,blog,stubbed,Returns empty arrays
+server/src/controllers/courses.controller.ts,source_executable,backend,courses,true,courses,stubbed,Returns empty arrays
+server/src/routes/index.ts,source_executable,backend,routing,true,route registration,live,19 route modules registered
+server/prisma/schema.prisma,schema,database,schema,true,data models,live,15+ models defined
+server/prisma/migrations/,migration,database,migrations,true,schema migrations,live,2 migrations present
+docs/README.md,docs,documentation,overview,false,project overview,docs-only,Significant drift from code
+docs/COMPREHENSIVE_CODEBASE_AUDIT.md,docs,documentation,audit,false,self-audit,docs-only,Overclaims implementation
+docs/ARCHITECTURE.md,docs,documentation,architecture,false,architecture,docs-only,May not match reality
+tests/example.spec.ts,test,tests,e2e,false,E2E tests,partial,Playwright smoke tests
+package.json,config,frontend,dependencies,true,frontend deps,live,React 19 + Vite + Radix confirmed
+server/package.json,config,backend,dependencies,true,backend deps,live,Express + Prisma + ws (NOT Socket.io)

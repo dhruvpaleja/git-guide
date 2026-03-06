@@ -1,0 +1,115 @@
+{
+  "repo_root": "d:\\Downloads\\soul-yatri-website",
+  "audit_phase": "PHASE_1_COMPLETE",
+  "completed_batches": [
+    "BATCH_0: Bootstrap",
+    "BATCH_1: Top-level and Config Audit",
+    "BATCH_2: Frontend Architecture (Partial)",
+    "BATCH_3: Backend Controllers (Partial)",
+    "BATCH_4: Backend Services (Partial)",
+    "BATCH_5: Routes/Controllers (Partial)",
+    "BATCH_6: Database Schema",
+    "BATCH_7: Tests (Partial)",
+    "BATCH_8: Documentation (Partial)",
+    "MAIN_AUDIT_REPORT: Complete"
+  ],
+  "current_batch": "PHASE_1_COMPLETE",
+  "files_reviewed_count": 45,
+  "files_total_count": 84566,
+  "files_excluded_vendor_generated": [
+    "node_modules (~80000 files)",
+    ".git",
+    "dist",
+    "build",
+    "server/dist",
+    "server/node_modules"
+  ],
+  "estimated_reviewable_files": "~4500 source/config/docs/test files",
+  "artifacts_created": [
+    "docs/audit/_progress.json",
+    "docs/audit/00_repo_inventory.md",
+    "docs/audit/01_file_manifest.csv",
+    "docs/audit/02_frontend_route_matrix.csv",
+    "docs/audit/03_backend_route_matrix.csv",
+    "docs/audit/04_database_matrix.csv",
+    "docs/audit/06_gap_register.md",
+    "docs/audit/07_documentation_drift.md",
+    "docs/audit/ULTIMATE_WORLD_CLASS_CODEBASE_AUDIT.md"
+  ],
+  "artifacts_pending": [
+    "docs/audit/05_feature_matrix.csv",
+    "docs/audit/08_ui_ux_visual_matrix.csv",
+    "docs/audit/09_cta_button_audit.csv",
+    "docs/audit/10_integration_options_matrix.csv",
+    "docs/audit/11_cost_model.md",
+    "docs/audit/12_design_system_audit.md",
+    "docs/audit/13_world_class_recommendations.md",
+    "docs/audit/14_execution_prompts.md"
+  ],
+  "key_findings_summary": {
+    "stack_verified": "React 19 + Vite + TypeScript + Tailwind + Radix | Express + Prisma + PostgreSQL + JWT + ws",
+    "auth_status": "Backend REAL (bcrypt/JWT/lockout) | Frontend COMPROMISED (bypass flag + mock auth)",
+    "implemented_features": ["auth", "users", "health-tools (mood/journal/meditation)", "notifications (partial)"],
+    "stubbed_features": ["therapy", "astrology", "ai", "payments", "blog", "courses", "community", "shop", "events", "admin", "corporate", "careers", "ngo"],
+    "critical_security_issues": ["ProtectedRoute auth bypass flag", "Mock auth enabled by default"],
+    "major_doc_drift": ["Socket.io claimed but ws used", "React Query claimed but not installed", "Zustand claimed but not installed", "Redis claimed but not installed"]
+  },
+  "overall_scores": {
+    "frontend_ui": 75,
+    "backend_core": 60,
+    "database": 70,
+    "integrations": 15,
+    "testing": 20,
+    "documentation": 40,
+    "devops": 45,
+    "security": 55,
+    "seo": 25,
+    "overall": 35
+  },
+  "priority_fixes": {
+    "P0_critical": [
+      "Remove auth bypass flag from ProtectedRoute.tsx",
+      "Disable mock auth in production (.env.production)"
+    ],
+    "P1_high": [
+      "Implement Razorpay payment processing",
+      "Implement therapy backend (sessions/booking)",
+      "Add email service (Resend/SendGrid)",
+      "Add video integration (Daily.co)"
+    ],
+    "P2_medium": [
+      "Expand test coverage (unit/integration)",
+      "Add SSR for SEO (Next.js migration or Vite SSR)",
+      "Add structured data (schema.org)"
+    ],
+    "P3_low": [
+      "Performance optimization (bundle analysis)",
+      "Accessibility improvements (axe-core audit)",
+      "Documentation cleanup (README accuracy)"
+    ]
+  },
+  "known_doc_drift": [
+    "README claims Socket.io but server uses 'ws' package",
+    "README claims React Query but not in dependencies",
+    "README claims Zustand but not in dependencies",
+    "README claims Redis but not in server dependencies",
+    "README claims comprehensive testing but only ~15 E2E tests exist"
+  ],
+  "security_risks_identified": [
+    "ProtectedRoute can be completely bypassed via runtimeFlags.authBypassEnabled",
+    "Mock auth enabled by default in development (VITE_ENABLE_MOCK_AUTH=true)",
+    "Dev login routes may be enabled in production if config not set correctly"
+  ],
+  "pricing_sources_checked": [],
+  "visual_pages_audited": [],
+  "next_actions": [
+    "PHASE_2: Deep dive into remaining controllers",
+    "PHASE_2: Complete feature matrix",
+    "PHASE_2: UI/UX visual inspection (requires running app)",
+    "PHASE_2: Integration/platform research with official pricing",
+    "PHASE_2: Complete execution prompts for AI agents"
+  ],
+  "phase_1_complete": "2026-03-06T01:30:00.000Z",
+  "last_updated": "2026-03-06T01:30:00.000Z",
+  "audit_start": "2026-03-06T00:00:00.000Z"
+}

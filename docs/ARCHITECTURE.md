@@ -1,132 +1,175 @@
 # Architecture Guide
 
-## Project Structure Overview
+## Overview
 
-Soul Yatri is a modern, scalable web application built with React, Vite, and TypeScript. It follows industry-standard practices for large-scale applications.
+Soul Yatri is a full-stack mental wellness platform built as a monorepo with separate frontend and backend applications.
 
-### Directory Structure
+- **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS
+- **Backend**: Express + TypeScript + Prisma ORM + PostgreSQL
+- **Shared contracts**: TypeScript types shared via `@contracts/*` path alias
+
+## Directory Structure
+
+### Frontend (`src/`)
 
 ```
 src/
-├── components/         # React components
-│   ├── ui/            # Reusable UI primitives (shadcn/ui)
-│   └── error-boundary.tsx
-├── config/            # Configuration files
-│   ├── index.ts       # App/env config
+├── components/
+│   ├── layout/        # Navigation, Footer, SmoothScrollProvider
+│   └── ui/            # Reusable UI primitives (shadcn/ui based)
+├── config/
+│   ├── index.ts       # App/env config + runtime flag re-export
+│   ├── runtime.flags.ts  # Feature flags (VITE_AUTH_BYPASS, VITE_ENABLE_MOCK_AUTH)
 │   ├── routes.ts      # Route definitions
-│   ├── permissions.ts # RBAC permissions
+│   ├── permissions.ts # RBAC permission map
 │   └── validation.schemas.ts  # Zod schemas
 ├── constants/         # Application constants
-├── context/           # React Context providers
-├── hooks/             # Custom React hooks
-├── lib/               # Third-party library utilities
-├── middleware/        # Request/response middleware
-├── pages/             # Page-level components
-│   ├── LandingPage.tsx
-│   └── SplashScreen.tsx
-├── sections/          # Landing page sections
-│   ├── Navigation.tsx
-│   ├── HeroSection.tsx
-│   ├── StatsSection.tsx
-│   ├── WellnessSection.tsx
-│   ├── ServicesSection.tsx
-│   ├── HowItWorksSection.tsx
-│   ├── SoulBotSection.tsx
-│   ├── CorporateSection.tsx
-│   ├── FAQSection.tsx
-│   ├── CTASection.tsx
-│   └── Footer.tsx
-├── services/          # API and external services
+├── context/           # React Context providers (Auth, Theme)
+├── features/          # Feature modules (domain-grouped)
+│   ├── about/         # About page components
+│   ├── auth/          # Auth forms and logic
+│   ├── business/      # Corporate/business page components
+│   ├── constellation/ # Soul Constellation Map widget
+│   ├── courses/       # Course listing and detail
+│   ├── dashboard/     # Dashboard widgets, layout, pages
+│   ├── journey-preparation/  # Journey prep flow
+│   ├── landing/       # Landing page sections (Hero, Stats, etc.)
+│   ├── onboarding/    # User onboarding screens
+│   ├── student-counselling/  # Student counselling feature
+│   └── workshop/      # Workshop components
+├── hooks/             # Custom React hooks (useDocumentTitle, etc.)
+├── layouts/           # Page layout containers (DashboardLayout)
+├── lib/               # Third-party library setup
+├── middleware/         # Client-side request middleware
+├── pages/             # Page-level route components
+│   ├── auth/          # LoginPage, SignupPage
+│   ├── dashboard/     # Dashboard sub-pages
+│   └── practitioner/  # Practitioner pages
+├── router/            # React Router config, ProtectedRoute
+├── services/          # API service, WebSocket service, analytics
 ├── types/             # TypeScript type definitions
-├── utils/             # Utility functions
-│   ├── helpers/       # Pure helper functions
-│   ├── validators/    # Validation functions
-│   └── errors/        # Error class definitions
-├── App.tsx            # Root component with routing
-├── main.tsx           # Entry point
-└── index.css          # Global styles + design tokens
+└── utils/
+    ├── errors/        # Client error classes
+    ├── helpers/       # Pure utility functions
+    └── validators/    # Input validation
 ```
 
-### Assets Location
-All static assets live in `public/images/` with semantic names:
-- `hero-monk.png` — Hero section meditation image
-- `wellness-silhouette.png` — Wellness section silhouette
-- `service-*.jpg` — Service cards (breathwork, therapist, counsellor, healer)
-- `feature-*.jpg` — Feature cards (guided-plan, 1on1-sessions, micro-tools)
-- `corporate-wellness.jpg` — Corporate section image
-- `soul-yatri-logo.png` — Brand logo
-- `concentric-circles.svg` — Splash screen background
+### Backend (`server/src/`)
 
-## Code Organization Principles
+```
+server/src/
+├── config/            # Server config (env vars, runtime flags)
+├── controllers/       # Request handlers (auth, notifications, health-tools, users)
+├── lib/
+│   ├── errors.ts      # AppError class + canonical error codes
+│   ├── response.ts    # sendSuccess / sendError helpers
+│   ├── dev-login.ts   # Dev login helper
+│   └── websocket.ts   # Socket.io setup
+├── middleware/
+│   ├── auth.middleware.ts      # requireAuth, requireRole
+│   ├── rbac.middleware.ts      # Role-based access control
+│   ├── error.ts               # Global error handler
+│   ├── request-context.ts     # Correlation IDs, timing
+│   ├── security.middleware.ts  # Security headers
+│   └── user-rate-limit.middleware.ts  # Per-user rate limiting
+├── modules/           # Domain module stubs (future service layer)
+│   ├── admin/     ├── ai/       ├── astrology/
+│   ├── auth/      ├── blog/     ├── careers/
+│   ├── community/ ├── corporate/ ├── courses/
+│   ├── events/    ├── health/   ├── health-tools/
+│   ├── ngo/       ├── notifications/
+│   ├── payments/  ├── shop/     ├── therapy/
+│   └── users/
+├── routes/            # Express routers (22 route files)
+├── services/          # Business logic (tokens, etc.)
+├── shared/
+│   ├── constants/     # Error codes (ERROR_CODES, CANONICAL_ERROR_CODES)
+│   ├── contracts/     # Shared TypeScript contracts (api, auth, websocket)
+│   ├── middleware/     # Shared middleware
+│   ├── types/         # Shared types
+│   └── utils/         # Shared utilities
+└── validators/        # Request body validators (Zod schemas)
+```
 
-### 1. Components
-- **UI Components**: Reusable, single-purpose components (Button, Card, Modal)
-- **Common Components**: Frequently used components (Header, Footer, Navigation)
-- **Layout Components**: Page layout containers
-- **Section Components**: Large page sections
+### Other
 
-### 2. Services
-- **API Service**: Centralized HTTP client with retry logic
-- **Storage Service**: Abstraction for localStorage/sessionStorage
-- **Domain Services**: Business logic services (Auth, User, Blog, etc.)
+```
+docs/
+├── API.md             # Full endpoint reference (170+ endpoints)
+├── ARCHITECTURE.md    # This file
+├── CONTRIBUTING.md    # Contribution guide
+├── DEVELOPMENT.md     # Setup and development guide
+└── execution/         # Batch execution tracking
+    ├── MASTER_PLAN.md
+    ├── STATUS.md
+    ├── DECISIONS.md
+    ├── RISKS.md
+    └── BASELINE_METRICS.json
 
-### 3. Utilities
-- **Helpers**: Pure utility functions (string, date, number, array operations)
-- **Validators**: Input validation functions
-- **Hooks**: Custom React hooks (useIsMounted, useDebounce, usePrevious)
+tests/                 # Playwright E2E tests
+scripts/               # Build/audit scripts
+public/images/         # Static assets
+```
 
-### 4. Types
-- Centralized TypeScript type definitions
-- Organized by feature/domain
-- Strict type safety across the application
+## Key Architecture Patterns
 
-### 5. Constants
-- Configuration values
-- Magic strings and numbers
-- Enum-like values
-- API endpoints
+### Shared Contracts
 
-## Patterns and Best Practices
+Frontend and backend share TypeScript type contracts via the `@contracts/*` path alias, mapped to `server/src/shared/contracts/`:
 
-### State Management
-- React Context for global state
-- Local component state for UI state
-- Services for data persistence
+- `api.contracts.ts` — API envelope types (`ApiEnvelope`)
+- `auth.contracts.ts` — Auth role/token types
+- `websocket.contracts.ts` — WebSocket event/payload types
 
 ### Error Handling
-- Centralized error handling in API service
-- Error boundaries for React errors
-- User-friendly error messages
+
+**Server**: Canonical error code system (`AUTH_001`–`SRV_005`) with `AppError` class and `sendSuccess`/`sendError` response helpers. Global error middleware catches all thrown errors and normalizes the response.
+
+**Client**: `ApiMiddleware` + `api.service.ts` handle retry logic (GET transients), auth token refresh, and error normalization for the UI layer.
+
+### Authentication & Authorization
+
+- **JWT-based**: Access token (short-lived) + refresh token
+- **Middleware**: `requireAuth` validates Bearer token, `requireRole` checks role hierarchy
+- **RBAC**: Four roles — `USER`, `THERAPIST`, `ASTROLOGER`, `ADMIN`
+- **Dev mode**: `VITE_AUTH_BYPASS` and `VITE_ENABLE_MOCK_AUTH` runtime flags allow testing without a running backend
+
+### Runtime Feature Flags
+
+Defined in `src/config/runtime.flags.ts`, controlled by `VITE_*` environment variables:
+
+| Flag | Default (dev) | Purpose |
+|------|:------------:|---------|
+| `VITE_AUTH_BYPASS` | `true` | Skip real auth in dev |
+| `VITE_ENABLE_MOCK_AUTH` | `true` | Enable mock login system |
+
+### State Management
+
+- **React Context**: Auth state, theme
+- **Zustand**: Feature-specific stores (where needed)
+- **React Query**: Server state and data fetching cache
+- **Local state**: Component-level UI state
 
 ### Performance
-- Code splitting via lazy loading
-- Component memoization
-- Image optimization
-- Bundle size monitoring
 
-### Testing
-- Unit tests for utilities and services
-- Component tests for UI components
-- Integration tests for features
-- E2E tests for critical flows
+- **Code splitting**: React `lazy()` for route-level chunks
+- **Bundle budgets**: Enforced via `scripts/check-bundle-budgets.js`
+- **Component memoization**: `React.memo` on render-heavy components
+- **Chunk strategy**: Vendor, animation, and feature chunks split in Vite config
 
-### Code Quality
-- ESLint for code standards
-- TypeScript for type safety
-- Prettier for code formatting
-- Pre-commit hooks
+### WebSocket
 
-## Development Workflow
+- **Socket.io**: Real-time notifications and session events
+- **Auth**: WebSocket connection validated via JWT
+- **Typed events**: Shared contracts define event names and payload shapes
 
-### Local Development
-```bash
-npm run dev
-```
+### API Route Status
 
-### Building for Production
-```bash
-npm run build
-```
+Of ~170 registered server routes:
+- **~30 implemented** (auth, users, health-tools, notifications, health, dev routes)
+- **~140 stubs** returning `501 SRV_005 Not Implemented`
+
+See [API.md](API.md) for the complete endpoint reference with implementation status.
 
 ### Running Linter
 ```bash

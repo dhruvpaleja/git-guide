@@ -389,6 +389,44 @@
         "smoke_log": "docs/execution/evidence/BATCH_016_TESTING_FOUNDATION/SMOKE_RUN.log"
       },
       "notes": "Created deterministic E2E testing foundation with 15-test Playwright smoke suite covering public routes, mock-auth login flow, dashboard routes, and API resilience without changing dev-login/mock-auth behavior."
+    },
+    {
+      "batch_id": "BATCH:017",
+      "phase": "10 documentation and operational hardening",
+      "checks": {
+        "frontend_typecheck": "pass",
+        "frontend_lint_ci": "pass",
+        "frontend_build": "pass",
+        "bundle_budget_check": "pass",
+        "server_build": "pass",
+        "server_lint_ci": "pass",
+        "quality_ci": "pass",
+        "smoke_e2e_chromium": "pass_15_of_15"
+      },
+      "doc_changes": {
+        "setup_md_consolidated": true,
+        "readme_refreshed": true,
+        "api_md_rewritten": true,
+        "architecture_md_refreshed": true,
+        "contributing_md_updated": true,
+        "env_example_updated": true,
+        "api_endpoints_documented": 170
+      },
+      "operational_changes": {
+        "r022_stub_normalization": {
+          "files_changed": 14,
+          "stubs_normalized": 241,
+          "pattern": "sendError(res, 501, 'SRV_005', 'Not implemented')"
+        },
+        "stale_files_deleted": {
+          "root_files": 29,
+          "server_files": 12,
+          "other": 1,
+          "total": 42
+        }
+      },
+      "risks_closed": ["R-022"],
+      "notes": "Phase 10 documentation and operational hardening: consolidated redundant docs, comprehensive API endpoint reference, refreshed architecture/contributing guides, normalized all 501 stubs to canonical error envelope, cleaned 42 stale files. No auth/UI-flow changes."
     }
   ]
 }

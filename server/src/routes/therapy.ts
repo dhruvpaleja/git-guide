@@ -1,81 +1,82 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
+import { sendError } from '../lib/response.js';
 
 const router = Router();
 
 // Session requests & booking
 router.post('/request', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/sessions', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/sessions/:id', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/sessions/:id/tasks', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.post('/sessions/:id/tasks', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/sessions/:id/recording', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/sessions/:id/report', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/sessions/:id/monitor/client', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/sessions/:id/monitor/therapist', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 // Therapist listing
 router.get('/therapists', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/therapists/:id', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 // Therapist dashboard
 router.get('/therapist/dashboard', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/therapist/clients', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/therapist/revenue', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/therapist/reviews', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/therapist/profile', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.put('/therapist/profile', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.get('/therapist/clients/:id', (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 export default router;

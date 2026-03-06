@@ -269,3 +269,27 @@
 - Batch: BATCH:016
 - Decision: Target chromium-only for smoke command with `reuseExistingServer: true` in local dev; keep firefox/webkit/mobile projects configured but out of default smoke run.
 - Rationale: Maximizes determinism and speed for the initial testing foundation; cross-browser projects are ready when needed and can be enabled via `--project` flag.
+
+## D-046
+- Date: 2026-03-06
+- Batch: BATCH:017
+- Decision: Consolidate SETUP.md content into docs/DEVELOPMENT.md and delete SETUP.md from root.
+- Rationale: SETUP.md was a near-duplicate of DEVELOPMENT.md with less information. Single source of truth reduces confusion and maintenance burden.
+
+## D-047
+- Date: 2026-03-06
+- Batch: BATCH:017
+- Decision: Normalize all 241 ad-hoc 501 stub responses across 14 server route files to use canonical `sendError(res, 501, 'SRV_005', 'Not implemented')` from `lib/response.ts`.
+- Rationale: Closes R-022. All API responses (including stubs) now include canonical `error.code`, `requestId`, and `timestamp` fields. Frontend error handling can rely on consistent envelope shape from every endpoint.
+
+## D-048
+- Date: 2026-03-06
+- Batch: BATCH:017
+- Decision: Delete 41 stale files from root and server directories (29 root markdown/output files, 12 server lint/tsc output files, `.gitstatus.txt`).
+- Rationale: These files were one-time development artifacts, debug outputs, or superseded documentation. Their presence cluttered the repo and confused contributors about what is authoritative.
+
+## D-049
+- Date: 2026-03-06
+- Batch: BATCH:017
+- Decision: Add `VITE_AUTH_BYPASS=true` and `VITE_ENABLE_MOCK_AUTH=true` to root `.env.example`.
+- Rationale: These runtime flags are actively used by the auth system but were undocumented in the example env file, requiring developers to discover them via source code.

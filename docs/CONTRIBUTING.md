@@ -1,61 +1,65 @@
 # Contributing Guide
 
-## Contributing to Soul Yatri
+## Setup
 
-Thank you for your interest in contributing! This guide will help you get started.
+See [DEVELOPMENT.md](DEVELOPMENT.md) for full setup instructions.
 
-## Code of Conduct
+## Workflow
 
-- Be respectful and inclusive
-- Provide constructive feedback
-- Help others learn and grow
-- Report issues responsibly
+1. Create a feature branch from `master`: `git checkout -b feature/description`
+2. Make changes with clear, scoped commits
+3. Run quality gates before pushing:
+   ```bash
+   npm run quality:ci
+   ```
+4. Push and open a Pull Request
+5. Pass CI checks + code review
+6. Squash-merge to `master`
 
-## Getting Started
+## Quality Gates
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'feat(scope): add amazing feature'`)
-5. Push to your fork (`git push origin feature/amazing-feature`)
-6. Create a Pull Request
+Every PR must pass the full quality gate chain:
 
-## PR Requirements
+| Gate | Command | What it checks |
+|------|---------|---------------|
+| Type-check | `npm run type-check` | Frontend TypeScript |
+| Lint (frontend) | `npm run lint:ci` | ESLint with zero warnings |
+| Build (frontend) | `npm run build` | Vite production build |
+| Bundle budget | `npm run bundle:budget` | JS chunk size limits |
+| Build (backend) | `cd server && npm run build` | Backend TypeScript |
+| Lint (backend) | `cd server && npm run lint:ci` | Backend ESLint (zero warnings) |
 
-- [ ] Code passes linting and type checking
-- [ ] Tests are included for new features
-- [ ] Documentation is updated
-- [ ] Commit messages follow conventional commits
-- [ ] No breaking changes without discussion
-- [ ] Branch is up-to-date with main
+Run all at once:
+```bash
+npm run quality:ci
+```
 
-## Review Process
+E2E smoke tests (optional but recommended):
+```bash
+npm run test:e2e
+```
 
-1. GitHub Actions: Automated checks must pass
-2. Code Review: At least one maintainer review
-3. Approval: Code must be approved before merge
-4. Merge: Squash commits and merge to main
+## Commit Messages
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+feat(auth): add password reset flow
+fix(dashboard): correct mood chart rendering
+docs(api): document therapy endpoints
+refactor(services): extract token refresh logic
+```
+
+## Code Standards
+
+- **TypeScript**: Use explicit types, avoid `any`. Use `type` imports.
+- **ESLint**: Zero warnings policy. Run `npm run lint` to auto-fix.
+- **Naming**: PascalCase for components/types, camelCase for functions, UPPER_SNAKE_CASE for constants.
+- **Imports**: Use `@/` path alias for frontend, `@contracts/*` for shared types.
 
 ## What to Work On
 
 - Check GitHub Issues for open tasks
-- Look for "good first issue" label for beginners
-- Suggest improvements in Discussions
-- Fix bugs you find
-
-## Quality Standards
-
-- Write clean, readable code
-- Follow existing patterns
-- Add comments for complex logic
-- Keep functions small and focused
-- Use meaningful variable names
-
-## Need Help?
-
-- Check existing documentation
-- Search closed issues
-- Ask in Discussions
-- Create an issue if blocked
-
-Thank you for contributing!
+- Look for `good first issue` label
+- Stub routes marked `STUB` in [API.md](API.md) need implementation
+- See [ARCHITECTURE.md](ARCHITECTURE.md) for codebase orientation

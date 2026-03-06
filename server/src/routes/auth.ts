@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
+import { sendError } from '../lib/response.js';
 
 import { requireAuth } from '../middleware/auth.middleware.js';
 import { authLimiter } from '../middleware/security.middleware.js';
@@ -15,11 +16,11 @@ router.post('/logout', authController.logout);
 router.get('/me', requireAuth, authController.me);
 
 router.post('/forgot-password', authLimiter, (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 router.post('/reset-password', authLimiter, (_req: Request, res: Response) => {
-  res.status(501).json({ success: false, error: { message: 'Not implemented' } });
+  sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
 export default router;

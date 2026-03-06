@@ -35,15 +35,16 @@
 12. Phase 11 - Final verification and release readiness.
 
 ## Current Batch
-- `BATCH:016`
-- Phase target: `Phase 9 testing foundation and coverage ramp`
+- `BATCH:017`
+- Phase target: `Phase 10 documentation and operational hardening`
 - Objective:
-  - Create deterministic E2E testing foundation with Playwright smoke suite.
-  - Stabilize `playwright.config.ts` for failure-focused traces/screenshots and deterministic viewport.
-  - Replace placeholder tests with structured smoke coverage over public, auth, dashboard, and resilience areas.
-  - 15 smoke tests across 4 test groups: public (7), auth (2), dashboard (4), resilience (2).
-  - Validate mock-auth login flow works in E2E context.
-  - Validate app resilience to failing/slow API calls via route interception.
-  - Preserve QA dev-login/mock-auth behavior.
-  - All quality gates passing: `type-check`, `lint:ci`, `build`, `(cd server && npm run build)`, `(cd server && npm run lint:ci)`, `quality:ci`, `test:e2e` smoke.
-  - Update docs at batch end.
+  - Consolidate redundant setup docs (SETUP.md → docs/DEVELOPMENT.md).
+  - Refresh README.md (React 19, quality:ci/test:e2e commands, correct dev account passwords).
+  - Comprehensive API.md rewrite: 170+ endpoints documented with method, path, auth, status (LIVE/STUB), description.
+  - Refresh ARCHITECTURE.md to reflect current directory structure, features/, shared contracts, runtime flags, middleware pipeline.
+  - Update CONTRIBUTING.md with project-specific quality gates, commit conventions, code standards.
+  - Close R-022: normalize all 241 ad-hoc 501 stub responses across 14 server route files to canonical `sendError(res, 501, 'SRV_005', 'Not implemented')`.
+  - Add missing `VITE_AUTH_BYPASS` and `VITE_ENABLE_MOCK_AUTH` to root `.env.example`.
+  - Delete 29 stale root markdown/output files and 12 stale server output files.
+  - All quality gates passing: `type-check`, `lint:ci`, `build`, `bundle:budget`, server build, server lint:ci, `quality:ci`, chromium smoke (15/15).
+  - Update execution docs at batch end.

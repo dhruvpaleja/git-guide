@@ -5,6 +5,7 @@ import { AppError } from '../lib/errors.js';
 import { prisma } from '../lib/prisma.js';
 import { websocketService } from '../lib/websocket.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import type { NotificationWebSocketPayload } from '../shared/contracts/websocket.contracts.js';
 
 /**
  * Notifications Controllers
@@ -28,6 +29,7 @@ export const getNotifications = asyncHandler(
     sendSuccess(res, {
       notifications,
       unread: unreadCount,
+      unreadCount,
     });
   },
 );
@@ -132,6 +134,26 @@ export const createNotification = async (params: {
   body: string;
   data?: Record<string, unknown>;
 }): Promise<void> => {
+  const parseNotificationData = (raw: unknown): string | Record<string, unknown> | null => {
+    if (raw === null || raw === undefined) {
+      return null;
+    }
+
+    if (typeof raw === 'object' && !Array.isArray(raw)) {
+      return raw as Record<string, unknown>;
+    }
+
+    if (typeof raw !== 'string') {
+      return String(raw);
+    }
+
+    try {
+      return JSON.parse(raw) as Record<string, unknown>;
+    } catch {
+      return raw;
+    }
+  };
+
   const notification = await prisma.notification.create({
     data: {
       userId: params.userId,
@@ -142,10 +164,22 @@ export const createNotification = async (params: {
     },
   });
 
+  const realtimeNotification: NotificationWebSocketPayload = {
+    id: notification.id,
+    userId: notification.userId,
+    type: notification.type,
+    title: notification.title,
+    body: notification.body,
+    isRead: notification.isRead,
+    createdAt: notification.createdAt.toISOString(),
+    readAt: notification.readAt ? notification.readAt.toISOString() : null,
+    data: parseNotificationData(notification.data),
+  };
+
   // Send via WebSocket if user is connected
   websocketService.sendToUser(params.userId, {
     type: 'notification',
-    data: notification,
+    data: realtimeNotification,
   });
 };
 

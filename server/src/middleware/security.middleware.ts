@@ -1,22 +1,18 @@
 // ---------------------------------------------------------------------------
-// Security Middleware — Rate limiting tiers, CORS hardening, security headers
+// Security Middleware - Rate limiting tiers, CORS hardening, security headers
 // ---------------------------------------------------------------------------
 
+import type { Request, Response } from 'express';
 import { rateLimit, type Options } from 'express-rate-limit';
 import { ErrorCode } from '../lib/errors.js';
+import { sendError } from '../lib/response.js';
 
-// ---------------------------------------------------------------------------
-// Base rate-limit response factory
-// ---------------------------------------------------------------------------
-
-function rateLimitResponse(message: string) {
-  return {
-    success: false,
-    error: {
-      code: ErrorCode.RATE_LIMITED,
-      message,
-    },
-    timestamp: new Date().toISOString(),
+function rateLimitHandler(message: string) {
+  return (req: Request, res: Response): void => {
+    sendError(res, 429, ErrorCode.RATE_LIMITED, message, {
+      path: req.originalUrl,
+      method: req.method,
+    });
   };
 }
 
@@ -26,9 +22,9 @@ function createLimiter(opts: Partial<Options> & { windowMs: number; max: number;
     max: opts.max,
     standardHeaders: true,
     legacyHeaders: false,
-    message: rateLimitResponse(opts.message),
     keyGenerator: opts.keyGenerator,
     skip: opts.skip,
+    handler: rateLimitHandler(opts.message),
   });
 }
 

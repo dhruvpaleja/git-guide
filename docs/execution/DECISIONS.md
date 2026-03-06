@@ -233,3 +233,21 @@
 - Batch: BATCH:014
 - Decision: Remove build/lint artifact files from version control (`build-result2.txt`, `eslint-check.txt`, `lint-result.txt`) and normalize BATCH:014 evidence/docs to actual executed checks.
 - Rationale: Keeps repository and execution tracking deterministic; prevents false "pass" reporting and generated-file churn.
+
+## D-040
+- Date: 2026-03-06
+- Batch: BATCH:015
+- Decision: Keep `server/src/lib/errors.ts` as the sole canonical error-code namespace and normalize all incoming/legacy codes through compatibility alias mapping before response emission.
+- Rationale: Prevents drift between middleware/controllers and guarantees server responses converge on one stable canonical code family without breaking existing legacy checks.
+
+## D-041
+- Date: 2026-03-06
+- Batch: BATCH:015
+- Decision: Enforce frontend retry policy as GET-only for transient failures (network/timeout/5xx) with bounded backoff, and allow 4xx replay only through a single safe token-refresh retry path.
+- Rationale: Improves resilience while avoiding unsafe non-idempotent retries and preserving existing auth flow semantics.
+
+## D-042
+- Date: 2026-03-06
+- Batch: BATCH:015
+- Decision: Extend websocket client with explicit connection-state events (`connecting`, `connected`, `reconnecting`, `disconnected`, `failed`) plus bounded jittered reconnect attempts.
+- Rationale: Eliminates reconnect hot-loop risk and gives dashboard consumers deterministic state for safe UX messaging without redesigning page layout.

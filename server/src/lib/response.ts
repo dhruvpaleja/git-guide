@@ -1,9 +1,11 @@
 // ---------------------------------------------------------------------------
-// Response Helpers — Standardized API response envelope
+// Response Helpers - Standardized API response envelope
 // ---------------------------------------------------------------------------
 
 import type { Response } from 'express';
 import type { ApiEnvelope, PaginationMeta } from '../shared/contracts/api.contracts.js';
+import { defaultErrorCodeForStatus, resolveCanonicalErrorCode } from './errors.js';
+import { getRequestId } from '../middleware/request-context.js';
 
 export type ApiResponse<T = unknown> = ApiEnvelope<T, string, PaginationMeta>;
 
@@ -20,7 +22,7 @@ export function sendSuccess<T>(
     success: true,
     data,
     timestamp: new Date().toISOString(),
-    requestId: (res.req as unknown as Record<string, unknown>)?.requestId as string | undefined,
+    requestId: getRequestId(res.req),
   };
 
   if (meta) {
@@ -40,15 +42,17 @@ export function sendError(
   message: string,
   details?: Record<string, unknown>,
 ): void {
+  const canonicalCode = resolveCanonicalErrorCode(code, defaultErrorCodeForStatus(statusCode));
+
   const body: ApiResponse = {
     success: false,
     error: {
-      code,
+      code: canonicalCode,
       message,
       ...(details && { details }),
     },
     timestamp: new Date().toISOString(),
-    requestId: (res.req as unknown as Record<string, unknown>)?.requestId as string | undefined,
+    requestId: getRequestId(res.req),
   };
 
   res.status(statusCode).json(body);

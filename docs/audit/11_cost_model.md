@@ -1,171 +1,123 @@
 # Cost Model — Soul Yatri Platform
 
-## 3 Scenarios: Student (Free), Beta Launch (₹5K/mo), Production Scale (₹50K/mo)
+_All prices researched March 2026 from official vendor pricing pages. INR conversions at ₹84/USD._
 
----
+## Scenario 1: Student MVP (₹0–₹500/mo | $0–$6/mo)
 
-## Scenario 1: STUDENT / FREE TIER (₹0/month)
+**Goal**: Launch MVP with real auth, health tools, basic therapy booking — zero or near-zero cost.
 
-> For development, testing, and portfolio demonstration. Supports ~100 users.
+| Service | Provider | Plan | Monthly Cost (USD) | Monthly Cost (INR) |
+|---------|----------|------|-------------------:|-------------------:|
+| Frontend Hosting | Vercel | Hobby (Free) | $0 | ₹0 |
+| Backend Hosting | Render | Free (512MB, spins down) | $0 | ₹0 |
+| Database | Neon | Free (0.5GB, 100 CU-hrs) | $0 | ₹0 |
+| Email | Resend | Free (3K emails/mo) | $0 | ₹0 |
+| Video | 100ms | Free (10K min/mo) | $0 | ₹0 |
+| Payments | Razorpay | Per-txn only | $0 base | ₹0 base |
+| Analytics | PostHog | Free (1M events) | $0 | ₹0 |
+| Error Monitoring | Sentry | Free (5K errors) | $0 | ₹0 |
+| Cache/Queue | Upstash | Free (10K cmd/day) | $0 | ₹0 |
+| AI Chat | Google Gemini | Free (15 req/min) | $0 | ₹0 |
+| Domain | .in domain | Annual | ~$1/mo | ~₹84/mo |
+| **TOTAL** | | | **$1/mo** | **~₹84/mo** |
 
-| Category | Service | Plan | Monthly Cost |
-|----------|---------|------|-------------|
-| Database | Neon Postgres | Free (0.5GB, 100hrs compute) | ₹0 |
-| Hosting (Frontend) | Vercel | Free (hobby) | ₹0 |
-| Hosting (Backend) | Railway | Free ($5 trial credit) | ₹0 |
-| Cache | Upstash Redis | Free (10K commands/day) | ₹0 |
-| Email | Resend | Free (3,000 emails/month) | ₹0 |
-| Error Tracking | Sentry | Free (5K events/month) | ₹0 |
-| Analytics | PostHog | Free (1M events/month) | ₹0 |
-| Storage | Cloudflare R2 | Free (10GB + 1M reads) | ₹0 |
-| Video | Daily.co | Free (2,000 participant-min/month) | ₹0 |
-| AI | OpenAI GPT-4o-mini | Pay-per-use (~₹0 at student scale) | ₹0 |
-| Payment | Razorpay | Transaction-based only | ₹0 |
-| Monitoring | BetterUptime | Free (10 monitors) | ₹0 |
-| Domain | — | Already owned (assumed) | ₹0 |
-| **TOTAL** | | | **₹0/month** |
+**Notes**:
+- Render free tier spins down after 15 min inactivity; ~30s cold start
+- Neon scales to zero automatically; 0.5GB is enough for early users
+- 100ms free = ~167 hrs of 1:1 therapy sessions/mo
+- Razorpay charges 2% per transaction only (no monthly fee)
+- Gemini free tier sufficient for ~50-100 AI interactions/day
+- Domain is the only hard cost (~₹1000/yr for .in)
 
-### Constraints at Free Tier
-- Neon: 100 compute-hours/month → ~3.3 hrs/day of active queries
-- Railway: $5 trial credit exhausts; then need paid
-- Vercel: No commercial use; 100GB bandwidth
-- Daily.co: 2,000 minutes → ~33 hours of video calls
-- Resend: 3,000 emails → ~100 users × 30 emails/month
+## Scenario 2: Early Growth (₹2,000–₹5,000/mo | $25–$60/mo)
 
----
+**Goal**: 100-500 users, always-on backend, reliable email, basic monitoring.
 
-## Scenario 2: BETA LAUNCH (₹5,000/month ≈ $60/month)
+| Service | Provider | Plan | Monthly Cost (USD) | Monthly Cost (INR) |
+|---------|----------|------|-------------------:|-------------------:|
+| Frontend Hosting | Vercel | Hobby (Free) | $0 | ₹0 |
+| Backend Hosting | Render | Starter ($7/mo, always-on) | $7 | ₹588 |
+| Database | Neon | Launch (~$15/mo) | $15 | ₹1,260 |
+| Email | Resend | Free (3K/mo still sufficient) | $0 | ₹0 |
+| Video | 100ms | Free tier likely sufficient | $0 | ₹0 |
+| Payments | Razorpay | Per-txn (2% of GMV) | ~$2-5 | ~₹168-420 |
+| Analytics | PostHog | Free | $0 | ₹0 |
+| Error Monitoring | Sentry | Free | $0 | ₹0 |
+| Cache | Upstash | Free | $0 | ₹0 |
+| AI Chat | OpenAI GPT-4o-mini | ~$5/mo at 100 chats/day | $5 | ₹420 |
+| Domain + SSL | Vercel manages | Included | $0 | ₹0 |
+| **TOTAL** | | | **$29–$32/mo** | **₹2,436–₹2,688/mo** |
 
-> For beta testing with 500-1,000 real users. Basic production features.
+**Notes**:
+- Render Starter runs 24/7 (no cold starts)
+- Neon Launch gives 16 CU, auto-scaling, 7-day restore
+- 500 users × 2 sessions/mo × 45 min = 750 video min (well within 10K free)
+- Razorpay revenue: if 50 paid sessions/mo × ₹1,000 = ₹50,000 GMV → ₹1,000 fee
+- GPT-4o-mini at ~$0.15/1M input tokens handles hundreds of conversations
 
-| Category | Service | Plan | Monthly Cost (₹) |
-|----------|---------|------|------------------|
-| Database | Neon Postgres | Launch ($19/mo = ₹1,600) | ₹1,600 |
-| Hosting (Frontend) | Vercel | Pro ($20/mo = ₹1,680) | ₹1,680 |
-| Hosting (Backend) | Railway | Starter ($5/mo + usage ~$3) | ₹670 |
-| Cache | Upstash Redis | Pay-as-you-go (~$2/mo) | ₹170 |
-| Email | Resend | Free tier (3K/mo enough for beta) | ₹0 |
-| Error Tracking | Sentry | Free tier (5K events enough) | ₹0 |
-| Analytics | PostHog | Free tier (1M events enough) | ₹0 |
-| Storage | Cloudflare R2 | Free tier (10GB enough for beta) | ₹0 |
-| Video | Daily.co | Free + pay overage (~$5/mo) | ₹420 |
-| AI | OpenAI GPT-4o-mini | ~100K tokens/day (~$3/mo) | ₹250 |
-| Payment Gateway | Razorpay | 2% per transaction (no monthly) | ₹0 base |
-| Monitoring | BetterUptime | Free tier | ₹0 |
-| Domain + SSL | Cloudflare | Free SSL; domain ~₹100/mo amortized | ₹100 |
-| **TOTAL** | | | **₹4,890/month** |
+## Scenario 3: Growth (₹10,000–₹25,000/mo | $120–$300/mo)
 
-### Revenue Needed to Break Even
-- At ₹499/month membership: 10 paying users cover costs
-- At 2% Razorpay fee on ₹499: ₹10 per transaction → negligible
-- First 50 therapy sessions at ₹500 each: ₹25,000 GMV → ₹500 Razorpay fee
+**Goal**: 1,000-5,000 users, professional infrastructure, HD video, dedicated support.
 
-### What You Get at Beta Tier
-- ✅ Custom domain with SSL
-- ✅ Auto-deploy from GitHub
-- ✅ Real payment processing
-- ✅ AI chatbot (SoulBot) with rate limits
-- ✅ 1:1 video therapy (up to 100 sessions/month)
-- ✅ Transactional emails (password reset, booking confirmation)
-- ✅ Error tracking and uptime monitoring
-- ❌ No marketing email automation
-- ❌ No advanced analytics/funnels
-- ❌ No CDN image optimization
-- ❌ Limited to single backend instance
+| Service | Provider | Plan | Monthly Cost (USD) | Monthly Cost (INR) |
+|---------|----------|------|-------------------:|-------------------:|
+| Frontend Hosting | Vercel | Pro ($20/mo) | $20 | ₹1,680 |
+| Backend Hosting | Render | Standard ($25/mo, 2GB) | $25 | ₹2,100 |
+| Database | Neon | Launch (~$40/mo at 5GB) | $40 | ₹3,360 |
+| Email | Resend | Pro ($20/mo, 50K emails) | $20 | ₹1,680 |
+| Video | 100ms | ~$50/mo (5K min over free) | $50 | ₹4,200 |
+| Payments | Razorpay | 2% of ~₹5L GMV | ~$12 | ~₹1,000 |
+| Analytics | PostHog | Free (still under 1M) | $0 | ₹0 |
+| Error Monitoring | Sentry | Team ($26/mo) | $26 | ₹2,184 |
+| Cache | Upstash | Pro ($10/mo) | $10 | ₹840 |
+| AI Chat | OpenAI GPT-4o-mini | ~$15/mo | $15 | ₹1,260 |
+| File Storage | Cloudinary | Free (25 credits) | $0 | ₹0 |
+| Domain | .com domain | Annual | ~$1/mo | ~₹84/mo |
+| **TOTAL** | | | **$219/mo** | **~₹18,388/mo** |
 
----
+**Notes**:
+- At 5K users, Vercel Pro gives faster builds + team collaboration
+- Render Standard handles concurrent users without issues
+- 5K users × 1 session/mo × 45 min = 3,750 min → ~$15 video cost (within free + small overage)
+- Email volume: welcome + booking + receipt + reminder = ~4 emails/user/mo = 20K emails
+- Sentry Team for proper error tracking with source maps
 
-## Scenario 3: PRODUCTION SCALE (₹50,000/month ≈ $600/month)
+## Scenario 4: Scale (₹50,000+/mo | $600+/mo)
 
-> For 5,000-10,000 active users. Full feature set. Revenue-generating.
+**Goal**: 10,000+ users, HA database, horizontal scaling, compliance.
 
-| Category | Service | Plan | Monthly Cost (₹) |
-|----------|---------|------|------------------|
-| Database | Neon Postgres | Scale ($69/mo = ₹5,800) | ₹5,800 |
-| Hosting (Frontend) | Vercel | Pro ($20/mo) | ₹1,680 |
-| Hosting (Backend) | Railway | Pro ($20/mo + usage ~$30) | ₹4,200 |
-| Cache | Upstash Redis | Pro ($10/mo) | ₹840 |
-| Email (Transactional) | Resend | Pro ($20/mo = 50K emails) | ₹1,680 |
-| Email (Marketing) | Resend | Same account | Included |
-| Error Tracking | Sentry | Team ($26/mo) | ₹2,180 |
-| Analytics | PostHog | Free (1M events still enough) | ₹0 |
-| Storage | Cloudflare R2 | Pay-per-use (~$5/mo for 50GB) | ₹420 |
-| Image CDN | Cloudflare Images | $5/mo base | ₹420 |
-| Video (1:1) | Daily.co | Scale ($0.004/min × 3000 min) | ₹1,010 |
-| Video (Group) | Daily.co | Same account | Included |
-| AI (SoulBot) | OpenAI GPT-4o-mini | ~1M tokens/day (~$15/mo) | ₹1,260 |
-| AI (Crisis) | OpenAI Moderation | Free API | ₹0 |
-| Payment Gateway | Razorpay | 2% per transaction | Variable |
-| Queue | BullMQ + Upstash | Included in Redis cost | ₹0 |
-| Search | Meilisearch Cloud | Starter ($30/mo) | ₹2,520 |
-| Monitoring | BetterUptime | Starter ($20/mo) | ₹1,680 |
-| Push Notifications | Firebase FCM | Free | ₹0 |
-| Domain + DNS | Cloudflare | Free DNS; domain amortized | ₹100 |
-| CMS (Blog) | Sanity | Free (3 users) | ₹0 |
-| **SUBTOTAL (Infrastructure)** | | | **₹23,790/month** |
-| | | | |
-| **Human Costs** | | | |
-| Part-time DevOps/SRE | Freelance (10 hrs/mo) | | ₹10,000 |
-| Content Creator | Freelance (blog/social) | | ₹8,000 |
-| Customer Support | Part-time | | ₹8,000 |
-| **SUBTOTAL (Human)** | | | **₹26,000/month** |
-| | | | |
-| **GRAND TOTAL** | | | **₹49,790/month** |
+| Service | Provider | Plan | Monthly Cost (USD) | Monthly Cost (INR) |
+|---------|----------|------|-------------------:|-------------------:|
+| Frontend | Vercel | Pro ($20/mo) | $20 | ₹1,680 |
+| Backend | Render | Pro ($85/mo, 4GB/2CPU) × 2 | $170 | ₹14,280 |
+| Database | Neon | Scale (~$200/mo at 50GB) | $200 | ₹16,800 |
+| Email | Resend | Scale ($90/mo, 100K) | $90 | ₹7,560 |
+| Video | 100ms | ~$200/mo (50K min) | $200 | ₹16,800 |
+| Payments | Razorpay | 2% of ~₹25L GMV | ~$60 | ~₹5,000 |
+| Analytics | PostHog | Usage-based | $50 | ₹4,200 |
+| Error Monitoring | Sentry | Team ($26/mo) | $26 | ₹2,184 |
+| Cache | Upstash | Pro ($10/mo) | $10 | ₹840 |
+| AI | OpenAI GPT-4o | ~$50/mo | $50 | ₹4,200 |
+| File Storage | Cloudinary | Plus ($89/mo) | $89 | ₹7,476 |
+| **TOTAL** | | | **~$965/mo** | **~₹81,020/mo** |
 
-### Revenue Model at Scale
+## Revenue vs Cost Analysis
 
-| Revenue Stream | Price | Users/Mo | Monthly Revenue |
-|----------------|-------|----------|----------------|
-| Basic Membership | ₹499/mo | 500 | ₹2,49,500 |
-| Premium Membership | ₹999/mo | 200 | ₹1,99,800 |
-| Therapy Sessions | ₹800/session (20% commission) | 400 | ₹64,000 |
-| Courses | ₹1,499 one-time | 50 | ₹74,950 |
-| Corporate Packages | ₹25,000/mo | 3 | ₹75,000 |
-| **TOTAL REVENUE** | | | **₹6,63,250/month** |
-| **Infrastructure Cost** | | | ₹49,790/month |
-| **Gross Margin** | | | **₹6,13,460 (92.5%)** |
+| Metric | Student MVP | Early Growth | Growth | Scale |
+|--------|------------|-------------|--------|-------|
+| Monthly Users | 1-50 | 100-500 | 1K-5K | 10K+ |
+| Monthly Cost | ₹84 | ₹2,500 | ₹18,000 | ₹81,000 |
+| Avg Revenue/User | ₹0 (free) | ₹100 | ₹200 | ₹300 |
+| Monthly Revenue | ₹0 | ₹25,000 | ₹4,00,000 | ₹30,00,000 |
+| Unit Economics | N/A | ₹50/user profit | ₹196/user profit | ₹292/user profit |
+| Break-even Users | N/A | 25 paid users | 90 paid users | 270 paid users |
 
-### Cost Per User Breakdown
-| Metric | Value |
-|--------|-------|
-| Infrastructure cost per MAU (5,000) | ₹4.76/user/month |
-| Infrastructure cost per paying user (700) | ₹34/user/month |
-| Payback on ₹499 membership | First month |
-| Break-even users (infrastructure only) | 48 Basic members |
-| Break-even users (full cost) | 100 Basic members |
+## Key Takeaways
 
----
-
-## Cost Optimization Strategies
-
-### Immediate (save 20-30%)
-1. **Serverless database** (Neon scale-to-zero) — avoid paying for idle
-2. **Aggressive caching** (Upstash) — reduce DB queries by 60%
-3. **Image optimization pipeline** (Sharp + R2) — reduce storage/bandwidth
-4. **AI token budgeting** — limit SoulBot to 500 tokens/response; use GPT-4o-mini not GPT-4
-
-### Medium-term (save 30-40%)
-1. **Self-host PostHog** on Railway — eliminate analytics cost entirely
-2. **Move to Fly.io** for backend — cheaper than Railway at scale; global edge
-3. **Bundle Daily.co minutes** — annual plan saves 20%
-4. **Use Cloudflare Workers** for edge caching — reduce backend load
-
-### Long-term (save 50%+)
-1. **Reserved instances** — annual commits on Neon/Railway
-2. **Self-host Meilisearch** — eliminate search SaaS cost
-3. **Fine-tune smaller AI model** — distill GPT-4o-mini knowledge into local model
-4. **Move video to Agora** at scale — better bulk pricing above 10K minutes
-
----
-
-## Investment Priorities (Where ₹1 Spent Returns ₹10+)
-
-| Priority | Investment | Cost | Expected Return |
-|----------|-----------|------|----------------|
-| 1 | Razorpay Integration | ₹0 (dev time) | Unlocks ALL revenue |
-| 2 | Daily.co Video | ₹0-420/mo | Therapy sessions = primary revenue |
-| 3 | Resend Email | ₹0 (free tier) | Password reset → user retention |
-| 4 | Sentry | ₹0 (free tier) | Catch errors → reduce churn |
-| 5 | OpenAI SoulBot | ₹250/mo | Differentiator → premium conversions |
-| 6 | Meilisearch | ₹0 (self-host) | Course/blog discovery → engagement |
-| 7 | PostHog | ₹0 (free) | Data-driven decisions → all metrics |
+1. **MVP can launch at ₹84/mo** — only hard cost is a domain name
+2. **Free tiers cover development + initial 50 users** — zero infrastructure cost
+3. **Video is the biggest variable cost** — 100ms free tier (10K min) covers ~220 thirty-min 1:1 sessions/mo
+4. **Razorpay has zero monthly cost** — pure per-transaction pricing ideal for bootstrapping
+5. **AI cost is manageable** — GPT-4o-mini at $0.15/1M tokens handles thousands of interactions for pennies
+6. **Break-even is achievable** with 25-90 paying users depending on growth stage
+7. **Total annual cost for Year 1** (student MVP → early growth): **~₹15,000–₹30,000** (~$180–$360)

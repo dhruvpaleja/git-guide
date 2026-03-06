@@ -1,207 +1,366 @@
-# Design System Audit — Soul Yatri
+# Design System Audit
 
-## Foundation Layer
-
-### Color System
-| Token Type | Implementation | Quality |
-|-----------|---------------|---------|
-| CSS Variables | ✅ Defined in `src/index.css` via `:root` and `.dark` | GOOD |
-| HSL Format | ✅ Using `hsl(var(--primary))` pattern | GOOD |
-| Dark Mode | ✅ `.dark` class toggles HSL values | GOOD |
-| Semantic Tokens | ✅ `--background`, `--foreground`, `--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, `--card`, `--popover`, `--border`, `--input`, `--ring` | EXCELLENT |
-| Chart Colors | ✅ `--chart-1` through `--chart-5` defined | GOOD |
-| Brand Colors | ⚠️ Some pages use raw hex instead of tokens (`bg-[#f3f3f3]`, `bg-[#F8F9FA]`, `text-[#FF7B00]`) | NEEDS FIX |
-
-**Issues Found:**
-- 4 pages bypass design tokens with hardcoded colors (About, Contact, Career, Business)
-- Teal accent (`#14B8A6`) used directly instead of via CSS variable
-- Orange brand color (`#FF7B00`) not in token system
-
-### Typography
-| Element | Implementation | Notes |
-|---------|---------------|-------|
-| Font Stack | `font-sans` (Tailwind default) | No custom brand font loaded |
-| Heading Scale | ✅ Consistent `text-4xl`/`text-3xl`/`text-2xl`/`text-xl` | Via Tailwind |
-| Body Text | ✅ `text-base`/`text-sm`/`text-xs` | Consistent |
-| Font Weights | ✅ `font-bold`/`font-semibold`/`font-medium` | Consistent |
-| Line Height | ✅ Tailwind defaults (`leading-relaxed` used) | Good readability |
-| Custom Font | ❌ No `@font-face` or Google Fonts loaded | Using system fonts |
-
-**Recommendation:** Add brand font (e.g., Inter, Plus Jakarta Sans) for visual identity.
-
-### Spacing
-| Pattern | Usage | Quality |
-|---------|-------|---------|
-| Tailwind Scale | ✅ `p-4`, `p-6`, `p-8`, `gap-4`, `gap-6`, `space-y-4` | CONSISTENT |
-| Container | ✅ `max-w-7xl mx-auto px-4` pattern | GOOD |
-| Section Spacing | ✅ `py-16`/`py-20`/`py-24` for page sections | CONSISTENT |
-| Card Padding | ✅ `p-4`/`p-6` standard | CONSISTENT |
-
-### Border Radius
-| Element | Value | Quality |
-|---------|-------|---------|
-| CSS Variable | ✅ `--radius: 0.5rem` defined | GOOD |
-| Buttons | ✅ Via `rounded-md` / shadcn default | CONSISTENT |
-| Cards | ✅ `rounded-lg` / `rounded-xl` | CONSISTENT |
-| Inputs | ✅ `rounded-md` | CONSISTENT |
-| Avatars | ✅ `rounded-full` | CONSISTENT |
+**Generated:** March 6, 2026  
+**Scope:** Visual consistency, component reuse, typography, spacing, button system, trust design
 
 ---
 
-## Component Library
+## Executive Summary
 
-### shadcn/ui Components Inventory
+**Overall Design System Maturity: 65/100**
 
-| Component | File Exists | Used In Pages | Quality |
-|-----------|-------------|--------------|---------|
-| Button | ✅ `src/components/ui/button.tsx` | 25+ pages | EXCELLENT |
-| Card | ✅ `card.tsx` | 20+ pages | EXCELLENT |
-| Dialog | ✅ `dialog.tsx` | 5+ pages | GOOD |
-| Input | ✅ `input.tsx` | 10+ pages | GOOD |
-| Label | ✅ `label.tsx` | 8+ pages | GOOD |
-| Select | ✅ `select.tsx` | 5+ pages | GOOD |
-| Textarea | ✅ `textarea.tsx` | 4+ pages | GOOD |
-| Badge | ✅ `badge.tsx` | 8+ pages | GOOD |
-| Avatar | ✅ `avatar.tsx` | 6+ pages | GOOD |
-| Skeleton | ✅ `skeleton.tsx` | 3+ pages | MODERATE |
-| Tabs | ✅ `tabs.tsx` | 4+ pages | GOOD |
-| Toast/Sonner | ✅ `sonner.tsx` | Global | GOOD |
-| Tooltip | ✅ `tooltip.tsx` | 3+ pages | MODERATE |
-| Separator | ✅ `separator.tsx` | 5+ pages | GOOD |
-| Progress | ✅ `progress.tsx` | 2+ pages | MODERATE |
-| Switch | ✅ `switch.tsx` | 2+ pages | MODERATE |
-| Checkbox | ✅ `checkbox.tsx` | 2+ pages | MODERATE |
-| Accordion | ✅ `accordion.tsx` | 1+ pages | LOW USE |
-| Alert | ✅ `alert.tsx` | 2+ pages | MODERATE |
-| Dropdown Menu | ✅ `dropdown-menu.tsx` | 3+ pages | GOOD |
-| Sheet | ✅ `sheet.tsx` | 1+ pages | LOW USE |
-| Scroll Area | ✅ `scroll-area.tsx` | 2+ pages | MODERATE |
-| Form (RHF) | ✅ `form.tsx` | 4+ pages | GOOD |
+| Area | Score | Status |
+|------|-------|--------|
+| Visual Consistency | 70/100 | Good foundation, some inconsistencies |
+| Component Reuse | 75/100 | shadcn/radix well-utilized |
+| Typography Discipline | 65/100 | Multiple font sizes; could be tighter |
+| Spacing/Radius/Shadow | 60/100 | Inconsistent patterns observed |
+| Button System | 70/100 | Radix buttons consistent; variants unclear |
+| Form System | 65/100 | Radix forms good; validation inconsistent |
+| Dashboard Consistency | 60/100 | Widget patterns vary |
+| Trust/Reassurance Design | 55/100 | Limited social proof; fake data hurts trust |
+| Premium Feel | 70/100 | Landing page strong; dashboards weaker |
 
-### Button Variants (CVA)
+---
+
+## Visual Consistency: 70/100
+
+### Strengths
+- ✅ Tailwind CSS provides consistent utility classes
+- ✅ shadcn/radix components ensure UI element consistency
+- ✅ Color palette defined in tailwind.config.js (primary, secondary, accent, etc.)
+- ✅ Dark mode implemented consistently via next-themes
+
+### Weaknesses
+- ⚠️ Some pages use custom CSS instead of Tailwind utilities
+- ⚠️ Inconsistent card styles across dashboard widgets
+- ⚠️ Some components have inline styles that override design tokens
+- ⚠️ Gradient usage varies between pages
+
+### Evidence
 ```
-Variants defined in button.tsx:
-- default: bg-primary text-primary-foreground
-- destructive: bg-destructive text-destructive-foreground
-- outline: border border-input bg-background
-- secondary: bg-secondary text-secondary-foreground
-- ghost: hover:bg-accent hover:text-accent-foreground
-- link: text-primary underline-offset-4
-
-Sizes:
-- default: h-10 px-4 py-2
-- sm: h-9 rounded-md px-3
-- lg: h-11 rounded-md px-8
-- icon: h-10 w-10
+src/components/ui/ - Consistent shadcn components
+src/features/landing/ - Custom gradients not reused elsewhere
+src/pages/dashboard/ - Widget cards have varying border-radius
 ```
 
-**Issues:**
-- Some pages create custom button styles instead of using variants
-- Landing page CTAs use inline Tailwind instead of Button component
-- No `warning` variant for confirmation actions
+### Recommendations
+1. Create design token documentation
+2. Audit and remove inline styles
+3. Standardize card component across dashboards
+4. Create gradient utility classes
 
 ---
 
-## Layout System
+## Component Reuse: 75/100
 
-### Grid & Flexbox Usage
-| Pattern | Implementation | Consistency |
-|---------|---------------|-------------|
-| Page Layout | `DashboardLayout` wrapper | ✅ CONSISTENT |
-| Content Grid | `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3` | ✅ CONSISTENT |
-| Flex Row | `flex items-center justify-between` | ✅ CONSISTENT |
-| Stack | `flex flex-col gap-4` | ✅ CONSISTENT |
-| Sidebar | ✅ Collapsible with responsive behavior | GOOD |
-| Navbar | ✅ Fixed top with backdrop blur | GOOD |
+### Strengths
+- ✅ 40+ shadcn/radix UI components in `src/components/ui/`
+- ✅ Layout components reused (Navigation, Footer, DashboardLayout)
+- ✅ Feature components organized by domain (`src/features/*`)
+- ✅ LoadingSpinner used consistently
 
-### Layout Components
-| Component | Purpose | Quality |
-|-----------|---------|---------|
-| MainLayout | Public pages (navbar + footer) | ✅ GOOD |
-| DashboardLayout | Auth pages (sidebar + topbar) | ✅ GOOD |
-| AuthLayout | Login/Signup (centered card) | ✅ GOOD |
-| Sidebar | Dashboard navigation | ✅ GOOD — collapsible, icons, nested items |
-| Navbar | Public navigation | ✅ GOOD — responsive hamburger menu |
-| Footer | Public footer | ✅ GOOD — links, social, newsletter |
+### Weaknesses
+- ⚠️ Some duplicate form patterns (SignupForm vs Onboarding forms)
+- ⚠️ Card variants not standardized
+- ⚠️ Empty states not componentized
+- ⚠️ Error state patterns inconsistent
 
----
+### Component Inventory
+| Component | File | Reused In | Status |
+|-----------|------|-----------|--------|
+| Button | src/components/ui/button.tsx | 50+ locations | ✅ Excellent |
+| Input | src/components/ui/input.tsx | 30+ locations | ✅ Excellent |
+| Card | src/components/ui/card.tsx | 20+ locations | ✅ Good |
+| Dialog | src/components/ui/dialog.tsx | 15+ locations | ✅ Good |
+| Navigation | src/components/layout/Navigation.tsx | All public pages | ✅ Excellent |
+| Footer | src/components/layout/Footer.tsx | All public pages | ✅ Excellent |
+| LoadingSpinner | src/components/LoadingSpinner.tsx | 20+ locations | ✅ Excellent |
+| DashboardSidebar | src/features/dashboard/components/layout/DashboardSidebar.tsx | Dashboard pages | ✅ Good |
 
-## Animation System
-
-### Libraries Used
-| Library | Purpose | Pages | Quality |
-|---------|---------|-------|---------|
-| GSAP + ScrollTrigger | Scroll-driven parallax, pinning | Landing, Wellness sections | EXCELLENT |
-| Framer Motion | Page transitions, card animations, hover effects | 20+ pages | EXCELLENT |
-| Lottie (lottie-react) | Animated illustrations | Splash, loading | GOOD |
-| AOS | Scroll reveal animations | Several sections | GOOD |
-| anime.js | Complex path animations | Constellation feature | MODERATE |
-| Lenis | Smooth scroll | Global | GOOD |
-| CSS Animations | Pulse, glow, caret-blink, shimmer | Various | GOOD |
-
-### Animation Consistency
-- ✅ Framer Motion `variants` pattern used consistently
-- ✅ `staggerChildren` for list animations
-- ✅ `whileHover` and `whileTap` for interactivity
-- ⚠️ Too many animation libraries → potential bundle bloat
-- ⚠️ No `prefers-reduced-motion` handling detected
+### Recommendations
+1. Create EmptyState component
+2. Standardize Card variants (stat, interactive, content)
+3. Create FormError component
+4. Document component usage patterns
 
 ---
 
-## Responsive Design
-
-### Breakpoint Coverage
-| Breakpoint | Usage | Quality |
-|-----------|-------|---------|
-| `sm:` (640px) | ✅ Used across all pages | GOOD |
-| `md:` (768px) | ✅ Primary layout shift point | GOOD |
-| `lg:` (1024px) | ✅ Desktop layout | GOOD |
-| `xl:` (1280px) | ✅ Wide desktop | MODERATE (less used) |
-| `2xl:` (1536px) | ❌ Not used | N/A |
-
-### Mobile-First Analysis
-- ✅ Base styles target mobile
-- ✅ Grid columns adjust per breakpoint
-- ✅ Navigation collapses to hamburger
-- ✅ Touch targets generally 44px+ (Tailwind h-10 = 40px)
-- ⚠️ Some text sizes could be larger on small screens
-
----
-
-## Accessibility
+## Typography Discipline: 65/100
 
 ### Current State
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Semantic HTML | ✅ Good | `<nav>`, `<main>`, `<section>`, `<header>`, `<footer>` |
-| ARIA Labels | ✅ Moderate | Icon buttons have `aria-label` |
-| Focus Styles | ✅ Good | `focus-visible:ring-ring` via shadcn |
-| Color Contrast | ⚠️ Unknown | Cannot verify without visual testing |
-| Skip to Content | ❌ Missing | No `#main-content` skip link |
-| Screen Reader Text | ✅ Present | `sr-only` class used in some places |
-| Keyboard Navigation | ⚠️ Partial | Radix components handle this; custom carousels don't |
-| prefers-reduced-motion | ❌ Missing | Animations play regardless of preference |
-| prefers-color-scheme | ❌ Missing | Theme toggle only; no system detection |
+- ✅ Tailwind typography plugin configured
+- ✅ Heading hierarchy generally follows h1→h6
+- ⚠️ Font size variations: 14+ different sizes observed
+- ⚠️ Font weight inconsistent (some 400, some 500, some 600 for same level)
+- ⚠️ Line height not always consistent
+
+### Typography Scale (Observed)
+| Element | Expected | Actual | Consistency |
+|---------|----------|--------|-------------|
+| h1 | 2.5rem (40px) | 2.25rem-3rem | ⚠️ Varies |
+| h2 | 2rem (32px) | 1.75rem-2.5rem | ⚠️ Varies |
+| h3 | 1.5rem (24px) | 1.25rem-1.75rem | ⚠️ Varies |
+| body | 1rem (16px) | 0.875rem-1rem | ⚠️ Varies |
+| small | 0.875rem (14px) | 0.75rem-0.875rem | ⚠️ Varies |
+
+### Recommendations
+1. Define strict typography scale in tailwind.config.js
+2. Create typography documentation
+3. Audit all pages for compliance
+4. Use clamp() for responsive typography
 
 ---
 
-## Design System Score
+## Spacing/Radius/Shadow: 60/100
 
-| Dimension | Score | Weight | Weighted |
-|-----------|-------|--------|----------|
-| Color Tokens | 80 | 15% | 12.0 |
-| Typography | 65 | 10% | 6.5 |
-| Spacing | 90 | 10% | 9.0 |
-| Components | 85 | 20% | 17.0 |
-| Layout System | 85 | 10% | 8.5 |
-| Responsive | 82 | 10% | 8.2 |
-| Animations | 78 | 10% | 7.8 |
-| Accessibility | 55 | 15% | 8.3 |
-| **TOTAL** | | **100%** | **77.3/100** |
+### Spacing System
+- ✅ Tailwind spacing scale (p-4, m-8, etc.) generally used
+- ⚠️ Some custom spacing values observed (px values instead of scale)
+- ⚠️ Inconsistent section padding between pages
 
-### Top 5 Design System Improvements
-1. **Add brand font** — Load Inter or Plus Jakarta Sans via Google Fonts
-2. **Fix hardcoded colors** — Replace all `bg-[#hex]` with CSS variable tokens
-3. **Add skip-to-content link** — Accessibility requirement
-4. **Add prefers-reduced-motion** — Respect user animation preference
-5. **Create a Storybook** — Document all components with live examples
+### Border Radius
+```
+Observed values:
+- rounded-sm (2px)
+- rounded (4px)
+- rounded-md (6px)
+- rounded-lg (8px)
+- rounded-xl (12px)
+- rounded-2xl (16px)
+- Custom: 10px, 14px (inconsistent)
+```
+
+### Shadow System
+```
+Observed values:
+- shadow-sm
+- shadow
+- shadow-md
+- shadow-lg
+- shadow-xl
+- Custom shadows with varying blur radii
+```
+
+### Issues
+- ⚠️ Cards use different border-radius on same page
+- ⚠️ Shadow elevation not consistent with z-depth
+- ⚠️ Some components have no radius (sharp corners)
+
+### Recommendations
+1. Standardize border-radius scale (sm, md, lg, xl only)
+2. Create shadow elevation guide
+3. Audit spacing consistency
+4. Remove custom values
+
+---
+
+## Button System: 70/100
+
+### Current Implementation
+- ✅ Radix UI Button component as base
+- ✅ Variants defined: default, destructive, outline, secondary, ghost, link
+- ✅ Sizes defined: default, sm, lg, icon
+- ✅ Consistent hover/focus states
+
+### Button Variants (from button.tsx)
+```typescript
+variants: {
+  variant: {
+    default: "bg-primary text-primary-foreground",
+    destructive: "bg-destructive text-destructive-foreground",
+    outline: "border border-input bg-background",
+    secondary: "bg-secondary text-secondary-foreground",
+    ghost: "hover:bg-accent hover:text-accent-foreground",
+    link: "text-primary underline-offset-4 hover:underline",
+  },
+  size: {
+    default: "h-10 px-4 py-2",
+    sm: "h-9 rounded-md px-3",
+    lg: "h-11 rounded-md px-8",
+    icon: "h-10 w-10",
+  },
+}
+```
+
+### Issues
+- ⚠️ Too many variants used on single pages
+- ⚠️ Primary vs secondary not always clear
+- ⚠️ Some buttons use custom styles instead of variants
+- ⚠️ Disabled state styling inconsistent
+
+### Recommendations
+1. Create button usage guidelines (when to use each variant)
+2. Limit to 2 CTA colors per page
+3. Standardize disabled states
+4. Add loading state variant
+
+---
+
+## Form System: 65/100
+
+### Current Implementation
+- ✅ Radix UI Form components (Input, Textarea, Select, etc.)
+- ✅ React Hook Form for form state
+- ✅ Zod for validation schemas
+- ⚠️ Error message display inconsistent
+- ⚠️ Success states not standardized
+
+### Form Components Available
+| Component | File | Status |
+|-----------|------|--------|
+| Input | src/components/ui/input.tsx | ✅ Complete |
+| Textarea | src/components/ui/textarea.tsx | ✅ Complete |
+| Select | src/components/ui/select.tsx | ✅ Complete |
+| Checkbox | src/components/ui/checkbox.tsx | ✅ Complete |
+| Radio | src/components/ui/radio-group.tsx | ✅ Complete |
+| Switch | src/components/ui/switch.tsx | ✅ Complete |
+| Form | src/components/ui/form.tsx | ✅ Complete |
+| Label | src/components/ui/label.tsx | ✅ Complete |
+
+### Issues
+- ⚠️ Validation error messages vary in placement
+- ⚠️ Some forms show inline errors, some show toast
+- ⚠️ Success confirmation not consistent
+- ⚠️ Required field indicators inconsistent (* vs "Required")
+
+### Recommendations
+1. Create FormField wrapper with standard error display
+2. Standardize success/toast messages
+3. Add required field indicator standard
+4. Create form submission states (loading, success, error)
+
+---
+
+## Dashboard Consistency: 60/100
+
+### Current State
+- ✅ DashboardLayout provides consistent sidebar/topbar
+- ✅ Widget grid system in place
+- ⚠️ Widget cards vary in styling
+- ⚠️ Metric display patterns inconsistent
+- ⚠️ Some widgets show fake data (hurts consistency)
+
+### Widget Patterns Observed
+| Widget Type | Consistency | Issue |
+|-------------|-------------|-------|
+| Metric Card | 70% | Some show trends, some don't |
+| List Widget | 60% | Varying item styles |
+| Chart Widget | 50% | Different chart libraries |
+| Action Widget | 65% | Inconsistent button placement |
+
+### Issues
+- ⚠️ SessionsPage uses mock data (pravatar avatars obvious)
+- ⚠️ ConnectionsPage has hardcoded MOCK_MATCHES
+- ⚠️ AdminDashboard shows fake metrics
+- ⚠️ AstrologyDashboard shows fake data
+
+### Recommendations
+1. Create standard Widget component
+2. Standardize metric display format
+3. Remove all fake data; use empty states instead
+4. Create loading skeleton for widgets
+
+---
+
+## Trust/Reassurance Design: 55/100
+
+### Current State
+- ⚠️ Limited social proof on landing page
+- ⚠️ No trust badges visible
+- ⚠️ Fake data throughout dashboards destroys trust
+- ⚠️ No security indicators
+- ⚠️ Privacy policy not prominent
+
+### Trust Elements Present
+| Element | Present | Quality |
+|---------|---------|---------|
+| Testimonials | ❌ No | - |
+| User Counts | ⚠️ Fake | Poor |
+| Security Badges | ❌ No | - |
+| Privacy Links | ⚠️ Footer only | Poor |
+| Team Photos | ⚠️ About page only | Fair |
+| Press Logos | ❌ No | - |
+
+### Trust Issues by Page
+| Page | Trust Score | Main Issue |
+|------|-------------|------------|
+| Landing | 60/100 | No testimonials; no user counts |
+| Login/Signup | 65/100 | No security indicators |
+| Dashboard | 40/100 | Fake data obvious |
+| Pricing | N/A | No pricing page exists |
+| About | 70/100 | Team section present |
+
+### Recommendations
+1. **CRITICAL:** Remove all fake data immediately
+2. Add trust badges to login/signup (SSL, data protection)
+3. Add testimonials section to landing
+4. Add security section to About page
+5. Create transparent pricing page
+6. Add real user counts (or remove until real)
+
+---
+
+## Premium Feel: 70/100
+
+### Strengths
+- ✅ Landing page has premium visual quality
+- ✅ Animations (Framer Motion, GSAP) add polish
+- ✅ Color palette is sophisticated
+- ✅ Icons (Lucide) are high-quality
+
+### Weaknesses
+- ⚠️ Dashboard pages feel less premium than landing
+- ⚠️ Some pages have generic/placeholder feel
+- ⚠️ Fake data reduces premium perception
+- ⚠️ Loading states not polished
+
+### Premium Indicators Present
+| Indicator | Status | Notes |
+|-----------|--------|-------|
+| Smooth Animations | ✅ Yes | Framer Motion + GSAP |
+| Micro-interactions | ⚠️ Partial | Some buttons lack hover |
+| Loading Skeletons | ⚠️ Partial | Spinners used instead |
+| Empty States | ❌ No | Most show nothing or fake data |
+| Error States | ⚠️ Partial | Basic toast messages |
+| Custom Illustrations | ❌ No | Stock images only |
+
+### Recommendations
+1. Add loading skeletons to all pages
+2. Create custom empty states
+3. Improve error state design
+4. Add micro-interactions to all interactive elements
+5. Create custom illustrations for key features
+
+---
+
+## Action Plan
+
+### Week 1: Critical Trust Fixes
+- [ ] Remove all fake data from dashboards
+- [ ] Add empty states to all features
+- [ ] Add trust badges to auth pages
+- [ ] Create transparent "Coming Soon" states
+
+### Week 2: Component Standardization
+- [ ] Create Widget component
+- [ ] Create EmptyState component
+- [ ] Create FormField wrapper
+- [ ] Document button usage
+
+### Week 3: Typography & Spacing Audit
+- [ ] Define strict typography scale
+- [ ] Standardize border-radius
+- [ ] Remove custom spacing values
+- [ ] Create design token documentation
+
+### Week 4: Premium Polish
+- [ ] Add loading skeletons everywhere
+- [ ] Improve error states
+- [ ] Add micro-interactions
+- [ ] Create custom illustrations
+
+---
+
+**Audit Complete:** March 6, 2026  
+**Next Review:** After design system improvements implemented

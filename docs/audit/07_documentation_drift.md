@@ -1,231 +1,91 @@
-# Documentation Drift Register — Soul Yatri Codebase Audit
+# Documentation Drift Report — Soul Yatri Codebase
 
-> Every claim in documentation checked against actual codebase reality.
+_Generated: Code-grounded audit comparing every doc claim against actual implementation._
 
-## Severity Legend
-- **🔴 CRITICAL**: Claim implies production-ready capability that does not exist
-- **🟡 MAJOR**: Significant exaggeration or missing implementation
-- **🟢 MINOR**: Cosmetic, outdated reference, or partial truth
+## Overview
+- **40 drift instances** identified across 10 documentation files
+- **15 CRITICAL** — doc claims features/systems that don't exist at all
+- **11 HIGH** — doc claims work but reality is stubs or 501 responses
+- **9 MEDIUM** — claims partially true but misleading about completeness
+- **5 LOW** — accurate with minor caveats
 
----
+## Drift Table
 
-## 🔴 CRITICAL DRIFT
+| Doc | Claim | Code Reality | Severity |
+|-----|-------|-------------|----------|
+| **ULTIMATE_GOD_MODE_ARCHITECTURE.md** | Supervisor AI Agent monitoring event firehose with Redpanda/Kafka | Zero message queue integrations; no event consumer infrastructure | CRITICAL |
+| ULTIMATE_GOD_MODE_ARCHITECTURE.md | Live Therapist Co-pilot analyzing real-time audio/transcript | No session recording, no Whisper, no real-time pipeline; native `ws` only | CRITICAL |
+| ULTIMATE_GOD_MODE_ARCHITECTURE.md | Multimodal crisis detection (voice tone + typing cadence + facial webcam) | Only hardcoded keyword list in client code; no ML models | CRITICAL |
+| ULTIMATE_GOD_MODE_ARCHITECTURE.md | Autonomous content pipeline (research → write → optimize → publish) | No blog CMS; no content ingestion pipeline | CRITICAL |
+| ULTIMATE_GOD_MODE_ARCHITECTURE.md | Self-healing codebase (auto-fix bugs from Sentry stack traces) | No Sentry; no error monitoring integration | CRITICAL |
+| **BUILD_PLAN.md** | Real-time via Socket.IO | Uses native Node `ws`, NOT Socket.IO | HIGH |
+| BUILD_PLAN.md | Razorpay + Stripe payment integration | Zero payment integrations; payments.controller returns 501 | CRITICAL |
+| BUILD_PLAN.md | Daily.co or 100ms for therapy video sessions | No video SDK; therapy routes all 501 | CRITICAL |
+| BUILD_PLAN.md | OpenAI GPT-4o + Whisper AI integration | No AI/LLM SDK in package.json; ai.controller returns 501 | CRITICAL |
+| BUILD_PLAN.md | Fine-tuning strategy (Phase 2–4) with model training pipeline | No model training capability | HIGH |
+| BUILD_PLAN.md | Multi-currency support (8 currencies via exchange rate API) | No currency logic | MEDIUM |
+| BUILD_PLAN.md | WCAG 2.1 AA on all pages (automated + manual testing) | Only Radix UI defaults; no dedicated a11y audit | MEDIUM |
+| **MVP_DEFINITION.md** | Video therapy sessions via Daily.co (core MVP) | No video backend; therapy routes return 501 | CRITICAL |
+| MVP_DEFINITION.md | AI voice assistant 24/7 with crisis detection (safety critical) | Keyword-only crisis check + mock AI responses | CRITICAL |
+| MVP_DEFINITION.md | Therapist dashboard for managing clients, appointments, notes | UI exists; all backend handlers are TODO stubs | HIGH |
+| MVP_DEFINITION.md | Astrologer system with kundali matching + pre-session reports | 71-line TODO stub; no kundali logic | CRITICAL |
+| MVP_DEFINITION.md | Health tools (mood tracker, meditation, breathing, journal) | Backend health-tools.controller exists and works; frontend pages API-backed — **claim is accurate** | LOW |
+| MVP_DEFINITION.md | Notification system (in-app + email transactional) | In-app WebSocket partial; no email integration | MEDIUM |
+| MVP_DEFINITION.md | Razorpay payments (India-first MVP) | Zero payment code | CRITICAL |
+| **ARCHITECTURE.md** | 22 route files with RESTful endpoints | Route files exist; 9 of 12 controllers return 501 | HIGH |
+| ARCHITECTURE.md | Socket.IO for real-time | Uses native `ws` | HIGH |
+| ARCHITECTURE.md | RBAC with 4 roles fully functional | Auth middleware supports roles; only USER flow fully works | MEDIUM |
+| ARCHITECTURE.md | Backend services layer (tokens, AI, moderation) | Token service works; AI + moderation are TODO stubs | MEDIUM |
+| **IMPLEMENTATION_SUMMARY.md** | Type system fully implemented (5 files) | Types exist but reference unimplemented routes | LOW |
+| IMPLEMENTATION_SUMMARY.md | Services layer (API, storage, websocket) | All three exist and function | LOW |
+| IMPLEMENTATION_SUMMARY.md | 20+ utility functions + validators | Accurate but many unused by hardcoded pages | LOW |
+| IMPLEMENTATION_SUMMARY.md | Global state management with Context/Zustand | Auth context works with mock auth only | MEDIUM |
+| **IMPLEMENTATION_COMPLETE.md** | "PRODUCTION READY" status | 71 empty modules, 9/12 controllers return 501, zero integrations | CRITICAL |
+| IMPLEMENTATION_COMPLETE.md | OnboardingWizardPage steps 4–10 fully functional | POST endpoints work; GET logic for loading saved state incomplete | MEDIUM |
+| **COMPREHENSIVE_CODEBASE_AUDIT.md** | Claims to be a codebase audit | Actually an aspirational blueprint (god-mode spec for future) | MEDIUM |
+| COMPREHENSIVE_CODEBASE_AUDIT.md | Complete Prisma schema needed for video, payments, courses | True; minimal stub schema; 15+ domain models missing | HIGH |
+| COMPREHENSIVE_CODEBASE_AUDIT.md | Background jobs, cache, search infrastructure needed | All three 100% missing | HIGH |
+| **STATUS.md** | 17 batches completed with full validation | "Completed" = lint/build pass, NOT feature completion | HIGH |
+| STATUS.md | 170+ endpoints documented in API.md | 72 of those return 501 (Unimplemented) | HIGH |
+| STATUS.md | Testing foundation: 15 smoke tests covering core flows | Accurate but tests only check public routes + mock login | LOW |
+| STATUS.md | Error handling + resilience unification (BATCH:015) | Error codes + middleware exist; but controllers are stubs, no real error paths tested | MEDIUM |
+| **CURRENT_PROBLEMS.md** | P-001 through P-003 resolved (auth bypass/mock gated) | Flags exist but bypass/mock still default-enabled | MEDIUM |
+| CURRENT_PROBLEMS.md | Only open problem: Tailwind ambiguous utilities | Core functionality gaps not listed as problems | LOW |
+| **DEVELOPMENT.md** | `npm run quality:ci` runs full quality gate | Runs successfully; but only smoke-tests public pages | MEDIUM |
+| DEVELOPMENT.md | Real auth via POST `/api/v1/auth/login` works | Endpoint works; but fallback to mock on network failure undocumented | MEDIUM |
 
-### DRIFT-C01: React Query / TanStack Query
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md, ARCHITECTURE.md |
-| Claim | "React Query: Server state and data fetching cache" |
-| Reality | Not in package.json. Not imported anywhere. Zero files reference `useQuery` or `@tanstack/react-query`. |
-| Impact | Data fetching has no cache, no background refetch, no optimistic updates. Every page re-fetches on mount. |
-| Fix Effort | Medium — install + wrap existing fetch calls |
-
-### DRIFT-C02: Zustand State Management
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "Zustand: Feature-specific stores" |
-| Reality | Not in package.json. Only React Context (AuthContext, ThemeContext). No feature stores. |
-| Impact | State management is minimal; no shared state across features |
-| Fix Effort | Low-Medium — install + create stores as needed |
-
-### DRIFT-C03: AES-256 Encryption at Rest
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "All therapy session data: AES-256 encryption at rest", "Encrypted storage for therapy notes" |
-| Reality | No encryption library installed (no crypto-js, no node:crypto usage for data encryption). Data stored in Prisma as plain text. |
-| Impact | Privacy/compliance violation if therapy data is stored. Currently therapy is all stubs so no actual exposure. |
-| Fix Effort | Medium — field-level encryption with Prisma middleware |
-
-### DRIFT-C04: HIPAA-Style Audit Logging
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md, ARCHITECTURE.md |
-| Claim | "HIPAA-style audit logs for all PHI access", "Complete audit trail" |
-| Reality | AuditLog model exists in schema.prisma. ZERO code writes to it. No middleware logs data access. |
-| Impact | No compliance capability. Legal risk if handling PHI. |
-| Fix Effort | Medium — Prisma middleware + query logging |
-
-### DRIFT-C05: Socket.IO Real-Time
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md, MVP_DEFINITION.md |
-| Claim | "Socket.IO: Real-time notifications and live features" |
-| Reality | Backend uses raw `ws` package (WebSocket). Frontend uses native WebSocket API. Socket.IO is NOT installed on either side. |
-| Impact | Terminology confusion; actual WebSocket is simpler than Socket.IO |
-| Correction | Docs should say "ws (raw WebSocket)" not "Socket.IO" |
-
-### DRIFT-C06: Sentry Error Monitoring
-| Field | Value |
-|-------|-------|
-| Document(s) | ARCHITECTURE.md, BUILD_PLAN.md |
-| Claim | "Monitoring: Sentry + PostHog" |
-| Reality | Neither @sentry/react nor @sentry/node in any package.json. No DSN configured. No Sentry.init() calls. |
-| Impact | Zero error tracking in production. Errors silently lost. |
-| Fix Effort | Low — standard Sentry SDK setup |
-
-### DRIFT-C07: PostHog Analytics
-| Field | Value |
-|-------|-------|
-| Document(s) | ARCHITECTURE.md |
-| Claim | "PostHog for product analytics" |
-| Reality | posthog-js not installed. No analytics events tracked. |
-| Impact | Zero product analytics. No user behavior data. |
-| Fix Effort | Low — standard PostHog setup |
-
-### DRIFT-C08: Multi-Currency Payment Processing
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "8 currencies: INR, USD, EUR, GBP, AUD, CAD, SGD, AED" |
-| Reality | Payment model has single `currency` field defaulting to "INR". No Stripe integration. No currency conversion logic. All payment endpoints return 501. |
-| Impact | Only INR even conceptually; no payments work at all |
-| Fix Effort | High — requires payment gateway integration + currency handling |
-
----
-
-## 🟡 MAJOR DRIFT
-
-### DRIFT-M01: Phase Claims (4-24 Phases)
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md (3,785 lines) |
-| Claim | Detailed phases 4 through 24 describing marketplace, AI therapy, global expansion, blockchain, AR/VR, quantum computing |
-| Reality | Phase 1 (Auth) partially complete. Phase 2 (Core) < 40% complete. Phases 3-24 are zero-implementation aspirational roadmap. |
-| Impact | Massive documentation overhead maintaining fictional feature specs |
-| Recommendation | Archive phases 4+ into a `ROADMAP_VISION.md`; keep BUILD_PLAN focused on next 2-3 phases |
-
-### DRIFT-M02: Redis Caching
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md, docker-compose.yml |
-| Claim | "Redis for session caching and rate limiting" |
-| Reality | docker-compose.yml has Redis container. Cache service uses in-memory Map. No ioredis/redis package installed. |
-| Impact | Cache evaporates on process restart |
-| Fix Effort | Low — swap Map for Redis client |
-
-### DRIFT-M03: Video/Telehealth Integration (Daily.co/Agora)
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "Video call integration with Daily.co" |
-| Reality | No Daily.co, Agora, Twilio, or any video SDK. Session model has `roomUrl` field that is never populated. |
-| Impact | Remote therapy sessions impossible |
-| Fix Effort | High — requires video SDK integration + UI |
-
-### DRIFT-M04: AI Integration (OpenAI/GPT)
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md, ARCHITECTURE.md |
-| Claim | "AI-Powered Support: SoulBot, AI journaling insights, crisis detection" |
-| Reality | All 11 AI endpoints return 501. No openai package installed. AI routes have a TODO comment. |
-| Impact | Central product differentiator is non-functional |
-| Fix Effort | Medium-High — OpenAI integration + prompt engineering + safety filters |
-
-### DRIFT-M05: Comprehensive Test Suite
-| Field | Value |
-|-------|-------|
-| Document(s) | CONTRIBUTING.md, BUILD_PLAN.md |
-| Claim | "Run test suite before submitting PRs", "Unit, integration, E2E tests" |
-| Reality | 1 Playwright config file + 1 example spec with 2 smoke tests. Zero unit tests. Zero integration tests. No Vitest/Jest configured. |
-| Impact | No automated quality assurance |
-| Fix Effort | High — requires test infrastructure + writing tests |
-
-### DRIFT-M06: Notification System Overclaimed
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "Push notifications, email notifications, in-app notifications, SMS alerts" |
-| Reality | In-app notifications work (WebSocket + Prisma). Push notifications: not implemented. Email: console.log stub. SMS: not implemented. |
-| Impact | 75% of notification capability missing |
-
-### DRIFT-M07: Community Features
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "Support groups, community forums, peer connections, moderated discussions" |
-| Reality | All community endpoints return 501. No CommunityPost/CommunityGroup models. Frontend pages use hardcoded mock data. |
-| Impact | Social features non-functional |
-
-### DRIFT-M08: E-Commerce / Shop
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "Product marketplace, cart, checkout, order management" |
-| Reality | All shop endpoints return 501. No Product/Order models in schema. |
-| Impact | Merchandise/product revenue blocked |
-
----
-
-## 🟢 MINOR DRIFT
-
-### DRIFT-N01: "Enterprise-Grade" Architecture Claims
-| Field | Value |
-|-------|-------|
-| Document(s) | ULTIMATE_GOD_MODE_ARCHITECTURE.md, ENTERPRISE_CHECKLIST.md |
-| Claim | "God-mode architecture", "Enterprise-ready" |
-| Reality | Standard Express + React app. No microservices, no message queues, no service mesh, no auto-scaling. |
-| Impact | Misleading for stakeholders reading docs |
-
-### DRIFT-N02: Rate Limiting Implementation
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "Advanced rate limiting per role per endpoint" |
-| Reality | express-rate-limit IS installed and configured, but with basic global limits. Not per-role or per-endpoint. |
-| Impact | Works but less granular than claimed |
-
-### DRIFT-N03: File Upload / Avatar
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "User avatar upload with image processing" |
-| Reality | Multer + Sharp ARE installed. Storage service exists but uses in-memory (files lost on restart). |
-| Impact | Partially works in dev; not production-ready |
-
-### DRIFT-N04: Internationalization (i18n)
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "Multi-language support (Phase 8)" |
-| Reality | No i18n library. All strings hardcoded in English. |
-| Impact | Expected since it's a future phase, but doc could be clearer |
-
-### DRIFT-N05: PWA Support
-| Field | Value |
-|-------|-------|
-| Document(s) | BUILD_PLAN.md |
-| Claim | "Progressive Web App with offline support" |
-| Reality | No service worker. No manifest.json. No offline capability. |
-| Impact | Expected for future phase |
-
----
-
-## Summary Statistics
+## Severity Counts
 
 | Severity | Count |
 |----------|-------|
-| 🔴 CRITICAL | 8 |
-| 🟡 MAJOR | 8 |
-| 🟢 MINOR | 5 |
-| **TOTAL** | **21** |
+| CRITICAL | 15 |
+| HIGH | 11 |
+| MEDIUM | 9 |
+| LOW | 5 |
+| **Total** | **40** |
 
-### Documentation Files Assessed
-| File | Lines | Drift Items | Accuracy % |
-|------|-------|-------------|------------|
-| BUILD_PLAN.md | ~3,785 | 14 | ~40% |
-| ARCHITECTURE.md | ~500 | 4 | ~60% |
-| MVP_DEFINITION.md | ~300 | 2 | ~50% |
-| CONTRIBUTING.md | ~100 | 1 | ~80% |
-| ENTERPRISE_CHECKLIST.md | ~200 | 1 | ~50% |
-| ULTIMATE_GOD_MODE_ARCHITECTURE.md | ~500 | 1 | ~30% |
-| DEVELOPMENT.md | ~150 | 0 | ~90% |
+## Key Drift Patterns
 
-### Root Cause
-The BUILD_PLAN.md is a **forward-looking vision document** being treated as a **current state description**. It describes 24 phases of development but does not clearly distinguish "implemented" vs "planned" vs "aspirational". This creates confusion for developers, stakeholders, and AI agents reading the codebase.
+### Pattern 1: Architecture Without Implementation
+Docs describe 22 controllers and 71 module files as if they function. Reality: 3 controllers work, 9 return 501, and all 71 module files are `// TODO: Implement`.
 
-### Recommendation
-1. Split BUILD_PLAN.md into: `CURRENT_STATE.md` (what works today) + `ROADMAP.md` (what's planned)
-2. Add status badges to each section: ✅ LIVE | 🚧 IN PROGRESS | 📋 PLANNED | 💡 VISION
-3. Run this drift audit after every sprint to keep docs honest
+### Pattern 2: "Production Ready" Claims
+IMPLEMENTATION_COMPLETE.md declares production readiness. The frontend is ~70% mock/static and backend is ~75% stubs.
+
+### Pattern 3: Aspirational Docs Mixed with Operational Docs
+ULTIMATE_GOD_MODE_ARCHITECTURE.md and COMPREHENSIVE_CODEBASE_AUDIT.md describe future-state systems (AI supervisors, self-healing code, multimodal crisis detection). They're not labeled as aspirational, creating confusion about current state.
+
+### Pattern 4: Batch Completion ≠ Feature Completion
+STATUS.md marks 17 batches as "completed" based on lint/build passing. This creates a false sense of progress when the actual feature implementation is ~20-25%.
+
+### Pattern 5: Integration Claims Without Code
+Docs reference Razorpay, Daily.co, OpenAI, Socket.IO, Resend, Sentry as if they're integrated. Zero external service SDKs are actually connected.
+
+## Recommendations
+
+1. **Add reality labels** to each doc: `[ASPIRATIONAL]`, `[CURRENT]`, `[DEPRECATED]`
+2. **Create CURRENT_REALITY.md** that explicitly lists what's implemented vs. planned
+3. **Fix Socket.IO → ws** references in ARCHITECTURE.md and BUILD_PLAN.md
+4. **Remove "PRODUCTION READY"** from IMPLEMENTATION_COMPLETE.md
+5. **Redefine batch completion** in STATUS.md to include feature-level acceptance criteria
+6. **Separate ULTIMATE_GOD_MODE** into a `/docs/vision/` folder distinct from operational docs

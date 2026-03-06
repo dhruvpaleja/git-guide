@@ -1,160 +1,147 @@
 path,file_type,area,category,deep_reviewed,feature_mapping,live_mock_static_stub,notes
-.github/workflows/build.yml,yml,ci_cd,infra,yes,CI build pipeline,live,Matrix build Node 18+20; missing backend build
-.github/workflows/quality.yml,yml,ci_cd,infra,yes,CI quality checks,live,Type-check + lint; swallows audit errors
-Dockerfile,dockerfile,deployment,infra,yes,Container build,live,Multi-stage; needs security hardening
-docker-compose.yml,yml,deployment,infra,yes,Local dev stack,live,CRITICAL: hardcoded secrets
-nginx.conf,conf,deployment,infra,yes,Reverse proxy,live,Good SPA config; missing CSP
-vercel.json,json,deployment,infra,yes,Vercel deploy,live,Minimal correct SPA rewrite
-index.html,html,frontend,entry_point,yes,App entry,live,Missing SEO meta tags
-package.json,json,frontend,config,yes,Dependencies,live,React 19 + Vite 7 + full stack
-vite.config.ts,ts,frontend,config,yes,Build config,live,Excellent chunk splitting
-tailwind.config.js,js,frontend,config,yes,CSS framework,live,Full-featured dark mode + animations
-eslint.config.js,js,frontend,config,yes,Linting,live,Strict TS rules + a11y
-commitlint.config.js,js,frontend,config,yes,Commit format,live,Conventional commits enforced
-postcss.config.js,js,frontend,config,yes,CSS processing,live,Tailwind + Autoprefixer
-components.json,json,frontend,config,yes,shadcn/ui config,live,Component scaffolding config
-playwright.config.ts,ts,testing,config,yes,E2E test config,live,5 browser/device projects
-tsconfig.json,json,frontend,config,yes,TS root config,live,References app + node
-tsconfig.app.json,json,frontend,config,yes,TS app config,live,Strict mode enabled
-tsconfig.node.json,json,frontend,config,yes,TS node config,live,Build tools config
-tsconfig.test.json,json,frontend,config,yes,TS test config,live,Extends app + Playwright types
-scripts/check-bundle-budgets.js,js,frontend,script,yes,Bundle size enforcement,live,Production-ready budget checker
-scripts/responsive-audit.mjs,mjs,testing,script,yes,Responsive testing,live,8 breakpoints x 40+ routes
-tests/example.spec.ts,ts,testing,test,yes,E2E smoke tests,live,Public + auth + dashboard smoke
-src/main.tsx,tsx,frontend,source_executable,yes,App bootstrap,live,React 19 + providers
-src/App.tsx,tsx,frontend,source_executable,yes,App shell,live,Theme + Auth + Router providers
-src/index.css,css,frontend,source_support,yes,Global styles,live,Tailwind directives + custom utils
-src/router/index.tsx,tsx,frontend,source_executable,yes,Route definitions,live,All routes with lazy loading
-src/router/ProtectedRoute.tsx,tsx,frontend,source_executable,yes,Auth guard,live,CRITICAL: authBypassEnabled=true by default
-src/config/index.ts,ts,frontend,source_support,yes,App config,live,API URL + env config
-src/config/routes.ts,ts,frontend,source_support,yes,Route constants,live,Route path constants
-src/config/runtime.flags.ts,ts,frontend,source_support,yes,Runtime flags,live,CRITICAL: auth bypass + mock auth defaults true
-src/config/permissions.ts,ts,frontend,source_support,yes,RBAC permissions,live,Role-permission mapping
-src/config/validation.schemas.ts,ts,frontend,source_support,yes,Zod schemas,live,Login + signup validation
-src/context/AuthContext.tsx,tsx,frontend,source_executable,yes,Auth state,live,Login/signup/logout with mock fallback
-src/context/ThemeContext.tsx,tsx,frontend,source_executable,yes,Theme state,live,Dark/light/system theme
-src/context/index.ts,ts,frontend,source_support,yes,Context exports,live,Barrel file
-src/layouts/MainLayout.tsx,tsx,frontend,source_executable,yes,Public layout,live,Nav + Footer + light page detection
-src/layouts/DashboardLayout.tsx,tsx,frontend,source_executable,yes,Dashboard layout,live,Sidebar + topbar + mobile drawer
-src/layouts/AuthLayout.tsx,tsx,frontend,source_executable,yes,Auth layout,live,Centered form container
-src/layouts/index.ts,ts,frontend,source_support,yes,Layout exports,live,Barrel file
-src/services/api.service.ts,ts,frontend,source_executable,yes,HTTP client,live,Circuit breaker + retry + token refresh
-src/services/websocket.service.ts,ts,frontend,source_executable,yes,WebSocket client,live,Full implementation with reconnect
-src/services/analytics.service.ts,ts,frontend,source_executable,yes,Analytics,mock,Console logging only - no real analytics
-src/services/storage.service.ts,ts,frontend,source_executable,yes,Storage,live,localStorage + sessionStorage wrapper
-src/services/index.ts,ts,frontend,source_support,yes,Service exports,live,Barrel file
-src/middleware/api.middleware.ts,ts,frontend,source_executable,yes,API middleware,live,401/403 auto-logout
-src/middleware/index.ts,ts,frontend,source_support,yes,Middleware exports,live,Barrel file
-src/pages/LandingPage.tsx,tsx,frontend,source_executable,yes,Landing page,static,Hero + stats + services + FAQ
-src/pages/AboutPage.tsx,tsx,frontend,source_executable,yes,About page,static,Company info + founders + values
-src/pages/BusinessPage.tsx,tsx,frontend,source_executable,yes,Business page,static,B2B solutions overview
-src/pages/CorporatePage.tsx,tsx,frontend,source_executable,yes,Corporate page,static,Corporate wellness packages
-src/pages/BlogsPage.tsx,tsx,frontend,source_executable,yes,Blog listing,mock,15+ hardcoded blog posts
-src/pages/BlogPostPage.tsx,tsx,frontend,source_executable,yes,Blog detail,mock,Hardcoded blog content + comments
-src/pages/CareerPage.tsx,tsx,frontend,source_executable,yes,Careers page,mock,12+ hardcoded job listings
-src/pages/ContactPage.tsx,tsx,frontend,source_executable,yes,Contact page,static,Form exists but doesn't submit
-src/pages/CoursesPage.tsx,tsx,frontend,source_executable,yes,Courses listing,mock,50+ hardcoded courses from data file
-src/pages/CourseDetailsPage.tsx,tsx,frontend,source_executable,yes,Course detail,mock,Hardcoded course content
-src/pages/StudentCounsellingPage.tsx,tsx,frontend,source_executable,yes,Student counselling,mock,Auto-scroll carousel + stats
-src/pages/StudentCounsellingDemoPage.tsx,tsx,frontend,source_executable,yes,Counselling demo,mock,Demo variant
-src/pages/WorkshopDemoPage.tsx,tsx,frontend,source_executable,yes,Workshop demo,mock,Workshop cards
-src/pages/SplashScreen.tsx,tsx,frontend,source_executable,yes,Splash screen,static,Multi-language greetings animation
-src/pages/NotFoundPage.tsx,tsx,frontend,source_executable,yes,404 page,static,Search integration
-src/pages/DashboardPage.tsx,tsx,frontend,source_executable,yes,User dashboard,live,Widgets with API integration
-src/pages/auth/LoginPage.tsx,tsx,frontend,source_executable,yes,Login,live,Auth API + role routing; OAuth stubbed
-src/pages/auth/SignupPage.tsx,tsx,frontend,source_executable,yes,Signup,live,Multi-step onboarding
-src/pages/dashboard/AdminDashboard.tsx,tsx,frontend,source_executable,yes,Admin dashboard,mock,ALL data hardcoded (1284 users etc.)
-src/pages/dashboard/AstrologyDashboard.tsx,tsx,frontend,source_executable,yes,Astrology dashboard,mock,ALL data hardcoded
-src/pages/dashboard/ConfessionalPage.tsx,tsx,frontend,source_executable,yes,Confessional,live,API: POST/GET /health-tools/journal
-src/pages/dashboard/ConnectionsPage.tsx,tsx,frontend,source_executable,yes,Connections,mock,MOCK_MATCHES hardcoded
-src/pages/dashboard/EditProfilePage.tsx,tsx,frontend,source_executable,yes,Edit profile,mock,Hardcoded practitioner data; save is fake delay
-src/pages/dashboard/JournalPage.tsx,tsx,frontend,source_executable,yes,Journal,live,API: GET/POST /health-tools/journal
-src/pages/dashboard/LogoutPage.tsx,tsx,frontend,source_executable,yes,Logout,live,Calls logout() + stats display
-src/pages/dashboard/ManageAvailabilityPage.tsx,tsx,frontend,source_executable,yes,Availability,mock,Hardcoded weekly schedule
-src/pages/dashboard/MeditationPage.tsx,tsx,frontend,source_executable,yes,Meditation,live,API: GET/POST /health-tools/meditation
-src/pages/dashboard/MoodPage.tsx,tsx,frontend,source_executable,yes,Mood tracker,live,API: GET/POST /health-tools/mood
-src/pages/dashboard/MyClientsPage.tsx,tsx,frontend,source_executable,yes,My clients,mock,Hardcoded 5 clients
-src/pages/dashboard/NotificationsPage.tsx,tsx,frontend,source_executable,yes,Notifications,live,API + WebSocket integration
-src/pages/dashboard/PractitionerDashboard.tsx,tsx,frontend,source_executable,yes,Practitioner dash,mock,Hardcoded metrics; widgets delegate
-src/pages/dashboard/ProfilePage.tsx,tsx,frontend,source_executable,yes,User profile,live,API: GET/PUT + avatar upload
-src/pages/dashboard/SessionsPage.tsx,tsx,frontend,source_executable,yes,Sessions browser,mock,Hardcoded therapist list + sessions
-src/pages/dashboard/SettingsPage.tsx,tsx,frontend,source_executable,yes,Settings,live,API: GET/PUT settings + export + delete
-src/pages/dashboard/TodaysSessionsPage.tsx,tsx,frontend,source_executable,yes,Today's sessions,mock,Hardcoded sessions + chart
-src/pages/practitioner/PractitionerDashboard.tsx,tsx,frontend,source_executable,yes,Practitioner home,mock,Animated mock line graph
-server/package.json,json,backend,config,yes,Server dependencies,live,Express + Prisma + ws
-server/tsconfig.json,json,backend,config,yes,Server TS config,live,Strict mode
-server/prisma.config.ts,ts,backend,config,yes,Prisma config,live,PostgreSQL adapter
-server/prisma/schema.prisma,prisma,backend,migration_schema,yes,Database schema,live,20 models; 13 orphaned
-server/prisma/migrations/20260228143218_init/migration.sql,sql,backend,migration_schema,yes,Migration 1,live,User + RefreshToken + AuditLog
-server/prisma/migrations/20260303042000_init/migration.sql,sql,backend,migration_schema,yes,Migration 2,live,9 additional models
-server/prisma/seed-dev.ts,ts,backend,script,yes,Dev seed,live,4 test users
-server/seed-simple.ts,ts,backend,script,yes,Simple seed,live,Duplicate of seed-dev.ts
-server/seed-all-dev-users.mjs,mjs,backend,script,yes,All users seed,live,Different passwords than seed-dev
-server/setup-dev.cjs,cjs,backend,script,yes,Dev setup,live,Duplicate seed logic
-server/setup-dev.mjs,mjs,backend,script,yes,Dev setup ES,live,Duplicate seed logic
-server/scripts/create-test-accounts.ts,ts,backend,script,yes,Test accounts,stub,BROKEN: wrong field name passwordHash
-server/tmp_test_server.mjs,mjs,backend,script,yes,Temp test server,stub,Test harness
-server/src/index.ts,ts,backend,source_executable,yes,Server entry,live,Express + WS bootstrap
-server/src/config/index.ts,ts,backend,source_support,yes,Server config,live,Full env config with validation
-server/src/config/env.validation.ts,ts,backend,source_support,yes,Env validation,live,Zod env schema
-server/src/routes/index.ts,ts,backend,source_executable,yes,Route registration,live,Mounts all route files
-server/src/routes/auth.ts,ts,backend,source_executable,yes,Auth routes,live,5 real + 2 stub endpoints
-server/src/routes/users.ts,ts,backend,source_executable,yes,User routes,live,11 real endpoints
-server/src/routes/health.ts,ts,backend,source_executable,yes,Health routes,live,2 real endpoints
-server/src/routes/health-tools.ts,ts,backend,source_executable,yes,Health tools routes,live,7 real endpoints
-server/src/routes/notifications.ts,ts,backend,source_executable,yes,Notification routes,live,3 real endpoints
-server/src/routes/therapy.ts,ts,backend,source_executable,yes,Therapy routes,stub,20 endpoints ALL 501
-server/src/routes/astrology.ts,ts,backend,source_executable,yes,Astrology routes,stub,14 endpoints ALL 501
-server/src/routes/ai.ts,ts,backend,source_executable,yes,AI routes,stub,11 endpoints ALL 501
-server/src/routes/blog.ts,ts,backend,source_executable,yes,Blog routes,stub,7 endpoints ALL 501
-server/src/routes/courses.ts,ts,backend,source_executable,yes,Courses routes,stub,8 endpoints ALL 501
-server/src/routes/community.ts,ts,backend,source_executable,yes,Community routes,stub,9 endpoints ALL 501
-server/src/routes/shop.ts,ts,backend,source_executable,yes,Shop routes,stub,15 endpoints ALL 501
-server/src/routes/payments.ts,ts,backend,source_executable,yes,Payment routes,stub,27 endpoints ALL 501 CRITICAL
-server/src/routes/events.ts,ts,backend,source_executable,yes,Events routes,stub,7 endpoints ALL 501
-server/src/routes/corporate.ts,ts,backend,source_executable,yes,Corporate routes,stub,11 endpoints ALL 501
-server/src/routes/careers.ts,ts,backend,source_executable,yes,Careers routes,stub,3 endpoints ALL 501
-server/src/routes/ngo.ts,ts,backend,source_executable,yes,NGO routes,stub,5 endpoints ALL 501
-server/src/routes/admin.ts,ts,backend,source_executable,yes,Admin routes,stub,40+ endpoints ALL 501
-server/src/routes/dev-helper.ts,ts,backend,source_executable,yes,Dev helper,live,Dev utility routes
-server/src/routes/dev-login.ts,ts,backend,source_executable,yes,Dev login,live,SECURITY: auto-login by email
-server/src/routes/test.ts,ts,backend,source_executable,yes,Test routes,live,Connectivity checks
-server/src/routes/test-new.ts,ts,backend,source_executable,yes,Test routes v2,live,Duplicate test route
-server/src/controllers/auth.controller.ts,ts,backend,source_executable,yes,Auth controller,live,bcrypt + JWT + audit logging
-server/src/controllers/users.controller.ts,ts,backend,source_executable,yes,Users controller,live,Profile + onboarding + GDPR
-server/src/controllers/health-tools.controller.ts,ts,backend,source_executable,yes,Health tools controller,live,Mood + journal + meditation
-server/src/controllers/notifications.controller.ts,ts,backend,source_executable,yes,Notifications controller,live,Inline in route file
-server/src/controllers/admin.controller.ts,ts,backend,source_executable,yes,Admin controller,stub,TODO placeholders
-server/src/controllers/ai.controller.ts,ts,backend,source_executable,yes,AI controller,stub,TODO placeholders
-server/src/controllers/blog.controller.ts,ts,backend,source_executable,yes,Blog controller,stub,TODO placeholders
-server/src/controllers/community.controller.ts,ts,backend,source_executable,yes,Community controller,stub,TODO placeholders
-server/src/controllers/courses.controller.ts,ts,backend,source_executable,yes,Courses controller,stub,TODO placeholders
-server/src/controllers/payments.controller.ts,ts,backend,source_executable,yes,Payments controller,stub,TODO placeholders
-server/src/controllers/therapy.controller.ts,ts,backend,source_executable,yes,Therapy controller,stub,TODO placeholders
-server/src/controllers/placeholders.controller.ts,ts,backend,source_executable,yes,Placeholder controller,stub,Generic 501 handler
-server/src/middleware/auth.middleware.ts,ts,backend,source_executable,yes,Auth middleware,live,JWT verify + role hierarchy
-server/src/middleware/error.ts,ts,backend,source_executable,yes,Error middleware,live,Error normalization
-server/src/middleware/rbac.middleware.ts,ts,backend,source_executable,yes,RBAC middleware,live,Role-based access
-server/src/middleware/security.middleware.ts,ts,backend,source_executable,yes,Security middleware,live,6-tier rate limiting
-server/src/middleware/upload.middleware.ts,ts,backend,source_executable,yes,Upload middleware,live,File type + size validation
-server/src/middleware/user-rate-limit.middleware.ts,ts,backend,source_executable,yes,User rate limit,live,Per-user in-memory limiting
-server/src/middleware/request-context.ts,ts,backend,source_executable,yes,Request context,live,Correlation IDs + GDPR IP hash
-server/src/services/tokens.service.ts,ts,backend,source_executable,yes,Token service,live,JWT generation/verification
-server/src/services/cache.service.ts,ts,backend,source_executable,yes,Cache service,stub,In-memory Map; Redis-ready comments only
-server/src/services/email.service.ts,ts,backend,source_executable,yes,Email service,stub,Console logging; Resend-ready comments
-server/src/services/queue.service.ts,ts,backend,source_executable,yes,Queue service,stub,Synchronous; BullMQ-ready comments
-server/src/services/storage.service.ts,ts,backend,source_executable,yes,Storage service,stub,In-memory; S3-ready comments
-server/src/services/ai-event-logger.service.ts,ts,backend,source_executable,yes,AI event logger,live,Winston + Prisma audit trail
-server/src/lib/prisma.ts,ts,backend,source_executable,yes,Prisma client,live,Singleton + health check
-server/src/lib/errors.ts,ts,backend,source_executable,yes,Error lib,live,40+ canonical error codes
-server/src/lib/response.ts,ts,backend,source_executable,yes,Response lib,live,sendSuccess/sendError helpers
-server/src/lib/logger.ts,ts,backend,source_executable,yes,Logger,live,Winston JSON + pretty
-server/src/lib/websocket.ts,ts,backend,source_executable,yes,WebSocket server,live,Auth-gated ws with ping/pong
-server/src/lib/upload.ts,ts,backend,source_executable,yes,Upload lib,live,Multer + Sharp image processing
-server/src/lib/async-handler.ts,ts,backend,source_executable,yes,Async handler,live,Express error wrapping
-server/src/lib/dev-login.ts,ts,backend,source_executable,yes,Dev login lib,live,SECURITY: creates users on access
-src/utils/security.ts,ts,frontend,source_support,yes,Security utils,mock,CRITICAL: btoa() used instead of bcrypt
-src/utils/testing.utils.ts,ts,frontend,source_support,yes,Test utils,live,Test helpers
-src/utils/validators/validators.ts,ts,frontend,source_support,yes,Validators,live,Email/phone/password validation
-src/utils/errors/index.ts,ts,frontend,source_support,yes,Error codes,live,50+ canonical error codes
-src/components/error-boundary.tsx,tsx,frontend,source_executable,yes,Error boundary,live,React error boundary with recovery
+package.json,json,root,config,yes,all,live,72 deps + 13 scripts; version 0.0.0
+tsconfig.json,json,root,config,yes,all,live,project references + path aliases
+tsconfig.app.json,json,root,config,yes,frontend,live,ES2022 target; strict mode all enabled
+tsconfig.node.json,json,root,config,yes,build,live,ES2023 for build tools
+tsconfig.test.json,json,root,config,yes,testing,live,extends app config
+vite.config.ts,ts,root,config,yes,frontend,live,manual chunks; dev proxy /api to :3000
+tailwind.config.js,js,root,config,yes,frontend,live,HSL variables; dark mode class-based
+postcss.config.js,js,root,config,yes,frontend,live,tailwind + autoprefixer
+eslint.config.js,js,root,config,yes,all,live,strict TS + a11y rules; ignores playwright-report but glob fails
+commitlint.config.js,js,root,config,yes,devops,live,conventional commits enforced
+Dockerfile,dockerfile,root,infra,yes,devops,live,multi-stage; node:20-alpine; missing USER directive
+docker-compose.yml,yaml,root,infra,yes,devops,live,postgres+frontend+backend; hardcoded secrets
+vercel.json,json,root,infra,yes,devops,live,SPA rewrite only
+nginx.conf,conf,root,infra,yes,devops,live,basic SPA; missing gzip/CSP/compression
+playwright.config.ts,ts,root,config,yes,testing,live,5 browsers incl mobile; HTML reporter
+components.json,json,root,config,yes,frontend,live,shadcn/ui new-york style; tailwind config path bug
+index.html,html,root,frontend,yes,all,live,missing meta description/OG/favicon links/canonical
+skills-lock.json,json,root,config,yes,tooling,live,33 marketing skills locked
+src/main.tsx,tsx,src,source_executable,yes,all,live,React 19 root render with providers
+src/App.tsx,tsx,src,source_executable,yes,all,live,RouterProvider + ErrorBoundary + Toaster
+src/index.css,css,src,source_support,yes,all,live,Tailwind directives + CSS variables + custom utilities
+src/router/index.tsx,tsx,src/router,source_executable,yes,routing,live,lazy-loaded routes; 30+ routes with code splitting
+src/router/ProtectedRoute.tsx,tsx,src/router,source_executable,yes,auth,live,AUTH BYPASS via runtimeFlags.authBypassEnabled default true
+src/context/AuthContext.tsx,tsx,src/context,source_executable,yes,auth,mock-backed,hardcoded test accounts; base64 tokens; mock auth default on
+src/context/ThemeContext.tsx,tsx,src/context,source_executable,yes,theme,live,dark/light/system with localStorage
+src/config/index.ts,ts,src/config,source_support,yes,all,live,app name; API base URL
+src/config/permissions.ts,ts,src/config,source_support,yes,auth,live,RBAC for 6 roles
+src/config/routes.ts,ts,src/config,source_support,yes,routing,live,route definitions with icons and roles
+src/config/runtime.flags.ts,ts,src/config,source_support,yes,auth,live,VITE_AUTH_BYPASS=true VITE_ENABLE_MOCK_AUTH=true
+src/config/validation.schemas.ts,ts,src/config,source_support,yes,validation,live,Zod schemas for all forms
+src/constants/app.constants.ts,ts,src/constants,source_support,yes,all,live,API timeout 8s; storage keys; pagination
+src/constants/navigation.constants.ts,ts,src/constants,source_support,yes,navigation,static,hardcoded nav items
+src/constants/responsive.ts,ts,src/constants,source_support,yes,ui,live,breakpoint definitions
+src/services/api.service.ts,ts,src/services,source_executable,yes,api,live,circuit-breaker pattern; auth token injection; retry
+src/services/analytics.service.ts,ts,src/services,source_executable,yes,analytics,stub,logs to console only; TODO backend
+src/services/storage.service.ts,ts,src/services,source_executable,yes,storage,live,localStorage/sessionStorage wrapper
+src/services/websocket.service.ts,ts,src/services,source_executable,yes,realtime,live,auto-reconnect 8 attempts; exponential backoff
+src/hooks/advanced.hooks.ts,ts,src/hooks,source_support,yes,utils,live,useAsyncOperation useFetch useLocalStorage useWindowSize
+src/hooks/responsive.hooks.ts,ts,src/hooks,source_support,yes,ui,live,useWindowSize useMediaQuery useBreakpoint
+src/hooks/use-mobile.ts,ts,src/hooks,source_support,yes,ui,live,useIsMobile 768px
+src/hooks/useDashboard.ts,ts,src/hooks,source_executable,yes,dashboard,live,GET /users/dashboard
+src/hooks/useDocumentTitle.ts,ts,src/hooks,source_support,yes,seo,live,dynamic page titles
+src/layouts/AuthLayout.tsx,tsx,src/layouts,source_executable,yes,auth,live,dark 600px centered form container
+src/layouts/DashboardLayout.tsx,tsx,src/layouts,source_executable,yes,dashboard,live,sidebar + topbar + animated main; responsive mobile drawer
+src/layouts/MainLayout.tsx,tsx,src/layouts,source_executable,yes,public,live,nav/footer with dynamic theme
+src/lib/utils.ts,ts,src/lib,source_support,yes,utils,live,cn() clsx + tailwind-merge
+src/middleware/api.middleware.ts,ts,src/middleware,source_executable,yes,api,live,authMiddleware errorMiddleware loggingMiddleware
+src/utils/security.ts,ts,src/utils,source_executable,yes,security,mock-backed,hashPassword uses btoa (NOT real hash); CSRF gen; sanitizeHTML
+src/utils/testing.utils.ts,ts,src/utils,source_support,yes,testing,mock,mock API responses; mock users
+src/utils/errors/index.ts,ts,src/utils,source_support,yes,errors,live,canonical error codes 20+
+src/utils/helpers/string.helpers.ts,ts,src/utils,source_support,yes,utils,live,capitalize truncate slugify
+src/utils/helpers/date.helpers.ts,ts,src/utils,source_support,yes,utils,live,format getRelativeTime addDays
+src/utils/helpers/number.helpers.ts,ts,src/utils,source_support,yes,utils,live,formatCurrency round clamp
+src/utils/helpers/react.helpers.ts,ts,src/utils,source_support,yes,utils,live,useIsMounted useDebounce usePrevious
+src/utils/helpers/collection.helpers.ts,ts,src/utils,source_support,yes,utils,live,unique groupBy flatten chunk deepMerge
+src/utils/validators/validators.ts,ts,src/utils,source_support,yes,validation,live,isValidEmail isValidUrl isValidPhone
+src/pages/LandingPage.tsx,tsx,src/pages,source_executable,yes,landing,static,composition of 9 feature components; no API
+src/pages/DashboardPage.tsx,tsx,src/pages,source_executable,yes,dashboard,partially-live,useDashboard hook + hardcoded quick actions
+src/pages/AboutPage.tsx,tsx,src/pages,source_executable,yes,about,static,composition of about feature components
+src/pages/SplashScreen.tsx,tsx,src/pages,source_executable,yes,landing,static,animated multilingual greetings; may be orphaned
+src/pages/NotFoundPage.tsx,tsx,src/pages,source_executable,yes,error,static,404 with search; hardcoded UI
+src/pages/CoursesPage.tsx,tsx,src/pages,source_executable,yes,courses,static,wrapper for CoursesProgramsPage
+src/pages/CourseDetailsPage.tsx,tsx,src/pages,source_executable,yes,courses,hardcoded,generates course data from static; enroll not wired
+src/pages/BlogsPage.tsx,tsx,src/pages,source_executable,yes,blogs,hardcoded,9+ hardcoded posts; no API
+src/pages/BlogPostPage.tsx,tsx,src/pages,source_executable,yes,blogs,hardcoded,full HTML content hardcoded; comments UI only
+src/pages/BusinessPage.tsx,tsx,src/pages,source_executable,yes,business,static,B2B solutions composition
+src/pages/CorporatePage.tsx,tsx,src/pages,source_executable,yes,corporate,static,corporate wellness composition
+src/pages/ContactPage.tsx,tsx,src/pages,source_executable,yes,contact,hardcoded,form not wired; T&C inline; Send Request non-functional
+src/pages/CareerPage.tsx,tsx,src/pages,source_executable,yes,careers,hardcoded,15+ positions hardcoded; no API
+src/pages/StudentCounsellingPage.tsx,tsx,src/pages,source_executable,yes,student-counselling,hardcoded,carousel + analytics metrics hardcoded
+src/pages/StudentCounsellingDemoPage.tsx,tsx,src/pages,source_executable,yes,student-counselling,static,demo with back button
+src/pages/WorkshopDemoPage.tsx,tsx,src/pages,source_executable,yes,workshop,static,demo with back button
+src/pages/auth/LoginPage.tsx,tsx,src/pages/auth,source_executable,yes,auth,partially-live,mock auth default; OAuth buttons placeholder
+src/pages/auth/SignupPage.tsx,tsx,src/pages/auth,source_executable,yes,auth,partially-live,multi-step; persists astrology to API
+src/pages/dashboard/MoodPage.tsx,tsx,src/pages/dashboard,source_executable,yes,health-tools,live,API-backed GET/POST /health-tools/mood
+src/pages/dashboard/JournalPage.tsx,tsx,src/pages/dashboard,source_executable,yes,health-tools,live,API-backed GET/POST /health-tools/journal
+src/pages/dashboard/MeditationPage.tsx,tsx,src/pages/dashboard,source_executable,yes,health-tools,live,API-backed GET/POST /health-tools/meditation
+src/pages/dashboard/SessionsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,therapy,hardcoded,mock therapists + sessions; pravatar.cc avatars
+src/pages/dashboard/ConnectionsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,constellation,hardcoded,6 MOCK_MATCHES; synergy scores fake
+src/pages/dashboard/NotificationsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,notifications,live,API + WebSocket; real-time updates
+src/pages/dashboard/ProfilePage.tsx,tsx,src/pages/dashboard,source_executable,yes,users,live,API-backed; avatar upload; stats
+src/pages/dashboard/SettingsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,users,live,API-backed; debounced save 400ms
+src/pages/dashboard/ConfessionalPage.tsx,tsx,src/pages/dashboard,source_executable,yes,health-tools,live,saves as journal entry; Voice Vent coming soon
+src/pages/dashboard/EditProfilePage.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,hardcoded,fake save with setTimeout; Swati Agarwal data
+src/pages/dashboard/LogoutPage.tsx,tsx,src/pages/dashboard,source_executable,yes,auth,hardcoded,hardcoded stats; countdown timer
+src/pages/dashboard/AdminDashboard.tsx,tsx,src/pages/dashboard,source_executable,yes,admin,hardcoded,1284 users + 156 sessions + 4.2L revenue all fake
+src/pages/dashboard/AstrologyDashboard.tsx,tsx,src/pages/dashboard,source_executable,yes,astrology,hardcoded,fake stats; purple/gold theme
+src/pages/dashboard/PractitionerDashboard.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,partially-live,delegates to widgets; some may be hardcoded
+src/pages/dashboard/TodaysSessionsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,hardcoded,heroSession + 4 upcoming + 3 previous all fake
+src/pages/dashboard/MyClientsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,hardcoded,5 clients + 2 intake hardcoded; earnings fake
+src/pages/dashboard/ManageAvailabilityPage.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,hardcoded,weekly schedule fake; Google Calendar not wired
+src/components/error-boundary.tsx,tsx,src/components,source_executable,yes,error,live,React error boundary with retry
+src/components/LoadingSpinner.tsx,tsx,src/components,source_executable,yes,ui,live,simple centered spinner
+src/components/layout/Navigation.tsx,tsx,src/components/layout,source_executable,yes,navigation,static,scrolled detection; theme auto-detection
+src/components/layout/Footer.tsx,tsx,src/components/layout,source_executable,yes,navigation,static,email signup not wired; copyright year 2025
+src/components/layout/SmoothScrollProvider.tsx,tsx,src/components/layout,source_executable,yes,ui,live,Lenis smooth scroll; respects reduced-motion
+server/package.json,json,server,config,yes,backend,live,50+ deps
+server/tsconfig.json,json,server,config,yes,backend,live,ES2022 ESNext
+server/prisma.config.ts,ts,server,config,yes,database,live,Prisma config
+server/src/index.ts,ts,server/src,source_executable,yes,backend,live,Express app; Helmet; CORS; rate limit; graceful shutdown; WS
+server/src/config/env.validation.ts,ts,server/src/config,source_support,yes,backend,live,Zod env schema validation
+server/src/config/index.ts,ts,server/src/config,source_support,yes,backend,live,unified config 15 objects
+server/src/middleware/auth.middleware.ts,ts,server/src/middleware,source_executable,yes,auth,live,JWT verify; requireAuth; requireRole; requireOwnership
+server/src/middleware/rbac.middleware.ts,ts,server/src/middleware,source_executable,yes,auth,live,role hierarchy enforcement
+server/src/middleware/security.middleware.ts,ts,server/src/middleware,source_executable,yes,security,live,6 rate limiters (auth/api/strict/sensitive/upload/ai)
+server/src/middleware/request-context.ts,ts,server/src/middleware,source_executable,yes,observability,live,correlation IDs; IP hashing SHA256
+server/src/middleware/error.ts,ts,server/src/middleware,source_executable,yes,errors,live,global error normalization; ZodError/Prisma/JWT
+server/src/middleware/upload.middleware.ts,ts,server/src/middleware,source_executable,yes,uploads,live,Multer; MIME validation; extension blocking
+server/src/middleware/user-rate-limit.middleware.ts,ts,server/src/middleware,source_executable,yes,security,live,in-memory user-based rate limiting
+server/src/lib/async-handler.ts,ts,server/src/lib,source_support,yes,backend,live,promise wrapper for express handlers
+server/src/lib/logger.ts,ts,server/src/lib,source_executable,yes,observability,live,Winston JSON(prod)/colored(dev)
+server/src/lib/prisma.ts,ts,server/src/lib,source_executable,yes,database,live,singleton + health check
+server/src/lib/errors.ts,ts,server/src/lib,source_executable,yes,errors,live,AppError + 40+ error codes
+server/src/lib/response.ts,ts,server/src/lib,source_executable,yes,api,live,sendSuccess/sendError + pagination
+server/src/lib/websocket.ts,ts,server/src/lib,source_executable,yes,realtime,live,WS service; auth; heartbeat; message handling
+server/src/lib/dev-login.ts,ts,server/src/lib,source_executable,yes,auth,mock-backed,dev token generation WITHOUT password; base64 tokens
+server/src/lib/upload.ts,ts,server/src/lib,source_executable,yes,uploads,live,avatar upload + Sharp image processing
+server/src/controllers/auth.controller.ts,ts,server/src/controllers,source_executable,yes,auth,live,register/login/refresh/logout/me
+server/src/controllers/users.controller.ts,ts,server/src/controllers,source_executable,yes,users,live,onboarding steps 1-10; profile; avatar; settings
+server/src/controllers/health-tools.controller.ts,ts,server/src/controllers,source_executable,yes,health-tools,live,mood/journal/meditation CRUD
+server/src/controllers/payments.controller.ts,ts,server/src/controllers,source_executable,yes,payments,stub,all endpoints return 501
+server/src/controllers/therapy.controller.ts,ts,server/src/controllers,source_executable,yes,therapy,stub,all endpoints return 501
+server/src/controllers/ai.controller.ts,ts,server/src/controllers,source_executable,yes,ai,stub,all endpoints return 501
+server/src/controllers/courses.controller.ts,ts,server/src/controllers,source_executable,yes,courses,stub,all endpoints return 501
+server/src/controllers/admin.controller.ts,ts,server/src/controllers,source_executable,yes,admin,stub,all endpoints return 501
+server/src/controllers/blog.controller.ts,ts,server/src/controllers,source_executable,yes,blog,stub,all endpoints return 501
+server/src/controllers/community.controller.ts,ts,server/src/controllers,source_executable,yes,community,stub,all endpoints return 501
+server/src/controllers/notifications.controller.ts,ts,server/src/controllers,source_executable,yes,notifications,stub,all endpoints return 501
+server/src/services/tokens.service.ts,ts,server/src/services,source_executable,yes,auth,live,JWT gen/verify; token families; rotation
+server/src/services/email.service.ts,ts,server/src/services,source_executable,yes,email,stub,template-based; TODO Resend integration
+server/src/services/cache.service.ts,ts,server/src/services,source_executable,yes,cache,live,in-memory TTL cache; TODO Redis swap
+server/src/services/queue.service.ts,ts,server/src/services,source_executable,yes,queue,live,job queue with handlers; TODO BullMQ swap
+server/src/services/storage.service.ts,ts,server/src/services,source_executable,yes,storage,live,file uploads+validation; TODO S3/R2 swap
+server/src/services/ai-event-logger.service.ts,ts,server/src/services,source_executable,yes,audit,live,Winston + Prisma AuditLog
+server/prisma/schema.prisma,prisma,server/prisma,migration_schema,yes,database,live,13 models; 7 enums; 2 migrations
+server/seed-all-dev-users.mjs,mjs,server,scripts,yes,database,live,4 test users seeded
+server/seed-simple.ts,ts,server,scripts,yes,database,live,seed script
+server/setup-dev.cjs,cjs,server,scripts,yes,devops,live,dev setup
+server/setup-dev.mjs,mjs,server,scripts,yes,devops,live,dev setup
+tests/example.spec.ts,ts,tests,tests,yes,testing,live,15 Playwright smoke tests; 7 public + 2 auth + 4 dashboard + 2 resilience
+scripts/check-bundle-budgets.js,js,scripts,scripts,yes,devops,live,enforces chunk size limits
+scripts/responsive-audit.mjs,mjs,scripts,scripts,yes,testing,live,screenshot all routes at 8 breakpoints
+.github/workflows/build.yml,yaml,.github,infra,yes,devops,live,Node 18.x/20.x matrix; lint+build+audit
+.github/workflows/quality.yml,yaml,.github,infra,yes,devops,live,type-check+lint+audit on push/PR
+.husky/pre-commit,sh,.husky,config,yes,devops,live,type-check+lint:check+format:check
+.husky/commit-msg,sh,.husky,config,yes,devops,live,commitlint conventional enforcement

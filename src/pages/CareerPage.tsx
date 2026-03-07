@@ -138,6 +138,10 @@ const openingGroups: Array<{ name: string; count: number; jobs: Job[] }> = [
   },
 ];
 
+const jobRoleOptions = openingGroups.flatMap((group) =>
+  group.jobs.map((job) => job.title)
+);
+
 function JobCard({ job }: { job: Job }) {
   return (
     <article className="min-h-[200px] rounded-[25px] border border-white/10 bg-[#080808] px-4 py-5 text-white sm:px-[30px] sm:py-[30px]">
@@ -378,13 +382,21 @@ export default function CareerPage() {
 
             <label className="block">
               <span className="mb-2 block text-[14px] text-white/80">Role You&apos;re Applying For</span>
-              <input
+              <select
                 value={formData.role}
                 onChange={(e) => setField('role', e.target.value)}
                 aria-invalid={Boolean(errors.role)}
                 className={`h-[52px] w-full rounded-[20px] border bg-[#101010] px-5 text-[14px] text-white outline-none transition-colors ${errors.role ? 'border-red-400/70' : 'border-white/15 focus:border-white/35'}`}
-                placeholder="e.g. Digital Marketing Executive"
-              />
+              >
+                <option value="" className="text-white/60">
+                  Select a job opening
+                </option>
+                {jobRoleOptions.map((role) => (
+                  <option key={role} value={role}>
+                    {role}
+                  </option>
+                ))}
+              </select>
               {errors.role && <p className="mt-1 text-[12px] text-red-300">{errors.role}</p>}
             </label>
 

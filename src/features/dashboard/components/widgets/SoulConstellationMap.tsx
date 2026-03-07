@@ -29,19 +29,27 @@ export default function SoulConstellationMap() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        setIsLoading(true);
-        setError(null);
+        let cancelled = false;
+        
         constellationService
             .getConstellation()
             .then((data) => {
-                setNodes(data.nodes);
-                setConnections(data.connections);
+                if (!cancelled) {
+                    setNodes(data.nodes);
+                    setConnections(data.connections);
+                }
             })
             .catch((err) => {
-                console.error('Failed to load constellation:', err);
-                setError('Could not load your constellation pattern. This is optional — your journey continues.');
+                if (!cancelled) {
+                    console.error('Failed to load constellation:', err);
+                    setError('Could not load your constellation pattern. This is optional — your journey continues.');
+                }
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+                if (!cancelled) setIsLoading(false);
+            });
+        
+        return () => { cancelled = true; };
     }, []);
 
     const renderNodes = useMemo<PositionedNode[]>(() => {

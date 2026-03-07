@@ -18,6 +18,7 @@ export default defineConfig([
     '.agents/**',
     'playwright-utils/**',
     'tests/**',
+    'playwright-report/**',
   ]),
   {
     files: ['**/*.{ts,tsx}'],

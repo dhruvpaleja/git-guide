@@ -188,7 +188,7 @@ function MeetingView({ sessionId, isTherapist, onLeave }: Omit<VideoSDKRoomProps
           <ParticipantView participantId={localParticipantId} isLocal />
           
           {/* Remote Participants */}
-          {participants.map((participant) => (
+          {participants.map((participant: { id: string }) => (
             participant.id !== localParticipantId && (
               <ParticipantView key={participant.id} participantId={participant.id} />
             )

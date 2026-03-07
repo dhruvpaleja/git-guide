@@ -440,7 +440,7 @@ class ActivityTracker {
     }, 500);
   };
 
-  private handleCopy = (e: ClipboardEvent) => {
+  private handleCopy = (_e: ClipboardEvent) => {
     const selection = window.getSelection()?.toString()?.slice(0, 100);
     this.push({
       eventType: 'copy',

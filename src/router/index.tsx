@@ -52,6 +52,7 @@ const EditProfilePage = lazy(() => import('@/pages/dashboard/EditProfilePage'));
 const LogoutPage = lazy(() => import('@/pages/dashboard/LogoutPage'));
 const AstrologyDashboard = lazy(() => import('@/pages/dashboard/AstrologyDashboard'));
 const AdminDashboard = lazy(() => import('@/pages/dashboard/AdminDashboard'));
+const HrDashboard = lazy(() => import('@/pages/dashboard/HrDashboard'));
 const PersonalizationPage = lazy(() => import('@/features/dashboard/pages/PersonalizationPage'));
 
 // Dashboard sub-pages
@@ -209,6 +210,14 @@ const router = createBrowserRouter([
             element: (
               <Lazy>
                 <AdminDashboard />
+              </Lazy>
+            ),
+          },
+          {
+            path: '/admin/hr',
+            element: (
+              <Lazy>
+                <HrDashboard />
               </Lazy>
             ),
           },

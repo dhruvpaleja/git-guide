@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 
 const exploreLinks = [
-  { label: 'Overview', href: '/home', isRoute: true },
+  { label: 'About', href: '/about', isRoute: true },
   { label: 'Careers', href: '/careers', isRoute: true },
   { label: 'Blog', href: '/blogs', isRoute: true },
   { label: 'B2B', href: '/business', isRoute: true },

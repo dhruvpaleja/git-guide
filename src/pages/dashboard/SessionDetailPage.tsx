@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { therapyApi } from '@/services/therapy.api';
 import { videoApi } from '@/services/video.api';
 import type { SessionDetail, SessionStatus } from '@/types/therapy.types';
-import DailyVideoRoom from '@/features/video/DailyVideoRoom';
+import VideoSDKRoom from '@/features/video/VideoSDKRoom';
 import {
   ArrowLeft, Calendar, Clock, Star, MapPin, MessageCircle, X,
   Play, CheckCircle, UserX, Loader2, ExternalLink, AlertTriangle,
@@ -670,7 +670,7 @@ export default function SessionDetailPage() {
         {showVideo && videoStarted && (
           <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm">
             <div className="w-full h-full max-w-7xl mx-auto p-4">
-              <DailyVideoRoom
+              <VideoSDKRoom
                 sessionId={session.id}
                 userName={user?.name || 'User'}
                 isTherapist={isTherapist}

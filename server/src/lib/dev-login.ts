@@ -1,4 +1,7 @@
 import { prisma } from './prisma.js';
+import { tokensService } from '../services/tokens.service.js';
+import { mapServerRoleToAppRole } from '../shared/contracts/auth.contracts.js';
+import type { ServerRole } from '../shared/contracts/auth.contracts.js';
 
 // Quick dev login - bypass password for development
 export async function devLogin(email: string) {
@@ -16,16 +19,16 @@ export async function devLogin(email: string) {
       throw new Error(`User not found: ${email}`);
     }
 
-    // Generate tokens directly for development
-    const accessToken = generateDevToken(user);
-    const refreshToken = generateDevRefreshToken(user.id);
+    // Generate REAL JWT tokens using the tokens service
+    const accessToken = tokensService.generateAccessToken(user.id, user.role as ServerRole);
+    const refreshToken = tokensService.generateRefreshToken(user.id, crypto.randomUUID());
 
     return {
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role.toLowerCase(),
+        role: mapServerRoleToAppRole(user.role as ServerRole),
       },
       accessToken,
       refreshToken,
@@ -37,31 +40,6 @@ export async function devLogin(email: string) {
     console.warn('Database connection failed, please run npm run seed:test to create test accounts:', error);
     throw new Error(`Database connection failed. Please run 'npm run seed:test' to create test accounts in the database.`);
   }
-}
-
-// Simple token generation for development
-function generateDevToken(user: { id: string; role: string }) {
-  const payload = {
-    sub: user.id,
-    role: user.role,
-    jti: crypto.randomUUID(),
-    iss: 'soul-yatri-api',
-    aud: 'soul-yatri-client',
-  };
-
-  // For development, use a simple base64 encoded token (not secure for production!)
-  return Buffer.from(JSON.stringify(payload)).toString('base64');
-}
-
-function generateDevRefreshToken(userId: string) {
-  const payload = {
-    sub: userId,
-    familyId: crypto.randomUUID(),
-    type: 'refresh',
-    jti: crypto.randomUUID(),
-  };
-
-  return Buffer.from(JSON.stringify(payload)).toString('base64');
 }
 
 // Development API endpoint helper

@@ -1,36 +1,39 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
 import {
     Search, SlidersHorizontal, AlertCircle, ChevronLeft,
-    Camera, Upload, Plus, X, Save, Trash2, Edit3, Eye, EyeOff
+    Camera, Upload, Plus, X, Save, Trash2, Edit3, Eye, EyeOff, Loader2
 } from 'lucide-react';
+import { therapyApi } from '@/services/therapy.api';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
 
-/* ── Hard-coded profile data ─────────────────────────────────── */
+/* ── Fallback profile shape ──────────────────────────────────── */
 
-const initialProfile = {
-    firstName: 'Swati',
-    lastName: 'Agarwal',
-    displayName: 'Swati Agarwal',
-    email: 'swati.agarwal@soulyatri.com',
-    phone: '+91 98765 43210',
-    bio: 'Experienced counsellor and therapist specializing in cognitive behavioural therapy, mindfulness-based stress reduction, and relationship counselling. Passionate about helping individuals find inner balance and emotional resilience.',
-    gender: 'Female',
-    dateOfBirth: '1990-05-15',
-    city: 'Mumbai',
-    state: 'Maharashtra',
+const emptyProfile = {
+    firstName: '',
+    lastName: '',
+    displayName: '',
+    email: '',
+    phone: '',
+    bio: '',
+    gender: '',
+    dateOfBirth: '',
+    city: '',
+    state: '',
     country: 'India',
-    languages: ['English', 'Hindi', 'Marathi'],
-    specializations: ['Cognitive Behavioural Therapy', 'Mindfulness', 'Relationship Counselling', 'Stress Management', 'Anxiety'],
-    experience: '8',
-    qualifications: 'M.A. Clinical Psychology, Certified CBT Practitioner',
-    licenseNumber: 'RCI/PSY/2018/4521',
-    sessionRate: '1500',
-    sessionDuration: '60',
-    availableDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    availableFrom: '10:00',
-    availableTo: '18:00',
+    languages: [] as string[],
+    specializations: [] as string[],
+    experience: '0',
+    qualifications: '',
+    licenseNumber: '',
+    sessionRate: '0',
+    sessionDuration: '50',
+    availableDays: [] as string[],
+    availableFrom: '09:00',
+    availableTo: '17:00',
     password: '••••••••••',
 };
 
@@ -38,13 +41,58 @@ const initialProfile = {
 
 export default function EditProfilePage() {
     useDocumentTitle('Edit Profile');
-    const [profile, setProfile] = useState(initialProfile);
+    const { user } = useAuth();
+    const [profile, setProfile] = useState(emptyProfile);
     const [newLanguage, setNewLanguage] = useState('');
     const [newSpecialization, setNewSpecialization] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [activeSection, setActiveSection] = useState('personal');
     const [showPassword, setShowPassword] = useState(false);
+
+    /* ── Fetch real profile on mount ─── */
+    const loadProfile = useCallback(async () => {
+        try {
+            setIsLoading(true);
+            const data = await therapyApi.getTherapistProfile();
+            const p = data as unknown as Record<string, unknown>;
+            const u = (p.user ?? {}) as Record<string, unknown>;
+            const name = String(u.name || user?.name || '');
+            const [firstName = '', ...restName] = name.split(' ');
+            const lastName = restName.join(' ');
+            setProfile({
+                firstName,
+                lastName,
+                displayName: name,
+                email: String(u.email || user?.email || ''),
+                phone: String(u.phone || ''),
+                bio: String(p.bio || ''),
+                gender: String(p.gender || u.gender || ''),
+                dateOfBirth: '',
+                city: '',
+                state: '',
+                country: 'India',
+                languages: Array.isArray(p.languages) ? p.languages as string[] : [],
+                specializations: Array.isArray(p.specializations) ? p.specializations as string[] : [],
+                experience: String(p.experience || '0'),
+                qualifications: Array.isArray(p.qualifications) ? (p.qualifications as string[]).join(', ') : String(p.qualifications || ''),
+                licenseNumber: '',
+                sessionRate: String(p.pricePerSession || '0'),
+                sessionDuration: '50',
+                availableDays: [],
+                availableFrom: '09:00',
+                availableTo: '17:00',
+                password: '••••••••••',
+            });
+        } catch {
+            toast.error('Failed to load profile');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [user]);
+
+    useEffect(() => { loadProfile(); }, [loadProfile]);
 
     const updateField = (field: string, value: string) => {
         setProfile(p => ({ ...p, [field]: value }));
@@ -83,11 +131,24 @@ export default function EditProfilePage() {
     };
 
     const handleSave = async () => {
-        setIsSaving(true);
-        await new Promise(r => setTimeout(r, 1200));
-        setIsSaving(false);
-        setSaved(true);
-        setTimeout(() => setSaved(false), 3000);
+        try {
+            setIsSaving(true);
+            await therapyApi.updateTherapistProfile({
+                bio: profile.bio,
+                specializations: profile.specializations,
+                languages: profile.languages,
+                experience: parseInt(profile.experience, 10) || 0,
+                qualifications: profile.qualifications.split(',').map(q => q.trim()).filter(Boolean),
+                pricePerSession: parseInt(profile.sessionRate, 10) || 0,
+            });
+            setSaved(true);
+            toast.success('Profile saved successfully');
+            setTimeout(() => setSaved(false), 3000);
+        } catch {
+            toast.error('Failed to save profile');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const sections = [
@@ -102,14 +163,20 @@ export default function EditProfilePage() {
             <PractitionerSidebar />
 
             <main className="flex-1 ml-20 md:ml-24 overflow-y-auto">
+                {isLoading ? (
+                    <div className="flex items-center justify-center h-screen">
+                        <Loader2 className="w-8 h-8 text-[#2C2F7A] animate-spin" />
+                    </div>
+                ) : (
+                <>
                 {/* ─── Top Welcome Bar ─── */}
                 <div className="bg-white px-6 md:px-10 py-4 flex items-center justify-between border-b border-gray-100 sticky top-0 z-30">
                     <div className="flex items-center gap-3">
                         <img src="/images/main-logo.png" alt="Soul Yatri" className="w-8 h-8 object-contain" />
                         <span className="text-2xl font-bold text-gray-900 hidden sm:block">Welcome!</span>
-                        <img src="/images/practitioner/imgImage.png" alt="Swati Agarwal" className="w-10 h-10 rounded-full object-cover border-2 border-gray-100" />
+                        <img src="/images/practitioner/imgImage.png" alt={profile.displayName} className="w-10 h-10 rounded-full object-cover border-2 border-gray-100" />
                         <div className="hidden md:flex flex-col">
-                            <span className="text-sm font-semibold text-gray-800">Swati Agarwal</span>
+                            <span className="text-sm font-semibold text-gray-800">{profile.displayName || user?.name || 'Practitioner'}</span>
                             <span className="text-[11px] text-gray-400">Counsellor | Therapist</span>
                         </div>
                     </div>
@@ -470,6 +537,8 @@ export default function EditProfilePage() {
                         </div>
                     </div>
                 </div>
+                </>
+                )}
             </main>
         </div>
     );

@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { PrismaClient, Role, TherapistApproach, Gender } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 import bcrypt from 'bcrypt';
 
 // Load environment variables
@@ -11,7 +12,16 @@ if (!databaseUrl) {
   throw new Error('DATABASE_URL is required');
 }
 
-const adapter = new PrismaPg({ connectionString: databaseUrl });
+const dbUrl = new URL(databaseUrl);
+const pool = new pg.Pool({
+  host: dbUrl.hostname,
+  port: parseInt(dbUrl.port) || 5432,
+  database: dbUrl.pathname.slice(1),
+  user: dbUrl.username,
+  password: process.env.DATABASE_PASSWORD || decodeURIComponent(dbUrl.password),
+  ssl: dbUrl.hostname !== 'localhost' ? { rejectUnauthorized: false } : undefined,
+});
+const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 const THERAPISTS = [

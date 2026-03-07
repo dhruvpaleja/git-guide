@@ -1,5 +1,5 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
@@ -11,17 +11,85 @@ import {
   LogOut,
   BarChart3,
   TrendingUp,
-  AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { apiService } from '@/services/api.service';
+
+interface AdminStats {
+  totalUsers: number;
+  totalTherapists: number;
+  totalSessions: number;
+  activeSessions: number;
+  completedSessions: number;
+  totalPayments: number;
+  newUsersThisWeek: number;
+}
+
+interface RecentUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isVerified: boolean;
+  createdAt: string;
+}
+
+interface RecentSession {
+  id: string;
+  status: string;
+  scheduledAt: string;
+  user: { name: string; email: string };
+  therapist: { user: { name: string } };
+}
 
 export default function AdminDashboard() {
   useDocumentTitle('Admin Dashboard');
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState<AdminStats>({
+    totalUsers: 0, totalTherapists: 0, totalSessions: 0,
+    activeSessions: 0, completedSessions: 0, totalPayments: 0, newUsersThisWeek: 0,
+  });
+  const [recentUsers, setRecentUsers] = useState<RecentUser[]>([]);
+  const [recentSessions, setRecentSessions] = useState<RecentSession[]>([]);
+  const [allUsers, setAllUsers] = useState<RecentUser[]>([]);
+
+  useEffect(() => {
+    async function loadDashboard() {
+      try {
+        setIsLoading(true);
+        const data = await apiService.get<{
+          stats: AdminStats;
+          recentUsers: RecentUser[];
+          recentSessions: RecentSession[];
+        }>('/admin/dashboard');
+        
+        const d = data as unknown as Record<string, unknown>;
+        if (d.stats) setStats(d.stats as AdminStats);
+        if (d.recentUsers) setRecentUsers(d.recentUsers as RecentUser[]);
+        if (d.recentSessions) setRecentSessions(d.recentSessions as RecentSession[]);
+      } catch {
+        toast.error('Failed to load admin dashboard');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadDashboard();
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === 'users') {
+      apiService.get<{ users: RecentUser[] }>('/admin/users').then((data) => {
+        const d = data as unknown as Record<string, unknown>;
+        if (d.users) setAllUsers(d.users as RecentUser[]);
+      }).catch(() => toast.error('Failed to load users'));
+    }
+  }, [activeTab]);
 
   const handleLogout = () => {
     localStorage.removeItem('auth_token');
@@ -70,6 +138,12 @@ export default function AdminDashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-24">
+            <Loader2 className="w-8 h-8 animate-spin text-blue-400" />
+          </div>
+        ) : (
+        <>
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="bg-slate-900 border-slate-800">
@@ -80,8 +154,8 @@ export default function AdminDashboard() {
               <Users className="w-4 h-4 text-blue-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">1,284</div>
-              <p className="text-xs text-green-400">+24 this week</p>
+              <div className="text-2xl font-bold text-white">{stats.totalUsers.toLocaleString()}</div>
+              <p className="text-xs text-green-400">+{stats.newUsersThisWeek} this week</p>
             </CardContent>
           </Card>
 
@@ -93,34 +167,34 @@ export default function AdminDashboard() {
               <Activity className="w-4 h-4 text-green-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">156</div>
-              <p className="text-xs text-slate-500">Currently online</p>
+              <div className="text-2xl font-bold text-white">{stats.activeSessions}</div>
+              <p className="text-xs text-slate-500">{stats.totalSessions} total</p>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-slate-400">
-                Revenue
+                Payments
               </CardTitle>
               <DollarSign className="w-4 h-4 text-yellow-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">₹4.2L</div>
-              <p className="text-xs text-green-400">+12% this month</p>
+              <div className="text-2xl font-bold text-white">{stats.totalPayments}</div>
+              <p className="text-xs text-slate-500">Total transactions</p>
             </CardContent>
           </Card>
 
           <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-slate-400">
-                System Status
+                Therapists
               </CardTitle>
               <CheckCircle className="w-4 h-4 text-green-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">Healthy</div>
-              <p className="text-xs text-slate-500">All systems operational</p>
+              <div className="text-2xl font-bold text-white">{stats.totalTherapists}</div>
+              <p className="text-xs text-slate-500">Verified professionals</p>
             </CardContent>
           </Card>
         </div>
@@ -187,29 +261,37 @@ export default function AdminDashboard() {
               <div className="mt-8">
                 <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
                 <div className="space-y-3">
-                  {[
-                    { action: 'New user registration', user: 'rahul@example.com', time: '2 min ago', type: 'user' },
-                    { action: 'Therapist verified', user: 'dr.sarah@example.com', time: '15 min ago', type: 'success' },
-                    { action: 'Payment received', user: 'Order #1234', time: '1 hour ago', type: 'payment' },
-                    { action: 'System backup completed', user: 'Automated', time: '2 hours ago', type: 'system' },
-                  ].map((activity, index) => (
+                  {recentUsers.length === 0 && recentSessions.length === 0 && (
+                    <p className="text-slate-500">No recent activity</p>
+                  )}
+                  {recentUsers.map((u) => (
                     <div 
-                      key={index}
+                      key={`user-${u.id}`}
                       className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700"
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`w-2 h-2 rounded-full ${
-                          activity.type === 'user' ? 'bg-blue-400' :
-                          activity.type === 'success' ? 'bg-green-400' :
-                          activity.type === 'payment' ? 'bg-yellow-400' :
-                          'bg-slate-400'
-                        }`} />
+                        <div className="w-2 h-2 rounded-full bg-blue-400" />
                         <div>
-                          <div className="font-medium text-white">{activity.action}</div>
-                          <div className="text-sm text-slate-400">{activity.user}</div>
+                          <div className="font-medium text-white">New user registration</div>
+                          <div className="text-sm text-slate-400">{u.email}</div>
                         </div>
                       </div>
-                      <div className="text-sm text-slate-500 sm:pl-4">{activity.time}</div>
+                      <div className="text-sm text-slate-500 sm:pl-4">{new Date(u.createdAt).toLocaleDateString()}</div>
+                    </div>
+                  ))}
+                  {recentSessions.map((s) => (
+                    <div 
+                      key={`session-${s.id}`}
+                      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`w-2 h-2 rounded-full ${s.status === 'COMPLETED' ? 'bg-green-400' : 'bg-yellow-400'}`} />
+                        <div>
+                          <div className="font-medium text-white">Session {s.status.toLowerCase()}</div>
+                          <div className="text-sm text-slate-400">{s.user?.name} → {s.therapist?.user?.name}</div>
+                        </div>
+                      </div>
+                      <div className="text-sm text-slate-500 sm:pl-4">{new Date(s.scheduledAt).toLocaleDateString()}</div>
                     </div>
                   ))}
                 </div>
@@ -226,15 +308,18 @@ export default function AdminDashboard() {
                   </CardHeader>
                   <CardContent>
                     <div className="h-32 flex items-end gap-2">
-                      {[40, 65, 45, 80, 55, 90, 70].map((height, i) => (
-                        <div 
-                          key={i}
-                          className="flex-1 bg-blue-500 rounded-t"
-                          style={{ height: `${height}%` }}
-                        />
-                      ))}
+                      {(() => {
+                        const maxVal = Math.max(stats.totalUsers, 1);
+                        return [stats.newUsersThisWeek, stats.totalUsers, stats.totalTherapists, stats.totalSessions, stats.activeSessions, stats.completedSessions, stats.totalPayments].map((val, i) => (
+                          <div 
+                            key={i}
+                            className="flex-1 bg-blue-500 rounded-t"
+                            style={{ height: `${Math.min(100, (val / maxVal) * 100)}%` }}
+                          />
+                        ));
+                      })()}
                     </div>
-                    <p className="text-sm text-slate-400 mt-2">Weekly user registrations</p>
+                    <p className="text-sm text-slate-400 mt-2">Platform metrics overview</p>
                   </CardContent>
                 </Card>
 
@@ -247,15 +332,18 @@ export default function AdminDashboard() {
                   </CardHeader>
                   <CardContent>
                     <div className="h-32 flex items-end gap-2">
-                      {[30, 50, 40, 70, 60, 85, 75].map((height, i) => (
-                        <div 
-                          key={i}
-                          className="flex-1 bg-green-500 rounded-t"
-                          style={{ height: `${height}%` }}
-                        />
-                      ))}
+                      {(() => {
+                        const maxSess = Math.max(stats.totalSessions, 1);
+                        return [stats.completedSessions, stats.activeSessions, stats.totalPayments, stats.totalSessions, stats.totalTherapists, stats.newUsersThisWeek, stats.totalUsers].map((val, i) => (
+                          <div 
+                            key={i}
+                            className="flex-1 bg-green-500 rounded-t"
+                            style={{ height: `${Math.min(100, (val / maxSess) * 100)}%` }}
+                          />
+                        ));
+                      })()}
                     </div>
-                    <p className="text-sm text-slate-400 mt-2">Weekly revenue in thousands</p>
+                    <p className="text-sm text-slate-400 mt-2">Session & payment metrics</p>
                   </CardContent>
                 </Card>
               </div>
@@ -272,16 +360,15 @@ export default function AdminDashboard() {
                       <th className="p-4 text-slate-400 font-medium">User</th>
                       <th className="p-4 text-slate-400 font-medium">Role</th>
                       <th className="p-4 text-slate-400 font-medium">Status</th>
-                      <th className="p-4 text-slate-400 font-medium">Actions</th>
+                      <th className="p-4 text-slate-400 font-medium">Joined</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800">
-                    {[
-                      { name: 'Rahul Sharma', email: 'rahul@example.com', role: 'User', status: 'Active' },
-                      { name: 'Dr. Sarah', email: 'sarah@example.com', role: 'Therapist', status: 'Active' },
-                      { name: 'Priya Patel', email: 'priya@example.com', role: 'User', status: 'Pending' },
-                    ].map((user, index) => (
-                      <tr key={index} className="hover:bg-slate-800/50">
+                    {allUsers.length === 0 && (
+                      <tr><td colSpan={4} className="p-4 text-center text-slate-500">Loading users...</td></tr>
+                    )}
+                    {allUsers.map((user) => (
+                      <tr key={user.id} className="hover:bg-slate-800/50">
                         <td className="p-4">
                           <div className="font-medium text-white">{user.name}</div>
                           <div className="text-sm text-slate-400">{user.email}</div>
@@ -293,17 +380,15 @@ export default function AdminDashboard() {
                         </td>
                         <td className="p-4">
                           <span className={`px-2 py-1 rounded text-xs ${
-                            user.status === 'Active' 
+                            user.isVerified
                               ? 'bg-green-500/20 text-green-400' 
                               : 'bg-yellow-500/20 text-yellow-400'
                           }`}>
-                            {user.status}
+                            {user.isVerified ? 'Verified' : 'Pending'}
                           </span>
                         </td>
-                        <td className="p-4">
-                          <Button size="sm" variant="outline" className="border-slate-600 text-slate-300">
-                            Edit
-                          </Button>
+                        <td className="p-4 text-sm text-slate-400">
+                          {new Date(user.createdAt).toLocaleDateString()}
                         </td>
                       </tr>
                     ))}
@@ -328,18 +413,20 @@ export default function AdminDashboard() {
 
         {/* System Alerts */}
         <div className="mt-6">
-          <Card className="bg-yellow-500/10 border-yellow-500/30">
+          <Card className="bg-green-500/10 border-green-500/30">
             <CardContent className="flex items-center gap-3 py-4">
-              <AlertCircle className="w-5 h-5 text-yellow-400" />
+              <CheckCircle className="w-5 h-5 text-green-400" />
               <div>
-                <div className="font-medium text-yellow-400">System Notice</div>
-                <div className="text-sm text-yellow-400/70">
-                  This is a test admin dashboard. Some features are simulated for demonstration purposes.
+                <div className="font-medium text-green-400">Live Data</div>
+                <div className="text-sm text-green-400/70">
+                  Dashboard is displaying real-time data from the database.
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
+        </>
+        )}
       </main>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useState, useEffect } from 'react';
 import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
 import { PractitionerHeader } from '@/features/dashboard/components/PractitionerHeader';
 import { MetricCard } from '@/features/dashboard/components/MetricCard';
@@ -7,9 +8,42 @@ import { PendingApprovalsWidget } from '@/features/dashboard/components/PendingA
 import { ClientIntakeWidget } from '@/features/dashboard/components/ClientIntakeWidget';
 import { WeeklySessionsWidget, CompletedSessionsWidget } from '@/features/dashboard/components/SessionsRecordsWidgets';
 import { QuickLinksWidget } from '@/features/dashboard/components/QuickLinksWidget';
+import { therapyApi } from '@/services/therapy.api';
 
 export default function PractitionerDashboard() {
   useDocumentTitle('Practitioner Dashboard');
+
+  const [metrics, setMetrics] = useState({
+    todayEarning: '₹0',
+    pendingPays: '₹0',
+    monthlyRecords: '₹0',
+  });
+
+  useEffect(() => {
+    async function loadMetrics() {
+      try {
+        const [dashboard, metricsData] = await Promise.all([
+          therapyApi.getTherapistDashboard(),
+          therapyApi.getTherapistMetrics(),
+        ]);
+        const d = dashboard as unknown as Record<string, unknown>;
+        const m = metricsData as unknown as Record<string, unknown>;
+        const totalCompleted = Number(m.totalCompletedSessions || 0);
+        const computedPrice = Number(m.computedPrice || d.pricePerSession || 500);
+        const totalEarnings = totalCompleted * computedPrice;
+        const todayEarnings = Number(d.todayEarnings || 0);
+
+        setMetrics({
+          todayEarning: `₹${(todayEarnings / 1000).toFixed(1)}k`,
+          pendingPays: `₹${((Number(d.pendingAmount || 0)) / 1000).toFixed(1)}k`,
+          monthlyRecords: `₹${(totalEarnings / 1000).toFixed(1)}k`,
+        });
+      } catch {
+        // Keep defaults on error
+      }
+    }
+    loadMetrics();
+  }, []);
     return (
         <div className="min-h-screen bg-[#FDFDFD] flex font-sans">
             {/* Fixed Left Navigation */}
@@ -34,22 +68,22 @@ export default function PractitionerDashboard() {
                             <div className="flex flex-col sm:flex-row gap-4 mb-2">
                                 <MetricCard
                                     title="Today's Earning"
-                                    date="Thurs 11 Dec"
-                                    amount="₹5.5k.55"
+                                    date={new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
+                                    amount={metrics.todayEarning}
                                     badgeText="+55% Today"
                                     theme="green"
                                 />
                                 <MetricCard
                                     title="Pending Pays"
                                     date="This Month"
-                                    amount="₹1.3K.20"
+                                    amount={metrics.pendingPays}
                                     badgeText="+65% This Month"
                                     theme="red"
                                 />
                                 <MetricCard
                                     title="Monthly Records"
-                                    date="December"
-                                    amount="₹18.8k.50"
+                                    date={new Date().toLocaleDateString('en-IN', { month: 'long' })}
+                                    amount={metrics.monthlyRecords}
                                     badgeText="+70% This Month"
                                     theme="green"
                                 />

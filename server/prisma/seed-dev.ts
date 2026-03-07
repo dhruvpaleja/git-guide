@@ -1,12 +1,24 @@
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 import bcrypt from 'bcrypt';
 
 // Load environment variables
 dotenv.config();
 
-// Create direct Prisma client for seeding
-const prisma = new PrismaClient();
+// Create Prisma client with PrismaPg adapter (required for Prisma v7 + Supabase)
+const dbUrl = new URL(process.env.DATABASE_URL!);
+const pool = new pg.Pool({
+  host: dbUrl.hostname,
+  port: parseInt(dbUrl.port) || 5432,
+  database: dbUrl.pathname.slice(1),
+  user: dbUrl.username,
+  password: process.env.DATABASE_PASSWORD || decodeURIComponent(dbUrl.password),
+  ssl: dbUrl.hostname !== 'localhost' ? { rejectUnauthorized: false } : undefined,
+});
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 // Development credentials - easy to remember
 const DEV_USERS = [
@@ -150,7 +162,8 @@ async function seedDevUsers() {
 }
 
 // Run if called directly
-if (require.main === module) {
+const isMainModule = import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`;
+if (isMainModule) {
   seedDevUsers().catch(console.error);
 }
 

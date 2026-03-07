@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { asyncHandler } from '../lib/asyncHandler.js';
+import { asyncHandler } from '../lib/async-handler.js';
 import { AppError, ErrorCode } from '../lib/errors.js';
 import { sendSuccess } from '../lib/response.js';
 import * as dailyService from '../services/daily.service.js';

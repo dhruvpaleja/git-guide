@@ -1,43 +1,91 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
-import { Search, SlidersHorizontal, AlertCircle, Camera, MoreVertical, ChevronLeft } from 'lucide-react';
+import { Search, SlidersHorizontal, AlertCircle, Camera, MoreVertical, ChevronLeft, Loader2 } from 'lucide-react';
+import { therapyApi } from '@/services/therapy.api';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
 
-/* ── Hard-coded data ─────────────────────────────────────────── */
+/* ── Types ───────────────────────────────────────────────────── */
+interface ClientItem {
+    name: string;
+    type: string;
+    clientId: string;
+    sessions: string;
+    sessionDate: string;
+    time: string;
+    avatar: string;
+}
 
-const clients = [
-    { name: 'Aditya Singhania', type: 'Therapy', clientId: 'SY 128845', sessions: '5 / 4', sessionDate: 'Fri, 27 Dec, 10 PM', time: '10 AM', avatar: '/images/practitioner/imgImage.png' },
-    { name: 'Shubham Kamath', type: 'Counselling', clientId: 'SY 124239', sessions: '3 / 4', sessionDate: 'Fri, 27 Dec, 12 PM', time: '12 PM', avatar: '/images/practitioner/imgImage.png' },
-    { name: 'Jasmine Sandles', type: 'Therapy', clientId: 'SY 123344', sessions: '5 / 4', sessionDate: 'Fri, 27 Dec, 2 PM', time: '2 PM', avatar: '/images/practitioner/imgImage.png' },
-    { name: 'Sahil Verma', type: 'Counselling', clientId: 'SY 125534', sessions: '5 / 4', sessionDate: 'Fri, 27 Dec, 4 PM', time: '4 PM', avatar: '/images/practitioner/imgImage.png' },
-    { name: 'Hrithik Patel', type: 'Counselling', clientId: 'SY 125334', sessions: '5 / 4', sessionDate: 'Fri, 27 Dec, 6 PM', time: '6 PM', avatar: '/images/practitioner/imgImage.png' },
-];
-
-const clientIntake = [
-    {
-        name: 'Sabrina Nice',
-        type: 'Counselling',
-        chosenDate: 'Sat, 28 Dec',
-        chosenTime: '4 PM',
-        avatar: '/images/practitioner/imgImage.png',
-        discussionTopic: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    },
-    {
-        name: 'Zayn Malik',
-        type: 'Counselling',
-        chosenDate: 'Sat, 28 Dec',
-        chosenTime: '6 PM',
-        avatar: '/images/practitioner/imgImage.png',
-        discussionTopic: 'Seeking guidance on personal growth and self-awareness. Wants to explore coping mechanisms for workplace stress and improve mindfulness practices in daily routine.',
-    },
-];
+interface IntakeItem {
+    name: string;
+    type: string;
+    chosenDate: string;
+    chosenTime: string;
+    avatar: string;
+    discussionTopic: string;
+}
 
 /* ── Component ───────────────────────────────────────────────── */
 
 export default function MyClientsPage() {
     useDocumentTitle('My Clients');
+    const { user } = useAuth();
     const [activeFilter, setActiveFilter] = useState<'all' | 'therapy' | 'counselling'>('all');
+    const [clients, setClients] = useState<ClientItem[]>([]);
+    const [clientIntake, setClientIntake] = useState<IntakeItem[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [metrics, setMetrics] = useState({ earnings: '₹0', rating: 0, totalSessions: 0 });
+
+    useEffect(() => {
+        async function load() {
+            try {
+                setIsLoading(true);
+                const [clientsData, metricsData] = await Promise.all([
+                    therapyApi.getTherapistClients(),
+                    therapyApi.getTherapistMetrics(),
+                ]);
+
+                const list = Array.isArray(clientsData) ? clientsData : [];
+                const mapped: ClientItem[] = list.map((c: Record<string, unknown>) => ({
+                    name: String((c as { user?: { name?: string } }).user?.name || c.name || 'Unknown'),
+                    type: String(c.sessionType || 'Therapy'),
+                    clientId: String(c.userId || c.id || '').slice(0, 10),
+                    sessions: String(c.totalSessions || c.sessionCount || 0),
+                    sessionDate: c.lastSessionAt ? new Date(String(c.lastSessionAt)).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }) : 'No sessions',
+                    time: c.lastSessionAt ? new Date(String(c.lastSessionAt)).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }) : '-',
+                    avatar: '/images/practitioner/imgImage.png',
+                }));
+                setClients(mapped);
+
+                // Upcoming sessions as intake (scheduled sessions)
+                const sessionsData = await therapyApi.getTherapistSessions({ status: 'SCHEDULED' });
+                const sessions = Array.isArray(sessionsData) ? sessionsData : (sessionsData as { data?: unknown[] })?.data || [];
+                const intake: IntakeItem[] = (sessions as Record<string, unknown>[]).slice(0, 3).map((s) => ({
+                    name: String((s as { user?: { name?: string } }).user?.name || 'Client'),
+                    type: String(s.sessionType || 'Therapy'),
+                    chosenDate: s.scheduledAt ? new Date(String(s.scheduledAt)).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }) : '',
+                    chosenTime: s.scheduledAt ? new Date(String(s.scheduledAt)).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }) : '',
+                    avatar: '/images/practitioner/imgImage.png',
+                    discussionTopic: String(s.notes || s.matchReason || 'No discussion topic provided yet.'),
+                }));
+                setClientIntake(intake);
+
+                const m = metricsData as unknown as Record<string, unknown>;
+                setMetrics({
+                    earnings: `₹${((Number(m.totalEarnings || m.computedPrice || 0)) / 1000).toFixed(1)}k`,
+                    rating: Number(m.avgRating || m.rating || 0),
+                    totalSessions: Number(m.totalCompletedSessions || 0),
+                });
+            } catch {
+                toast.error('Failed to load client data');
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        load();
+    }, []);
 
     const filteredClients = activeFilter === 'all'
         ? clients
@@ -48,13 +96,19 @@ export default function MyClientsPage() {
             <PractitionerSidebar />
 
             <main className="flex-1 ml-20 md:ml-24 overflow-y-auto">
+                {isLoading ? (
+                    <div className="flex items-center justify-center h-screen">
+                        <Loader2 className="w-8 h-8 text-[#2C2F7A] animate-spin" />
+                    </div>
+                ) : (
+                <>
                 {/* ─── Top Welcome Bar ─── */}
                 <div className="bg-white px-6 md:px-10 py-4 flex items-center justify-between border-b border-gray-100">
                     <div className="flex items-center gap-3">
                         <span className="text-2xl md:text-3xl font-bold text-gray-900">Welcome!</span>
-                        <img src="/images/practitioner/imgImage.png" alt="Swati Agarwal" className="w-10 h-10 rounded-full object-cover" />
+                        <img src="/images/practitioner/imgImage.png" alt={user?.name || 'Practitioner'} className="w-10 h-10 rounded-full object-cover" />
                         <div className="hidden md:flex flex-col">
-                            <span className="text-sm font-semibold text-gray-800">Swati Agarwal</span>
+                            <span className="text-sm font-semibold text-gray-800">{user?.name || 'Practitioner'}</span>
                             <span className="text-[11px] text-gray-400">Counsellor | Therapist</span>
                         </div>
                     </div>
@@ -89,16 +143,16 @@ export default function MyClientsPage() {
                     <div className="bg-[#1A1A1A] text-white rounded-b-[20px] px-6 py-3 flex items-center justify-between max-w-3xl ml-auto">
                         <div className="flex items-center gap-2">
                             <span className="text-xs text-white/50 font-medium">Total Earnings</span>
-                            <span className="text-xl font-bold">₹48.5k<span className="text-sm font-normal text-white/50">.80</span></span>
+                            <span className="text-xl font-bold">{metrics.earnings}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="text-xs text-white/50 font-medium">Your Rating</span>
-                            <span className="text-xl font-bold">4.8</span>
+                            <span className="text-xl font-bold">{metrics.rating.toFixed(1)}</span>
                             <span className="text-yellow-400 text-lg">★</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="text-xs text-white/50 font-medium">Total Sessions</span>
-                            <span className="text-xl font-bold">100+</span>
+                            <span className="text-xl font-bold">{metrics.totalSessions}+</span>
                         </div>
                     </div>
                 </div>
@@ -252,6 +306,8 @@ export default function MyClientsPage() {
                         </div>
                     </div>
                 </div>
+                </>
+                )}
             </main>
         </div>
     );

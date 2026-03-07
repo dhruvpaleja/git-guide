@@ -6,10 +6,18 @@ import { sendSuccess, parsePagination, buildPaginationMeta } from '../lib/respon
 import { AppError } from '../lib/errors.js';
 import { prisma } from '../lib/prisma.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import {
+  getNotificationPreferences,
+  updateNotificationPreferences,
+} from '../controllers/notifications.controller.js';
 
 const router = Router();
 
 router.use(requireAuth);
+
+// Notification preferences
+router.get('/preferences', getNotificationPreferences);
+router.put('/preferences', updateNotificationPreferences);
 
 // List notifications for the authenticated user
 router.get(

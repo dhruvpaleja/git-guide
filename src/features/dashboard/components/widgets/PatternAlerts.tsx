@@ -342,13 +342,6 @@ export default function PatternAlerts() {
                         })}
                     </AnimatePresence>
                 )}
-
-                {/* Empty state */}
-                {!loading && !error && visibleNudges.length === 0 && (
-                    <div className="py-8 text-center">
-                        <p className="text-[12px] text-white/20">All clear. No active insights.</p>
-                    </div>
-                )}
             </div>
         </div>
     );

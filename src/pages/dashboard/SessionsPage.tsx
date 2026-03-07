@@ -725,13 +725,18 @@ function FindGuidePanel({
                     {/* Empty State */}
                     {allTherapists.length === 0 && recommended.length === 0 && (
                         <div className="py-16 text-center">
-                            <p className="text-[14px] text-white/50">No Wellness Guides found matching your criteria.</p>
-                            <button
-                                onClick={() => { onFilterChange(''); onSearchChange(''); }}
-                                className="mt-3 text-[12px] text-amber-500/60 hover:text-amber-400 transition-colors font-medium"
+                            <div className="w-14 h-14 rounded-full bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mx-auto mb-4">
+                                <Users className="w-6 h-6 text-white/20" />
+                            </div>
+                            <p className="text-[15px] text-white/50 mb-2">Complete your profile for personalized matches</p>
+                            <p className="text-[12px] text-white/30 mb-4">Tell us about yourself so we can match you with the right Soul Guide</p>
+                            <Link
+                                to="/dashboard/personalize"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[13px] font-medium transition-colors border border-amber-500/15"
                             >
-                                Clear filters
-                            </button>
+                                Complete Profile
+                                <ArrowRight className="w-3.5 h-3.5" />
+                            </Link>
                         </div>
                     )}
                 </>
@@ -893,8 +898,8 @@ function UpcomingPanel({ sessions, loading, onBookNew }: { sessions: SessionDeta
                     <div className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mx-auto mb-4">
                         <CalendarDays className="w-5 h-5 text-white/20" />
                     </div>
-                    <p className="text-[14px] text-white/50 mb-1">No upcoming sessions</p>
-                    <p className="text-[12px] text-white/30 mb-4">Book a session with a Wellness Guide to get started</p>
+                    <p className="text-[14px] text-white/50 mb-1">Your journey begins with a free 15-minute call</p>
+                    <p className="text-[12px] text-white/30 mb-4">Connect with a Soul Guide who understands you</p>
                 </div>
             )}
 

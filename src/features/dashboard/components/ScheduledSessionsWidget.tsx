@@ -186,8 +186,8 @@ export function ScheduledSessionsWidget({ variant = 'user' }: ScheduledSessionsW
             ) : sessions.length === 0 ? (
                 <div className="py-10 flex flex-col items-center text-center">
                     <CalendarOff className="w-8 h-8 text-gray-300 mb-3" />
-                    <p className="text-sm text-gray-500 font-medium">No sessions scheduled for today</p>
-                    <p className="text-xs text-gray-400 mt-1">Upcoming sessions will appear here</p>
+                    <p className="text-sm text-gray-500 font-medium">Your journey begins with a free 15-minute call</p>
+                    <p className="text-xs text-gray-400 mt-1">Connect with a Soul Guide to get started</p>
                 </div>
             ) : (
                 <div className="flex flex-col gap-3">

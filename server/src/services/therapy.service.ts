@@ -102,25 +102,7 @@ export async function bookSession(input: BookSessionInput) {
     });
   }
 
-  // 3. Max 3 active therapists
-  const activeTherapistIds = await prisma.session.findMany({
-    where: {
-      userId,
-      status: { in: ['SCHEDULED', 'IN_PROGRESS'] },
-    },
-    select: { therapistId: true },
-    distinct: ['therapistId'],
-  });
-  const uniqueIds = new Set(activeTherapistIds.map((s) => s.therapistId));
-  if (!uniqueIds.has(therapistId) && uniqueIds.size >= MAX_ACTIVE_THERAPISTS) {
-    throw new AppError({
-      message: `You already have ${MAX_ACTIVE_THERAPISTS} active therapists`,
-      statusCode: 409,
-      code: ErrorCode.MAX_THERAPISTS_REACHED,
-    });
-  }
-
-  // 4. Determine duration
+  // 3. Determine duration (MAX_ACTIVE_THERAPISTS enforced inside transaction below)
   const duration = sessionType === 'discovery' ? DISCOVERY_DURATION : STANDARD_DURATION;
 
   // 5. Slot available?
@@ -156,6 +138,21 @@ export async function bookSession(input: BookSessionInput) {
 
   // 8. Create session + ensure journey (transaction)
   const session = await prisma.$transaction(async (tx) => {
+    // Enforce max active therapists inside transaction to prevent race conditions
+    const activeTherapistIds = await tx.session.findMany({
+      where: { userId, status: { in: ['SCHEDULED', 'IN_PROGRESS'] } },
+      select: { therapistId: true },
+      distinct: ['therapistId'],
+    });
+    const uniqueIds = new Set(activeTherapistIds.map((s) => s.therapistId));
+    if (!uniqueIds.has(therapistId) && uniqueIds.size >= MAX_ACTIVE_THERAPISTS) {
+      throw new AppError({
+        message: `You already have ${MAX_ACTIVE_THERAPISTS} active therapists`,
+        statusCode: 409,
+        code: ErrorCode.MAX_THERAPISTS_REACHED,
+      });
+    }
+
     const created = await tx.session.create({
       data: {
         userId,
@@ -171,7 +168,7 @@ export async function bookSession(input: BookSessionInput) {
     });
 
     // Recompute active therapist count from actual session data
-    const activeTherapistIds = await tx.session.findMany({
+    const postBookTherapists = await tx.session.findMany({
       where: { userId, status: { in: ['SCHEDULED', 'IN_PROGRESS'] } },
       select: { therapistId: true },
       distinct: ['therapistId'],
@@ -179,8 +176,8 @@ export async function bookSession(input: BookSessionInput) {
 
     await tx.therapyJourney.upsert({
       where: { userId },
-      create: { userId, activeTherapistCount: activeTherapistIds.length },
-      update: { activeTherapistCount: activeTherapistIds.length },
+      create: { userId, activeTherapistCount: postBookTherapists.length },
+      update: { activeTherapistCount: postBookTherapists.length },
     });
 
     return created;
@@ -432,10 +429,10 @@ export async function cancelSession(
     select: { therapistId: true },
     distinct: ['therapistId'],
   });
-  await prisma.therapyJourney.update({
+  await prisma.therapyJourney.updateMany({
     where: { userId: session.userId },
     data: { activeTherapistCount: remainingTherapists.length },
-  }).catch(() => { /* journey may not exist yet */ });
+  });
 
   return updated;
 }
@@ -599,12 +596,6 @@ export async function completeSession(
         lastSessionAt: new Date(),
         totalSpent: { increment: session.priceAtBooking },
       },
-    });
-
-    // Set firstSessionAt if this is the user's first completed session
-    await tx.therapyJourney.updateMany({
-      where: { userId: session.userId, firstSessionAt: null },
-      data: { firstSessionAt: new Date() },
     });
 
     // Increment therapist session count inside transaction

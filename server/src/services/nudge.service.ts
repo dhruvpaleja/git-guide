@@ -117,7 +117,10 @@ export async function dismissNudge(nudgeId: string, userId: string) {
     throw new AppError({ message: 'Nudge not found or not owned by user', code: ErrorCode.NUDGE_NOT_FOUND, statusCode: 404 });
   }
 
-  const template = NUDGE_TEMPLATES[nudge.nudgeType as NudgeType];
+  const nudgeType = nudge.nudgeType as string;
+  const template = nudgeType in NUDGE_TEMPLATES
+    ? NUDGE_TEMPLATES[nudgeType as NudgeType]
+    : undefined;
   const cooldownDays = template?.cooldownDays;
 
   const cooldownUntil =
@@ -269,14 +272,7 @@ export async function generateNudgesForUser(userId: string): Promise<void> {
   if (canCreate('astrology_interest')) {
     const interests = profile.interests ?? [];
     if (interests.includes('astrology')) {
-      // Ensure no astrology nudge in the last 7 days
-      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const recentAstro = recentNudges.find(
-        (n) => n.nudgeType === 'astrology_interest' && n.createdAt > sevenDaysAgo,
-      );
-      if (!recentAstro) {
-        toCreate.push({ type: 'astrology_interest' });
-      }
+      toCreate.push({ type: 'astrology_interest' });
     }
   }
 

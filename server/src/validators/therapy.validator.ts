@@ -128,7 +128,7 @@ const listTherapistsSchema = z.object({
   approach: z.enum(['CBT', 'HOLISTIC', 'MIXED']).optional(),
   language: z.string().max(50).optional(),
   minRating: z.coerce.number().min(0).max(5).optional(),
-  sort: z.string().max(50).optional(),
+  sort: z.enum(['rating', 'experience', 'price']).optional(),
   page: z.coerce.number().int().positive().default(1),
   pageSize: z.coerce.number().int().min(1).max(50).default(20),
 });

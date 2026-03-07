@@ -1,4 +1,3 @@
-import { useDaily, useLocalParticipant } from '@daily-co/daily-react';
 import { Mic, MicOff, Video, VideoOff, PhoneOff, Monitor, CircleDot } from 'lucide-react';
 
 interface VideoControlsProps {
@@ -6,59 +5,65 @@ interface VideoControlsProps {
   isRecording: boolean;
   onToggleRecording: () => void;
   isTherapist?: boolean;
+  meeting?: any; // VideoSDK meeting object
 }
 
-export default function VideoControls({ onLeave, isRecording, onToggleRecording, isTherapist }: VideoControlsProps) {
-  const daily = useDaily();
-  const localParticipant = useLocalParticipant();
-
+export default function VideoControls({ onLeave, isRecording, onToggleRecording, isTherapist, meeting }: VideoControlsProps) {
   const toggleAudio = () => {
-    daily?.setLocalAudio(!localParticipant?.audio);
+    meeting?.toggleMic();
   };
 
   const toggleVideo = () => {
-    daily?.setLocalVideo(!localParticipant?.video);
+    meeting?.toggleWebcam();
   };
 
   const toggleScreenShare = async () => {
-    await daily?.startScreenShare();
+    if (meeting?.screenShareOn) {
+      await meeting.disableScreenShare();
+    } else {
+      await meeting.enableScreenShare();
+    }
   };
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+    <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent z-20">
       <div className="flex items-center justify-center gap-4">
         {/* Audio toggle */}
         <button
           onClick={toggleAudio}
-          className={`p-4 rounded-full transition-colors ${
-            localParticipant?.audio
-              ? 'bg-white/10 hover:bg-white/20 text-white'
-              : 'bg-red-500/20 hover:bg-red-500/30 text-red-400'
+          className={`p-4 rounded-full transition-all duration-300 transform hover:scale-110 ${
+            meeting?.micOn
+              ? 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm'
+              : 'bg-red-500/20 hover:bg-red-500/30 text-red-400 backdrop-blur-sm'
           }`}
-          title={localParticipant?.audio ? 'Mute' : 'Unmute'}
+          title={meeting?.micOn ? 'Mute' : 'Unmute'}
         >
-          {localParticipant?.audio ? <Mic className="w-6 h-6" /> : <MicOff className="w-6 h-6" />}
+          {meeting?.micOn ? <Mic className="w-6 h-6" /> : <MicOff className="w-6 h-6" />}
         </button>
 
         {/* Video toggle */}
         <button
           onClick={toggleVideo}
-          className={`p-4 rounded-full transition-colors ${
-            localParticipant?.video
-              ? 'bg-white/10 hover:bg-white/20 text-white'
-              : 'bg-red-500/20 hover:bg-red-500/30 text-red-400'
+          className={`p-4 rounded-full transition-all duration-300 transform hover:scale-110 ${
+            meeting?.webcamOn
+              ? 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm'
+              : 'bg-red-500/20 hover:bg-red-500/30 text-red-400 backdrop-blur-sm'
           }`}
-          title={localParticipant?.video ? 'Turn off camera' : 'Turn on camera'}
+          title={meeting?.webcamOn ? 'Turn off camera' : 'Turn on camera'}
         >
-          {localParticipant?.video ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
+          {meeting?.webcamOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
         </button>
 
         {/* Screen share (therapist only) */}
         {isTherapist && (
           <button
             onClick={toggleScreenShare}
-            className="p-4 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-            title="Share screen"
+            className={`p-4 rounded-full transition-all duration-300 transform hover:scale-110 ${
+              meeting?.screenShareOn
+                ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 backdrop-blur-sm'
+                : 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm'
+            }`}
+            title={meeting?.screenShareOn ? 'Stop sharing' : 'Share screen'}
           >
             <Monitor className="w-6 h-6" />
           </button>
@@ -68,10 +73,10 @@ export default function VideoControls({ onLeave, isRecording, onToggleRecording,
         {isTherapist && (
           <button
             onClick={onToggleRecording}
-            className={`p-4 rounded-full transition-colors ${
+            className={`p-4 rounded-full transition-all duration-300 transform hover:scale-110 ${
               isRecording
-                ? 'bg-red-500/20 hover:bg-red-500/30 text-red-400 animate-pulse'
-                : 'bg-white/10 hover:bg-white/20 text-white'
+                ? 'bg-red-500/20 hover:bg-red-500/30 text-red-400 backdrop-blur-sm animate-pulse'
+                : 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm'
             }`}
             title={isRecording ? 'Stop recording' : 'Start recording'}
           >
@@ -82,7 +87,7 @@ export default function VideoControls({ onLeave, isRecording, onToggleRecording,
         {/* Leave call */}
         <button
           onClick={onLeave}
-          className="p-4 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors"
+          className="p-4 rounded-full bg-red-500 hover:bg-red-600 text-white transition-all duration-300 transform hover:scale-110 backdrop-blur-sm shadow-lg shadow-red-500/30"
           title="Leave call"
         >
           <PhoneOff className="w-6 h-6" />

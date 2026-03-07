@@ -2,7 +2,7 @@
 // therapy.service.ts – Core session CRUD & business-logic service
 // ---------------------------------------------------------------------------
 
-import { SessionStatus } from '@prisma/client';
+import { SessionStatus, Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma.js';
 import { AppError, ErrorCode } from '../lib/errors.js';
 import { logger } from '../lib/logger.js';
@@ -14,6 +14,8 @@ import { isSlotAvailable } from './availability.service.js';
 
 const MAX_ACTIVE_THERAPISTS = 3;
 const CANCELLATION_WINDOW_MS = 2 * 60 * 60 * 1000; // 2 hours
+const RESCHEDULE_WINDOW_MS = 2 * 60 * 60 * 1000; // 2 hours
+const START_SESSION_WINDOW_MS = 30 * 60 * 1000; // 30 minutes before/after scheduled time
 const DISCOVERY_DURATION = 15; // minutes
 const STANDARD_DURATION = 45; // minutes
 
@@ -53,6 +55,46 @@ async function incrementTherapistSessionCount(therapistId: string) {
     where: { id: therapistId },
     data: { totalSessions: { increment: 1 } },
   });
+}
+
+/** Write audit log for session actions (non-blocking). */
+function logSessionAction(
+  action: string,
+  userId: string | null,
+  metadata: Prisma.InputJsonValue,
+) {
+  prisma.auditLog.create({
+    data: {
+      userId,
+      category: 'SESSION_ACTION',
+      action,
+      metadata,
+    },
+  }).catch((err) => logger.error('Audit log write failed', { err, action }));
+}
+
+/** Increment real-time TherapistMetrics counters (non-blocking). */
+function incrementMetrics(
+  therapistId: string,
+  field: 'totalCompletedSessions' | 'totalCancelledSessions',
+) {
+  prisma.therapistMetrics.updateMany({
+    where: { therapistId },
+    data: { [field]: { increment: 1 } },
+  }).catch((err) => logger.error('Metrics increment failed', { err, therapistId, field }));
+}
+
+/** Send in-app notification (non-blocking). */
+function sendNotification(
+  recipientUserId: string,
+  type: 'SESSION_REMINDER' | 'SESSION_CONFIRMED' | 'SESSION_CANCELLED',
+  title: string,
+  body: string,
+  data?: Prisma.InputJsonValue,
+) {
+  prisma.notification.create({
+    data: { userId: recipientUserId, type, title, body, data: data ?? Prisma.JsonNull },
+  }).catch((err) => logger.error('Notification send failed', { err, recipientUserId, type }));
 }
 
 // ---------------------------------------------------------------------------
@@ -183,6 +225,16 @@ export async function bookSession(input: BookSessionInput) {
     return created;
   });
 
+  // Audit log: session booked
+  logSessionAction('SESSION_BOOKED', userId, {
+    sessionId: session.id,
+    therapistId,
+    sessionType,
+    bookingSource,
+    scheduledAt: scheduledAt.toISOString(),
+    priceAtBooking,
+  });
+
   return session;
 }
 
@@ -212,11 +264,14 @@ export async function bookInstantSession(input: BookInstantSessionInput) {
     });
   }
 
+  // Auto-detect session type from user's pricing stage
+  const { stage } = await getUserPricingStage(userId);
+
   const session = await bookSession({
     userId,
     therapistId,
     scheduledAt: new Date(),
-    sessionType: 'standard',
+    sessionType: stage,
     bookingSource: 'instant',
     matchScore,
     matchReason,
@@ -434,6 +489,35 @@ export async function cancelSession(
     data: { activeTherapistCount: remainingTherapists.length },
   });
 
+  // Notify the other participant
+  const isUserCancelling = session.userId === cancelledBy;
+  if (isUserCancelling) {
+    sendNotification(
+      session.therapist.userId,
+      'SESSION_CANCELLED',
+      'Session cancelled',
+      'A client has cancelled their upcoming session.',
+      { sessionId, cancelledBy },
+    );
+  } else {
+    sendNotification(
+      session.userId,
+      'SESSION_CANCELLED',
+      'Session cancelled',
+      'Your therapist has cancelled your upcoming session.',
+      { sessionId, cancelledBy },
+    );
+  }
+
+  // Audit + metrics
+  logSessionAction('SESSION_CANCELLED', cancelledBy, {
+    sessionId,
+    cancelledBy,
+    reason,
+    scheduledAt: session.scheduledAt.toISOString(),
+  });
+  incrementMetrics(session.therapistId, 'totalCancelledSessions');
+
   return updated;
 }
 
@@ -476,6 +560,19 @@ export async function rescheduleSession(
     });
   }
 
+  // Reschedule window: user cannot reschedule within 2 hours of original time
+  const isUser = session.userId === requesterId;
+  if (isUser) {
+    const msUntil = session.scheduledAt.getTime() - Date.now();
+    if (msUntil < RESCHEDULE_WINDOW_MS) {
+      throw new AppError({
+        message: 'Cannot reschedule within 2 hours of scheduled time',
+        statusCode: 409,
+        code: ErrorCode.SESSION_NOT_RESCHEDULABLE,
+      });
+    }
+  }
+
   // Slot must be available
   const slotOpen = await isSlotAvailable(
     session.therapistId,
@@ -490,9 +587,35 @@ export async function rescheduleSession(
     });
   }
 
+  const previousTime = session.scheduledAt;
   const updated = await prisma.session.update({
     where: { id: sessionId },
     data: { scheduledAt: newScheduledAt },
+  });
+
+  // Notify the other participant
+  if (isUser && session.therapist) {
+    sendNotification(
+      session.therapist.userId,
+      'SESSION_CONFIRMED',
+      'Session rescheduled',
+      `A client has rescheduled their session to ${newScheduledAt.toISOString()}.`,
+      { sessionId, oldTime: previousTime.toISOString(), newTime: newScheduledAt.toISOString() },
+    );
+  } else {
+    sendNotification(
+      session.userId,
+      'SESSION_CONFIRMED',
+      'Session rescheduled',
+      `Your therapist has rescheduled your session.`,
+      { sessionId, oldTime: previousTime.toISOString(), newTime: newScheduledAt.toISOString() },
+    );
+  }
+
+  logSessionAction('SESSION_RESCHEDULED', requesterId, {
+    sessionId,
+    previousTime: previousTime.toISOString(),
+    newTime: newScheduledAt.toISOString(),
   });
 
   return updated;
@@ -532,10 +655,34 @@ export async function startSession(sessionId: string, therapistUserId: string) {
     });
   }
 
-  return prisma.session.update({
+  // Time proximity check: can only start within 30 min of scheduled time
+  const msUntil = Math.abs(session.scheduledAt.getTime() - Date.now());
+  if (msUntil > START_SESSION_WINDOW_MS) {
+    throw new AppError({
+      message: 'Session can only be started within 30 minutes of scheduled time',
+      statusCode: 409,
+      code: ErrorCode.BOOKING_TOO_SOON,
+    });
+  }
+
+  const started = await prisma.session.update({
     where: { id: sessionId },
-    data: { status: 'IN_PROGRESS' },
+    data: { status: 'IN_PROGRESS', startedAt: new Date() },
   });
+
+  // Track currentSessionId on therapist online status
+  prisma.therapistOnlineStatus.updateMany({
+    where: { therapistId: session.therapistId },
+    data: { currentSessionId: sessionId },
+  }).catch((err) => logger.error('Failed to set currentSessionId', { err }));
+
+  logSessionAction('SESSION_STARTED', therapistUserId, {
+    sessionId,
+    scheduledAt: session.scheduledAt.toISOString(),
+    actualStartedAt: new Date().toISOString(),
+  });
+
+  return started;
 }
 
 export async function completeSession(
@@ -572,11 +719,14 @@ export async function completeSession(
     });
   }
 
+  const now = new Date();
+
   const updated = await prisma.$transaction(async (tx) => {
     const s = await tx.session.update({
       where: { id: sessionId },
       data: {
         status: 'COMPLETED',
+        completedAt: now,
         therapistPrivateNotes: notes,
       },
     });
@@ -587,15 +737,22 @@ export async function completeSession(
       create: {
         userId: session.userId,
         completedSessionCount: 1,
-        lastSessionAt: new Date(),
-        firstSessionAt: new Date(),
+        lastSessionAt: now,
+        firstSessionAt: now,
         totalSpent: session.priceAtBooking,
       },
       update: {
         completedSessionCount: { increment: 1 },
-        lastSessionAt: new Date(),
+        lastSessionAt: now,
         totalSpent: { increment: session.priceAtBooking },
       },
+    });
+
+    // Set firstSessionAt if this is the user's first completed session
+    // (journey may have been created during booking without firstSessionAt)
+    await tx.therapyJourney.updateMany({
+      where: { userId: session.userId, firstSessionAt: null },
+      data: { firstSessionAt: now },
     });
 
     // Increment therapist session count inside transaction
@@ -606,6 +763,22 @@ export async function completeSession(
 
     return s;
   });
+
+  // Clear currentSessionId on therapist online status
+  prisma.therapistOnlineStatus.updateMany({
+    where: { therapistId: session.therapistId, currentSessionId: sessionId },
+    data: { currentSessionId: null },
+  }).catch((err) => logger.error('Failed to clear currentSessionId', { err }));
+
+  // Audit + metrics
+  logSessionAction('SESSION_COMPLETED', therapistUserId, {
+    sessionId,
+    userId: session.userId,
+    duration: session.duration,
+    sessionType: session.sessionType,
+    priceAtBooking: session.priceAtBooking,
+  });
+  incrementMetrics(session.therapistId, 'totalCompletedSessions');
 
   return updated;
 }
@@ -640,10 +813,18 @@ export async function markNoShow(sessionId: string, therapistUserId: string) {
     });
   }
 
-  return prisma.session.update({
+  const updated = await prisma.session.update({
     where: { id: sessionId },
     data: { status: 'NO_SHOW' },
   });
+
+  logSessionAction('SESSION_NO_SHOW', therapistUserId, {
+    sessionId,
+    userId: session.userId,
+    scheduledAt: session.scheduledAt.toISOString(),
+  });
+
+  return updated;
 }
 
 // ---------------------------------------------------------------------------
@@ -702,11 +883,18 @@ export async function rateSession(
 
   const updated = await prisma.session.update({
     where: { id: sessionId },
-    data: { userRating: rating, userFeedback: feedback },
+    data: { userRating: rating, userFeedback: feedback, ratedAt: new Date() },
   });
 
   // Rolling average recalc
   await recalculateRating(session.therapistId);
+
+  logSessionAction('SESSION_RATED', userId, {
+    sessionId,
+    therapistId: session.therapistId,
+    rating,
+    hasFeedback: !!feedback,
+  });
 
   return updated;
 }

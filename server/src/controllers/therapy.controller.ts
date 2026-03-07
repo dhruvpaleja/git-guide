@@ -310,6 +310,7 @@ export const getUserJourney = asyncHandler(
       activeTherapistCount: journey.activeTherapistCount,
       firstSessionAt: journey.firstSessionAt,
       lastSessionAt: journey.lastSessionAt,
+      totalSpent: journey.totalSpent,
     });
   },
 );

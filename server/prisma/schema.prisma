@@ -333,6 +333,11 @@ model Session {
   summary         String?          // AI-generated session summary
   userRating      Int?             // 1-5 post-session rating
   userFeedback    String?
+  ratedAt         DateTime?        // When the user submitted their rating
+
+  // Lifecycle timestamps
+  startedAt       DateTime?        // Actual session start (vs scheduledAt — tracks lateness)
+  completedAt     DateTime?        // Actual completion (→ real session duration)
 
   // Video
   roomUrl         String?          // Daily.co room URL

@@ -1,0 +1,103 @@
+/**
+ * CONTAINER QUERY UTILITIES
+ * Components that adapt to their container size
+ */
+
+/* Base container setup */
+@supports (container-type: inline-size) {
+  .container-responsive {
+    container-type: inline-size;
+    container-name: responsive;
+  }
+  
+  .container-card {
+    container-type: inline-size;
+    container-name: card;
+  }
+  
+  .container-sidebar {
+    container-type: inline-size;
+    container-name: sidebar;
+  }
+}
+
+/* Card component - adapts to container */
+@container card (max-width: 400px) {
+  .card-compact {
+    padding: 1rem;
+  }
+  
+  .card-compact .card-title {
+    font-size: 1.125rem;
+  }
+  
+  .card-compact .card-image {
+    aspect-ratio: 1;
+  }
+}
+
+@container card (min-width: 401px) {
+  .card-compact {
+    padding: 1.5rem;
+  }
+  
+  .card-compact .card-title {
+    font-size: 1.5rem;
+  }
+  
+  .card-compact .card-image {
+    aspect-ratio: 16/9;
+  }
+}
+
+/* Sidebar component */
+@container sidebar (max-width: 300px) {
+  .sidebar-compact {
+    display: none;
+  }
+  
+  .sidebar-compact-mobile {
+    display: block;
+  }
+}
+
+@container sidebar (min-width: 301px) {
+  .sidebar-compact {
+    display: block;
+  }
+  
+  .sidebar-compact-mobile {
+    display: none;
+  }
+}
+
+/* Responsive grid */
+@container responsive (max-width: 600px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@container responsive (min-width: 601px) and (max-width: 900px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@container responsive (min-width: 901px) {
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Fallback for browsers without container queries */
+@supports not (container-type: inline-size) {
+  .container-responsive,
+  .container-card,
+  .container-sidebar {
+    /* Use standard responsive classes instead */
+  }
+}

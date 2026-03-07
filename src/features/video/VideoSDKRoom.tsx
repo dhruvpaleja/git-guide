@@ -66,7 +66,10 @@ function ParticipantView({ participantId, isLocal = false }: { participantId: st
             playsInline
             muted={isLocal}
             className="w-full h-full object-cover"
-          />
+            aria-label={`${participant.displayName || 'Participant'} video`}
+          >
+            <track kind="captions" label="No captions available" />
+          </video>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/10 flex items-center justify-center border border-amber-500/20">
@@ -124,10 +127,10 @@ function MeetingView({ sessionId, isTherapist, onLeave }: Omit<VideoSDKRoomProps
 
   const meeting = useMeeting({
     onMeetingJoined: () => {
-      console.log('Meeting joined successfully');
+      console.warn('Meeting joined successfully');
     },
     onMeetingLeft: () => {
-      console.log('Meeting left');
+      console.warn('Meeting left');
       onLeave?.();
       navigate('/dashboard/sessions');
     },

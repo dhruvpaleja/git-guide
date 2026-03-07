@@ -197,7 +197,7 @@ export async function getRecordingUrl(recordingId: string): Promise<string | nul
  * Generate access token for a room (for authenticated users)
  * VideoSDK uses JWT tokens signed with secret key
  */
-export async function generateToken(roomId: string, userId: string, userName: string): Promise<string> {
+export async function generateToken(_roomId: string, _userId: string, _userName: string): Promise<string> {
   try {
     // VideoSDK JWT token format
     const payload = {

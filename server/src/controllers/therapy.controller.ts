@@ -1,6 +1,7 @@
 // ---------------------------------------------------------------------------
 // therapy.controller.ts – Thin wrappers: parse request → call service → respond
 // ---------------------------------------------------------------------------
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import type { Response } from 'express';
 import { SessionStatus } from '@prisma/client';

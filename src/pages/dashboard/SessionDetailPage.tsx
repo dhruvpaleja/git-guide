@@ -460,7 +460,7 @@ export default function SessionDetailPage() {
                   {[1, 2, 3, 4, 5].map(s => (
                     <Star
                       key={s}
-                      className={`w-6 h-6 ${s <= session.userRating! ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`}
+                      className={`w-6 h-6 ${s <= (session.userRating ?? 0) ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`}
                     />
                   ))}
                 </div>

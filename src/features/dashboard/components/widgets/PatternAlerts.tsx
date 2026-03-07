@@ -1,4 +1,4 @@
-import { AlertTriangle, Sparkles, Star, Bell, X, RefreshCw, Loader2 } from 'lucide-react';
+import { Star, X, RefreshCw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useEffect, useState, useCallback } from 'react';
@@ -73,7 +73,7 @@ const NUDGE_CONFIG: Record<string, NudgeConfig> = {
         actionRoute: '/dashboard/sessions',
     },
     session_gap_reminder: {
-        label: 'It's Been a While',
+        label: "It's Been a While",
         message: () =>
             "It's been a couple of weeks since your last session. A quick check-in could help you stay on track.",
         dotColor: 'bg-blue-400/80',
@@ -87,7 +87,7 @@ const NUDGE_CONFIG: Record<string, NudgeConfig> = {
             const guideName = nudge.nudgeData?.therapistName as string | undefined;
             return guideName
                 ? `Your recent call with ${guideName} — we'd love your feedback. It helps us match you better.`
-                : 'Your recent call ended — we'd love your feedback. It helps us match you better.';
+                : "Your recent call ended — we'd love your feedback. It helps us match you better.";
         },
         dotColor: 'bg-amber-400/80',
         labelColor: 'text-amber-400/70',
@@ -175,7 +175,12 @@ export default function PatternAlerts() {
             .finally(() => setLoading(false));
     }, []);
 
-    useEffect(() => { fetchNudges(); }, [fetchNudges]);
+    useEffect(() => {
+        const id = window.setTimeout(() => {
+            fetchNudges();
+        }, 0);
+        return () => window.clearTimeout(id);
+    }, [fetchNudges]);
 
     const handleDismiss = (id: string) => {
         setDismissed((s) => new Set(s).add(id));

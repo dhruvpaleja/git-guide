@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { UserRound, Loader2, Users } from 'lucide-react';
+import { UserRound, Users } from 'lucide-react';
 import { therapyApi } from '@/services/therapy.api';
 import type { TherapistClient } from '@/types/therapy.types';
 

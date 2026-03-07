@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { UserRound, MessageSquare, MoreVertical, Loader2, CalendarOff } from 'lucide-react';
+import { UserRound, MessageSquare, MoreVertical, CalendarOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { therapyApi } from '@/services/therapy.api';
 import type { SessionDetail } from '@/types/therapy.types';
@@ -65,12 +65,10 @@ interface SessionRecordProps {
     sessionId?: string;
 }
 
-export function SessionRecordItem({ name, type, date, time, actionText, isCompleted = false, photoUrl, sessionId }: SessionRecordProps) {
+export function SessionRecordItem({ name, type, date, time, actionText, isCompleted = false, photoUrl, sessionId: _sessionId }: SessionRecordProps) {
     const actionButtonStyle = isCompleted
         ? "px-5 py-2 rounded-full text-xs font-semibold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300"
         : "px-5 py-2 rounded-full text-xs font-semibold text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300";
-
-    const initial = name.charAt(0);
 
     return (
         <div className="py-4 border-b border-gray-100 last:border-0 flex items-center justify-between group hover:bg-gray-50/50 transition-colors px-2 -mx-2 rounded-xl">
@@ -132,8 +130,6 @@ export function WeeklySessionsWidget() {
     }, []);
 
     useEffect(() => { fetchSessions(); }, [fetchSessions]);
-
-    const completedCount = 0; // This widget shows scheduled, completed count from companion widget
 
     return (
         <div className="flex flex-col">

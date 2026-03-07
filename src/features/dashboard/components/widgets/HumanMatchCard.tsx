@@ -39,7 +39,12 @@ export default function HumanMatchCard() {
             .finally(() => setLoading(false));
     };
 
-    useEffect(() => { fetchGuide(); }, []);
+    useEffect(() => {
+        const id = window.setTimeout(() => {
+            fetchGuide();
+        }, 0);
+        return () => window.clearTimeout(id);
+    }, []);
 
     const availability = guide ? formatAvailability(guide.nextAvailableSlot) : null;
 

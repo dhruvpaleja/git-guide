@@ -24,7 +24,7 @@ const STANDARD_DURATION = 45; // minutes
 // ---------------------------------------------------------------------------
 
 /** Ensure a TherapyJourney row exists for the user (lazy-create). */
-async function ensureTherapyJourney(userId: string) {
+async function _ensureTherapyJourney(userId: string) {
   return prisma.therapyJourney.upsert({
     where: { userId },
     create: { userId },
@@ -50,7 +50,7 @@ async function recalculateRating(therapistId: string) {
 }
 
 /** Increment completed-session counter on TherapistProfile. */
-async function incrementTherapistSessionCount(therapistId: string) {
+async function _incrementTherapistSessionCount(therapistId: string) {
   await prisma.therapistProfile.update({
     where: { id: therapistId },
     data: { totalSessions: { increment: 1 } },

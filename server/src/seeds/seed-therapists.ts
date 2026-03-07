@@ -6,7 +6,12 @@ import bcrypt from 'bcrypt';
 // Load environment variables
 dotenv.config();
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL is required');
+}
+
+const adapter = new PrismaPg({ connectionString: databaseUrl });
 const prisma = new PrismaClient({ adapter });
 
 const THERAPISTS = [
@@ -269,7 +274,7 @@ const THERAPISTS = [
 ];
 
 async function seedTherapists() {
-  console.log('🌱 Seeding 12 therapists...');
+  console.warn('🌱 Seeding 12 therapists...');
 
   for (const t of THERAPISTS) {
     const passwordHash = await bcrypt.hash('SoulYatri2026!', 12);
@@ -372,10 +377,10 @@ async function seedTherapists() {
       },
     });
 
-    console.log(`  ✅ ${t.name} (${t.specializations.join(', ')})`);
+    console.warn(`  ✅ ${t.name} (${t.specializations.join(', ')})`);
   }
 
-  console.log('🎉 Done! 12 therapists seeded.');
+  console.warn('🎉 Done! 12 therapists seeded.');
 }
 
 seedTherapists()

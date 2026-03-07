@@ -1,5 +1,5 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, type KeyboardEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -84,6 +84,11 @@ function formatCountdown(scheduledAt: string): string {
     if (hours < 24) return `Starts in ${hours}h ${mins % 60}m`;
     const days = Math.floor(hours / 24);
     return `In ${days} day${days > 1 ? 's' : ''}`;
+}
+
+function isStartingSoonSession(scheduledAt: string): boolean {
+    const diff = new Date(scheduledAt).getTime() - Date.now();
+    return diff > 0 && diff <= 30 * 60 * 1000;
 }
 
 function getSessionTypeBadge(type: string, price: number) {
@@ -426,10 +431,19 @@ export default function SessionsPage() {
 /* ━━━━━━━━━━━━━━━━━━━━ Therapist Card (shared) ━━━━━━━━━━━━━━━━━━━━ */
 function TherapistCardUI({ therapist, onSelect, isDiscoveryEligible }: { therapist: TherapistCard; onSelect: (t: TherapistCard) => void; isDiscoveryEligible: boolean }) {
     const avail = formatAvailability(therapist.nextAvailableSlot);
+    const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onSelect(therapist);
+        }
+    };
     return (
         <div
             className="relative rounded-[18px] p-5 bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.035] hover:border-white/[0.07] transition-all duration-400 group overflow-hidden hover:-translate-y-0.5 cursor-pointer"
             onClick={() => onSelect(therapist)}
+            onKeyDown={handleCardKeyDown}
+            role="button"
+            tabIndex={0}
         >
             {/* Match Badge */}
             {therapist.matchScore >= 70 && (
@@ -714,10 +728,7 @@ function UpcomingPanel({ sessions, loading, onBookNew }: { sessions: SessionDeta
 
     // Sort: soonest first
     const sorted = [...sessions].sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime());
-    const startingSoon = sorted.filter(s => {
-        const diff = new Date(s.scheduledAt).getTime() - Date.now();
-        return diff > 0 && diff <= 30 * 60 * 1000; // within 30 min
-    });
+    const startingSoon = sorted.filter(s => isStartingSoonSession(s.scheduledAt));
     const other = sorted.filter(s => !startingSoon.includes(s));
 
     return (

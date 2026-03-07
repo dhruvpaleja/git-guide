@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { UserRound, Loader2, CalendarOff } from 'lucide-react';
+import { UserRound, CalendarOff } from 'lucide-react';
 import { therapyApi } from '@/services/therapy.api';
 import type { SessionDetail } from '@/types/therapy.types';
 
@@ -78,7 +78,6 @@ function SessionRow({ session, isActive }: SessionRowProps) {
     const photoUrl = session.therapist?.photoUrl;
 
     const bgColor = isActive ? 'bg-[#1A1A1A] text-white' : 'bg-white text-gray-900 border border-gray-100 hover:border-gray-200';
-    const subtextColor = isActive ? 'text-white/60' : 'text-gray-500';
     const avatarBg = isActive ? 'bg-white/10' : 'bg-gray-100 text-gray-400';
     const timeBg = isActive ? 'bg-white/10 text-white' : 'bg-gray-50 text-gray-600 border border-gray-100';
     const badgeCls = isActive

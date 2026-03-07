@@ -9,7 +9,11 @@ import {
   Moon,
   ArrowLeft,
   Sparkles,
-  Loader2
+  Loader2,
+  Plus,
+  FileText,
+  Download,
+  Save
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -206,28 +210,62 @@ export default function AstrologyDashboard() {
               <h2 className="text-xl font-semibold mb-4">Dashboard Overview</h2>
               
               {/* Quick Actions */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Button 
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Button
                   className="bg-yellow-500/20 border-yellow-500/50 text-yellow-300 hover:bg-yellow-500/30 h-auto py-4"
                   onClick={() => navigate('/astrology/chart')}
                 >
                   <div className="text-left">
-                    <div className="font-semibold">Vedic Chart Calculator</div>
+                    <div className="font-semibold flex items-center gap-2">
+                      <Plus className="w-4 h-4" />
+                      Generate New Chart
+                    </div>
                     <div className="text-xs opacity-70">Parashara Light Style</div>
                   </div>
                 </Button>
 
-                <Button className="bg-blue-500/20 border-blue-500/50 text-blue-300 hover:bg-blue-500/30 h-auto py-4">
+                <Button
+                  className="bg-blue-500/20 border-blue-500/50 text-blue-300 hover:bg-blue-500/30 h-auto py-4"
+                  onClick={() => {
+                    toast.info('Saved Charts feature coming soon');
+                  }}
+                >
                   <div className="text-left">
-                    <div className="font-semibold">View Calendar</div>
-                    <div className="text-xs opacity-70">Check appointments</div>
+                    <div className="font-semibold flex items-center gap-2">
+                      <Save className="w-4 h-4" />
+                      Saved Charts
+                    </div>
+                    <div className="text-xs opacity-70">Client kundalis</div>
                   </div>
                 </Button>
 
-                <Button className="bg-purple-500/20 border-purple-500/50 text-purple-300 hover:bg-purple-500/30 h-auto py-4">
+                <Button
+                  className="bg-purple-500/20 border-purple-500/50 text-purple-300 hover:bg-purple-500/30 h-auto py-4"
+                  onClick={() => {
+                    toast.info('Reports feature coming soon');
+                  }}
+                >
                   <div className="text-left">
-                    <div className="font-semibold">Client Reports</div>
-                    <div className="text-xs opacity-70">Generate kundali</div>
+                    <div className="font-semibold flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      Generate Report
+                    </div>
+                    <div className="text-xs opacity-70">PDF predictions</div>
+                  </div>
+                </Button>
+
+                <Button
+                  className="bg-green-500/20 border-green-500/50 text-green-300 hover:bg-green-500/30 h-auto py-4"
+                  onClick={() => {
+                    toast.info('Export feature coming soon');
+                  }}
+                >
+                  <div className="text-left">
+                    <div className="font-semibold flex items-center gap-2">
+                      <Download className="w-4 h-4" />
+                      Export Data
+                    </div>
+                    <div className="text-xs opacity-70">Download charts</div>
                   </div>
                 </Button>
               </div>

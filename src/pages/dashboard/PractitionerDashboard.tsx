@@ -55,7 +55,7 @@ export default function PractitionerDashboard() {
                                 />
                             </div>
 
-                            <ScheduledSessionsWidget />
+                            <ScheduledSessionsWidget variant="practitioner" />
 
                             <PendingApprovalsWidget />
 

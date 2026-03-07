@@ -1,6 +1,41 @@
-import { Bell, Search, Settings2, Info, Star } from 'lucide-react';
+import { useEffect, useState, useCallback } from 'react';
+import { Bell, Search, Settings2, Info, Star, Loader2 } from 'lucide-react';
+import { therapyApi } from '@/services/therapy.api';
+import type { TherapistDashboard } from '@/types/therapy.types';
+
+function formatEarnings(amount: number): { main: string; decimal: string } {
+    if (amount >= 1000) {
+        const k = amount / 1000;
+        const whole = Math.floor(k * 10) / 10; // one decimal
+        const parts = whole.toFixed(1).split('.');
+        return { main: `₹${parts[0]}k`, decimal: `.${parts[1]}` };
+    }
+    const parts = amount.toFixed(2).split('.');
+    return { main: `₹${parts[0]}`, decimal: `.${parts[1]}` };
+}
 
 export function PractitionerHeader() {
+    const [dashboard, setDashboard] = useState<TherapistDashboard | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    const fetchDashboard = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await therapyApi.getTherapistDashboard();
+            if (res.success && res.data) {
+                setDashboard(res.data as TherapistDashboard);
+            }
+        } catch { /* show defaults */ }
+        finally { setLoading(false); }
+    }, []);
+
+    useEffect(() => { fetchDashboard(); }, [fetchDashboard]);
+
+    const earnings = dashboard ? formatEarnings(dashboard.totalEarnings) : { main: '₹0', decimal: '.00' };
+    const rating = dashboard?.rating ?? 0;
+    const totalSessions = dashboard?.totalSessions ?? 0;
+    const sessionsDisplay = totalSessions >= 100 ? `${totalSessions}+` : String(totalSessions);
+
     return (
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-8 w-full font-sans">
 
@@ -11,12 +46,12 @@ export function PractitionerHeader() {
                 <div className="flex items-center gap-3 bg-[#F8F9FA] rounded-[30px] pr-5 pb-1 pt-1 pl-1 border border-gray-100 shadow-sm">
                         <img
                             src="https://i.pravatar.cc/150?img=47"
-                            alt="Swati Agarwal"
+                            alt="Practitioner"
                             className="w-10 h-10 rounded-full object-cover border-2 border-white"
                         />
                         <div className="flex flex-col -gap-1">
-                            <span className="font-semibold text-[15px] leading-tight text-gray-900">Swati Agarwal</span>
-                            <span className="text-[11px] text-gray-500 font-medium">Counsellor | Therapist</span>
+                            <span className="font-semibold text-[15px] leading-tight text-gray-900">Wellness Guide</span>
+                            <span className="text-[11px] text-gray-500 font-medium">Soul Guide | Practitioner</span>
                         </div>
                     </div>
 
@@ -60,23 +95,35 @@ export function PractitionerHeader() {
 
                         <div className="flex items-center gap-3 md:gap-5 min-w-[150px]">
                             <span className="text-[12px] md:text-[14px] text-white/80 font-normal whitespace-nowrap">Total Earnings</span>
-                            <div className="flex items-baseline">
-                                <span className="text-2xl md:text-[32px] font-semibold tracking-tight text-white leading-none">₹48.5k</span>
-                                <span className="text-[12px] md:text-[14px] font-medium text-white/50 ml-0.5 leading-none">.80</span>
-                            </div>
+                            {loading ? (
+                                <Loader2 className="w-5 h-5 animate-spin text-white/50" />
+                            ) : (
+                                <div className="flex items-baseline">
+                                    <span className="text-2xl md:text-[32px] font-semibold tracking-tight text-white leading-none">{earnings.main}</span>
+                                    <span className="text-[12px] md:text-[14px] font-medium text-white/50 ml-0.5 leading-none">{earnings.decimal}</span>
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex items-center gap-3 md:gap-5 min-w-[150px]">
                             <span className="text-[12px] md:text-[14px] text-white/80 font-normal whitespace-nowrap">Your Rating</span>
-                            <div className="flex items-center gap-2">
-                                <span className="text-2xl md:text-[32px] font-semibold tracking-tight text-white leading-none">4.8</span>
-                                <Star className="w-[20px] h-[20px] md:w-[24px] md:h-[24px] fill-[#FFD700] text-[#FFD700]" />
-                            </div>
+                            {loading ? (
+                                <Loader2 className="w-5 h-5 animate-spin text-white/50" />
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <span className="text-2xl md:text-[32px] font-semibold tracking-tight text-white leading-none">{rating.toFixed(1)}</span>
+                                    <Star className="w-[20px] h-[20px] md:w-[24px] md:h-[24px] fill-[#FFD700] text-[#FFD700]" />
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex items-center gap-3 md:gap-5 min-w-[150px] hidden sm:flex">
                             <span className="text-[12px] md:text-[14px] text-white/80 font-normal whitespace-nowrap">Total Sessions</span>
-                            <span className="text-2xl md:text-[32px] font-semibold tracking-tight text-white leading-none">100+</span>
+                            {loading ? (
+                                <Loader2 className="w-5 h-5 animate-spin text-white/50" />
+                            ) : (
+                                <span className="text-2xl md:text-[32px] font-semibold tracking-tight text-white leading-none">{sessionsDisplay}</span>
+                            )}
                         </div>
 
                     </div>

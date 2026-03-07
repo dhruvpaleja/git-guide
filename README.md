@@ -14,9 +14,9 @@ A comprehensive mental wellness platform that connects users with qualified ther
 
 ### **For Practitioners**
 - **Professional Dashboard**: Manage sessions, availability, and client relationships
-- **Secure Video Calls**: HIPAA-compliant video consultation platform
+- **Video Sessions**: Planned, not yet integrated with a live video provider
 - **Schedule Management**: Flexible scheduling and calendar integration
-- **Earnings Tracking**: Monitor income and session statistics
+- **Earnings Tracking**: Planned, not yet implemented end-to-end
 - **Client Management**: Secure client records and progress tracking
 
 ### **For Administrators**
@@ -199,7 +199,7 @@ Runs type-check → lint:ci → build → bundle:budget → server build → ser
 ```bash
 npm run test:e2e
 ```
-15 Playwright smoke tests covering public routes, auth flow, dashboard routes, and resilience.
+One Playwright smoke suite currently covers 14 tests across public routes, auth, dashboard rendering, and resilience. These tests are not currently enforced in CI.
 
 ### **Individual Checks**
 ```bash

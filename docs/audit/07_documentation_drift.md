@@ -203,8 +203,8 @@ This file contains older drift findings plus a 2026-03-07 re-verification layer.
 ### DRIFT-020: SoulBotSection has a hardcoded name "Dhruv Bhai" — not user-personalized as documented
 - **Severity**: LOW
 - **Doc claims**: SoulBot is described as an AI assistant that is personalized and responds to the user. The landing page is meant to be a public showcase.
-- **Code reality**: `src/features/landing/components/SoulBotSection.tsx` renders `<h3>Welcome Dhruv Bhai!</h3>` and `<p>Main hoon yahan — thoda batao, kya ho raha hai?</p>` — hardcoded with the founder's name and Hindi text. This is developer placeholder content deployed to production.
-- **Recommendation**: Replace hardcoded name with generic "Welcome!" or remove personal reference. The Hindi text is culturally authentic for the brand but the hardcoded name is a production bug.
+- **Code reality**: This was true during initial re-verification. It has since been corrected in `src/features/landing/components/SoulBotSection.tsx`, which now uses generic copy rather than the founder's name.
+- **Recommendation**: Keep this entry as historical drift that was corrected during the March 2026 re-verification pass.
 
 ---
 
@@ -235,8 +235,56 @@ This file contains older drift findings plus a 2026-03-07 re-verification layer.
 ### DRIFT-024: README testing section overstates the current automated test surface
 - **Severity**: MEDIUM
 - **Doc claims**: README says there are 15 Playwright smoke tests.
-- **Code reality**: Only one Playwright spec file exists in `tests/example.spec.ts`, and it currently contains 14 tests, not 15. CI also does not run them.
-- **Recommendation**: Update README to say a single smoke suite exists, and state clearly that it is not CI-enforced.
+- **Code reality**: Only one Playwright spec file exists in `tests/example.spec.ts`, and it currently contains 14 tests, not 15. CI also does not run them. README has now been corrected to reflect that current reality.
+- **Recommendation**: Keep README aligned with the actual CI surface; if Playwright becomes CI-enforced later, update both the workflow files and the docs together.
+
+---
+
+### DRIFT-025: IMPLEMENTATION_COMPLETE.md overstates production readiness and route protection guarantees
+- **Severity**: HIGH
+- **Doc claims**: `docs/IMPLEMENTATION_COMPLETE.md` presented the onboarding/dashboard flow as "COMPLETE & VERIFIED", "PRODUCTION READY", and stated `/personalize` cannot be accessed without login.
+- **Code reality**: The document was a historical snapshot, not a current production-readiness proof. The current workspace still has `VITE_AUTH_BYPASS` behavior that can short-circuit `ProtectedRoute` in dev-oriented flows, so the protection guarantee was overstated.
+- **Recommendation**: Treat implementation-snapshot docs as historical unless they are re-verified against current runtime flags and route behavior. The file has now been updated with a re-verification warning.
+
+---
+
+### DRIFT-026: MVP_DEFINITION.md is no longer a current source of product truth if the team is building the full platform
+- **Severity**: HIGH
+- **Doc claims**: `docs/MVP_DEFINITION.md` frames itself as the single source of truth and narrows scope to an MVP cut with large sections explicitly marked out of scope.
+- **Code reality**: The repository now contains multiple full-platform planning documents for constellation, connections, god-mode architecture, admin, AI, and long-horizon execution. If the active strategy is to build the full product, this MVP doc is historical planning context, not the canonical build target.
+- **Recommendation**: Keep the document as historical sequencing context, but do not use it to reject full-platform work. The file has now been marked as a historical MVP-scope artifact.
+
+---
+
+### DRIFT-027: FLOW_ISOLATION_VERIFICATION.md overstates production readiness even though it is primarily a structure note
+- **Severity**: MEDIUM
+- **Doc claims**: `docs/FLOW_ISOLATION_VERIFICATION.md` says the flow is "PERFECTLY ISOLATED" and "READY FOR PRODUCTION".
+- **Code reality**: The document is useful for understanding the intended signup-vs-personalization separation, but its strongest value is structural explanation, not deployment certification. The file was overstating certainty relative to the broader runtime context.
+- **Recommendation**: Treat it as a flow-shape verification note. The file has now been reframed to remove blanket production-readiness language.
+
+---
+
+### DRIFT-028: SOUL_CONSTELLATION_100.md is strategically strong but some current-state assertions have drifted from the repo
+- **Severity**: MEDIUM
+- **Doc claims**: `docs/SOUL_CONSTELLATION_100.md` describes the target Constellation architecture and includes current-state bullets such as API fallback behavior and feature inventory.
+- **Code reality**: The file is valuable as the target product spec, but it should not be used as implementation proof. Current code still includes `AddNodeModal`, the service short-circuits to mock data in dev-oriented flows, and no Prisma models or real Constellation backend endpoints exist yet.
+- **Recommendation**: Keep the document as the canonical target spec for Constellation, but verify all current-state bullets against code before using them for status reporting. The file has now been marked as a strategic spec rather than implementation truth.
+
+---
+
+### DRIFT-029: CONNECTIONS_SOCIAL_PLAN.md is a future-state master spec, not a reflection of current social backend reality
+- **Severity**: MEDIUM
+- **Doc claims**: `docs/CONNECTIONS_SOCIAL_PLAN.md` fully specifies matching, feed, messaging, circles, moderation, and revenue design for Connections.
+- **Code reality**: The current frontend Connections page is still mock-driven, and the backend only has early community route/controller scaffolding rather than the described social graph, messaging, or moderation systems.
+- **Recommendation**: Treat this document as the target design for the Connections platform. Do not cite it as evidence that the social layer exists today. The file has now been marked accordingly.
+
+---
+
+### DRIFT-030: ULTIMATE_GOD_MODE_ARCHITECTURE.md describes infrastructure and agents that are not installed in the repo
+- **Severity**: HIGH
+- **Doc claims**: `docs/ULTIMATE_GOD_MODE_ARCHITECTURE.md` presents supervisor agents, live therapist co-pilots, autonomous content pipelines, and event-firehose infrastructure with concrete implementation sketches.
+- **Code reality**: Root and server dependencies do not include Anthropic SDKs, Kafka/Redpanda clients, Daily/100ms SDKs, or the described orchestration/runtime layers. The server currently exposes config placeholders for OpenAI, Daily, and Razorpay, but not the implemented systems described in this document.
+- **Recommendation**: Preserve this file as future-state architecture, but do not let it be mistaken for repository capability. The file has now been labeled as aspirational.
 
 ---
 
@@ -245,10 +293,10 @@ This file contains older drift findings plus a 2026-03-07 re-verification layer.
 | Severity | Count |
 |----------|-------|
 | CRITICAL | 6 |
-| HIGH | 10 |
-| MEDIUM | 9 |
+| HIGH | 13 |
+| MEDIUM | 12 |
 | LOW | 3 |
-| **Total** | **28** |
+| **Total** | **34** |
 
 ### Top 5 Immediate Actions
 

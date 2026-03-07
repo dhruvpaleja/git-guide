@@ -29,9 +29,11 @@ const MOCK_NODES: ConstellationNode[] = [
     y: 45,
     size: 1.6,
     isPinned: true,
+    isHidden: false,
     createdAt: '2026-02-15T10:00:00Z',
     updatedAt: '2026-03-01T08:30:00Z',
     tags: ['core', 'identity'],
+    generationSource: 'onboarding',
   },
   {
     id: 'node-career',
@@ -45,10 +47,12 @@ const MOCK_NODES: ConstellationNode[] = [
     y: 30,
     size: 1.2,
     isPinned: false,
+    isHidden: false,
     createdAt: '2026-02-20T14:00:00Z',
     updatedAt: '2026-03-01T09:00:00Z',
     note: 'Every deadline triggers the same spiral. Need to break the pattern.',
     tags: ['work', 'stress', 'recurring'],
+    generationSource: 'journal',
   },
   {
     id: 'node-boss',
@@ -62,9 +66,11 @@ const MOCK_NODES: ConstellationNode[] = [
     y: 55,
     size: 1.0,
     isPinned: false,
+    isHidden: false,
     createdAt: '2026-02-22T16:00:00Z',
     updatedAt: '2026-02-28T11:00:00Z',
     tags: ['work', 'conflict', 'authority'],
+    generationSource: 'journal',
   },
   {
     id: 'node-partner',
@@ -78,10 +84,12 @@ const MOCK_NODES: ConstellationNode[] = [
     y: 28,
     size: 1.1,
     isPinned: false,
+    isHidden: false,
     createdAt: '2026-02-18T09:00:00Z',
     updatedAt: '2026-03-01T07:00:00Z',
     note: 'Started couples meditation. Feeling closer.',
     tags: ['love', 'growth', 'communication'],
+    generationSource: 'journal',
   },
   {
     id: 'node-anxiety',
@@ -95,9 +103,11 @@ const MOCK_NODES: ConstellationNode[] = [
     y: 68,
     size: 1.0,
     isPinned: false,
+    isHidden: false,
     createdAt: '2026-02-25T12:00:00Z',
     updatedAt: '2026-02-28T18:00:00Z',
     tags: ['social', 'fear', 'avoidance'],
+    generationSource: 'mood_log',
   },
   {
     id: 'node-meditation',
@@ -111,10 +121,12 @@ const MOCK_NODES: ConstellationNode[] = [
     y: 48,
     size: 0.9,
     isPinned: false,
+    isHidden: false,
     createdAt: '2026-01-10T06:00:00Z',
     updatedAt: '2026-03-02T06:30:00Z',
     note: '45-day streak! Noticing real shifts in reactivity.',
     tags: ['practice', 'mindfulness', 'routine'],
+    generationSource: 'pattern',
   },
   {
     id: 'node-fitness',
@@ -128,9 +140,11 @@ const MOCK_NODES: ConstellationNode[] = [
     y: 72,
     size: 0.85,
     isPinned: false,
+    isHidden: false,
     createdAt: '2026-02-01T07:00:00Z',
     updatedAt: '2026-03-01T07:30:00Z',
     tags: ['exercise', 'recovery', 'body'],
+    generationSource: 'journal',
   },
 ];
 
@@ -306,9 +320,11 @@ class ConstellationService {
         ...payload,
         size: 1.0,
         isPinned: false,
+        isHidden: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         tags: payload.tags ?? [],
+        generationSource: 'journal',
       };
       return newNode;
     }

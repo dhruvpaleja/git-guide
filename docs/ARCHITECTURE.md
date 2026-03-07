@@ -8,6 +8,8 @@ Soul Yatri is a full-stack mental wellness platform built as a monorepo with sep
 - **Backend**: Express + TypeScript + Prisma ORM + PostgreSQL
 - **Shared contracts**: TypeScript types shared via `@contracts/*` path alias
 
+> Re-verification note (2026-03-07): this document describes the intended architecture reasonably well, but several runtime details below had drifted from the code. The notes in this file now favor current implementation reality over intended future-state design.
+
 ## Directory Structure
 
 ### Frontend (`src/`)
@@ -64,7 +66,7 @@ server/src/
 │   ├── errors.ts      # AppError class + canonical error codes
 │   ├── response.ts    # sendSuccess / sendError helpers
 │   ├── dev-login.ts   # Dev login helper
-│   └── websocket.ts   # Socket.io setup
+│   └── websocket.ts   # Native ws setup
 ├── middleware/
 │   ├── auth.middleware.ts      # requireAuth, requireRole
 │   ├── rbac.middleware.ts      # Role-based access control
@@ -72,7 +74,7 @@ server/src/
 │   ├── request-context.ts     # Correlation IDs, timing
 │   ├── security.middleware.ts  # Security headers
 │   └── user-rate-limit.middleware.ts  # Per-user rate limiting
-├── modules/           # Domain module stubs (future service layer)
+├── modules/           # Domain module stubs / partially disconnected future service layer
 │   ├── admin/     ├── ai/       ├── astrology/
 │   ├── auth/      ├── blog/     ├── careers/
 │   ├── community/ ├── corporate/ ├── courses/
@@ -132,7 +134,7 @@ Frontend and backend share TypeScript type contracts via the `@contracts/*` path
 - **JWT-based**: Access token (short-lived) + refresh token
 - **Middleware**: `requireAuth` validates Bearer token, `requireRole` checks role hierarchy
 - **RBAC**: Four roles — `USER`, `THERAPIST`, `ASTROLOGER`, `ADMIN`
-- **Dev mode**: `VITE_AUTH_BYPASS` and `VITE_ENABLE_MOCK_AUTH` runtime flags allow testing without a running backend
+- **Dev mode**: `VITE_AUTH_BYPASS` and `VITE_ENABLE_MOCK_AUTH` runtime flags allow testing without a running backend; current code still defaults both to enabled in dev-oriented flows, so this is a real security and correctness caveat rather than just a convenience note
 
 ### Runtime Feature Flags
 
@@ -143,11 +145,14 @@ Defined in `src/config/runtime.flags.ts`, controlled by `VITE_*` environment var
 | `VITE_AUTH_BYPASS` | `true` | Skip real auth in dev |
 | `VITE_ENABLE_MOCK_AUTH` | `true` | Enable mock login system |
 
+These flags are not passive: `ProtectedRoute` will return the protected outlet directly when auth bypass is enabled, and `AuthContext` includes hardcoded mock role accounts when mock auth is enabled.
+
 ### State Management
 
 - **React Context**: Auth state, theme
-- **Zustand**: Feature-specific stores (where needed)
-- **React Query**: Server state and data fetching cache
+- **Hooks + service layer**: Most current data access flows use custom hooks and `apiService`
+- **Zustand**: Not part of the current active application architecture
+- **React Query**: Not part of the current active application architecture
 - **Local state**: Component-level UI state
 
 ### Performance
@@ -159,9 +164,17 @@ Defined in `src/config/runtime.flags.ts`, controlled by `VITE_*` environment var
 
 ### WebSocket
 
-- **Socket.io**: Real-time notifications and session events
+- **ws**: Native WebSocket service for real-time notifications
 - **Auth**: WebSocket connection validated via JWT
 - **Typed events**: Shared contracts define event names and payload shapes
+
+Current verified use is strongest for notifications. Broader realtime/session-event architecture described elsewhere in the docs is still largely planned.
+
+### Backend Structure Reality
+
+- **Active path**: `server/src/routes/*` + `server/src/controllers/*` contain the real request path for implemented domains such as auth, users, health-tools, and notifications.
+- **Stub path**: much of `server/src/modules/*` remains TODO-heavy or disconnected from the live router/controller flow.
+- **Route mounting caveat**: the server currently mounts the same route tree under both `/api/v1` and `/api`, which is convenient for compatibility but increases drift and testing complexity.
 
 ### API Route Status
 

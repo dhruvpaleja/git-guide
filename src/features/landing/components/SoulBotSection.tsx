@@ -21,7 +21,7 @@ export default function SoulBotSection() {
           className={`text-[24px] sm:text-[28px] md:text-[32px] font-semibold text-black tracking-[-0.32px] mb-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
         >
-          You Personal AI SouBot
+          Your Personal AI SoulBot
         </h2>
         <p
           className={`text-[16px] font-normal text-black/50 tracking-[-0.16px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
@@ -49,10 +49,10 @@ export default function SoulBotSection() {
           {/* Welcome text */}
           <div className="text-center pt-8 md:pt-10">
             <h3 className="text-2xl md:text-[32px] font-semibold text-white tracking-[-0.32px] mb-3 md:w-[420px] mx-auto">
-              Welcome Dhruv Bhai!
+              Welcome back.
             </h3>
             <p className="text-sm md:text-[16px] font-normal text-white/70 tracking-[-0.16px] md:w-[420px] mx-auto">
-              Main hoon yahan — thoda batao, kya ho raha hai?
+              Main yahan hoon. Thoda batao, aaj tum kaisa mehsoos kar rahe ho?
             </p>
           </div>
 
@@ -120,7 +120,7 @@ export default function SoulBotSection() {
               {/* Chat text */}
               <div className="flex-1">
                 <p className="text-[14px] md:text-[16px] font-normal text-white/70 tracking-[-0.16px] text-center md:text-left leading-relaxed">
-                  {`Mein tumhara dost hu. Mujhse share karo jo tumhare dil mein haii...`}
+                  {`Main yahan sunne ke liye hoon. Jo tumhare dil mein hai, use share karo.`}
                 </p>
               </div>
             </div>

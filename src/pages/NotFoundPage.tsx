@@ -50,9 +50,9 @@ export default function NotFoundPage() {
               height: 'clamp(50px, 6vw, 75px)',
             }}
           >
-            <img 
-              src="https://www.figma.com/api/mcp/asset/2a3be53c-efb9-4fcd-8c4a-7daa7c26be4d" 
-              alt="Page not found" 
+            <img
+              src="/images/not-found-happy-face.png"
+              alt="Page not found"
               className="w-full h-full object-contain drop-shadow-lg"
             />
           </div>

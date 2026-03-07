@@ -1,9 +1,11 @@
-# Flow Implementation - COMPLETE & VERIFIED
+# Flow Implementation - HISTORICAL SNAPSHOT, RE-VERIFICATION REQUIRED
 
-**Status:** ✅ **PRODUCTION READY**  
-**Build:** ✓ 2203 modules transformed in 38.99s  
-**Errors:** 0  
-**Last Verified:** March 1, 2026
+> Re-verification note (2026-03-07): this document captures the intended onboarding/dashboard flow shape, but several claims below overstate runtime guarantees in the current codebase. In particular, protected-route behavior is weakened by `VITE_AUTH_BYPASS`, and this file should not be treated as canonical proof of production readiness.
+
+**Status:** Historical implementation snapshot, not a current production-readiness certificate  
+**Build:** Historical point-in-time claim; re-run in active workspace before relying on it  
+**Errors:** Historical point-in-time claim  
+**Last Verified:** Originally documented as March 1, 2026; current repo re-verification in progress
 
 ---
 
@@ -98,9 +100,9 @@ const shouldShowNudge = useMemo(() => {
 
 **Protection Details:**
 - Inside `<ProtectedRoute>` wrapper
-- Requires valid JWT in Authorization header
-- Returns 401 Unauthorized if not authenticated
-- Cannot access `/personalize?s=4` without login
+- When auth bypass is disabled, this route follows authenticated app state and should require login
+- In current runtime defaults, `VITE_AUTH_BYPASS` can still short-circuit route protection during dev-oriented flows
+- Do not treat this section as proof that `/personalize` is always protected in the current workspace configuration
 
 ---
 

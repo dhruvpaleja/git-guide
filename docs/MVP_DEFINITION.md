@@ -1,9 +1,8 @@
 # Soul Yatri — MVP Definition (Super In-Depth)
 
-> **Document purpose**: This is the single source of truth for what goes into the Minimum
-> Viable Product (MVP). Every AI agent, developer, or stakeholder MUST read this before
-> starting work. The MVP is not the "whole product" — it is the smallest version that
-> delivers real value, can acquire paying users, and proves the business model.
+> Re-verification note (2026-03-07): this is a historical scope document from an MVP-first planning phase. It is useful for understanding the original sequencing logic, but it is not the current product strategy if the team is now building the full platform rather than optimizing for an MVP cut.
+
+> **Document purpose**: This document defines a historical minimum-viable-product scope. It should not be treated as the single source of truth for the current build if the product strategy has moved to a full-platform roadmap.
 
 ---
 

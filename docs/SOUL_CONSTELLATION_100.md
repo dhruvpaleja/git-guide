@@ -1,5 +1,7 @@
 # Soul Constellation — 100/100 Feature Plan
 
+> Re-verification note (2026-03-07): this is one of the strongest strategic product specs in the repo, but it mixes future-state design with current-state assessment. Use it as the target architecture for Constellation, not as proof that the described pipelines, persistence, or AI generation engine already exist in code.
+
 **Feature:** Soul Constellation (Emotional Mapping + AI Insights)  
 **Version:** 2.0 — Complete product and engineering spec  
 **Date:** 2026-03-06  

@@ -1,5 +1,7 @@
 # Soul Yatri Connections — 100/100 Social Feature Plan
 
+> Re-verification note (2026-03-07): this document is a full-feature product and engineering spec for the intended social layer. It should be treated as the target design, not as evidence that the described matching, messaging, moderation, feed, or circle systems already exist in the current codebase.
+
 **Feature:** Connections (Hinge + Instagram + LinkedIn hybrid for mental wellness)  
 **Version:** 1.0 — Master Product & Engineering Spec  
 **Date:** 2026-03-06  

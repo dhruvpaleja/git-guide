@@ -1,9 +1,11 @@
 # ULTIMATE WORLD-CLASS CODEBASE AUDIT — Soul Yatri
 
+> Re-verification note (2026-03-07): this document remains useful as a broad audit baseline, but current code review has already identified stale claims around audit completeness, build verification, and environment hardening. Verify critical statements against current source and refreshed artifacts in `docs/audit/` before treating them as canonical.
+
 **Platform**: Soul Yatri — Wellness & Mental Health Platform  
 **Audit Date**: March 2026  
-**Methodology**: Code-grounded audit — every claim verified against actual source files  
-**Build Verification**: All builds passing (frontend, server, Prisma, type-check, ESLint)  
+**Methodology**: Historical code-grounded audit baseline; current re-verification has found several claims that now require reconfirmation against source files  
+**Build Verification**: Historical claim in this document; current environment should be re-run before this is treated as authoritative  
 **Structure**: Follows agentprompt.txt STEP 1 — exact 25-section format
 
 ---
@@ -79,8 +81,8 @@ Soul Yatri has a **well-scaffolded frontend** with beautiful UI on its dashboard
 ## 2. Audit Method
 
 ### How This Repository Was Inspected
-- **Full file read**: Every source file in `src/`, `server/src/`, `server/prisma/`, config files, and `docs/` was read and analyzed
-- **Build verification**: `npm run build`, `npm run type-check`, `npx eslint ./src/`, `npx prisma validate` all executed and passing
+- **Full file read**: This document claims exhaustive file review, but current re-verification has already found stale findings in multiple audit artifacts, so exhaustive-completion claims should be treated as needing confirmation.
+- **Build verification**: This document claims `npm run build`, `npm run type-check`, `npx eslint ./src/`, and `npx prisma validate` all executed and passed; current re-verification has not accepted those results without rerunning them in the active workspace.
 - **Binary/static assets**: Counted and inventoried; content-hashed images in `public/images/`; placeholder/stock images noted
 - **Generated/vendor files**: `node_modules/`, `.agent/`, `playwright-report/trace/` excluded from deep review; dependency versions checked via `package.json`
 
@@ -112,7 +114,7 @@ Soul Yatri has a **well-scaffolded frontend** with beautiful UI on its dashboard
 
 | Metric | Count |
 |--------|-------|
-| Total files (excl. node_modules/.git) | 8,557 |
+| Total files (excl. node_modules/.git) | Historical count from this document; current workspace should be re-inventoried before relying on exact totals |
 | AI agent cache (.agent/) | 6,676 |
 | Source: src/ | 257 |
 | Source: server/ | 481 |

@@ -1,6 +1,8 @@
 # Signup vs Dashboard Personalization - Flow Isolation Verification
 
-**Status:** ✅ **PERFECTLY ISOLATED**
+> Re-verification note (2026-03-07): this document is still useful for understanding intended signup vs personalization separation, but its route-protection and production-readiness language was stronger than the current runtime guarantees. It should be read as a flow-shape verification note, not a deployment certificate.
+
+**Status:** Flow isolation mostly verified; production-readiness wording in this file should not be treated as canonical
 
 ---
 
@@ -62,7 +64,7 @@
 **Entry Point:** `/personalize?s=4` (ONLY accessible from dashboard nudge or direct nav if authenticated)  
 **Questions Included:** 7 (steps 4, 5, 6, 7, 8, 9, 10)  
 **Questions NOT Included:** 1, 2, 3 (never shown to users)  
-**Route Protection:** ProtectedRoute (requires valid JWT)  
+**Route Protection:** ProtectedRoute route wrapper in code; runtime behavior still depends on current flag/config strategy  
 **Exit Destination:** `/dashboard`
 
 ---
@@ -133,8 +135,8 @@ GET /api/v1/users/onboarding → onboardingStep, isComplete
 ```
 
 **File:** `src/router/index.tsx` (lines 91-119)  
-**Protection:** ProtectedRoute middleware checks JWT  
-**Result:** Cannot access `/personalize` without login
+**Protection:** ProtectedRoute wrapper exists in router  
+**Result:** Flow separation is structurally present in the router, but this file should not be used as blanket proof of runtime protection policy in every environment
 
 ---
 
@@ -257,4 +259,4 @@ COMPLETE ISOLATION:
   ✅ Zero cross-contamination
 ```
 
-**Status:** 🎯 **PERFECTLY ISOLATED - READY FOR PRODUCTION**
+**Status:** 🎯 Structurally isolated flow; do not use this line as a current production-readiness guarantee

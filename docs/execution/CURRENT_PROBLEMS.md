@@ -11,17 +11,16 @@ Updated during `BATCH:005` (Phase 1/2 re-verification).
   - `src/router/ProtectedRoute.tsx` now gates bypass through `runtimeFlags.authBypassEnabled`.
   - `src/context/AuthContext.tsx` now gates mock-auth path through `runtimeFlags.mockAuthEnabled`.
 
-## P-002 (resolved)
+## P-002 (stale - not actually resolved in current code)
 - Area: Server route exposure
 - Problem: `ENABLE_DEV_ROUTES` and `ENABLE_TEST_ROUTES` had default-open behavior in config (`true` effective in non-dev scenarios).
 - Impact: Risk of accidental dev/test route exposure.
-- Resolution:
-  - `server/src/config/index.ts` now defaults:
-    - `enableDevRoutes` => `isDevelopment`
-    - `enableTestRoutes` => `isDevelopment || isTest`
-  - `server/.env.example` switched to:
-    - `ENABLE_DEV_ROUTES=false`
-    - `ENABLE_TEST_ROUTES=false`
+- Current code reality:
+  - `server/src/config/index.ts` still defaults `enableDevRoutes` to `isDevelopment || isProduction`
+  - `server/.env.example` still keeps `ENABLE_DEV_ROUTES=true`, so the risk remains live unless explicitly overridden
+- Required resolution:
+  - Change the server config so `enableDevRoutes` fails closed outside development
+  - Update this file only after the code actually matches the claimed resolution
 
 ## P-003 (resolved)
 - Area: Lint gate reliability

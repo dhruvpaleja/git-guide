@@ -136,7 +136,7 @@ export default function NodeDetailPanel({
             <Sparkles className="w-3 h-3 text-accent/60" />
             <span className="text-[10px] font-medium text-accent/70 uppercase tracking-wider">AI-generated</span>
           </div>
-          {generationSource && (
+          {node.generationSource && (
             <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[11px]">{sourceInfo.emoji}</span>
               <span className="text-[10px] text-white/40">{sourceInfo.label}</span>

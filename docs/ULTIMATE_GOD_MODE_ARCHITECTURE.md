@@ -1,5 +1,7 @@
 # 🔥 SOUL YATRI — ULTIMATE GOD-MODE ARCHITECTURE & AUTOMATION BLUEPRINT
 
+> Re-verification note (2026-03-07): this file is an aspirational full-platform automation blueprint. It contains valuable ideas, but many referenced systems, vendors, agents, and event pipelines are not installed or implemented in the current repository. Treat it as future-state architecture, not present-state capability.
+
 > **Generated:** 2026-03-02  
 > **Scope:** Everything MISSING from BUILD_PLAN.md that separates a good product from the #1 dominant platform  
 > **Philosophy:** If it can be automated, it MUST be automated. If it can be tracked, it MUST be tracked. If it can rank, it MUST rank #1.

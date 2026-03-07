@@ -1,82 +1,46 @@
 import { Router } from 'express';
-import type { Request, Response } from 'express';
-import { sendError } from '../lib/response.js';
+import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
+import * as therapyController from '../controllers/therapy.controller.js';
+import * as validators from '../validators/therapy.validator.js';
 
 const router = Router();
 
-// Session requests & booking
-router.post('/request', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
+// --- User-facing endpoints ---
+router.get('/therapists', requireAuth, validators.validateListTherapists, therapyController.listTherapists);
+router.get('/therapists/recommended', requireAuth, therapyController.getRecommendedTherapists);
+router.get('/therapists/available-now', requireAuth, therapyController.getAvailableNowTherapists);
+router.get('/therapists/:id', requireAuth, therapyController.getTherapistDetail);
+router.get('/therapists/:id/slots', requireAuth, validators.validateGetSlots, therapyController.getTherapistSlots);
 
-router.get('/sessions', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
+router.post('/sessions', requireAuth, validators.validateBookSession, therapyController.bookSession);
+router.post('/sessions/instant', requireAuth, therapyController.bookInstantSession);
+router.get('/sessions', requireAuth, validators.validateListSessions, therapyController.listSessions);
+router.get('/sessions/:id', requireAuth, therapyController.getSessionDetail);
+router.patch('/sessions/:id/cancel', requireAuth, validators.validateCancelSession, therapyController.cancelSession);
+router.patch('/sessions/:id/reschedule', requireAuth, validators.validateRescheduleSession, therapyController.rescheduleSession);
+router.post('/sessions/:id/rate', requireAuth, validators.validateRateSession, therapyController.rateSession);
 
-router.get('/sessions/:id', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
+// --- User journey ---
+router.get('/journey', requireAuth, therapyController.getUserJourney);
 
-router.get('/sessions/:id/tasks', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
+// --- Nudge endpoints ---
+router.get('/nudges', requireAuth, therapyController.getNudges);
+router.patch('/nudges/:id/dismiss', requireAuth, therapyController.dismissNudge);
+router.patch('/nudges/:id/acted', requireAuth, therapyController.markNudgeActed);
 
-router.post('/sessions/:id/tasks', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/sessions/:id/recording', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/sessions/:id/report', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/sessions/:id/monitor/client', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/sessions/:id/monitor/therapist', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-// Therapist listing
-router.get('/therapists', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/therapists/:id', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-// Therapist dashboard
-router.get('/therapist/dashboard', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/therapist/clients', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/therapist/revenue', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/therapist/reviews', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/therapist/profile', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.put('/therapist/profile', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
-
-router.get('/therapist/clients/:id', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
+// --- Therapist-facing endpoints ---
+router.get('/therapist/dashboard', requireAuth, requireRole('THERAPIST'), therapyController.getTherapistDashboard);
+router.get('/therapist/sessions', requireAuth, requireRole('THERAPIST'), validators.validateListSessions, therapyController.listTherapistSessions);
+router.get('/therapist/clients', requireAuth, requireRole('THERAPIST'), therapyController.getTherapistClients);
+router.get('/therapist/clients/:id', requireAuth, requireRole('THERAPIST'), therapyController.getTherapistClientDetail);
+router.get('/therapist/availability', requireAuth, requireRole('THERAPIST'), therapyController.getTherapistAvailability);
+router.put('/therapist/availability', requireAuth, requireRole('THERAPIST'), validators.validateUpdateAvailability, therapyController.updateTherapistAvailability);
+router.patch('/therapist/online-status', requireAuth, requireRole('THERAPIST'), validators.validateOnlineStatusToggle, therapyController.updateOnlineStatus);
+router.get('/therapist/profile', requireAuth, requireRole('THERAPIST'), therapyController.getOwnProfile);
+router.put('/therapist/profile', requireAuth, requireRole('THERAPIST'), validators.validateUpdateTherapistProfile, therapyController.updateOwnProfile);
+router.get('/therapist/metrics', requireAuth, requireRole('THERAPIST'), therapyController.getOwnMetrics);
+router.post('/sessions/:id/start', requireAuth, requireRole('THERAPIST'), therapyController.startSession);
+router.post('/sessions/:id/complete', requireAuth, requireRole('THERAPIST'), validators.validateCompleteSession, therapyController.completeSession);
+router.post('/sessions/:id/no-show', requireAuth, requireRole('THERAPIST'), therapyController.markNoShow);
 
 export default router;

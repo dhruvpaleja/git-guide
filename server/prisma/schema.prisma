@@ -110,6 +110,8 @@ model User {
   meditationLogs    MeditationLog[]
   payments          Payment[]
   notifications     Notification[]
+  therapyJourney    TherapyJourney?
+  nudges            UserNudge[]
 
   @@index([email])
 }
@@ -278,6 +280,8 @@ model TherapistProfile {
   // Relations
   availabilities    TherapistAvailability[]
   sessions          Session[]
+  onlineStatus      TherapistOnlineStatus?
+  metrics           TherapistMetrics?
 
   @@index([isVerified, isAvailable])
   @@index([rating])
@@ -334,6 +338,22 @@ model Session {
   roomUrl         String?          // Daily.co room URL
   roomName        String?
 
+  // Session type and pricing
+  sessionType         String    @default("standard")  // "discovery", "pay_as_you_like", "standard"
+  priceAtBooking      Int       @default(0)
+  userPaidAmount      Int?
+
+  // Matching context
+  matchScore          Float?
+  matchReason         String?
+  bookingSource       String    @default("search")
+
+  // Astrologer input stub
+  astrologerNotes     String?
+
+  // Therapist private notes
+  therapistPrivateNotes String?
+
   // Payment
   paymentId       String?          @unique
   payment         Payment?         @relation(fields: [paymentId], references: [id])
@@ -345,6 +365,76 @@ model Session {
   @@index([therapistId])
   @@index([scheduledAt])
   @@index([status])
+}
+
+model TherapyJourney {
+  id                    String    @id @default(uuid())
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  completedSessionCount Int       @default(0)
+  activeTherapistCount  Int       @default(0)
+  firstSessionAt        DateTime?
+  lastSessionAt         DateTime?
+  totalSpent            Int       @default(0)
+
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model TherapistOnlineStatus {
+  id                String           @id @default(uuid())
+  therapistId       String           @unique
+  therapist         TherapistProfile @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+
+  isOnline          Boolean          @default(false)
+  lastSeenAt        DateTime         @default(now())
+  isAcceptingNow    Boolean          @default(false)
+  currentSessionId  String?
+
+  updatedAt         DateTime         @updatedAt
+}
+
+model UserNudge {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  nudgeType       String
+  nudgeData       Json?
+
+  status          String    @default("pending")
+  shownAt         DateTime?
+  dismissedAt     DateTime?
+  actedAt         DateTime?
+  expiresAt       DateTime?
+
+  cooldownUntil   DateTime?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId, status])
+  @@index([nudgeType])
+}
+
+model TherapistMetrics {
+  id                       String           @id @default(uuid())
+  therapistId              String           @unique
+  therapist                TherapistProfile @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  specializationStats      Json             @default("{}")
+  avgRating                Float            @default(0)
+  totalCompletedSessions   Int              @default(0)
+  totalCancelledSessions   Int              @default(0)
+  noShowRate               Float            @default(0)
+  clientReturnRate         Float            @default(0)
+  avgSessionDuration       Float            @default(0)
+  bookingFillRate          Float            @default(0)
+  responseTime             Float            @default(0)
+  computedPrice            Int              @default(500)
+  lastComputedAt           DateTime         @default(now())
+  createdAt                DateTime         @default(now())
+  updatedAt                DateTime         @updatedAt
 }
 
 // ===========================================================================

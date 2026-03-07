@@ -19,6 +19,7 @@
     "test:cancellation": "tsx tests/test-cancellation-rules.mjs",
     "test:therapist-limit": "tsx tests/test-therapist-limit.mjs",
     "test:nudge": "tsx tests/test-nudge-system.mjs",
+    "test:flow": "tsx tests/test-full-booking-flow.mjs",
     "postinstall": "npx prisma generate"
   },
   "dependencies": {

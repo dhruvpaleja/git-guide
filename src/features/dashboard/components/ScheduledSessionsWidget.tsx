@@ -135,9 +135,11 @@ interface ScheduledSessionsWidgetProps {
 export function ScheduledSessionsWidget({ variant = 'user' }: ScheduledSessionsWidgetProps) {
     const [sessions, setSessions] = useState<SessionDetail[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     const fetchToday = useCallback(async () => {
         setLoading(true);
+        setError(null);
         try {
             const res = variant === 'practitioner'
                 ? await therapyApi.getTherapistSessions({ status: 'SCHEDULED' })
@@ -147,9 +149,15 @@ export function ScheduledSessionsWidget({ variant = 'user' }: ScheduledSessionsW
                 const today = all.filter(s => isToday(s.scheduledAt));
                 today.sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime());
                 setSessions(today);
+            } else {
+                setError('Could not load sessions. Please try again.');
             }
-        } catch { /* empty state will show */ }
-        finally { setLoading(false); }
+        } catch (err) {
+            console.error('Failed to fetch sessions:', err);
+            setError('Unable to load sessions. Please check your connection.');
+        } finally {
+            setLoading(false);
+        }
     }, [variant]);
 
     useEffect(() => { fetchToday(); }, [fetchToday]);
@@ -161,6 +169,19 @@ export function ScheduledSessionsWidget({ variant = 'user' }: ScheduledSessionsW
             {loading ? (
                 <div className="flex flex-col gap-3">
                     {Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} />)}
+                </div>
+            ) : error ? (
+                <div className="py-10 flex flex-col items-center text-center">
+                    <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-3">
+                        <CalendarOff className="w-6 h-6 text-red-400" />
+                    </div>
+                    <p className="text-sm text-red-400 font-medium mb-1">{error}</p>
+                    <button
+                        onClick={fetchToday}
+                        className="mt-2 px-4 py-1.5 rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-400 text-xs font-medium transition-colors"
+                    >
+                        Try Again
+                    </button>
                 </div>
             ) : sessions.length === 0 ? (
                 <div className="py-10 flex flex-col items-center text-center">

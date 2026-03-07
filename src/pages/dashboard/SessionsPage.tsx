@@ -21,6 +21,7 @@ import {
     Zap,
     Shield,
     Loader2,
+    AlertTriangle,
 } from 'lucide-react';
 import { therapyApi } from '@/services/therapy.api';
 import type { TherapistCard, SessionDetail, TherapyJourney, TimeSlot } from '@/types/therapy.types';
@@ -139,6 +140,7 @@ export default function SessionsPage() {
     const [completed, setCompleted] = useState<SessionDetail[]>([]);
     const [journey, setJourney] = useState<TherapyJourney | null>(null);
     const [loading, setLoading] = useState(true);
+    const [fetchError, setFetchError] = useState<string | null>(null);
 
     /* ── UI state ── */
     const [activeTab, setActiveTab] = useState<Tab>('find');
@@ -157,6 +159,7 @@ export default function SessionsPage() {
     /* ── Data fetching ── */
     const fetchAll = useCallback(async () => {
         setLoading(true);
+        setFetchError(null);
         try {
             const [recRes, nowRes, schedRes, compRes, jrnRes] = await Promise.all([
                 therapyApi.getRecommendedTherapists(),
@@ -170,8 +173,12 @@ export default function SessionsPage() {
             if (schedRes.success && schedRes.data) setScheduled(unwrapList<SessionDetail>(schedRes.data));
             if (compRes.success && compRes.data) setCompleted(unwrapList<SessionDetail>(compRes.data));
             if (jrnRes.success && jrnRes.data) setJourney(jrnRes.data as TherapyJourney);
-        } catch { /* sections show empty states */ }
-        finally { setLoading(false); }
+        } catch (err) {
+            console.error('Failed to fetch sessions data:', err);
+            setFetchError('Could not load session data. Please check your connection and try again.');
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     useEffect(() => { fetchAll(); }, [fetchAll]);
@@ -269,6 +276,31 @@ export default function SessionsPage() {
             animate="show"
             className="w-full pb-16"
         >
+            {/* ── Error State ── */}
+            {!loading && fetchError && (
+                <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-6 rounded-[20px] p-6 bg-red-500/10 border border-red-500/20 relative overflow-hidden"
+                >
+                    <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center flex-shrink-0">
+                            <AlertTriangle className="w-5 h-5 text-red-400" />
+                        </div>
+                        <div className="flex-1">
+                            <h3 className="text-[15px] font-semibold text-red-400 mb-1">Couldn't load sessions</h3>
+                            <p className="text-[13px] text-red-300/80 leading-relaxed mb-3">{fetchError}</p>
+                            <button
+                                onClick={fetchAll}
+                                className="px-4 py-2 rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-400 text-[13px] font-medium transition-colors border border-red-500/20"
+                            >
+                                Try Again
+                            </button>
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+
             {/* ── Discovery Banner ── */}
             {!loading && isDiscoveryEligible && (
                 <motion.div variants={fadeUp} className="mb-5 rounded-[20px] p-5 sm:p-6 bg-gradient-to-r from-emerald-900/15 via-emerald-900/8 to-teal-900/5 border border-emerald-500/10 relative overflow-hidden">
@@ -1077,7 +1109,7 @@ function BookingModal({
                         </button>
                     </div>
 
-                    {/* Therapist mini card */}
+                    {/* Guide mini card */}
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full overflow-hidden border border-white/[0.06]">
                             {therapist.photoUrl ? (

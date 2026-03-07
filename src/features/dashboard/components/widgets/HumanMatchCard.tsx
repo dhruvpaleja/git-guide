@@ -123,7 +123,7 @@ export default function HumanMatchCard() {
                         </div>
                         <p className="text-[14px] text-white/55 font-medium">No matches yet</p>
                         <p className="text-[12px] text-white/35 leading-relaxed">
-                            Complete your profile for personalized Soul Guide matches
+                            Complete your profile for personalized wellness guide matches
                         </p>
                         <Link
                             to="/dashboard/personalize"
@@ -178,7 +178,7 @@ export default function HumanMatchCard() {
                             </div>
                         </div>
 
-                        {/* Therapist Profile + CTA */}
+                        {/* Wellness Guide Profile + CTA */}
                         <div className="flex items-center justify-between pt-4 border-t border-white/[0.04]">
                             <div className="flex items-center gap-3">
                                 <div className="relative">

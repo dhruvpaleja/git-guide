@@ -19,7 +19,7 @@ export default function StepGender({ value, onChange, onNext, onBack }: StepProp
   return (
     <div className="text-center max-w-sm mx-auto">
       <h2 className="text-[28px] sm:text-[32px] font-semibold text-white">How do you identify?</h2>
-      <p className="text-[14px] text-white/50 mt-2">This helps us personalize your therapist match</p>
+      <p className="text-[14px] text-white/50 mt-2">This helps us personalize your wellness guide match</p>
 
       <div className="mt-8 max-w-xs mx-auto grid grid-cols-2 gap-3">
         {options.map((option) => {

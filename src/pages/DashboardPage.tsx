@@ -11,6 +11,8 @@ import {
   Moon,
   Sun,
   CloudSun,
+  AlertTriangle,
+  RefreshCw,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SoulConstellationMap from '@/features/dashboard/components/widgets/SoulConstellationMap';
@@ -31,8 +33,8 @@ function getGreeting(): { text: string; icon: typeof Sun } {
 /* ──── Quick Actions ──── */
 const quickActions = [
   {
-    label: 'Book a Session',
-    desc: 'Find the right therapist',
+    label: 'Connect with a Guide',
+    desc: 'Find the right wellness guide',
     icon: Calendar,
     route: '/dashboard/sessions',
     accentColor: 'text-amber-400',
@@ -83,11 +85,45 @@ const fadeUp = {
 export default function DashboardPage() {
   useDocumentTitle('Dashboard');
   const [isConfessionalActive, setIsConfessionalActive] = useState(false);
-  const { data } = useDashboard();
+  const { data, isLoading, error, refetch } = useDashboard();
   const { user } = useAuth();
   const userName = user?.name?.split(' ')[0] ?? 'there';
   const greeting = getGreeting();
   const GreetingIcon = greeting.icon;
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="w-full min-h-[calc(100vh-80px)] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-full border-4 border-amber-500/20 border-t-amber-500 animate-spin mx-auto mb-4" />
+          <p className="text-white/50 text-sm">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state with retry
+  if (error) {
+    return (
+      <div className="w-full min-h-[calc(100vh-80px)] flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center">
+          <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="w-8 h-8 text-red-400" />
+          </div>
+          <h2 className="text-[18px] font-semibold text-white/90 mb-2">Couldn't load dashboard</h2>
+          <p className="text-[13px] text-white/60 leading-relaxed mb-6">{error}</p>
+          <button
+            onClick={refetch}
+            className="px-6 py-2.5 rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-400 text-[14px] font-medium transition-colors border border-red-500/20 inline-flex items-center gap-2"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-[calc(100vh-80px)] relative">
@@ -153,7 +189,7 @@ export default function DashboardPage() {
                 to="/dashboard/sessions"
                 className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-900/40 to-orange-900/20 hover:from-amber-800/50 hover:to-orange-800/30 border border-amber-500/10 text-[13px] font-medium text-white/70 hover:text-white/90 transition-all duration-400 backdrop-blur-sm flex items-center gap-2 flex-shrink-0 shadow-[0_0_40px_rgba(180,120,40,0.08)]"
               >
-                Book a Session
+                Connect with a Guide
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </Link>
             )}
@@ -186,7 +222,7 @@ export default function DashboardPage() {
 
         {/* ═══════════════════════════════════════════════════════════
             SECTION 4 — ★ INSIGHTS + PSYCHOLOGIST MATCH (the money shot)
-            Pattern intelligence on left, therapist recommendation on right.
+            Pattern intelligence on left, wellness guide recommendation on right.
             This is the primary conversion funnel.
         ═══════════════════════════════════════════════════════════ */}
         <motion.div

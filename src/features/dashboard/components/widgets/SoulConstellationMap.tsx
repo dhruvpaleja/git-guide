@@ -26,15 +26,21 @@ export default function SoulConstellationMap() {
     const [nodes, setNodes] = useState<ConstellationNode[]>([]);
     const [connections, setConnections] = useState<ConstellationConnection[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        setIsLoading(true);
+        setError(null);
         constellationService
             .getConstellation()
             .then((data) => {
                 setNodes(data.nodes);
                 setConnections(data.connections);
             })
-            .catch(() => { })
+            .catch((err) => {
+                console.error('Failed to load constellation:', err);
+                setError('Could not load your constellation pattern. This is optional — your journey continues.');
+            })
             .finally(() => setIsLoading(false));
     }, []);
 
@@ -136,6 +142,15 @@ export default function SoulConstellationMap() {
             {/* Nodes */}
             {isLoading ? (
                 <Loader2 className="w-5 h-5 text-white/10 animate-spin" />
+            ) : error ? (
+                <div className="absolute inset-0 flex items-center justify-center p-6">
+                    <div className="text-center max-w-xs">
+                        <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-3">
+                            <ArrowUpRight className="w-5 h-5 text-white/20" />
+                        </div>
+                        <p className="text-[12px] text-white/40 font-medium">{error}</p>
+                    </div>
+                </div>
             ) : (
                 <div className="absolute inset-0 pointer-events-none">
                     {renderNodes.map((node, idx) => {

@@ -1,7 +1,13 @@
 # Soul Yatri — Documentation Drift Report
 **Batch 8 / Audit Layer 7**
-**Generated**: 2026-07-15
-**Scope**: README.md, docs/ARCHITECTURE.md, docs/API.md, docs/DEVELOPMENT.md, docs/MVP_DEFINITION.md, docs/CONTRIBUTING.md, docs/COMPREHENSIVE_CODEBASE_AUDIT.md, docs/FLOW_ISOLATION_VERIFICATION.md, docs/execution/STATUS.md, docs/execution/BASELINE_METRICS.json
+**Re-verified**: 2026-03-07
+**Scope**: README.md, docs/ARCHITECTURE.md, docs/API.md, docs/DEVELOPMENT.md, docs/MVP_DEFINITION.md, docs/CONTRIBUTING.md, docs/COMPREHENSIVE_CODEBASE_AUDIT.md, docs/FLOW_ISOLATION_VERIFICATION.md, docs/execution/STATUS.md, docs/execution/BASELINE_METRICS.json, docs/execution/CURRENT_PROBLEMS.md, docs/audit/*
+
+---
+
+## Re-Verification Warning
+
+This file contains older drift findings plus a 2026-03-07 re-verification layer. Some earlier audit artifacts inside `docs/audit/` overstate completion, use future dates relative to the current repository review date, or describe issues that have partially changed since they were written. Treat this document as the current source of truth when it conflicts with older audit notes.
 
 ---
 
@@ -122,6 +128,22 @@
 
 ---
 
+### DRIFT-013A: README still claims secure video calls are live, but they are still not implemented
+- **Severity**: CRITICAL
+- **Doc claims**: README.md still says "Secure Video Calls: HIPAA-compliant video consultation platform" under practitioner features.
+- **Code reality**: Current README was partially corrected for stack drift, but this feature claim remains overstated. There is still no Daily, 100ms, Twilio Video, LiveKit, or other WebRTC SDK in root or server dependencies. Therapy routes still return `501` for core session operations.
+- **Recommendation**: Change README wording to "Video sessions planned" or remove the claim until a real provider and session backend are integrated.
+
+---
+
+### DRIFT-013B: README still claims practitioner earnings tracking, but backend and UI do not support it
+- **Severity**: MEDIUM
+- **Doc claims**: README.md still lists "Earnings Tracking" under practitioner capabilities.
+- **Code reality**: No dedicated earnings page exists, no practitioner earnings endpoint exists, and therapy/payment domains are still mostly stubbed.
+- **Recommendation**: Mark earnings tracking as planned, not current.
+
+---
+
 ### DRIFT-014: COMPREHENSIVE_CODEBASE_AUDIT.md lists axe-core for automated a11y testing — no axe integration in tests
 - **Severity**: MEDIUM
 - **Doc claims**: `BUILD_PLAN.md` Tech Stack table: "Accessibility: Radix UI + axe-core + Lighthouse a11y — WCAG 2.1 AA target, automated + manual testing". COMPREHENSIVE_CODEBASE_AUDIT.md Section 5.10 references axe-core automation.
@@ -154,6 +176,14 @@
 
 ---
 
+### DRIFT-017A: ARCHITECTURE.md still claims Zustand, React Query, and Socket.io after README was partially corrected
+- **Severity**: HIGH
+- **Doc claims**: ARCHITECTURE.md still lists Zustand for feature state, React Query for server state, and Socket.io for realtime.
+- **Code reality**: The current codebase still uses React Context, custom `apiService`, and native `ws`/`WebSocket`. This file is now more misleading than README because README has already been partially corrected.
+- **Recommendation**: Update ARCHITECTURE.md immediately so onboarding and implementation docs do not diverge.
+
+---
+
 ### DRIFT-018: ARCHITECTURE.md says dev routes are runtime-flag-gated — `enableDevRoutes` still defaults true in production config
 - **Severity**: CRITICAL
 - **Doc claims**: ARCHITECTURE.md "Authentication & Authorization" section implies dev routes are safely gated. BATCH:009 STATUS.md entry: "deterministic runtime-gated dev/test route mounting"
@@ -178,20 +208,52 @@
 
 ---
 
+### DRIFT-021: docs/execution/CURRENT_PROBLEMS.md claims dev-route defaults were resolved, but code still contradicts it
+- **Severity**: CRITICAL
+- **Doc claims**: `docs/execution/CURRENT_PROBLEMS.md` marks server route exposure as resolved and says `enableDevRoutes => isDevelopment`.
+- **Code reality**: `server/src/config/index.ts` still sets `enableDevRoutes: envBool('ENABLE_DEV_ROUTES', isDevelopment || isProduction)`, which is not resolved.
+- **Recommendation**: Update the execution note or fix the code immediately. Right now the doc is materially false.
+
+---
+
+### DRIFT-022: docs/audit/00_repo_inventory.md claims `.env.local` is committed, but that file is not present in the current workspace
+- **Severity**: MEDIUM
+- **Doc claims**: `docs/audit/00_repo_inventory.md` lists `.env.local` as committed and flags it as a security risk.
+- **Code reality**: Current workspace file inventory contains `.env.example`, `.env.production`, `server/.env.example`, and `server/.env.production`, but no `.env.local`.
+- **Recommendation**: Remove or qualify the old claim. Keep the general secret-handling warning, but do not state `.env.local` is currently present when it is not.
+
+---
+
+### DRIFT-023: Existing audit artifacts overstate audit completion and use future-dated timestamps
+- **Severity**: HIGH
+- **Doc claims**: `docs/audit/_progress.json` says the audit is 100% complete, while several audit files are dated 2026-07-15.
+- **Code reality**: The current repo review date is 2026-03-07, existing artifacts include stale or already-corrected claims, and the progress metadata itself admits only 50 files reviewed while simultaneously claiming full completion.
+- **Recommendation**: Treat previous audit artifacts as a baseline, not a final authority. Continue re-verification before making implementation decisions from them.
+
+---
+
+### DRIFT-024: README testing section overstates the current automated test surface
+- **Severity**: MEDIUM
+- **Doc claims**: README says there are 15 Playwright smoke tests.
+- **Code reality**: Only one Playwright spec file exists in `tests/example.spec.ts`, and it currently contains 14 tests, not 15. CI also does not run them.
+- **Recommendation**: Update README to say a single smoke suite exists, and state clearly that it is not CI-enforced.
+
+---
+
 ## Summary
 
 | Severity | Count |
 |----------|-------|
-| CRITICAL | 4 (DRIFT-005, DRIFT-012, DRIFT-018, and edge of DRIFT-019) |
-| HIGH | 8 (DRIFT-001, DRIFT-002, DRIFT-003, DRIFT-004, DRIFT-008, DRIFT-010, DRIFT-011, DRIFT-019) |
-| MEDIUM | 6 (DRIFT-006, DRIFT-009, DRIFT-013, DRIFT-014, DRIFT-015, DRIFT-017) |
-| LOW | 3 (DRIFT-007, DRIFT-016, DRIFT-020) |
-| **Total** | **20** |
+| CRITICAL | 6 |
+| HIGH | 10 |
+| MEDIUM | 9 |
+| LOW | 3 |
+| **Total** | **28** |
 
 ### Top 5 Immediate Actions
 
 1. **DRIFT-005** — Remove HIPAA-compliant video claim (no video provider integrated)
 2. **DRIFT-018** — Fix `enableDevRoutes` production security vulnerability
 3. **DRIFT-012** — Audit bypass caveat in FLOW_ISOLATION doc; enforce prod env var
-4. **DRIFT-009** — Add Playwright smoke tests to GitHub Actions CI
-5. **DRIFT-010** — Fix non-functional Google OAuth buttons (or remove them)
+4. **DRIFT-021** — Correct `docs/execution/CURRENT_PROBLEMS.md` or fix the code so the "resolved" claim becomes true
+5. **DRIFT-024** — Fix README testing claims and stop overstating the current smoke-test surface

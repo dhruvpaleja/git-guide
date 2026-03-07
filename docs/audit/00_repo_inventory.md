@@ -1,5 +1,5 @@
 # Soul Yatri — Repository Inventory
-**Audit Date:** 2026-07-15  
+**Audit Date:** 2026-03-07  
 **Auditor:** Forensic Codebase Audit (automated + manual review)  
 **Repo Root:** `/home/runner/work/soul-yatri-website/soul-yatri-website`
 
@@ -141,7 +141,6 @@ soul-yatri-website/
 ├── tests/
 │   └── example.spec.ts         # Single Playwright e2e test (placeholder)
 ├── .env.example                # Frontend env template (VITE_AUTH_BYPASS=true ⚠️)
-├── .env.local                  # ⚠️ COMMITTED — local env vars (security risk)
 ├── .env.production             # Production env vars placeholder
 ├── .gitignore
 ├── .prettierrc / .prettierignore
@@ -207,7 +206,7 @@ soul-yatri-website/
 | **Total source files** (`.ts` + `.tsx`) | 416 | Frontend: ~178 tsx + ~100 ts; Server: ~138 ts |
 | **Config files** | ~25 | package.json, tsconfig*, vite.config, eslint, tailwind, postcss, playwright, docker*, vercel, nginx, commitlint, .prettierrc, components.json |
 | **Documentation files** | ~201 | `.md` files across docs/, src/, README.md, agentprompt.txt |
-| **Test files** | 1 | `tests/example.spec.ts` (placeholder only) |
+| **Test files** | 1 | `tests/example.spec.ts` (single Playwright smoke suite with 14 tests; not placeholder, but still far from comprehensive) |
 | **Static assets (images)** | 657 | 585 `.png` + 57 `.jpg` + 15 `.svg` |
 | **Database/Schema files** | 3 | schema.prisma + 2 SQL migrations |
 | **Scripts** | 7 | scripts/, .husky/, prisma seed |
@@ -256,7 +255,7 @@ soul-yatri-website/
 | Server `prisma validate` | Not run | server node_modules absent |
 
 ### Committed Secrets Risk
-- `.env.local` is present in the repo (evidence: found in file listing)
+- `.env.local` is not present in the current workspace, but `.env.production` and `server/.env.production` remain tracked and should be reviewed for secret hygiene
 - docker-compose.yml contains plaintext `JWT_SECRET=change-me-in-production`
 
 ---

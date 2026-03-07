@@ -6,6 +6,332 @@
 
 ---
 
+## Reality-Based 100/100 Execution Blueprint (Verified 2026-03-07)
+
+This section overrides any optimistic assumptions elsewhere in this file. It is grounded in the current repository state.
+
+### Current Product Reality
+
+| Area | Current State | Verified Reality |
+|------|---------------|------------------|
+| Auth | Partially real | Core auth, users, onboarding, profile, settings, notifications are real; password reset and some hardening paths are incomplete |
+| Health tools | Real | Mood, journal, meditation are the strongest end-to-end user features |
+| Sessions / therapy | Partial | Frontend exists, backend domain mostly returns 501, DB schema only partially supports intended flow |
+| Constellation | Partial | Frontend experience is strong, backend is absent, current data is fallback mock data |
+| Connections / social | Planned | UI is mock, backend and Prisma models are absent |
+| Astrology | Partial | Onboarding captures birth data, full astrologer workflows and models are not implemented |
+| Admin | Skeleton | Types and route shells exist, real analytics and operations backend are missing |
+| AI | Planned | Type system is rich, live AI orchestration is not implemented |
+| Analytics | Partial | Event types are defined, production tracking pipeline is not implemented |
+| Realtime | Partial | `ws` exists for notifications, not Socket.IO, not a full messaging stack |
+
+### 100/100 North Star
+
+Soul Yatri should become a personal healing operating system with five defensible moats:
+
+1. A living emotional graph that maps the user's life better than any journal or chat log.
+2. A resonance network that matches people, practitioners, and content from lived signal instead of shallow profile fields.
+3. A memory-rich AI layer that understands change over time, not just the latest prompt.
+4. A practitioner and astrologer operating system that improves outcomes, accountability, and trust.
+5. A full-funnel measurement and experimentation stack that learns what increases healing, retention, trust, and paid conversion.
+
+### Product Principles That Must Not Be Violated
+
+1. Constellation is AI-first. Users refine it; they do not manually build the core graph from blank state.
+2. Connections must reward vulnerability and healing progress, not vanity metrics.
+3. Every major action must create structured product signal for personalization, ranking, and improvement.
+4. Tracking must be consent-aware and privacy-safe. Training data must be anonymized, consented, auditable, and revocable.
+5. Public UX can feel warm and premium; operational layers must still be measurable, testable, and deterministic.
+
+### The Real Build Order
+
+Do not build this in theme order. Build it in dependency order.
+
+#### Phase 0. Platform Hardening
+- Remove dev-only auth bypass risk from production paths.
+- Standardize feature flags and environment guards.
+- Finish auth recovery flows, session invalidation, audit coverage, and role boundary checks.
+- Make dashboard access depend on real roles and backend truth, not frontend assumptions.
+
+#### Phase 1. Data Foundation
+- Add canonical event taxonomy across frontend and backend.
+- Create event ingestion, warehouse-ready storage, and identity stitching.
+- Track pageview, CTA click, form submit, onboarding step, mood log, journal write, meditation complete, session request, session completion, constellation insight open, match accept, message send, content post, payment step, churn signals.
+- Add consent state, data export coverage, deletion propagation, and training-data eligibility flags.
+
+#### Phase 2. Constellation Backend
+- Add Prisma models for nodes, edges, insights, snapshots, access grants, annotations, feedback.
+- Replace fallback mock service with real APIs and async generation jobs.
+- Wire node extraction from onboarding, mood, journal, chat, transcript, and astrology inputs.
+- Add insight generation, trajectory scoring, daily snapshots, time-travel support, and practitioner access.
+
+#### Phase 3. Therapy Core
+- Build real therapist discovery, availability, booking, session lifecycle, tasks, reports, reviews, and therapist dashboards.
+- Integrate Daily or 100ms for sessions, recording policy, consent states, and post-session summaries.
+- Make sessions the operational spine for therapy, astrology prep, recommendations, and retention.
+
+#### Phase 4. Astrology Operating System
+- Add Prisma models for astrologers, kundali charts, predictions, accuracy logs, brownie points, and prediction consensus.
+- Build chart ingestion, prediction authoring, session prep reports, therapist review loop, and astrologer scorecards.
+- Use astrology as a high-signal interpretation layer for constellation and matching, not a separate isolated product.
+
+#### Phase 5. Connections Graph
+- Build social graph models: connections, follows, blocks, prompts, posts, comments, reactions, moments, message threads, circles, moderation events, match cache.
+- Launch in this order: soul profile, prompt answers, match queue, connection request flow, protected DMs, feed, moments, circles, professional network.
+- Keep identity reveal gated until mutual intent is clear.
+
+#### Phase 6. AI Memory and Recommendation Engine
+- Introduce long-term semantic memory for journaling, sessions, constellation history, preferences, and prior interventions.
+- Build next-best-action engine for user nudges, therapist prep, astrologer prompts, admin anomaly alerts, and growth experiments.
+- Add safety evaluation, model routing, cost-aware inference, prompt versioning, and feedback loops.
+
+#### Phase 7. Admin Command Center
+- Build live business health dashboards, workflow queues, moderation, crisis escalation, practitioner QA, astrologer accuracy, funnel visibility, infra health, and experimentation dashboards.
+- Admin should see one truth across revenue, trust, retention, safety, growth, and delivery quality.
+
+#### Phase 8. Retention Engine
+- Build churn scoring, reactivation journeys, session follow-up loops, constellation streaks, social reciprocity loops, and therapist/accountability reminders.
+- Every user should always have a best next action visible within 10 seconds of opening the app.
+
+#### Phase 9. Experimentation and Scale
+- Add A/B framework, feed ranking evaluation, match quality evaluation, AI quality scorecards, event replay, warehouse sync, and cost controls.
+- Only after this should you optimize virality and scale acquisition aggressively.
+
+### Core Algorithms That Must Exist
+
+#### 1. Soul Graph Extraction Pipeline
+
+```text
+input event -> preprocess -> safety/PII scrub -> candidate node extraction -> dedupe/merge -> edge suggestion -> insight triggers -> snapshot update -> ranking features update
+```
+
+Implementation requirements:
+
+- Preprocess text from journal, mood note, chat turn, therapy transcript, and astrology interpretation.
+- Extract candidate nodes with normalized category, emotion, intensity, tags, source, and confidence.
+- Deduplicate against existing graph using embedding similarity plus symbolic heuristics.
+- Merge by weighted averaging for intensity and source-specific confidence.
+- Create or strengthen edges when temporal co-occurrence, semantic overlap, or repeated narrative adjacency exists.
+- Recompute user category distribution, dominant emotions, valence/arousal summary, and trajectory.
+
+Recommended merge rule:
+
+$$
+newIntensity = \alpha(source) \cdot candidate + (1 - \alpha(source)) \cdot existing
+$$
+
+Where $\alpha(source)$ is higher for therapy transcripts and repeated journal patterns than for a single mood note.
+
+#### 2. Constellation Insight Trigger Engine
+
+Minimum trigger families:
+
+- intensity spike
+- prolonged high intensity
+- negative cluster persistence
+- positive recovery emergence
+- conflict escalation between linked nodes
+- session prep briefing
+- astrology correlation
+- stagnation / silence
+- improvement milestone
+- isolation risk
+
+Every trigger must produce:
+
+- user-facing insight copy
+- admin-safe structured record
+- optional notification
+- recommendation candidates
+- training/evaluation label for later model tuning
+
+#### 3. Match Ranking Engine
+
+Connections must not be swipe-based. They must be ranked from deep signal.
+
+Recommended version 1 scoring:
+
+$$
+matchScore = 0.30C + 0.18M + 0.12A + 0.10S + 0.08G + 0.07T + 0.05I + 0.05R + 0.05Q
+$$
+
+Where:
+
+- $C$ = constellation resonance
+- $M$ = mood-pattern compatibility over time
+- $A$ = astrology compatibility
+- $S$ = struggle and healing-goal overlap
+- $G$ = growth complementarity, not sameness
+- $T$ = activity-time overlap
+- $I$ = intent compatibility
+- $R$ = reciprocity likelihood from prior behavior
+- $Q$ = safety and quality penalty-adjusted trust score
+
+Guardrails:
+
+- Hard-filter blocked users, recent declines, age/consent boundaries, incompatible intents, and safety flags.
+- Add diversity constraints so feed quality does not collapse into one repetitive user archetype.
+- Do not expose raw scores; expose only quality bands.
+
+#### 4. Feed Ranking Engine
+
+Recommended discovery score:
+
+$$
+feedScore = 0.28 relevance + 0.18 relationship + 0.16 quality + 0.12 freshness + 0.10 safety + 0.08 diversity + 0.08 actionProbability
+$$
+
+Where quality is not vanity likes. It should prefer constructive comments, hold-space reactions, meaningful saves, and low-regret interactions.
+
+#### 5. Next Best Action Engine
+
+Every user session should resolve to one primary recommended action:
+
+- log mood
+- continue journal reflection
+- revisit constellation insight
+- reply to a pending connection
+- book or prepare for session
+- complete assigned therapeutic task
+- view a recommended practitioner / astrologer / resource
+
+Recommended decision order:
+
+1. Safety-critical need
+2. Scheduled obligation
+3. Stalled healing workflow
+4. High-likelihood social reciprocity
+5. Content or course progression
+6. Monetization opportunity only if user state is healthy enough
+
+#### 6. Therapist Matching Engine
+
+Therapist selection should score:
+
+- specialization fit
+- language fit
+- schedule fit
+- modality fit
+- issue severity fit
+- historical satisfaction fit
+- churn-risk urgency fit
+- cultural / spiritual preference fit
+
+Therapist matching must be explainable: every recommendation should list the top reasons it was chosen.
+
+#### 7. Astrologer Accuracy Engine
+
+Astrologers need a real scorecard:
+
+- prediction submission timeliness
+- therapist-rated usefulness
+- user-rated resonance
+- outcome alignment after defined time window
+- calibration quality: confidence vs actual accuracy
+
+This should drive brownie points, tiering, ranking, and QA intervention.
+
+#### 8. Retention and Churn Engine
+
+Churn scoring should use:
+
+- days since meaningful action
+- failed habit loops
+- decline in mood / increase in distress
+- ignored notifications
+- unfinished onboarding
+- session dropoff
+- pricing friction
+- social inactivity
+- therapist mismatch signals
+
+Output classes:
+
+- healthy
+- cooling
+- at risk
+- critical risk
+
+Each class must map to exact interventions, not just dashboards.
+
+### AI Architecture Required To Be Number 1
+
+The winning AI is not just chat. It is a system that understands chronology, context, contradiction, and identity.
+
+#### Memory Layers
+
+1. Short-term conversation state: current session context.
+2. Long-term semantic memory: embeddings of journals, notes, transcripts, insights, preferences, goals.
+3. Structured life graph: constellation nodes, edges, snapshots, therapy tasks, practitioner notes.
+4. Behavioral memory: what nudges worked, what prompts were ignored, what content created healing progress.
+5. Consent and safety memory: what the AI is allowed to use and surface.
+
+#### AI Outputs That Must Exist
+
+- session summaries
+- pre-session therapist briefs
+- astrologer prep summaries
+- weekly constellation digest
+- next best action recommendation
+- social match explanation
+- churn intervention suggestion
+- admin anomaly explanations
+- content moderation decisions with reason codes
+- prompt / model quality reports
+
+### Event Tracking Blueprint
+
+Track everything important, but not recklessly.
+
+#### Required Event Groups
+
+- acquisition: landing CTA, referral source, campaign, SEO page, waitlist, signup start
+- onboarding: each step enter, complete, skip, validation fail, abandon
+- healing: mood logged, journal submitted, meditation started/completed, task completed, insight opened
+- sessions: request, booked, rescheduled, canceled, joined, completed, reviewed
+- constellation: node created by source, node updated, insight generated, insight rated, snapshot viewed, share action
+- connections: match shown, request sent, request accepted, message sent, post created, story viewed, circle joined
+- revenue: checkout started, provider selected, payment success, refund, subscription state
+- risk and safety: crisis keywords, moderation flag, abuse report, auth anomaly, chargeback, suspicious activity
+
+#### Derived Tables To Build
+
+- daily user health summary
+- funnel step facts
+- retention cohorts
+- practitioner quality fact table
+- astrologer accuracy fact table
+- social graph engagement fact table
+- AI intervention outcome table
+
+### World-Class UX Requirements
+
+If the goal is that users never leave, every major surface must answer one question fast: what should I do now, and why is this worth doing?
+
+Required UX outcomes:
+
+- homepage sells trust, proof, and specific outcomes within first viewport
+- dashboard immediately surfaces one next step, one progress signal, and one emotional insight
+- constellation feels magical but never confusing
+- connections feel safe before they feel exciting
+- therapy flows feel operationally reliable, not beautiful but fake
+- astrologer flows feel accountable, not mystical and vague
+- admin feels like mission control, not a static report page
+
+### Acceptance Criteria For A True 100/100 State
+
+The platform is not 100/100 when features exist. It is 100/100 when:
+
+1. The core journey from signup to first value to retention is measurable end to end.
+2. Constellation is persistent, explainable, useful, and improves session quality.
+3. Connections generate real recurring engagement without becoming a low-trust social feed.
+4. Therapy and astrology workflows are fully operational, accountable, and revenue-connected.
+5. AI outputs are helpful, safe, auditable, and continuously improving.
+6. Admin can detect quality, fraud, safety, and growth issues in near real time.
+7. The product can justify every major recommendation with structured evidence.
+
+---
+
 ## Tech Stack Decisions (and why)
 
 | Layer | Choice | Why |
@@ -14,11 +340,11 @@
 | **UI Library** | Tailwind CSS + Radix UI (shadcn/ui) | Already set up. Apple-style clean design, WCAG 2.1 AA accessible |
 | **3D / Animations** | Framer Motion + (optional) Three.js/React Three Fiber | Framer Motion for page transitions & scroll animations. Three.js only for specific hero effects |
 | **Routing** | React Router v7 | Already set up with lazy loading |
-| **State** | Zustand (replace Context for complex state) | Tiny, fast, works outside React, perfect for AI agent dev |
+| **State** | React Context + local hooks today; add Zustand only when shared client state becomes genuinely complex | Matches current repo reality and avoids premature store sprawl |
 | **Backend** | Node.js + Express + TypeScript | Already set up in `server/`. Industry standard |
 | **Database** | PostgreSQL + Prisma ORM | Type-safe queries, auto-generated types, migrations |
 | **Auth** | JWT + bcrypt + refresh tokens | Industry standard, works with any frontend |
-| **Real-time** | Socket.IO | For therapy video sessions, AI chat, notifications |
+| **Real-time** | Native `ws` for notifications today; Daily/100ms for video; add Socket.IO only if richer bidirectional semantics justify it | Matches current backend and keeps transport choices intentional |
 | **AI** | OpenAI GPT-4o + Whisper + fine-tuned models | See AI Model Strategy below |
 | **Payments** | Razorpay (India/INR) + Stripe (global/multi-currency) | INR → Razorpay, all other currencies → Stripe |
 | **File Storage** | AWS S3 / Cloudflare R2 | Session recordings, course videos, product images |

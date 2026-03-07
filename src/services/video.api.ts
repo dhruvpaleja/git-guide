@@ -5,35 +5,35 @@ export const videoApi = {
    * Start video session (creates VideoSDK room)
    */
   startSession: (sessionId: string, enableRecording = true) =>
-    apiService.post('/daily/start', { sessionId, enableRecording }),
+    apiService.post('/video/start', { sessionId, enableRecording }),
 
   /**
    * End video session
    */
   endSession: (sessionId: string) =>
-    apiService.post('/daily/end', { sessionId }),
+    apiService.post('/video/end', { sessionId }),
 
   /**
    * Get room info
    */
   getRoom: (sessionId: string) =>
-    apiService.get(`/daily/room/${sessionId}`),
+    apiService.get(`/video/room/${sessionId}`),
 
   /**
    * Get access token (VideoSDK JWT)
    */
   getToken: (sessionId: string) =>
-    apiService.post('/daily/token', { sessionId }),
+    apiService.post('/video/token', { sessionId }),
 
   /**
    * Toggle recording
    */
   toggleRecording: (sessionId: string, action: 'start' | 'stop') =>
-    apiService.post('/daily/recording', { sessionId, action }),
+    apiService.post('/video/recording', { sessionId, action }),
 
   /**
    * Get recording URL
    */
   getRecordingUrl: (recordingId: string) =>
-    apiService.get(`/daily/recording/${recordingId}`),
+    apiService.get(`/video/recording/${recordingId}`),
 };

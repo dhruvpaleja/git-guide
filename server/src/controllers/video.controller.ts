@@ -1,21 +1,23 @@
 import { Response } from 'express';
-import { asyncHandler } from '../lib/asyncHandler.js';
+import { asyncHandler } from '../lib/async-handler.js';
 import { AppError, ErrorCode } from '../lib/errors.js';
 import { sendSuccess } from '../lib/response.js';
-import * as dailyService from '../services/daily.service.js';
+import * as videoService from '../services/video.service.js';
 import { prisma } from '../lib/prisma.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 /**
  * Start video session
- * POST /api/v1/daily/start
+ * POST /api/v1/video/start
  */
 export const startSession = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const auth = req.auth;
   if (!auth) throw new AppError({ message: 'Unauthorized', statusCode: 401, code: ErrorCode.UNAUTHORIZED });
-  
+
   const userId = auth.userId;
-  const { sessionId, enableRecording, enableChat } = req.body;
+  const sessionId = Array.isArray(req.body.sessionId) ? req.body.sessionId[0] : req.body.sessionId;
+  const enableRecording = req.body.enableRecording === 'true' || req.body.enableRecording === true;
+  const enableChat = req.body.enableChat === 'true' || req.body.enableChat === true;
 
   // Verify user has access to session
   const session = await prisma.session.findUnique({
@@ -43,13 +45,13 @@ export const startSession = asyncHandler(async (req: AuthenticatedRequest, res: 
   }
 
   // Check if room already exists
-  const existingRoom = await dailyService.getRoom(sessionId);
+  const existingRoom = await videoService.getRoom(sessionId);
   if (existingRoom) {
     return sendSuccess(res, existingRoom, 'Room retrieved successfully');
   }
 
   // Create new room
-  const room = await dailyService.createRoom({
+  const room = await videoService.createRoom({
     sessionId,
     enableRecording,
     enableChat,
@@ -67,14 +69,14 @@ export const startSession = asyncHandler(async (req: AuthenticatedRequest, res: 
 
 /**
  * End video session
- * POST /api/v1/daily/end
+ * POST /api/v1/video/end
  */
 export const endSession = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const auth = req.auth;
   if (!auth) throw new AppError({ message: 'Unauthorized', statusCode: 401, code: ErrorCode.UNAUTHORIZED });
-  
+
   const userId = auth.userId;
-  const { sessionId } = req.body;
+  const sessionId = Array.isArray(req.body.sessionId) ? req.body.sessionId[0] : req.body.sessionId;
 
   // Verify access
   const session = await prisma.session.findUnique({
@@ -91,7 +93,7 @@ export const endSession = asyncHandler(async (req: AuthenticatedRequest, res: Re
   }
 
   // End room
-  await dailyService.endRoom(sessionId);
+  await videoService.endRoom(sessionId);
 
   // Update session status to COMPLETED (only therapist can complete)
   if (session.therapistId === userId) {
@@ -106,14 +108,14 @@ export const endSession = asyncHandler(async (req: AuthenticatedRequest, res: Re
 
 /**
  * Get room info
- * GET /api/v1/daily/room/:sessionId
+ * GET /api/v1/video/room/:sessionId
  */
 export const getRoom = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const auth = req.auth;
   if (!auth) throw new AppError({ message: 'Unauthorized', statusCode: 401, code: ErrorCode.UNAUTHORIZED });
-  
+
   const userId = auth.userId;
-  const { sessionId } = req.params;
+  const sessionId = Array.isArray(req.params.sessionId) ? req.params.sessionId[0] : req.params.sessionId;
 
   // Verify access
   const session = await prisma.session.findUnique({
@@ -129,7 +131,7 @@ export const getRoom = asyncHandler(async (req: AuthenticatedRequest, res: Respo
     });
   }
 
-  const room = await dailyService.getRoom(sessionId);
+  const room = await videoService.getRoom(sessionId);
 
   if (!room) {
     throw new AppError({
@@ -144,36 +146,37 @@ export const getRoom = asyncHandler(async (req: AuthenticatedRequest, res: Respo
 
 /**
  * Toggle recording
- * POST /api/v1/daily/recording
+ * POST /api/v1/video/recording
  */
 export const toggleRecording = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { sessionId, action } = req.body;
+  const sessionId = Array.isArray(req.body.sessionId) ? req.body.sessionId[0] : req.body.sessionId;
+  const action = Array.isArray(req.body.action) ? req.body.action[0] : req.body.action;
 
   if (action === 'start') {
-    const recordingId = await dailyService.startRecording(sessionId);
+    const recordingId = await videoService.startRecording(sessionId);
     if (!recordingId) {
       throw new AppError({
         message: 'Failed to start recording',
         statusCode: 500,
-        code: ErrorCode.INTERNAL_ERROR,
+        code: ErrorCode.EXTERNAL_SERVICE_ERROR,
       });
     }
     sendSuccess(res, { recordingId, action: 'started' }, 'Recording started');
   } else {
-    await dailyService.stopRecording(sessionId);
+    await videoService.stopRecording(sessionId);
     sendSuccess(res, { action: 'stopped' }, 'Recording stopped');
   }
 });
 
 /**
  * Get recording URL
- * GET /api/v1/daily/recording/:recordingId
+ * GET /api/v1/video/recording/:recordingId
  */
 export const getRecordingUrl = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { recordingId } = req.params;
-  
-  const url = await dailyService.getRecordingUrl(recordingId);
-  
+  const recordingId = Array.isArray(req.params.recordingId) ? req.params.recordingId[0] : req.params.recordingId;
+
+  const url = await videoService.getRecordingUrl(recordingId);
+
   if (!url) {
     throw new AppError({
       message: 'Recording not found',
@@ -187,15 +190,14 @@ export const getRecordingUrl = asyncHandler(async (req: AuthenticatedRequest, re
 
 /**
  * Generate access token for room
- * POST /api/v1/daily/token
+ * POST /api/v1/video/token
  */
 export const getToken = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const auth = req.auth;
   if (!auth) throw new AppError({ message: 'Unauthorized', statusCode: 401, code: ErrorCode.UNAUTHORIZED });
-  
+
   const { sessionId } = req.body;
   const userId = auth.userId;
-  const userName = auth.name || 'User';
 
   // Verify access
   const session = await prisma.session.findUnique({
@@ -211,7 +213,7 @@ export const getToken = asyncHandler(async (req: AuthenticatedRequest, res: Resp
     });
   }
 
-  const room = await dailyService.getRoom(sessionId);
+  const room = await videoService.getRoom(sessionId);
 
   if (!room) {
     throw new AppError({
@@ -222,7 +224,7 @@ export const getToken = asyncHandler(async (req: AuthenticatedRequest, res: Resp
   }
 
   // Generate token
-  const token = await dailyService.generateToken(room.roomName, userId, userName);
+  const token = await videoService.generateToken(room.roomName, userId, auth.userId);
 
   sendSuccess(res, { token, roomName: room.roomName }, 'Token generated');
 });

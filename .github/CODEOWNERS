@@ -1,0 +1,38 @@
+# Code Owners for Soul Yatri
+# https://help.github.com/articles/about-codeowners/
+
+# Default owners for the entire repository
+* @dhruvpaleja
+
+# Frontend code
+src/ @dhruvpaleja
+
+# Backend code
+server/ @dhruvpaleja
+
+# Database schema
+server/prisma/schema.prisma @dhruvpaleja
+
+# GitHub workflows
+.github/workflows/ @dhruvpaleja
+
+# Documentation
+docs/ @dhruvpaleja
+*.md @dhruvpaleja
+
+# Configuration files
+*.json @dhruvpaleja
+*.yml @dhruvpaleja
+*.yaml @dhruvpaleja
+
+# Video integration
+src/features/video/ @dhruvpaleja
+server/src/services/video.* @dhruvpaleja
+server/src/controllers/video.* @dhruvpaleja
+
+# Vedic Astrology feature
+src/features/vedic-astrology/ @dhruvpaleja
+
+# Tests
+tests/ @dhruvpaleja
+server/tests/ @dhruvpaleja

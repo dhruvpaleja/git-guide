@@ -3,7 +3,7 @@ import healthRoutes from './health.js';
 import authRoutes from './auth.js';
 import userRoutes from './users.js';
 import therapyRoutes from './therapy.js';
-import dailyRoutes from './daily.js';
+import videoRoutes from './video.js';
 import astrologyRoutes from './astrology.js';
 import aiRoutes from './ai.js';
 import healthToolsRoutes from './health-tools.js';
@@ -32,7 +32,7 @@ if (config.runtime.enableDevRoutes) {
 }
 router.use('/users', userRoutes);
 router.use('/therapy', therapyRoutes);
-router.use('/daily', dailyRoutes);
+router.use('/video', videoRoutes);
 router.use('/astrology', astrologyRoutes);
 router.use('/ai', aiRoutes);
 router.use('/health-tools', healthToolsRoutes);

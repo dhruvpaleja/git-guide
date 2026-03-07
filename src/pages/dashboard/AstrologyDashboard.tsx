@@ -1,11 +1,11 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Star, 
-  Calendar, 
-  Clock, 
-  Users, 
+import {
+  Star,
+  Calendar,
+  Clock,
+  Users,
   Moon,
   ArrowLeft,
   Sparkles
@@ -146,20 +146,23 @@ export default function AstrologyDashboard() {
               
               {/* Quick Actions */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Button className="bg-yellow-500/20 border-yellow-500/50 text-yellow-300 hover:bg-yellow-500/30 h-auto py-4">
+                <Button 
+                  className="bg-yellow-500/20 border-yellow-500/50 text-yellow-300 hover:bg-yellow-500/30 h-auto py-4"
+                  onClick={() => navigate('/astrology/chart')}
+                >
                   <div className="text-left">
-                    <div className="font-semibold">Start Consultation</div>
-                    <div className="text-xs opacity-70">Begin a new session</div>
+                    <div className="font-semibold">Vedic Chart Calculator</div>
+                    <div className="text-xs opacity-70">Parashara Light Style</div>
                   </div>
                 </Button>
-                
+
                 <Button className="bg-blue-500/20 border-blue-500/50 text-blue-300 hover:bg-blue-500/30 h-auto py-4">
                   <div className="text-left">
                     <div className="font-semibold">View Calendar</div>
                     <div className="text-xs opacity-70">Check appointments</div>
                   </div>
                 </Button>
-                
+
                 <Button className="bg-purple-500/20 border-purple-500/50 text-purple-300 hover:bg-purple-500/30 h-auto py-4">
                   <div className="text-left">
                     <div className="font-semibold">Client Reports</div>

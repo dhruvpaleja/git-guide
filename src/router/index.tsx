@@ -54,6 +54,7 @@ const AstrologyDashboard = lazy(() => import('@/pages/dashboard/AstrologyDashboa
 const AdminDashboard = lazy(() => import('@/pages/dashboard/AdminDashboard'));
 const HrDashboard = lazy(() => import('@/pages/dashboard/HrDashboard'));
 const PersonalizationPage = lazy(() => import('@/features/dashboard/pages/PersonalizationPage'));
+const VedicAstrologyPage = lazy(() => import('@/features/vedic-astrology/pages/VedicAstrologyPage'));
 
 // Dashboard sub-pages
 const MoodPage = lazy(() => import('@/pages/dashboard/MoodPage'));
@@ -197,6 +198,14 @@ const router = createBrowserRouter([
             element: (
               <Lazy>
                 <AstrologyDashboard />
+              </Lazy>
+            ),
+          },
+          {
+            path: '/astrology/chart',
+            element: (
+              <Lazy>
+                <VedicAstrologyPage />
               </Lazy>
             ),
           },

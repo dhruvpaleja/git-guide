@@ -54,7 +54,7 @@
     "@types/node": "^22.16.4",
     "@types/ws": "^8.18.1",
     "@types/zxcvbn": "^4.4.5",
-    "prisma": "^6.19.2",
+    "prisma": "^7.4.2",
     "tsx": "^4.20.3",
     "typescript": "^5.9.3"
   }

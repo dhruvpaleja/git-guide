@@ -1,52 +1,101 @@
-node_modules
-dist
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+*.lcov
+.nyc_output
+
+# Production builds
+dist/
+build/
+out/
+
+# Environment variables
 .env
 .env.local
-*.log
-!docs/execution/evidence/**/*.log
-nul
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Claude/AI temp files
-tmpclaude-*
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.tmpclaude-*
 app/
 app.worktrees/
 
-# Debug/temp output files
+# Debug/output files
 *.patch
 backup_diff.patch
 branches.txt
 build_output.txt
-build-result2.txt
-status_conflict.txt
+build-result*.txt
+status_*.txt
 branch_diff.txt
 branch_files.txt
 conflict_status.txt
 git_log.txt
 lint_output.txt
-eslint-check.txt
-lint-result.txt
+eslint-*.txt
+lint-result*.txt
 merged_lint.txt
-repo_url.txt
-repo_url_utf8.txt
+repo_url*.txt
 status.txt
 tc_output.txt
 server/build_out.txt
+server/build-result*.txt
 
-# Playwright and E2E testing (dev-only helpers)
-playwright-utils/
-
-# Agent skills and development tools
-.agents/
-.agent/
-
-# Playwright HTML reports
+# Playwright
 playwright-report/
 blob-report/
 test-results/
+playwright-utils/
+PLAYWRIGHT_*.md
 
-# Local Playwright helper notes (do not commit)
-PLAYWRIGHT_FUNCTIONS_REFERENCE.md
-PLAYWRIGHT_GUIDE.md
-PLAYWRIGHT_INSTALLATION_SUMMARY.md
-PLAYWRIGHT_SETUP_COMPLETE.md
-build_result.txt
+# Agent/AI tools
+.agents/
+.agent/
+.agentic/
+
+# Prisma
+prisma/migrations/*/migration_lock.toml
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Vite
+vite.config.ts.timestamp-*
+
+# Docker
+docker-compose.override.yml
+.dockerignore.local
+
+# Misc
+*.md.bak
+*.md.backup

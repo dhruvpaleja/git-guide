@@ -4,9 +4,10 @@ import { test, expect } from '@playwright/test';
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Wait for the page shell (main or [role="main"]) to be visible. */
+/** Wait for the page shell (#main-content) to be visible. */
 async function expectPageShell(page: import('@playwright/test').Page) {
-  const shell = page.locator('main, [role="main"]');
+  // Use #main-content selector to avoid conflicts with nested main elements
+  const shell = page.locator('#main-content').first();
   await expect(shell).toBeVisible({ timeout: 15_000 });
 }
 

@@ -23,7 +23,7 @@ export const therapyApi = {
     apiService.get<TherapistCard[]>('/therapy/therapists/available-now'),
 
   listTherapists: (params: ListTherapistsParams) =>
-    apiService.get<PaginatedList<TherapistCard>>('/therapy/therapists', { params }),
+    apiService.get<PaginatedList<TherapistCard>>('/therapy/therapists', { params: { ...params } }),
 
   getTherapist: (id: string) =>
     apiService.get<TherapistCard>(`/therapy/therapists/${id}`),

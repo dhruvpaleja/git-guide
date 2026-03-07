@@ -136,7 +136,7 @@ export interface TherapyJourney {
 // Request / param shapes (used by therapy.api.ts + Phase E components)
 // ---------------------------------------------------------------------------
 
-export interface ListTherapistsParams {
+export type ListTherapistsParams = {
   specialization?: string;
   language?: string;
   approach?: 'CBT' | 'HOLISTIC' | 'MIXED';

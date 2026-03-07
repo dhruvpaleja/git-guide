@@ -5,23 +5,33 @@ interface VideoControlsProps {
   isRecording: boolean;
   onToggleRecording: () => void;
   isTherapist?: boolean;
-  meeting?: any; // VideoSDK meeting object
+  meeting?: unknown; // VideoSDK meeting object
 }
 
 export default function VideoControls({ onLeave, isRecording, onToggleRecording, isTherapist, meeting }: VideoControlsProps) {
+  const meetingObj = meeting as {
+    toggleMic: () => void;
+    toggleWebcam: () => void;
+    disableScreenShare: () => Promise<void>;
+    enableScreenShare: () => Promise<void>;
+    micOn: boolean;
+    webcamOn: boolean;
+    screenShareOn: boolean;
+  } | undefined;
+
   const toggleAudio = () => {
-    meeting?.toggleMic();
+    meetingObj?.toggleMic();
   };
 
   const toggleVideo = () => {
-    meeting?.toggleWebcam();
+    meetingObj?.toggleWebcam();
   };
 
   const toggleScreenShare = async () => {
-    if (meeting?.screenShareOn) {
-      await meeting.disableScreenShare();
+    if (meetingObj?.screenShareOn) {
+      await meetingObj.disableScreenShare();
     } else {
-      await meeting.enableScreenShare();
+      await meetingObj?.enableScreenShare();
     }
   };
 
@@ -32,26 +42,26 @@ export default function VideoControls({ onLeave, isRecording, onToggleRecording,
         <button
           onClick={toggleAudio}
           className={`p-4 rounded-full transition-all duration-300 transform hover:scale-110 ${
-            meeting?.micOn
+            meetingObj?.micOn
               ? 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm'
               : 'bg-red-500/20 hover:bg-red-500/30 text-red-400 backdrop-blur-sm'
           }`}
-          title={meeting?.micOn ? 'Mute' : 'Unmute'}
+          title={meetingObj?.micOn ? 'Mute' : 'Unmute'}
         >
-          {meeting?.micOn ? <Mic className="w-6 h-6" /> : <MicOff className="w-6 h-6" />}
+          {meetingObj?.micOn ? <Mic className="w-6 h-6" /> : <MicOff className="w-6 h-6" />}
         </button>
 
         {/* Video toggle */}
         <button
           onClick={toggleVideo}
           className={`p-4 rounded-full transition-all duration-300 transform hover:scale-110 ${
-            meeting?.webcamOn
+            meetingObj?.webcamOn
               ? 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm'
               : 'bg-red-500/20 hover:bg-red-500/30 text-red-400 backdrop-blur-sm'
           }`}
-          title={meeting?.webcamOn ? 'Turn off camera' : 'Turn on camera'}
+          title={meetingObj?.webcamOn ? 'Turn off camera' : 'Turn on camera'}
         >
-          {meeting?.webcamOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
+          {meetingObj?.webcamOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
         </button>
 
         {/* Screen share (therapist only) */}
@@ -59,11 +69,11 @@ export default function VideoControls({ onLeave, isRecording, onToggleRecording,
           <button
             onClick={toggleScreenShare}
             className={`p-4 rounded-full transition-all duration-300 transform hover:scale-110 ${
-              meeting?.screenShareOn
+              meetingObj?.screenShareOn
                 ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 backdrop-blur-sm'
                 : 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm'
             }`}
-            title={meeting?.screenShareOn ? 'Stop sharing' : 'Share screen'}
+            title={meetingObj?.screenShareOn ? 'Stop sharing' : 'Share screen'}
           >
             <Monitor className="w-6 h-6" />
           </button>

@@ -134,7 +134,7 @@ function MeetingView({ sessionId, isTherapist, onLeave }: Omit<VideoSDKRoomProps
       onLeave?.();
       navigate('/dashboard/sessions');
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error('Meeting error:', error);
       setError('Connection error. Please refresh the page.');
     },
@@ -274,7 +274,12 @@ export default function VideoSDKRoom({ sessionId, userName, isTherapist, onLeave
     );
   }
 
-  const MeetingProviderAny = MeetingProvider as any;
+  const MeetingProviderAny = MeetingProvider as unknown as React.ComponentType<{
+    children: React.ReactNode;
+    config: Record<string, unknown>;
+    token: string;
+    onError: (error: unknown) => void;
+  }>;
   
   return (
     <MeetingProviderAny
@@ -289,7 +294,7 @@ export default function VideoSDKRoom({ sessionId, userName, isTherapist, onLeave
         debugMode: false,
       }}
       token={meetingConfig.token}
-      onError={(error: any) => {
+      onError={(error: unknown) => {
         console.error('VideoSDK error:', error);
         setError('Connection error. Please refresh.');
       }}

@@ -1,159 +1,140 @@
 /**
- * Therapy Session Management Types
+ * Therapy / Wellness Guidance Types — BUILD 1
+ *
+ * Matches backend Session, TherapistProfile, TherapyJourney,
+ * UserNudge, and TherapistMetrics models.
  */
 
-export interface TherapySession {
-  id: string;
-  userId: string;
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+export type SessionType = 'discovery' | 'pay_as_you_like' | 'standard';
+export type SessionStatus = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
+export type PricingStage = 'discovery' | 'pay_as_you_like' | 'standard';
+export type NudgeStatus = 'pending' | 'shown' | 'dismissed' | 'acted' | 'expired';
+
+// ---------------------------------------------------------------------------
+// Therapist (search / recommendation cards)
+// ---------------------------------------------------------------------------
+
+export interface TherapistCard {
   therapistId: string;
-  scheduledAt: Date;
-  duration: number; // in minutes
-  status: SessionStatus;
-  sessionType: SessionType;
-  meetingUrl?: string;
-  notes?: string;
-  prescription?: string;
-  followUpDate?: Date;
-  cancelledAt?: Date;
-  cancelledReason?: string;
-  completedAt?: Date;
-  feedback?: SessionFeedback;
-  /** Recording & transcription */
-  recording?: SessionRecording;
-  /** Pre-session astrology report (auto-generated 1-3hrs before) */
-  astrologyReportId?: string;
-  /** Post-session tasks assigned by therapist */
-  tasks?: SessionTask[];
-  /** Deep personality report generated after session */
-  personalityReport?: PersonalityReport;
-  /** AI monitoring data (client-side) — see ai.types.ts */
-  clientMonitorId?: string;
-  /** AI monitoring data (therapist quality + fraud) — see ai.types.ts */
-  therapistMonitorId?: string;
-}
-
-export type SessionStatus = 'scheduled' | 'astrology-review' | 'in-progress' | 'completed' | 'cancelled' | 'no-show' | 'rescheduled';
-export type SessionType = 'consultation' | 'therapy' | 'follow-up' | 'assessment';
-
-export interface SessionRecording {
-  id: string;
-  sessionId: string;
-  recordingUrl: string;
-  duration: number;
-  transcription?: SessionTranscription;
-  createdAt: Date;
-}
-
-export interface SessionTranscription {
-  id: string;
-  sessionId: string;
-  fullText: string;
-  keyPoints: string[];
-  actionItems: string[];
-  emotionalHighlights: EmotionalHighlight[];
-  generatedAt: Date;
-}
-
-export interface EmotionalHighlight {
-  timestamp: number; // seconds into session
-  emotion: string;
-  text: string;
-  intensity: number; // 0-1
-}
-
-export interface SessionTask {
-  id: string;
-  sessionId: string;
   userId: string;
-  therapistId: string;
-  title: string;
-  description: string;
-  category: 'exercise' | 'journaling' | 'meditation' | 'reading' | 'social' | 'lifestyle' | 'other';
-  dueDate: Date;
-  completed: boolean;
-  completedAt?: Date;
-  notes?: string;
-}
-
-export interface PersonalityReport {
-  id: string;
-  userId: string;
-  sessionId: string;
-  traits: PersonalityTrait[];
-  strengths: string[];
-  growthAreas: string[];
-  healingRecommendations: string[];
-  astrologicalInsights?: string[];
-  generatedAt: Date;
-}
-
-export interface PersonalityTrait {
   name: string;
-  score: number; // 0-100
-  description: string;
-  category: 'emotional' | 'cognitive' | 'behavioral' | 'social' | 'spiritual';
+  bio: string;
+  photoUrl: string | null;
+  specializations: string[];
+  approach: 'CBT' | 'HOLISTIC' | 'MIXED';
+  languages: string[];
+  qualifications: string[];
+  experience: number;
+  rating: number;
+  totalReviews: number;
+  totalSessions: number;
+  pricePerSession: number;
+  isOnline: boolean;
+  isAcceptingNow: boolean;
+  nextAvailableSlot: string | null;
+  matchScore: number;
+  matchReasons: string[];
 }
 
-export interface SessionFeedback {
-  rating: number; // 1-5
-  comment: string;
-  wouldRecommend: boolean;
-  improvementAreas: string[];
-  nextSteps: string[];
-}
-
-export interface SessionRequest {
-  id: string;
-  userId: string;
-  issue: string;
-  struggles: string[];
-  preferredTherapist?: string;
-  availabilityTimeSlots: TimeSlot[];
-  urgent: boolean;
-  status: 'pending' | 'matched' | 'rejected';
-  /** System auto-matches best therapist based on ranking and specialization */
-  matchedTherapistId?: string;
-  matchScore?: number;
-  createdAt: Date;
-}
+// ---------------------------------------------------------------------------
+// Availability / Time Slots
+// ---------------------------------------------------------------------------
 
 export interface TimeSlot {
-  date: Date;
+  date: string;
   startTime: string;
   endTime: string;
+  startDateTime: string;
+  endDateTime: string;
+  isBooked: boolean;
 }
 
-export interface TherapyProgress {
-  sessionId: string;
-  userId: string;
-  therapistId: string;
-  mood: number; // 1-10
-  symptoms: string[];
-  goals: string[];
-  improvements: string[];
-  challenges: string[];
-  notes: string;
-}
+// ---------------------------------------------------------------------------
+// Session
+// ---------------------------------------------------------------------------
 
-export interface TherapyPlan {
+export interface SessionDetail {
   id: string;
   userId: string;
   therapistId: string;
-  description: string;
-  goals: string[];
-  sessions: number;
-  duration: string; // e.g., "8 weeks"
-  reviewDate: Date;
-  completed: boolean;
+  therapist: {
+    name: string;
+    photoUrl: string | null;
+    specializations: string[];
+    rating: number;
+  };
+  scheduledAt: string;
+  duration: number;
+  status: SessionStatus;
+  sessionType: SessionType;
+  priceAtBooking: number;
+  userPaidAmount: number | null;
+  matchScore: number | null;
+  matchReason: string | null;
+  bookingSource: string;
+  userRating: number | null;
+  userFeedback: string | null;
+  cancelledBy: string | null;
+  cancelReason: string | null;
+  cancelledAt: string | null;
+  createdAt: string;
 }
 
-export interface TherapistNotification {
+// ---------------------------------------------------------------------------
+// Nudges
+// ---------------------------------------------------------------------------
+
+export interface NudgeItem {
   id: string;
-  therapistId: string;
-  clientId: string;
-  type: 'negative-pattern' | 'emergency-flag' | 'missed-task' | 'session-reminder' | 'astrology-report-ready';
-  message: string;
-  severity: 'info' | 'warning' | 'urgent';
-  read: boolean;
-  createdAt: Date;
+  nudgeType: string;
+  nudgeData: Record<string, unknown> | null;
+  status: NudgeStatus;
+  shownAt: string | null;
+  createdAt: string;
 }
+
+// ---------------------------------------------------------------------------
+// Therapist Dashboard
+// ---------------------------------------------------------------------------
+
+export interface TherapistDashboard {
+  todaySessions: SessionDetail[];
+  totalEarnings: number;
+  totalSessions: number;
+  rating: number;
+  totalClients: number;
+}
+
+export interface TherapistClient {
+  userId: string;
+  name: string;
+  avatarUrl: string | null;
+  struggles: string[];
+  totalSessions: number;
+  lastSessionAt: string | null;
+  avgRating: number | null;
+}
+
+// ---------------------------------------------------------------------------
+// Therapy Journey (pricing stage)
+// ---------------------------------------------------------------------------
+
+export interface TherapyJourney {
+  completedSessionCount: number;
+  pricingStage: PricingStage;
+  activeTherapistCount: number;
+  firstSessionAt: string | null;
+  lastSessionAt: string | null;
+  totalSpent: number;
+}
+
+// ---------------------------------------------------------------------------
+// Legacy alias — keep until dashboard.types.ts is cleaned up
+// ---------------------------------------------------------------------------
+
+/** @deprecated Use SessionDetail instead */
+export type TherapySession = SessionDetail;

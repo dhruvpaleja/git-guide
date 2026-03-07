@@ -57,4 +57,5 @@ export interface RequestConfig {
   retries?: number;
   headers?: Record<string, string>;
   cancelToken?: AbortSignal;
+  params?: Record<string, string | number | boolean | undefined>;
 }

@@ -201,6 +201,13 @@ class ApiService {
   }
 
   /**
+   * Make PATCH request
+   */
+  async patch<T = unknown>(endpoint: string, data?: unknown, config?: RequestConfig): Promise<ApiResponse<T>> {
+    return this.request<T>('PATCH', endpoint, data, config);
+  }
+
+  /**
    * Make DELETE request
    */
   async delete<T = unknown>(endpoint: string, config?: RequestConfig): Promise<ApiResponse<T>> {
@@ -298,7 +305,19 @@ class ApiService {
         const timeoutMs = mergedConfig.timeout ?? API_CONSTANTS.TIMEOUT;
         const signal = mergedConfig.cancelToken ?? AbortSignal.timeout(timeoutMs);
 
-        const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        let url = `${this.baseUrl}${endpoint}`;
+        if (mergedConfig.params) {
+          const searchParams = new URLSearchParams();
+          for (const [key, value] of Object.entries(mergedConfig.params)) {
+            if (value !== undefined && value !== null) {
+              searchParams.append(key, String(value));
+            }
+          }
+          const qs = searchParams.toString();
+          if (qs) url += `?${qs}`;
+        }
+
+        const response = await fetch(url, {
           method,
           credentials: 'include',
           headers: {

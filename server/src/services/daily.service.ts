@@ -1,23 +1,25 @@
 /**
- * Daily.co Service
+ * VideoSDK Service
  * 
  * Manages video room creation, recording, and lifecycle.
  * 
  * ENV Required:
- * - DAILY_API_KEY: Daily.co API key
- * - DAILY_DOMAIN: Daily.co domain (e.g., soulyatri.daily.co)
+ * - VIDEOSDK_API_KEY: VideoSDK API key
+ * - VIDEOSDK_SECRET_KEY: VideoSDK secret key for token generation
  */
 
 import axios from 'axios';
 import { prisma } from '../lib/prisma.js';
+import crypto from 'crypto';
 
-const DAILY_API_KEY = process.env.DAILY_API_KEY || '';
-// const DAILY_DOMAIN = process.env.DAILY_DOMAIN || 'soulyatri.daily.co'; // Reserved for future use
+const VIDEOSDK_API_KEY = process.env.VIDEOSDK_API_KEY || '';
+const VIDEOSDK_SECRET_KEY = process.env.VIDEOSDK_SECRET_KEY || '';
 
 const dailyApi = axios.create({
-  baseURL: `https://api.daily.co/v1`,
+  baseURL: `https://api.videosdk.live`,
   headers: {
-    'Authorization': `Bearer ${DAILY_API_KEY}`,
+    'Authorization': VIDEOSDK_API_KEY,
+    'Content-Type': 'application/json',
   },
 });
 
@@ -193,22 +195,31 @@ export async function getRecordingUrl(recordingId: string): Promise<string | nul
 
 /**
  * Generate access token for a room (for authenticated users)
+ * VideoSDK uses JWT tokens signed with secret key
  */
-export async function generateToken(roomName: string, userId: string, userName: string): Promise<string> {
+export async function generateToken(roomId: string, userId: string, userName: string): Promise<string> {
   try {
-    const response = await dailyApi.post(`/meeting-tokens`, {
-      properties: {
-        room_name: roomName,
-        user_id: userId,
-        user_name: userName,
-        is_owner: false, // Only therapists should be owners
+    // VideoSDK JWT token format
+    const payload = {
+      api_key: VIDEOSDK_API_KEY,
+      permissions: {
+        allow_join: true,
+        allow_mic: true,
+        allow_webcam: true,
+        allow_screen_share: true,
       },
-    });
+    };
 
-    return response.data.token;
+    // Sign with secret key
+    const token = crypto
+      .createHmac('sha256', VIDEOSDK_SECRET_KEY)
+      .update(JSON.stringify(payload))
+      .digest('hex');
+
+    return token;
   } catch (error: unknown) {
-    const err = error as { response?: { data?: unknown }; message?: string };
-    console.error('Failed to generate token:', err.response?.data || err.message);
+    const err = error as { message?: string };
+    console.error('Failed to generate token:', err.message);
     throw new Error('Failed to generate access token');
   }
 }

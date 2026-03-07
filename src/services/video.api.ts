@@ -2,7 +2,7 @@ import { apiService } from './api.service';
 
 export const videoApi = {
   /**
-   * Start video session
+   * Start video session (creates VideoSDK room)
    */
   startSession: (sessionId: string, enableRecording = true) =>
     apiService.post('/daily/start', { sessionId, enableRecording }),
@@ -20,7 +20,7 @@ export const videoApi = {
     apiService.get(`/daily/room/${sessionId}`),
 
   /**
-   * Get access token
+   * Get access token (VideoSDK JWT)
    */
   getToken: (sessionId: string) =>
     apiService.post('/daily/token', { sessionId }),

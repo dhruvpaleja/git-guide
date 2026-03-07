@@ -100,6 +100,28 @@ If you want the best compounding implementation order, start agents in this sequ
 
 This order matches the strongest product moat: Constellation and Connections become the data backbone for AI, retention, and social graph features.
 
+## Immediate Next Build Slice In This Repo
+
+If the question is not long-run strategy but "what should we build right now in this codebase", start with the first real Therapy backend slice.
+
+Why this should go first right now:
+
+1. The frontend Sessions experience already exists and is visibly product-important.
+2. Prisma already has `TherapistProfile`, `TherapistAvailability`, `Session`, and `Payment`, so this is not a schema-from-zero domain.
+3. `server/src/routes/therapy.ts` is entirely stubbed, which means one focused implementation batch can unlock obvious user value fast.
+4. Admin, AI, and Community are still more skeletal and would force a wider foundation build before they become useful.
+5. Constellation is strategically the deepest moat, but in the current repository it still depends on new schema, new APIs, and replacement of a full mock-first service layer.
+
+The exact first batch should be:
+
+1. `GET /therapy/therapists`
+2. `GET /therapy/therapists/:id`
+3. `POST /therapy/request`
+4. `GET /therapy/sessions`
+5. `GET /therapy/sessions/:id`
+
+Do not start with video, monitoring, recording, therapist revenue, or advanced reports. Those should come after the booking and retrieval slice is real.
+
 ## Copy-Paste Prompts
 
 ### 1. Constellation Backend Foundation

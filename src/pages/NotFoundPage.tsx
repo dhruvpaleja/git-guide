@@ -51,7 +51,7 @@ export default function NotFoundPage() {
             }}
           >
             <img
-              src="/images/not-found-happy-face.png"
+              src="/images/not-found-happy-face.svg"
               alt="Page not found"
               className="w-full h-full object-contain drop-shadow-lg"
             />

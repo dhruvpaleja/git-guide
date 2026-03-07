@@ -109,14 +109,6 @@ export default function ServicesSection() {
           </div>
         </div>
 
-        {/* Nav dots - Figma: h-8, w-30, rounded-4 */}
-        <div className="flex justify-center gap-[5px] mt-8">
-          <div className="w-[30px] h-[8px] rounded-[4px] bg-black" />
-          <div className="w-[30px] h-[8px] rounded-[4px] bg-black/10" />
-          <div className="w-[30px] h-[8px] rounded-[4px] bg-black/10" />
-          <div className="w-[30px] h-[8px] rounded-[4px] bg-black/10" />
-          <div className="w-[30px] h-[8px] rounded-[4px] bg-black/10" />
-        </div>
       </div>
       <style>{`
         .services-marquee-track {

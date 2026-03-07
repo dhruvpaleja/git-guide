@@ -3,11 +3,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { therapyApi } from '@/services/therapy.api';
+import { videoApi } from '@/services/video.api';
 import type { SessionDetail, SessionStatus } from '@/types/therapy.types';
+import DailyVideoRoom from '@/features/video/DailyVideoRoom';
 import {
   ArrowLeft, Calendar, Clock, Star, MapPin, MessageCircle, X,
   Play, CheckCircle, UserX, Loader2, ExternalLink, AlertTriangle,
-  Sparkles, Phone, FileText,
+  Sparkles, Phone, FileText, Video,
 } from 'lucide-react';
 
 /* ── Helpers ─────────────────────────────────────────────────── */
@@ -62,6 +64,11 @@ function addToCalendarUrl(session: SessionDetail): string {
   const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const title = encodeURIComponent(`Soul Yatri — Call with ${session.therapist.name}`);
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${fmt(start)}/${fmt(end)}`;
+}
+
+function isStartingSoon(scheduledAt: string): boolean {
+  const diff = new Date(scheduledAt).getTime() - Date.now();
+  return diff > 0 && diff <= 30 * 60 * 1000; // Within 30 minutes
 }
 
 /* ── Skeleton ────────────────────────────────────────────────── */
@@ -188,6 +195,11 @@ export default function SessionDetailPage() {
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
 
+  // Video call states
+  const [showVideo, setShowVideo] = useState(false);
+  const [videoStarted, setVideoStarted] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
+
   // Therapist action states
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [therapistNotes, setTherapistNotes] = useState('');
@@ -234,6 +246,33 @@ export default function SessionDetailPage() {
     if (!session) return;
     navigate(`/dashboard/sessions?reschedule=${session.id}&therapist=${session.therapistId}`);
   }, [session, navigate]);
+
+  /* ── Start video call ── */
+  const handleStartCall = useCallback(async () => {
+    if (!session) return;
+    try {
+      setVideoError(null);
+      // Start video session (creates room)
+      await videoApi.startSession(session.id);
+      setVideoStarted(true);
+      setShowVideo(true);
+    } catch (err: any) {
+      setVideoError(err.message || 'Failed to start video call');
+      console.error(err);
+    }
+  }, [session]);
+
+  /* ── Leave video call ── */
+  const handleLeaveCall = useCallback(() => {
+    setShowVideo(false);
+    setVideoStarted(false);
+    // Refresh session data
+    if (id) {
+      therapyApi.getSession(id).then(res => {
+        if (res.data) setSession(res.data as SessionDetail);
+      });
+    }
+  }, [id]);
 
   /* ── Therapist actions ── */
   const handleTherapistAction = useCallback(async (action: 'start' | 'complete' | 'noshow') => {
@@ -416,6 +455,18 @@ export default function SessionDetailPage() {
               <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm p-6">
                 <h3 className="text-sm font-bold text-gray-900 mb-4">Actions</h3>
                 <div className="flex items-center gap-3 flex-wrap">
+                  {/* Start Call button - shown when session is starting soon */}
+                  {isStartingSoon(session.scheduledAt) && (
+                    <button
+                      onClick={handleStartCall}
+                      disabled={videoStarted}
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-semibold hover:bg-emerald-100 transition-colors disabled:opacity-50"
+                    >
+                      <Video className="w-4 h-4" />
+                      {videoStarted ? 'Call Active' : 'Start Call'}
+                    </button>
+                  )}
+                  
                   <a
                     href={addToCalendarUrl(session)}
                     target="_blank"
@@ -440,6 +491,13 @@ export default function SessionDetailPage() {
                     Cancel
                   </button>
                 </div>
+                
+                {/* Video call error */}
+                {videoError && (
+                  <div className="mt-4 p-4 rounded-lg bg-red-50 border border-red-100">
+                    <p className="text-sm text-red-700">{videoError}</p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -603,6 +661,20 @@ export default function SessionDetailPage() {
                   Cancel Session
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── Video Call Modal ─── */}
+        {showVideo && videoStarted && (
+          <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm">
+            <div className="w-full h-full max-w-7xl mx-auto p-4">
+              <DailyVideoRoom
+                sessionId={session.id}
+                userName={user?.name || 'User'}
+                isTherapist={isTherapist}
+                onLeave={handleLeaveCall}
+              />
             </div>
           </div>
         )}

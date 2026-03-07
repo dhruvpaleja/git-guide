@@ -28,13 +28,16 @@ export default function Navigation() {
     return false;
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNavDimmed, setIsNavDimmed] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const location = useLocation();
   const navigate = useNavigate();
   const lenis = useLenis();
   const isScrolledRef = useRef(isScrolled);
+  const isNavDimmedRef = useRef(isNavDimmed);
   const themeRef = useRef(theme);
   const rafIdRef = useRef<number | null>(null);
+  const lastScrollYRef = useRef<number>(typeof window !== 'undefined' ? window.scrollY : 0);
 
   const resetScrollToTop = useCallback(() => {
     lenis?.scrollTo(0, { immediate: true });
@@ -50,11 +53,31 @@ export default function Navigation() {
   }, [lenis]);
 
   const updateHeaderState = useCallback(() => {
-    const nextIsScrolled = window.scrollY > 30;
+    const currentScrollY = window.scrollY;
+    const nextIsScrolled = currentScrollY > 30;
     if (nextIsScrolled !== isScrolledRef.current) {
       isScrolledRef.current = nextIsScrolled;
       setIsScrolled(nextIsScrolled);
     }
+
+    const scrollingDown = currentScrollY > lastScrollYRef.current + 2;
+    const scrollingUp = currentScrollY < lastScrollYRef.current - 2;
+
+    let nextIsNavDimmed = isNavDimmedRef.current;
+    if (currentScrollY <= 20) {
+      nextIsNavDimmed = false;
+    } else if (scrollingDown && currentScrollY > 80) {
+      nextIsNavDimmed = true;
+    } else if (scrollingUp) {
+      nextIsNavDimmed = false;
+    }
+
+    if (nextIsNavDimmed !== isNavDimmedRef.current) {
+      isNavDimmedRef.current = nextIsNavDimmed;
+      setIsNavDimmed(nextIsNavDimmed);
+    }
+
+    lastScrollYRef.current = currentScrollY;
 
     const elements = document.querySelectorAll('.bg-white, .bg-black, [data-theme]');
     let foundTheme: 'light' | 'dark' | null = null;
@@ -129,10 +152,12 @@ export default function Navigation() {
   };
 
   const isLight = theme === 'light';
+  const effectiveDimmed = isNavDimmed && !isMobileMenuOpen;
 
   return (
     <header
       className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[95%] max-w-[800px] ${isScrolled ? 'top-2' : 'top-6'
+        } ${effectiveDimmed ? 'opacity-35' : 'opacity-100'
         }`}
     >
       <a

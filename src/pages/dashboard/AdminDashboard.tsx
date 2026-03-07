@@ -171,6 +171,16 @@ export default function AdminDashboard() {
                     <div className="text-xs opacity-70">Configure platform settings</div>
                   </div>
                 </Button>
+
+                <Button
+                  className="bg-orange-600 hover:bg-orange-700 h-auto py-4"
+                  onClick={() => navigate('/admin/hr')}
+                >
+                  <div className="text-left">
+                    <div className="font-semibold">HR Dashboard</div>
+                    <div className="text-xs opacity-70">Manage job openings and applications</div>
+                  </div>
+                </Button>
               </div>
 
               {/* Recent Activity */}

@@ -12,6 +12,7 @@ import {
   resolveErrorAction,
 } from '@/utils/errors';
 import { isApiEnvelope } from '@contracts/api.contracts';
+import { activityTracker } from '@/services/activity-tracker';
 
 /** Simple circuit-breaker: after a transient network failure, skip attempts for a cooldown period. */
 let circuitOpenUntil = 0;
@@ -299,6 +300,7 @@ class ApiService {
 
     let tokenRefreshAttempted = false;
     let lastError: Error | null = null;
+    const startTime = performance.now();
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
@@ -360,6 +362,7 @@ class ApiService {
             continue;
           }
 
+          activityTracker.trackApiCall(endpoint, method, response.status, Math.round(performance.now() - startTime), parsedError.message);
           return {
             success: false,
             error: parsedError,
@@ -369,9 +372,11 @@ class ApiService {
         }
 
         if (isApiEnvelope(result)) {
+          activityTracker.trackApiCall(endpoint, method, response.status, Math.round(performance.now() - startTime));
           return result as ApiResponse<T>;
         }
 
+        activityTracker.trackApiCall(endpoint, method, response.status, Math.round(performance.now() - startTime));
         return {
           success: true,
           data: extractSuccessData(result) as T,
@@ -403,6 +408,7 @@ class ApiService {
 
     const transientNetworkError = isTransientFetchError(lastError);
 
+    activityTracker.trackApiCall(endpoint, method, 0, Math.round(performance.now() - startTime), lastError?.message || 'Request failed');
     return {
       success: false,
       error: {

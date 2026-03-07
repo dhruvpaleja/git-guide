@@ -18,6 +18,7 @@ import corporateRoutes from './corporate.js';
 import careerRoutes from './careers.js';
 import notificationRoutes from './notifications.js';
 import ngoRoutes from './ngo.js';
+import activityRoutes from './activity.js';
 import devLoginRoutes from './dev-login.js';
 import devHelperRoutes from './dev-helper.js';
 import { config } from '../config/index.js';
@@ -47,5 +48,6 @@ router.use('/corporate', corporateRoutes);
 router.use('/careers', careerRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/ngo', ngoRoutes);
+router.use('/activity', activityRoutes);
 
 export default router;

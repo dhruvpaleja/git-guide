@@ -37,70 +37,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const isDevLogin = runtimeFlags.mockAuthEnabled
         && ['user@test.com', 'therapist@test.com', 'astrologer@test.com', 'admin@test.com'].includes(email);
 
-      // MOCK MODE: Test accounts work without API call (guaranteed to work)
+      // DEV MODE: Use dev-login API to get REAL JWTs for test accounts
       if (isDevLogin) {
-        const mockUsers: Record<string, { id: string; email: string; name: string; role: string; passwords: string[] }> = {
-          'user@test.com': {
-            id: 'mock-user-1',
-            email: 'user@test.com',
-            name: 'Test User',
-            role: 'user',
-            passwords: ['user123', 'User123!@#']
-          },
-          'therapist@test.com': {
-            id: 'mock-therapist-1',
-            email: 'therapist@test.com',
-            name: 'Dr. Test Therapist',
-            role: 'practitioner',
-            passwords: ['therapist123', 'Therapist123!@#']
-          },
-          'astrologer@test.com': {
-            id: 'mock-astrologer-1',
-            email: 'astrologer@test.com',
-            name: 'Test Astrologer',
-            role: 'astrologer',
-            passwords: ['astrologer123', 'Astrologer123!@#']
-          },
-          'admin@test.com': {
-            id: 'mock-admin-1',
-            email: 'admin@test.com',
-            name: 'Test Admin',
-            role: 'admin',
-            passwords: ['admin123', 'Admin123!@#']
-          }
+        const devPasswords: Record<string, string[]> = {
+          'user@test.com': ['user123', 'User123!@#'],
+          'therapist@test.com': ['therapist123', 'Therapist123!@#'],
+          'astrologer@test.com': ['astrologer123', 'Astrologer123!@#'],
+          'admin@test.com': ['admin123', 'Admin123!@#'],
         };
 
-        const mockUser = mockUsers[email];
-
-        // Validate password (accept any of the configured passwords)
-        if (!mockUser.passwords.includes(password)) {
+        // Validate password locally
+        if (!devPasswords[email]?.includes(password)) {
           toast.error('Invalid email or password. Please try again.');
           return { success: false };
         }
 
-        // Create mock token
-        const mockToken = btoa(JSON.stringify({
-          sub: mockUser.id,
-          role: mockUser.role,
-          email: mockUser.email
-        }));
+        // Call dev-login API to get a real JWT token
+        const response = await apiService.get<{
+          user: { id: string; email: string; name: string; role: string };
+          accessToken: string;
+        }>(`/dev-login/${email}`);
 
-        // Set user data
-        const userData: User = {
-          id: mockUser.id,
-          email: mockUser.email,
-          name: mockUser.name,
-          role: mockUser.role as User['role'],
-          createdAt: new Date(),
-          updatedAt: new Date()
-        };
-        setUser(userData);
-        localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, mockToken);
-        toast.success('Successfully logged in!');
-        return { success: true, user: userData };
+        if (response.success && response.data) {
+          const userData: User = {
+            id: response.data.user.id,
+            email: response.data.user.email,
+            name: response.data.user.name,
+            role: response.data.user.role as User['role'],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          };
+          setUser(userData);
+          localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.data.accessToken);
+          toast.success('Successfully logged in!');
+          return { success: true, user: userData };
+        } else {
+          // Fallback: try real login endpoint
+          console.warn('Dev-login failed, falling back to real login');
+        }
       }
 
-      // Real authentication for non-test accounts
+      // Real authentication for non-test accounts (or dev-login fallback)
       const response = await apiService.post<{ user: User, accessToken: string }>('/auth/login', { email, password });
 
       if (response.success && response.data) {

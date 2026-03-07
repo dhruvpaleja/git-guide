@@ -1,5 +1,5 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PractitionerSidebar } from '@/features/dashboard/components/PractitionerSidebar';
 import { useAuth } from '@/context/AuthContext';
@@ -8,22 +8,14 @@ import {
     LogOut, Shield, ArrowLeft, Clock, Users, FileText,
     Calendar, Star, TrendingUp, Heart
 } from 'lucide-react';
+import { therapyApi } from '@/services/therapy.api';
 
-/* ─── Hard-coded session stats ─── */
-const STATS = {
-    upcomingSessions: 3,
-    activeClients: 24,
-    totalSessions: 128,
-    totalEarnings: '₹48.5k',
-    rating: 4.8,
-    completedThisMonth: 18,
-};
-
-const UPCOMING_SESSIONS = [
-    { client: 'Karan Patel', type: 'Weekly Therapy', time: '10:00 AM', date: 'Today', color: '#14B8A6' },
-    { client: 'Sabrina Nice', type: 'Counselling', time: '2:00 PM', date: 'Today', color: '#6366F1' },
-    { client: 'Shubham K.', type: 'Counselling', time: '10:00 AM', date: 'Tomorrow', color: '#F59E0B' },
-];
+interface SessionItem {
+  id: string;
+  scheduledAt: string;
+  sessionType: string;
+  user: { name: string };
+}
 
 export default function LogoutPage() {
     useDocumentTitle('Logging Out');
@@ -32,6 +24,49 @@ export default function LogoutPage() {
     const [countdown, setCountdown] = useState(3);
     const { logout, user } = useAuth();
     const navigate = useNavigate();
+
+    const [statsData, setStatsData] = useState({
+        upcomingSessions: 0,
+        activeClients: 0,
+        totalSessions: 0,
+        totalEarnings: '₹0',
+        rating: 0,
+        completedThisMonth: 0,
+    });
+    const [upcomingSessions, setUpcomingSessions] = useState<SessionItem[]>([]);
+    const SESSION_COLORS = ['#14B8A6', '#6366F1', '#F59E0B', '#EC4899', '#8B5CF6'];
+
+    const loadStats = useCallback(async () => {
+        try {
+            const [metricsRes, sessionsRes, clientsRes] = await Promise.all([
+                therapyApi.getTherapistMetrics(),
+                therapyApi.getTherapistSessions({ status: 'SCHEDULED' }),
+                therapyApi.getTherapistClients(),
+            ]);
+            const m = metricsRes as unknown as Record<string, unknown>;
+            const sessData = sessionsRes as unknown as Record<string, unknown>;
+            const sessions = (Array.isArray(sessData) ? sessData : (sessData.sessions as unknown[]) ?? []) as SessionItem[];
+            const clientData = clientsRes as unknown as Record<string, unknown>;
+            const clients = Array.isArray(clientData) ? clientData : (clientData.clients as unknown[]) ?? [];
+
+            const earnings = Number(m.totalEarnings ?? m.earnings ?? 0);
+            const earningsStr = earnings >= 100000 ? `₹${(earnings / 100000).toFixed(1)}L` : earnings >= 1000 ? `₹${(earnings / 1000).toFixed(1)}k` : `₹${earnings}`;
+
+            setStatsData({
+                upcomingSessions: sessions.length,
+                activeClients: clients.length,
+                totalSessions: Number(m.totalSessions ?? 0),
+                totalEarnings: earningsStr,
+                rating: Number(m.averageRating ?? m.rating ?? 0),
+                completedThisMonth: Number(m.completedThisMonth ?? m.completedThisWeek ?? 0),
+            });
+            setUpcomingSessions(sessions.slice(0, 3));
+        } catch {
+            // Silently fall back to zeros
+        }
+    }, []);
+
+    useEffect(() => { loadStats(); }, [loadStats]);
 
     const handleLogout = async () => {
         setIsLoggingOut(true);
@@ -124,11 +159,11 @@ export default function LogoutPage() {
                                 <div className="bg-[#1A1A1A] rounded-[20px] p-5 text-white">
                                     <p className="text-[10px] text-white/50 font-bold uppercase tracking-wider mb-4">Your Impact</p>
                                     {[
-                                        { icon: Star, label: 'Rating', value: `${STATS.rating} ★`, color: 'text-yellow-400' },
-                                        { icon: TrendingUp, label: 'Total Earnings', value: STATS.totalEarnings, color: 'text-emerald-400' },
-                                        { icon: Users, label: 'Active Clients', value: String(STATS.activeClients), color: 'text-blue-400' },
-                                        { icon: FileText, label: 'Total Sessions', value: `${STATS.totalSessions}+`, color: 'text-purple-400' },
-                                        { icon: Heart, label: 'This Month', value: String(STATS.completedThisMonth), color: 'text-pink-400' },
+                                        { icon: Star, label: 'Rating', value: `${statsData.rating.toFixed(1)} ★`, color: 'text-yellow-400' },
+                                        { icon: TrendingUp, label: 'Total Earnings', value: statsData.totalEarnings, color: 'text-emerald-400' },
+                                        { icon: Users, label: 'Active Clients', value: String(statsData.activeClients), color: 'text-blue-400' },
+                                        { icon: FileText, label: 'Total Sessions', value: `${statsData.totalSessions}+`, color: 'text-purple-400' },
+                                        { icon: Heart, label: 'This Month', value: String(statsData.completedThisMonth), color: 'text-pink-400' },
                                     ].map(stat => (
                                         <div key={stat.label} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                                             <div className="flex items-center gap-2.5">
@@ -166,7 +201,7 @@ export default function LogoutPage() {
                                             <div>
                                                 <p className="text-[13px] font-bold text-amber-800">Active Session Notice</p>
                                                 <p className="text-[12px] text-amber-600 mt-0.5 leading-relaxed">
-                                                    You have <span className="font-bold">{STATS.upcomingSessions} upcoming sessions</span> this week.
+                                                    You have <span className="font-bold">{statsData.upcomingSessions} upcoming sessions</span> this week.
                                                     Logging out won't cancel them but notifications will pause.
                                                 </p>
                                             </div>
@@ -235,22 +270,25 @@ export default function LogoutPage() {
                                             <Clock className="w-4 h-4 text-gray-400" />
                                             Upcoming Sessions
                                         </h4>
-                                        <span className="text-[10px] font-bold text-white bg-[#1A1A1A] px-2.5 py-1 rounded-full">{STATS.upcomingSessions}</span>
+                                        <span className="text-[10px] font-bold text-white bg-[#1A1A1A] px-2.5 py-1 rounded-full">{statsData.upcomingSessions}</span>
                                     </div>
                                     <div className="space-y-2.5">
-                                        {UPCOMING_SESSIONS.map((session, i) => (
-                                            <div key={i} className="flex items-center gap-3 p-3 bg-[#F9F9FB] rounded-[14px] border border-gray-50 hover:border-gray-200 transition-colors">
-                                                <div className="w-2 h-10 rounded-full" style={{ backgroundColor: session.color }} />
+                                        {upcomingSessions.map((session, i) => (
+                                            <div key={session.id} className="flex items-center gap-3 p-3 bg-[#F9F9FB] rounded-[14px] border border-gray-50 hover:border-gray-200 transition-colors">
+                                                <div className="w-2 h-10 rounded-full" style={{ backgroundColor: SESSION_COLORS[i % SESSION_COLORS.length] }} />
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-[13px] font-semibold text-gray-800 truncate">{session.client}</p>
-                                                    <p className="text-[11px] text-gray-400">{session.type}</p>
+                                                    <p className="text-[13px] font-semibold text-gray-800 truncate">{session.user?.name ?? 'Client'}</p>
+                                                    <p className="text-[11px] text-gray-400">{session.sessionType ?? 'Session'}</p>
                                                 </div>
                                                 <div className="text-right shrink-0">
-                                                    <p className="text-[12px] font-bold text-gray-700">{session.time}</p>
-                                                    <p className="text-[10px] text-gray-400">{session.date}</p>
+                                                    <p className="text-[12px] font-bold text-gray-700">{new Date(session.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                                    <p className="text-[10px] text-gray-400">{new Date(session.scheduledAt).toLocaleDateString()}</p>
                                                 </div>
                                             </div>
                                         ))}
+                                        {upcomingSessions.length === 0 && (
+                                            <p className="text-[12px] text-gray-400 text-center py-3">No upcoming sessions</p>
+                                        )}
                                     </div>
                                     <p className="text-[11px] text-gray-400 mt-3 text-center leading-relaxed">
                                         These sessions will <span className="font-semibold text-gray-600">not</span> be cancelled if you log out.

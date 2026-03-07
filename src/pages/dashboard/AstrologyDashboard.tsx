@@ -1,5 +1,5 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Star,
@@ -8,16 +8,71 @@ import {
   Users,
   Moon,
   ArrowLeft,
-  Sparkles
+  Sparkles,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { therapyApi } from '@/services/therapy.api';
+
+interface UpcomingSession {
+  id: string;
+  scheduledAt: string;
+  sessionType: string;
+  status: string;
+  user: { name: string };
+}
 
 export default function AstrologyDashboard() {
   useDocumentTitle('Astrology Dashboard');
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isLoading, setIsLoading] = useState(true);
+  const [todaysCount, setTodaysCount] = useState(0);
+  const [completedToday, setCompletedToday] = useState(0);
+  const [totalClients, setTotalClients] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [totalEarnings, setTotalEarnings] = useState(0);
+  const [upcomingSessions, setUpcomingSessions] = useState<UpcomingSession[]>([]);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setIsLoading(true);
+        const [metricsRes, scheduledRes, clientsRes] = await Promise.all([
+          therapyApi.getTherapistMetrics(),
+          therapyApi.getTherapistSessions({ status: 'SCHEDULED' }),
+          therapyApi.getTherapistClients(),
+        ]);
+
+        const m = metricsRes as unknown as Record<string, unknown>;
+        setRating(Number(m.averageRating ?? m.rating ?? 0));
+        setTotalEarnings(Number(m.totalEarnings ?? m.earnings ?? 0));
+
+        const scheduled = (scheduledRes as unknown as Record<string, unknown>);
+        const sessions = (Array.isArray(scheduled) ? scheduled : (scheduled.sessions as unknown[]) ?? []) as UpcomingSession[];
+        setUpcomingSessions(sessions.slice(0, 5));
+
+        // Count today's sessions
+        const today = new Date().toDateString();
+        const todaySessions = sessions.filter(s => new Date(s.scheduledAt).toDateString() === today);
+        setTodaysCount(todaySessions.length);
+
+        // Completed today (would need separate call but approximate from metrics)
+        setCompletedToday(Number(m.completedThisWeek ?? 0));
+
+        const clients = clientsRes as unknown as Record<string, unknown>;
+        const clientList = Array.isArray(clients) ? clients : (clients.clients as unknown[]) ?? [];
+        setTotalClients(clientList.length);
+      } catch {
+        toast.error('Failed to load dashboard data');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('auth_token');
@@ -65,6 +120,12 @@ export default function AstrologyDashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-24">
+            <Loader2 className="w-8 h-8 animate-spin text-yellow-400" />
+          </div>
+        ) : (
+        <>
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="bg-white/10 border-white/20">
@@ -75,8 +136,8 @@ export default function AstrologyDashboard() {
               <Calendar className="w-4 h-4 text-yellow-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">5</div>
-              <p className="text-xs text-white/60">2 completed, 3 upcoming</p>
+              <div className="text-2xl font-bold text-white">{todaysCount}</div>
+              <p className="text-xs text-white/60">{completedToday} completed this week</p>
             </CardContent>
           </Card>
 
@@ -88,8 +149,8 @@ export default function AstrologyDashboard() {
               <Users className="w-4 h-4 text-blue-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">128</div>
-              <p className="text-xs text-white/60">+12 this month</p>
+              <div className="text-2xl font-bold text-white">{totalClients}</div>
+              <p className="text-xs text-white/60">Active clients</p>
             </CardContent>
           </Card>
 
@@ -101,8 +162,8 @@ export default function AstrologyDashboard() {
               <Star className="w-4 h-4 text-yellow-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">4.8</div>
-              <p className="text-xs text-white/60">Based on 96 reviews</p>
+              <div className="text-2xl font-bold text-white">{rating.toFixed(1)}</div>
+              <p className="text-xs text-white/60">Average rating</p>
             </CardContent>
           </Card>
 
@@ -114,8 +175,8 @@ export default function AstrologyDashboard() {
               <Moon className="w-4 h-4 text-purple-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">₹24,500</div>
-              <p className="text-xs text-white/60">This month</p>
+              <div className="text-2xl font-bold text-white">₹{totalEarnings.toLocaleString()}</div>
+              <p className="text-xs text-white/60">Total earnings</p>
             </CardContent>
           </Card>
         </div>
@@ -175,30 +236,29 @@ export default function AstrologyDashboard() {
               <div className="mt-8">
                 <h3 className="text-lg font-semibold mb-4">Upcoming Consultations</h3>
                 <div className="space-y-3">
-                  {[
-                    { name: 'Rahul Sharma', time: '2:00 PM', type: 'Birth Chart Reading', status: 'upcoming' },
-                    { name: 'Priya Patel', time: '3:30 PM', type: 'Career Guidance', status: 'upcoming' },
-                    { name: 'Amit Kumar', time: '5:00 PM', type: 'Marriage Compatibility', status: 'upcoming' },
-                  ].map((consultation, index) => (
+                  {upcomingSessions.length === 0 && (
+                    <p className="text-white/60">No upcoming consultations</p>
+                  )}
+                  {upcomingSessions.map((session) => (
                     <div 
-                      key={index}
+                      key={session.id}
                       className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-white/5 rounded-lg border border-white/10"
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                           <span className="text-white font-bold text-sm">
-                            {consultation.name.split(' ').map(n => n[0]).join('')}
+                            {(session.user?.name ?? 'U').split(' ').map(n => n[0]).join('')}
                           </span>
                         </div>
                         <div>
-                          <div className="font-medium text-white">{consultation.name}</div>
-                          <div className="text-sm text-white/60">{consultation.type}</div>
+                          <div className="font-medium text-white">{session.user?.name ?? 'Client'}</div>
+                          <div className="text-sm text-white/60">{session.sessionType ?? 'Consultation'}</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end">
                         <div className="flex items-center gap-2 text-white/70">
                           <Clock className="w-4 h-4" />
-                          <span className="text-sm">{consultation.time}</span>
+                          <span className="text-sm">{new Date(session.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
                         <Button size="sm" className="bg-yellow-500 text-black hover:bg-yellow-400">
                           Start
@@ -223,6 +283,8 @@ export default function AstrologyDashboard() {
             </div>
           )}
         </div>
+        </>
+        )}
       </main>
     </div>
   );

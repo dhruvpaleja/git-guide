@@ -1,18 +1,25 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { sendError } from '../lib/response.js';
+import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
+import { getAdminDashboard, listUsers } from '../controllers/admin.controller.js';
 
 const router = Router();
+
+// All admin routes require auth + ADMIN role
+router.use(requireAuth);
+router.use(requireRole('ADMIN'));
 
 // ── Head Office (CEO view — aggregates everything) ───────────────────────
 router.get('/head-office', (_req: Request, res: Response) => {
   sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
-// ── Platform-wide Dashboard Stats ────────────────────────────────────────
-router.get('/dashboard', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
+// ── Platform-wide Dashboard Stats (REAL) ─────────────────────────────────
+router.get('/dashboard', getAdminDashboard);
+
+// ── User Management (REAL) ───────────────────────────────────────────────
+router.get('/users', listUsers);
 
 // ── Platform Health & Analytics ──────────────────────────────────────────
 router.get('/platform-health', (_req: Request, res: Response) => {
@@ -41,10 +48,7 @@ router.get('/pending-actions', (_req: Request, res: Response) => {
   sendError(res, 501, 'SRV_005', 'Not implemented');
 });
 
-// ── User Management ──────────────────────────────────────────────────────
-router.get('/users', (_req: Request, res: Response) => {
-  sendError(res, 501, 'SRV_005', 'Not implemented');
-});
+// ── User Management (remaining stubs) ────────────────────────────────────
 
 router.get('/users/:id', (_req: Request, res: Response) => {
   sendError(res, 501, 'SRV_005', 'Not implemented');

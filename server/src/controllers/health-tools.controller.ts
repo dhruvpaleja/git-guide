@@ -167,3 +167,47 @@ export const logMeditationSession = asyncHandler(
     sendSuccess(res, { log }, 201);
   },
 );
+
+/* ─── DELETE handlers ─── */
+
+export const deleteMoodEntry = asyncHandler(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
+    const { id } = req.params;
+    const entryId = typeof id === 'string' ? id : Array.isArray(id) ? id[0] : '';
+
+    const existing = await prisma.moodEntry.findFirst({ where: { id: entryId, userId } });
+    if (!existing) throw AppError.notFound('Mood entry');
+
+    await prisma.moodEntry.delete({ where: { id: entryId } });
+    sendSuccess(res, { message: 'Mood entry deleted' });
+  },
+);
+
+export const deleteJournalEntry = asyncHandler(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
+    const { id } = req.params;
+    const journalId = typeof id === 'string' ? id : Array.isArray(id) ? id[0] : '';
+
+    const existing = await prisma.journalEntry.findFirst({ where: { id: journalId, userId } });
+    if (!existing) throw AppError.notFound('Journal entry');
+
+    await prisma.journalEntry.delete({ where: { id: journalId } });
+    sendSuccess(res, { message: 'Journal entry deleted' });
+  },
+);
+
+export const deleteMeditationLog = asyncHandler(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { userId } = req.auth as NonNullable<typeof req.auth>;
+    const { id } = req.params;
+    const logId = typeof id === 'string' ? id : Array.isArray(id) ? id[0] : '';
+
+    const existing = await prisma.meditationLog.findFirst({ where: { id: logId, userId } });
+    if (!existing) throw AppError.notFound('Meditation log');
+
+    await prisma.meditationLog.delete({ where: { id: logId } });
+    sendSuccess(res, { message: 'Meditation log deleted' });
+  },
+);

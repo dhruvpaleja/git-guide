@@ -1,51 +1,118 @@
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PractitionerSidebar, PractitionerHeader } from '@/features/dashboard';
-import { Camera, MoreVertical, ChevronLeft, Star, TrendingUp } from 'lucide-react';
+import { Camera, MoreVertical, ChevronLeft, Star, TrendingUp, Loader2 } from 'lucide-react';
+import { therapyApi } from '@/services/therapy.api';
+import { toast } from 'sonner';
 
-/* ── Hard-coded data ─────────────────────────────────────────── */
-
-const heroSession = {
-    name: 'Karan Patel',
-    type: 'Weekly Therapy',
-    age: 21,
-    gender: 'Male',
-    concern: 'Stress, Anxiety, Relationship',
-    sessions: '2 / 4',
-    time: '10 AM',
-    avatar: 'https://i.pravatar.cc/150?img=12',
-    discussionTopic:
-        "Today we'll revisit your recent emotional experiences. Understand what triggers are affecting your stability.\nExplore how these patterns influence your daily mindset. And work on grounding techniques to restore inner balance.",
-};
-
-const upcomingSessions = [
-    { name: 'Suman Chaudhary', type: 'Weekly Therapy', sessions: '1 / 4', concern: 'Stress, Career', time: '10 AM', avatar: 'https://i.pravatar.cc/150?img=32', hasPrevious: false },
-    { name: 'James Breathe', type: 'Weekly Therapy', sessions: '3 / 4', concern: 'Stress, Career', time: '12 PM', avatar: 'https://i.pravatar.cc/150?img=53', hasPrevious: true },
-    { name: 'Thomas Simon', type: 'Counselling', sessions: '3 / 4', concern: 'Anxiety, Relationship', time: '2 PM', avatar: 'https://i.pravatar.cc/150?img=14', hasPrevious: true },
-    { name: 'Raj Vardhan', type: 'Counselling', sessions: '1 / 4', concern: 'Stress, Anxiety', time: '4 PM', avatar: 'https://i.pravatar.cc/150?img=60', hasPrevious: false },
-];
-
-const previousSessions = [
-    { name: 'Asha Mehta', type: 'Therapy', sessions: '4 / 4', concern: 'Relationship', time: '9 AM', avatar: 'https://i.pravatar.cc/150?img=44', hasPrevious: true },
-    { name: 'Vikram Rao', type: 'Counselling', sessions: '3 / 3', concern: 'Career, Stress', time: '11 AM', avatar: 'https://i.pravatar.cc/150?img=22', hasPrevious: true },
-    { name: 'Priya Singh', type: 'Weekly Therapy', sessions: '2 / 2', concern: 'Anxiety', time: '1 PM', avatar: 'https://i.pravatar.cc/150?img=29', hasPrevious: false },
-];
-
-const monthlyChartData = [30, 45, 35, 55, 40, 60, 50, 70, 55, 65, 45, 75];
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/* ── Types ───────────────────────────────────────────────────── */
+interface SessionItem {
+    name: string;
+    type: string;
+    age?: number;
+    gender?: string;
+    concern: string;
+    sessions: string;
+    time: string;
+    avatar: string;
+    hasPrevious: boolean;
+    discussionTopic?: string;
+}
 
 /* ── Main component ──────────────────────────────────────────── */
 
 export default function TodaysSessionsPage() {
     useDocumentTitle("Today's Sessions");
     const [activeTab, setActiveTab] = useState<'upcoming' | 'previous'>('upcoming');
+    const [isLoading, setIsLoading] = useState(true);
+    const [heroSession, setHeroSession] = useState<SessionItem | null>(null);
+    const [upcomingSessions, setUpcomingSessions] = useState<SessionItem[]>([]);
+    const [previousSessions, setPreviousSessions] = useState<SessionItem[]>([]);
+    const [metrics, setMetrics] = useState({ rating: 0, totalSessions: 0, weekTotal: 0, weekCompleted: 0 });
+    const [monthlyChartData, setMonthlyChartData] = useState<number[]>(new Array(12).fill(0));
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    useEffect(() => {
+        async function load() {
+            try {
+                setIsLoading(true);
+                const [scheduledData, completedData, metricsData] = await Promise.all([
+                    therapyApi.getTherapistSessions({ status: 'SCHEDULED' }),
+                    therapyApi.getTherapistSessions({ status: 'COMPLETED' }),
+                    therapyApi.getTherapistMetrics(),
+                ]);
+
+                const mapSession = (s: Record<string, unknown>): SessionItem => {
+                    const u = (s.user ?? {}) as Record<string, unknown>;
+                    const scheduledAt = s.scheduledAt ? new Date(String(s.scheduledAt)) : null;
+                    return {
+                        name: String(u.name || 'Client'),
+                        type: String(s.sessionType || 'Therapy'),
+                        concern: String(s.matchReason || s.cancelReason || 'General wellness'),
+                        sessions: `${s.userRating || 0} / ${s.duration || 50}`,
+                        time: scheduledAt ? scheduledAt.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }) : '-',
+                        avatar: String(u.avatarUrl || `https://i.pravatar.cc/150?u=${s.id}`),
+                        hasPrevious: true,
+                        discussionTopic: String(s.notes || s.summary || ''),
+                    };
+                };
+
+                const scheduled = Array.isArray(scheduledData) ? scheduledData : ((scheduledData as { data?: unknown[] })?.data || []);
+                const completed = Array.isArray(completedData) ? completedData : ((completedData as { data?: unknown[] })?.data || []);
+
+                const upcoming = (scheduled as Record<string, unknown>[]).map(mapSession);
+                const previous = (completed as Record<string, unknown>[]).map(mapSession);
+
+                if (upcoming.length > 0) {
+                    setHeroSession(upcoming[0]);
+                    setUpcomingSessions(upcoming.slice(1));
+                } else {
+                    setHeroSession(null);
+                    setUpcomingSessions([]);
+                }
+                setPreviousSessions(previous);
+
+                const m = metricsData as unknown as Record<string, unknown>;
+                const totalCompleted = Number(m.totalCompletedSessions || 0);
+                const totalCancelled = Number(m.totalCancelledSessions || 0);
+                setMetrics({
+                    rating: Number(m.avgRating || 0),
+                    totalSessions: totalCompleted + totalCancelled,
+                    weekTotal: upcoming.length + previous.length,
+                    weekCompleted: previous.length,
+                });
+
+                // Simple monthly distribution from completed sessions
+                const chartData = new Array(12).fill(0);
+                (completed as Record<string, unknown>[]).forEach((s) => {
+                    if (s.completedAt || s.scheduledAt) {
+                        const month = new Date(String(s.completedAt || s.scheduledAt)).getMonth();
+                        chartData[month]++;
+                    }
+                });
+                const maxVal = Math.max(...chartData, 1);
+                setMonthlyChartData(chartData.map(v => Math.round((v / maxVal) * 100)));
+            } catch {
+                toast.error('Failed to load sessions');
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        load();
+    }, []);
 
     return (
         <div className="min-h-screen bg-[#FDFDFD] flex font-sans">
             <PractitionerSidebar />
 
             <main className="flex-1 ml-20 md:ml-24 p-6 md:p-10 pt-10 overflow-y-auto">
+                {isLoading ? (
+                    <div className="flex items-center justify-center h-screen">
+                        <Loader2 className="w-8 h-8 text-[#2C2F7A] animate-spin" />
+                    </div>
+                ) : (
                 <div className="max-w-[1400px] mx-auto relative">
                     {/* Breadcrumb / Sub-header */}
                     <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
@@ -76,13 +143,13 @@ export default function TodaysSessionsPage() {
                                 <div className="flex items-center gap-2 mb-4">
                                     <span className="text-sm text-gray-500 font-medium">Your Rating</span>
                                     <div className="flex items-center gap-1 ml-auto">
-                                        <span className="text-2xl font-bold text-gray-900">4.8</span>
+                                        <span className="text-2xl font-bold text-gray-900">{metrics.rating.toFixed(1)}</span>
                                         <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-500 font-medium">Total Sessions</span>
-                                    <span className="text-2xl font-bold text-gray-900">100+</span>
+                                    <span className="text-2xl font-bold text-gray-900">{metrics.totalSessions}+</span>
                                 </div>
                             </div>
 
@@ -111,11 +178,11 @@ export default function TodaysSessionsPage() {
                             <div className="bg-white rounded-[20px] p-5 border border-gray-100 shadow-sm">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-sm text-gray-500 font-medium">Total Week Sessions</span>
-                                    <span className="text-lg font-bold text-gray-900">30</span>
+                                    <span className="text-lg font-bold text-gray-900">{metrics.weekTotal}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-500 font-medium">Completed Sessions</span>
-                                    <span className="text-lg font-bold text-gray-900">15</span>
+                                    <span className="text-lg font-bold text-gray-900">{metrics.weekCompleted}</span>
                                 </div>
                             </div>
                         </div>
@@ -124,6 +191,7 @@ export default function TodaysSessionsPage() {
                         <div className="flex-1 flex flex-col gap-6">
 
                             {/* ── Hero Session Card ── */}
+                            {heroSession ? (
                             <div className="bg-[#1A1A1A] rounded-[24px] p-6 md:p-8 text-white">
                                 {/* Top row: client details */}
                                 <div className="flex flex-wrap items-center gap-4 md:gap-6 mb-6">
@@ -180,6 +248,11 @@ export default function TodaysSessionsPage() {
                                     <button className="text-xs text-teal-400 hover:underline mt-3 block">View Client History</button>
                                 </div>
                             </div>
+                            ) : (
+                                <div className="bg-gray-50 rounded-[24px] p-8 text-center">
+                                    <p className="text-gray-400 text-sm">No upcoming sessions today.</p>
+                                </div>
+                            )}
 
                             {/* ── Tab Header ── */}
                             <div className="flex items-center gap-6 border-b border-gray-100 pb-3">
@@ -246,6 +319,7 @@ export default function TodaysSessionsPage() {
                         </div>
                     </div>
                 </div>
+                )}
             </main>
         </div>
     );

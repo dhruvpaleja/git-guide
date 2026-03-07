@@ -2,6 +2,7 @@
 // nudge.service.ts – Behavioral nudge generation, evaluation & management
 // ---------------------------------------------------------------------------
 
+import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma.js';
 import { AppError, ErrorCode } from '../lib/errors.js';
 
@@ -309,4 +310,82 @@ export async function generateNudgesForUser(userId: string): Promise<void> {
       }),
     });
   }
+}
+
+// ---------------------------------------------------------------------------
+// generateSessionReminders – creates 24h-before session reminder nudges
+// Called by a cron job or during nudge evaluation.
+// ---------------------------------------------------------------------------
+
+export async function generateSessionReminders(): Promise<number> {
+  const now = new Date();
+  const from = new Date(now.getTime() + 23 * 60 * 60 * 1000); // +23h
+  const to = new Date(now.getTime() + 25 * 60 * 60 * 1000);   // +25h
+
+  // Find all scheduled sessions in the 23-25h window
+  const upcomingSessions = await prisma.session.findMany({
+    where: {
+      status: 'SCHEDULED',
+      scheduledAt: { gte: from, lte: to },
+    },
+    include: {
+      therapist: { select: { user: { select: { name: true } } } },
+    },
+  });
+
+  if (upcomingSessions.length === 0) return 0;
+
+  // Collect userIds to check for existing reminder nudges
+  const userIds = [...new Set(upcomingSessions.map((s) => s.userId))];
+  const existingNudges = await prisma.userNudge.findMany({
+    where: {
+      userId: { in: userIds },
+      nudgeType: 'session_reminder_24h',
+    },
+    select: { nudgeData: true },
+  });
+
+  // Build a set of sessionIds that already have a reminder
+  const alreadyReminded = new Set<string>();
+  for (const n of existingNudges) {
+    const data = n.nudgeData as Record<string, unknown> | null;
+    if (data?.sessionId && typeof data.sessionId === 'string') {
+      alreadyReminded.add(data.sessionId);
+    }
+  }
+
+  const toCreate: Prisma.UserNudgeCreateManyInput[] = [];
+
+  for (const session of upcomingSessions) {
+    if (alreadyReminded.has(session.id)) continue;
+
+    const therapistName = session.therapist?.user?.name ?? 'your Soul Guide';
+    const dateLabel = session.scheduledAt.toLocaleDateString('en-IN', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    toCreate.push({
+      userId: session.userId,
+      nudgeType: 'session_reminder_24h',
+      nudgeData: {
+        title: 'Session Tomorrow',
+        message: `Your call with ${therapistName} is tomorrow at ${dateLabel}`,
+        cta: 'View Session',
+        sessionId: session.id,
+        actionUrl: `/dashboard/sessions/${session.id}`,
+      },
+      status: 'pending',
+      expiresAt: session.scheduledAt, // expires at session time
+    });
+  }
+
+  if (toCreate.length > 0) {
+    await prisma.userNudge.createMany({ data: toCreate });
+  }
+
+  return toCreate.length;
 }

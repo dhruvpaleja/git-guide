@@ -225,6 +225,43 @@ export async function bookSession(input: BookSessionInput) {
     return created;
   });
 
+  // ── F1: Booking confirmation notifications ──────────────────────────
+  // Fetch names for personalised notification text (non-blocking queries)
+  const [therapistWithUser, bookingUser] = await Promise.all([
+    prisma.therapistProfile.findUnique({
+      where: { id: therapistId },
+      select: { userId: true, user: { select: { name: true } } },
+    }),
+    prisma.user.findUnique({ where: { id: userId }, select: { name: true } }),
+  ]);
+
+  const therapistName = therapistWithUser?.user?.name ?? 'your Soul Guide';
+  const therapistUserId = therapistWithUser?.userId;
+  const userName = bookingUser?.name ?? 'A user';
+  const dateLabel = scheduledAt.toLocaleDateString('en-IN', {
+    weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+
+  // Notify the user who booked
+  sendNotification(
+    userId,
+    'SESSION_CONFIRMED',
+    'Session Booked!',
+    `Your call with ${therapistName} is confirmed for ${dateLabel}`,
+    { actionUrl: `/dashboard/sessions/${session.id}`, sessionId: session.id, therapistName },
+  );
+
+  // Notify the therapist
+  if (therapistUserId) {
+    sendNotification(
+      therapistUserId,
+      'SESSION_CONFIRMED',
+      'New Booking',
+      `${userName} has booked a ${sessionType} call on ${dateLabel}`,
+      { actionUrl: `/practitioner/sessions`, sessionId: session.id, clientName: userName },
+    );
+  }
+
   // Audit log: session booked
   logSessionAction('SESSION_BOOKED', userId, {
     sessionId: session.id,
@@ -277,22 +314,42 @@ export async function bookInstantSession(input: BookInstantSessionInput) {
     matchReason,
   });
 
-  // Send in-app notification to therapist
-  const therapist = await prisma.therapistProfile.findUnique({
-    where: { id: therapistId },
-    select: { userId: true },
-  });
-  if (therapist) {
-    await prisma.notification.create({
-      data: {
-        userId: therapist.userId,
-        type: 'SESSION_CONFIRMED',
-        title: 'New instant session',
-        body: 'A user has booked an instant session with you.',
-        data: { sessionId: session.id },
+  // ── F5 interim: Send urgent in-app notification to therapist ─────────
+  // (Replaces WebSocket in BUILD 1 — therapist dashboard polls GET /notifications)
+  const [instantTherapist, instantUser] = await Promise.all([
+    prisma.therapistProfile.findUnique({
+      where: { id: therapistId },
+      select: { userId: true },
+    }),
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        name: true,
+        profile: { select: { struggles: true } },
       },
-    });
+    }),
+  ]);
+
+  if (instantTherapist) {
+    const clientName = instantUser?.name ?? 'A user';
+    const clientStruggles = (instantUser?.profile?.struggles as string[]) ?? [];
+
+    sendNotification(
+      instantTherapist.userId,
+      'SESSION_CONFIRMED', // Reuse closest existing NotificationType
+      'Instant Session Request!',
+      `${clientName} wants to talk now — accept within 60 seconds`,
+      {
+        actionType: 'INSTANT_SESSION_REQUEST',
+        sessionId: session.id,
+        clientName,
+        clientStruggles,
+        matchScore: matchScore ?? null,
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      },
+    );
   }
+  // TODO: Replace polling with WebSocket when available
 
   return session;
 }
@@ -427,7 +484,7 @@ export async function cancelSession(
 ) {
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
-    include: { therapist: { select: { userId: true } } },
+    include: { therapist: { select: { userId: true, user: { select: { name: true } } } } },
   });
 
   if (!session) {
@@ -489,23 +546,30 @@ export async function cancelSession(
     data: { activeTherapistCount: remainingTherapists.length },
   });
 
-  // Notify the other participant
+  // Notify the other participant with rich context
   const isUserCancelling = session.userId === cancelledBy;
+  const therapistName = session.therapist.user?.name ?? 'your Soul Guide';
+  const dateLabel = session.scheduledAt.toLocaleDateString('en-IN', {
+    weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+
   if (isUserCancelling) {
+    const cancellingUser = await prisma.user.findUnique({ where: { id: cancelledBy }, select: { name: true } });
+    const clientName = cancellingUser?.name ?? 'A client';
     sendNotification(
       session.therapist.userId,
       'SESSION_CANCELLED',
-      'Session cancelled',
-      'A client has cancelled their upcoming session.',
-      { sessionId, cancelledBy },
+      'Session Cancelled',
+      `${clientName} has cancelled the ${dateLabel} session`,
+      { actionUrl: `/practitioner/sessions`, sessionId, clientName },
     );
   } else {
     sendNotification(
       session.userId,
       'SESSION_CANCELLED',
-      'Session cancelled',
-      'Your therapist has cancelled your upcoming session.',
-      { sessionId, cancelledBy },
+      'Session Cancelled',
+      `Your call with ${therapistName} on ${dateLabel} has been cancelled`,
+      { actionUrl: `/dashboard/sessions/${session.id}`, sessionId, therapistName },
     );
   }
 
@@ -692,7 +756,7 @@ export async function completeSession(
 ) {
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
-    include: { therapist: { select: { userId: true } } },
+    include: { therapist: { select: { userId: true, user: { select: { name: true } } } } },
   });
 
   if (!session) {
@@ -779,6 +843,18 @@ export async function completeSession(
     priceAtBooking: session.priceAtBooking,
   });
   incrementMetrics(session.therapistId, 'totalCompletedSessions');
+
+  // F4: Schedule "rate your session" nudge (expires in 7 days)
+  const therapistName = session.therapist.user?.name ?? 'your Soul Guide';
+  prisma.userNudge.create({
+    data: {
+      userId: session.userId,
+      nudgeType: 'post_session_rate',
+      nudgeData: { sessionId: session.id, therapistName },
+      status: 'pending',
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    },
+  }).catch((err) => logger.error('Failed to create post_session_rate nudge', { err, sessionId }));
 
   return updated;
 }

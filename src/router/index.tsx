@@ -65,6 +65,7 @@ const ConstellationPage = lazy(() => import('@/features/constellation/pages/Cons
 const ConfessionalPage = lazy(() => import('@/pages/dashboard/ConfessionalPage'));
 const ConnectionsPage = lazy(() => import('@/pages/dashboard/ConnectionsPage'));
 const SessionsPage = lazy(() => import('@/pages/dashboard/SessionsPage'));
+const SessionDetailPage = lazy(() => import('@/pages/dashboard/SessionDetailPage'));
 
 // Journey Preparation Page - shown after login before dashboard
 const JourneyPreparationPage = lazy(() =>
@@ -272,6 +273,10 @@ const router = createBrowserRouter([
           {
             path: 'sessions',
             element: <Lazy><SessionsPage /></Lazy>,
+          },
+          {
+            path: 'sessions/:id',
+            element: <Lazy><SessionDetailPage /></Lazy>,
           },
         ],
       },

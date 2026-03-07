@@ -104,4 +104,14 @@ export const therapyApi = {
 
   getTherapistMetrics: () =>
     apiService.get('/therapy/therapist/metrics'),
+
+  // ── Therapist Session Actions ──────────────────────────────────────
+  startSession: (id: string) =>
+    apiService.post<SessionDetail>(`/therapy/sessions/${id}/start`, {}),
+
+  completeSession: (id: string, notes?: string) =>
+    apiService.post<SessionDetail>(`/therapy/sessions/${id}/complete`, { notes }),
+
+  markNoShow: (id: string) =>
+    apiService.post<SessionDetail>(`/therapy/sessions/${id}/no-show`, {}),
 };

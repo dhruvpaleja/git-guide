@@ -15,6 +15,10 @@
     "db:reset": "npx prisma migrate reset --force && npm run seed:dev",
     "db:generate": "npx prisma generate",
     "db:migrate": "npx prisma migrate dev",
+    "test:pricing": "tsx tests/test-pricing-progression.mjs",
+    "test:cancellation": "tsx tests/test-cancellation-rules.mjs",
+    "test:therapist-limit": "tsx tests/test-therapist-limit.mjs",
+    "test:nudge": "tsx tests/test-nudge-system.mjs",
     "postinstall": "npx prisma generate"
   },
   "dependencies": {

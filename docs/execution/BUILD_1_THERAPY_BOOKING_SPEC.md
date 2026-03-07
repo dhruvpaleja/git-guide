@@ -47,12 +47,12 @@ Each therapist's `pricePerSession` is NOT manually set. It's computed:
 ```
 BASE_RATE = ₹500
 
-Modifiers (additive, each ₹0-₹500):
+Modifiers (additive, individually capped — total capped by clamp(500, 1000)):
   + experience_modifier    → years * 15 (capped at ₹300)
-  + rating_modifier        → (rating - 3.0) * 100 (capped at ₹200)
+  + rating_modifier        → max((rating - 3.0) * 100, 0) (capped at ₹200)
   + retention_modifier     → return_client_rate * 200 (capped at ₹200)
   + demand_modifier        → booking_fill_rate * 150 (capped at ₹150)
-  + session_quality_score  → from session feedback/ratings (capped at ₹150)
+  + quality_modifier       → (avgSessionDuration/50)*75 + (1-noShowRate)*75 (capped at ₹150)
 
 TOTAL = clamp(BASE_RATE + all_modifiers, 500, 1000)
 ```
@@ -293,6 +293,11 @@ model User {
 | POST | `/therapy/sessions/:id/no-show` | THERAPIST | Mark user as NO_SHOW |
 | POST | `/therapy/sessions/:id/rate` | USER | Rate completed session (1-5 + feedback) |
 
+### User Journey (Pricing Stage)
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/therapy/journey` | USER | Get user's therapy journey (completedSessionCount, pricingStage, activeTherapistCount) |
+
 ### Instant "Talk Now"
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
@@ -324,9 +329,25 @@ model User {
 |--------|----------|------|-------------|
 | GET | `/therapy/therapists/:id/slots` | USER | Get available time slots for a therapist (next 30 days) |
 
-**Total: 26 endpoints**
+**Total: 29 endpoints**
 
 ### Error Codes (Therapy-Specific)
+
+> **⚠️ IMPLEMENTATION NOTE:** The existing `server/src/lib/errors.ts` uses `BIZ_*` codes (BIZ_001–BIZ_009 already taken). When implementing, EITHER continue the `BIZ_*` series (BIZ_010+) OR add a separate `THERAPY_*` block. Be consistent — don't mix patterns.
+>
+> **REUSE EXISTING CODES where semantics overlap:**
+> - `BIZ_001` (SLOT_UNAVAILABLE) → use instead of THERAPY_002
+> - `BIZ_002` (SESSION_NOT_CANCELLABLE) → use instead of THERAPY_004
+> - `BIZ_009` (THERAPIST_UNAVAILABLE) → use instead of THERAPY_001
+>
+> **NEW codes needed (use `BIZ_010+`):**
+> - `BIZ_010` → Max 3 active therapists reached (THERAPY_003)
+> - `BIZ_011` → Session not found or access denied (THERAPY_005)
+> - `BIZ_012` → Invalid session status transition (THERAPY_006)
+> - `BIZ_013` → Already rated this session (THERAPY_007)
+> - `BIZ_014` → No therapists available for instant booking (THERAPY_008)
+> - `BIZ_015` → Nudge not found or not owned by user (THERAPY_009)
+
 | Code | HTTP | Meaning |
 |------|------|---------|
 | `THERAPY_001` | 404 | Therapist not found or unavailable |
@@ -378,7 +399,7 @@ server/
 │
 ├── src/
 │   ├── routes/
-│   │   └── therapy.ts                   ← REWRITE: All 26 endpoints
+│   │   └── therapy.ts                   ← REWRITE: All 29 endpoints
 │   │
 │   ├── controllers/
 │   │   └── therapy.controller.ts        ← REWRITE: All handler functions
@@ -398,15 +419,22 @@ server/
 │
 src/
 ├── services/
+│   ├── api.service.ts                   ← MODIFY: Add patch() method
 │   └── therapy.api.ts                   ← NEW: Frontend API service
+│
+├── types/
+│   └── therapy.types.ts                 ← NEW: Shared therapy TypeScript interfaces
 │
 ├── features/
 │   └── dashboard/
 │       └── components/
 │           ├── widgets/
 │           │   ├── HumanMatchCard.tsx    ← MODIFY: Wire to real API
-│           │   ├── PatternAlerts.tsx     ← MODIFY: Wire to real nudges
-│           │   └── ScheduledSessionsWidget.tsx ← MODIFY: Wire to real sessions
+│           │   └── PatternAlerts.tsx     ← MODIFY: Wire to real nudges
+│           ├── ScheduledSessionsWidget.tsx ← MODIFY: Wire to real sessions (NOT in widgets/)
+│           ├── PractitionerHeader.tsx    ← MODIFY: Wire earnings/rating from API (E6)
+│           ├── ClientIntakeWidget.tsx    ← MODIFY: Wire to real client list (E6)
+│           ├── SessionsRecordsWidgets.tsx ← MODIFY: Wire to real session records (E6)
 │           ├── BookingFlow.tsx           ← NEW: Step-by-step booking modal
 │           ├── SessionRating.tsx         ← NEW: Post-session rating form
 │           ├── TalkNowFlow.tsx           ← NEW: Instant session waiting UX
@@ -415,11 +443,12 @@ src/
 ├── pages/
 │   └── dashboard/
 │       ├── SessionsPage.tsx             ← MODIFY: Wire to real API
-│       └── SessionDetailPage.tsx        ← NEW: Individual session view
+│       ├── SessionDetailPage.tsx        ← NEW: Individual session view
+│       └── ManageAvailabilityPage.tsx   ← MODIFY: Wire to real availability API (E7)
 ```
 
 ---
 
 ## SUBTASK BREAKDOWN
 
-See: `docs/execution/BUILD_1_SUBTASKS.md` for the complete 95+ subtask breakdown with self-contained prompts for each.
+See: `docs/execution/BUILD_1_SUBTASKS.md` for the complete ~60 subtask breakdown with self-contained prompts for each.

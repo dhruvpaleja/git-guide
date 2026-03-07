@@ -270,8 +270,3 @@ For support, questions, or feedback:
 ---
 
 **Built with ❤️ for mental wellness and personal growth**
-#   G i t   C o n f i g u r a t i o n   U p d a t e d   f o r   V e r c e l 
- 
- #   G i t   C o n f i g u r a t i o n   U p d a t e d   f o r   G i t H u b   +   V e r c e l   I n t e g r a t i o n 
- 
- 

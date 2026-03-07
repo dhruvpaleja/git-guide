@@ -1,11 +1,11 @@
-# BUILD 1: SUBTASK BREAKDOWN — 100+ Self-Contained Prompts
+# BUILD 1: SUBTASK BREAKDOWN — ~60 Self-Contained Prompts
 
 > **Master Spec:** `docs/execution/BUILD_1_THERAPY_BOOKING_SPEC.md`
 > **Rule:** Each subtask is self-contained. Any AI agent can pick up any subtask without context of previous subtasks. Each prompt includes: what file to edit, what it should contain, what to import, and how to verify it works.
 
 ---
 
-## PHASE A: DATABASE SCHEMA (Subtasks 1-8)
+## PHASE A: DATABASE SCHEMA (A1–A8)
 
 ---
 
@@ -235,7 +235,7 @@ const THERAPISTS = [
       { dayOfWeek: 3, startTime: '09:00', endTime: '17:00' },
       { dayOfWeek: 5, startTime: '10:00', endTime: '15:00' },
     ],
-    metrics: { avgRating: 4.9, totalCompletedSessions: 312, clientReturnRate: 0.78, bookingFillRate: 0.85, computedPrice: 850 },
+    metrics: { avgRating: 4.9, totalCompletedSessions: 312, clientReturnRate: 0.78, bookingFillRate: 0.85, computedPrice: 850, avgSessionDuration: 48, noShowRate: 0.02 },
   },
   {
     name: 'Dr. Rohan Sharma',
@@ -256,7 +256,7 @@ const THERAPISTS = [
       { dayOfWeek: 2, startTime: '09:00', endTime: '18:00' },
       { dayOfWeek: 4, startTime: '09:00', endTime: '18:00' },
     ],
-    metrics: { avgRating: 4.7, totalCompletedSessions: 234, clientReturnRate: 0.65, bookingFillRate: 0.72, computedPrice: 700 },
+    metrics: { avgRating: 4.7, totalCompletedSessions: 234, clientReturnRate: 0.65, bookingFillRate: 0.72, computedPrice: 700, avgSessionDuration: 46, noShowRate: 0.04 },
   },
   {
     name: 'Dr. Priya Nair',
@@ -278,7 +278,7 @@ const THERAPISTS = [
       { dayOfWeek: 4, startTime: '11:00', endTime: '18:00' },
       { dayOfWeek: 6, startTime: '10:00', endTime: '14:00' },
     ],
-    metrics: { avgRating: 4.8, totalCompletedSessions: 267, clientReturnRate: 0.72, bookingFillRate: 0.80, computedPrice: 800 },
+    metrics: { avgRating: 4.8, totalCompletedSessions: 267, clientReturnRate: 0.72, bookingFillRate: 0.80, computedPrice: 800, avgSessionDuration: 49, noShowRate: 0.03 },
   },
   {
     name: 'Dr. Karan Patel',
@@ -299,7 +299,7 @@ const THERAPISTS = [
       { dayOfWeek: 3, startTime: '14:00', endTime: '20:00' },
       { dayOfWeek: 5, startTime: '14:00', endTime: '20:00' },
     ],
-    metrics: { avgRating: 4.5, totalCompletedSessions: 145, clientReturnRate: 0.55, bookingFillRate: 0.60, computedPrice: 600 },
+    metrics: { avgRating: 4.5, totalCompletedSessions: 145, clientReturnRate: 0.55, bookingFillRate: 0.60, computedPrice: 600, avgSessionDuration: 44, noShowRate: 0.06 },
   },
   {
     name: 'Dr. Ananya Singh',
@@ -321,7 +321,7 @@ const THERAPISTS = [
       { dayOfWeek: 3, startTime: '09:00', endTime: '13:00' },
       { dayOfWeek: 4, startTime: '09:00', endTime: '13:00' },
     ],
-    metrics: { avgRating: 4.9, totalCompletedSessions: 420, clientReturnRate: 0.82, bookingFillRate: 0.90, computedPrice: 950 },
+    metrics: { avgRating: 4.9, totalCompletedSessions: 420, clientReturnRate: 0.82, bookingFillRate: 0.90, computedPrice: 950, avgSessionDuration: 50, noShowRate: 0.01 },
   },
   {
     name: 'Dr. Vikram Desai',
@@ -342,7 +342,7 @@ const THERAPISTS = [
       { dayOfWeek: 2, startTime: '11:00', endTime: '17:00' },
       { dayOfWeek: 5, startTime: '11:00', endTime: '17:00' },
     ],
-    metrics: { avgRating: 4.6, totalCompletedSessions: 178, clientReturnRate: 0.60, bookingFillRate: 0.65, computedPrice: 650 },
+    metrics: { avgRating: 4.6, totalCompletedSessions: 178, clientReturnRate: 0.60, bookingFillRate: 0.65, computedPrice: 650, avgSessionDuration: 45, noShowRate: 0.05 },
   },
   {
     name: 'Dr. Meera Iyer',
@@ -364,7 +364,7 @@ const THERAPISTS = [
       { dayOfWeek: 5, startTime: '07:00', endTime: '12:00' },
       { dayOfWeek: 6, startTime: '08:00', endTime: '12:00' },
     ],
-    metrics: { avgRating: 4.7, totalCompletedSessions: 210, clientReturnRate: 0.68, bookingFillRate: 0.75, computedPrice: 750 },
+    metrics: { avgRating: 4.7, totalCompletedSessions: 210, clientReturnRate: 0.68, bookingFillRate: 0.75, computedPrice: 750, avgSessionDuration: 47, noShowRate: 0.03 },
   },
   {
     name: 'Dr. Arjun Kapoor',
@@ -385,7 +385,7 @@ const THERAPISTS = [
       { dayOfWeek: 4, startTime: '16:00', endTime: '21:00' },
       { dayOfWeek: 6, startTime: '10:00', endTime: '16:00' },
     ],
-    metrics: { avgRating: 4.4, totalCompletedSessions: 98, clientReturnRate: 0.50, bookingFillRate: 0.55, computedPrice: 550 },
+    metrics: { avgRating: 4.4, totalCompletedSessions: 98, clientReturnRate: 0.50, bookingFillRate: 0.55, computedPrice: 550, avgSessionDuration: 42, noShowRate: 0.08 },
   },
   {
     name: 'Dr. Simran Kaur',
@@ -393,7 +393,7 @@ const THERAPISTS = [
     gender: Gender.FEMALE,
     specializations: ['anxiety', 'stress', 'better-sleep'],
     approach: TherapistApproach.HOLISTIC,
-    languages: ['english', 'hindi'],
+    languages: ['english', 'hindi', 'punjabi'],
     qualifications: ['M.Phil Psychology', 'Sleep Disorder Specialist', 'Breathwork Practitioner'],
     experience: 8,
     bio: 'Cannot sleep? Mind racing at 3 AM? I specialize in the anxiety-sleep connection. My holistic approach combines sleep hygiene science, breathwork, and root-cause therapy to help you rest — truly rest.',
@@ -407,7 +407,7 @@ const THERAPISTS = [
       { dayOfWeek: 3, startTime: '09:00', endTime: '15:00' },
       { dayOfWeek: 5, startTime: '09:00', endTime: '15:00' },
     ],
-    metrics: { avgRating: 4.6, totalCompletedSessions: 189, clientReturnRate: 0.63, bookingFillRate: 0.70, computedPrice: 700 },
+    metrics: { avgRating: 4.6, totalCompletedSessions: 189, clientReturnRate: 0.63, bookingFillRate: 0.70, computedPrice: 700, avgSessionDuration: 47, noShowRate: 0.04 },
   },
   {
     name: 'Dr. Nisha Reddy',
@@ -428,7 +428,7 @@ const THERAPISTS = [
       { dayOfWeek: 3, startTime: '10:00', endTime: '18:00' },
       { dayOfWeek: 5, startTime: '10:00', endTime: '14:00' },
     ],
-    metrics: { avgRating: 4.8, totalCompletedSessions: 305, clientReturnRate: 0.75, bookingFillRate: 0.82, computedPrice: 850 },
+    metrics: { avgRating: 4.8, totalCompletedSessions: 305, clientReturnRate: 0.75, bookingFillRate: 0.82, computedPrice: 850, avgSessionDuration: 49, noShowRate: 0.02 },
   },
   {
     name: 'Dr. Amit Joshi',
@@ -449,7 +449,7 @@ const THERAPISTS = [
       { dayOfWeek: 4, startTime: '09:00', endTime: '17:00' },
       { dayOfWeek: 6, startTime: '09:00', endTime: '13:00' },
     ],
-    metrics: { avgRating: 4.7, totalCompletedSessions: 278, clientReturnRate: 0.70, bookingFillRate: 0.78, computedPrice: 800 },
+    metrics: { avgRating: 4.7, totalCompletedSessions: 278, clientReturnRate: 0.70, bookingFillRate: 0.78, computedPrice: 800, avgSessionDuration: 46, noShowRate: 0.03 },
   },
   {
     name: 'Dr. Tara Menon',
@@ -470,7 +470,7 @@ const THERAPISTS = [
       { dayOfWeek: 2, startTime: '10:00', endTime: '16:00' },
       { dayOfWeek: 4, startTime: '10:00', endTime: '16:00' },
     ],
-    metrics: { avgRating: 4.5, totalCompletedSessions: 142, clientReturnRate: 0.58, bookingFillRate: 0.62, computedPrice: 650 },
+    metrics: { avgRating: 4.5, totalCompletedSessions: 142, clientReturnRate: 0.58, bookingFillRate: 0.62, computedPrice: 650, avgSessionDuration: 44, noShowRate: 0.06 },
   },
 ];
 
@@ -489,6 +489,18 @@ async function seedTherapists() {
         name: t.name,
         role: Role.THERAPIST,
         isVerified: true,
+      },
+    });
+
+    // Create UserProfile with gender (needed for gender matching in matching.service)
+    await prisma.userProfile.upsert({
+      where: { userId: user.id },
+      update: {},
+      create: {
+        userId: user.id,
+        gender: t.gender,
+        onboardingStep: 10,
+        onboardingComplete: true,
       },
     });
 
@@ -551,6 +563,8 @@ async function seedTherapists() {
         clientReturnRate: t.metrics.clientReturnRate,
         bookingFillRate: t.metrics.bookingFillRate,
         computedPrice: t.metrics.computedPrice,
+        avgSessionDuration: t.metrics.avgSessionDuration,
+        noShowRate: t.metrics.noShowRate,
         specializationStats: Object.fromEntries(
           t.specializations.map((s) => [
             s,
@@ -577,7 +591,20 @@ seedTherapists()
 
 ---
 
-## PHASE B: BACKEND SERVICES — Core Business Logic (Subtasks 9-25)
+## PHASE B: BACKEND SERVICES — Core Business Logic (B1–B6)
+
+> **⚠️ IMPORTANT — LEFTOVER STUB FILES:** The directory `server/src/modules/therapy/` contains **4 empty stub files** from a previous scaffold:
+> - `therapy.controller.ts` — `// TODO: Implement therapy controllers`
+> - `therapy.service.ts` — `// TODO: Implement therapy service`
+> - `therapy.types.ts` — stub
+> - `therapy.validator.ts` — `// TODO: Implement therapy validators`
+>
+> **IGNORE ALL OF THEM.** The canonical file locations are:
+> - Controller → `server/src/controllers/therapy.controller.ts` (rewritten in C2)
+> - Service → `server/src/services/therapy.service.ts` (created in B3)
+> - Validators → `server/src/validators/therapy.validator.ts` (rewritten in B6)
+>
+> Do NOT import from `modules/therapy/`. Do NOT extend these stubs. They can be deleted during Phase H cleanup.
 
 ---
 
@@ -734,16 +761,18 @@ export async function isSlotAvailable(
   requestedEnd.setMinutes(requestedEnd.getMinutes() + duration);
 
   // Check for overlapping sessions
-  const conflicting = await prisma.session.findFirst({
+  // NOTE: Using findMany (not findFirst) to avoid false availability —
+  // findFirst could return a non-overlapping session while another session
+  // truly overlaps. Check ALL sessions that start before requestedEnd.
+  const candidates = await prisma.session.findMany({
     where: {
       therapistId,
       status: { in: ['SCHEDULED', 'IN_PROGRESS'] },
       scheduledAt: { lt: requestedEnd },
-      // We need to check overlap: existing session end > requested start
     },
   });
 
-  if (conflicting) {
+  for (const conflicting of candidates) {
     const conflictEnd = new Date(conflicting.scheduledAt);
     conflictEnd.setMinutes(conflictEnd.getMinutes() + conflicting.duration);
     if (conflictEnd > requestedTime) return false;
@@ -753,13 +782,17 @@ export async function isSlotAvailable(
   const dayOfWeek = requestedTime.getDay();
   const timeStr = `${String(requestedTime.getHours()).padStart(2, '0')}:${String(requestedTime.getMinutes()).padStart(2, '0')}`;
 
+  // Also compute the session END time string to verify the entire session
+  // fits within the availability window (not just the start time)
+  const endTimeStr = `${String(requestedEnd.getHours()).padStart(2, '0')}:${String(requestedEnd.getMinutes()).padStart(2, '0')}`;
+
   const availability = await prisma.therapistAvailability.findFirst({
     where: {
       therapistId,
       dayOfWeek,
       isActive: true,
       startTime: { lte: timeStr },
-      endTime: { gte: timeStr },
+      endTime: { gte: endTimeStr }, // Must fit ENTIRE session, not just start
     },
   });
 
@@ -868,7 +901,13 @@ export async function getMatchedTherapists(
   const therapists = await prisma.therapistProfile.findMany({
     where: { isVerified: true, isAvailable: true },
     include: {
-      user: { select: { id: true, name: true }, include: { profile: { select: { gender: true } } } },
+      user: {
+        select: {
+          id: true,
+          name: true,
+          profile: { select: { gender: true } },
+        },
+      },
       onlineStatus: true,
       metrics: true,
     },
@@ -1040,6 +1079,7 @@ export async function getAvailableNowTherapists(
 - `rateSession(sessionId, userId, rating, feedback)` — post-session rating
 - `getTherapistDashboard(therapistId)` — today's sessions, stats, earnings
 - `getTherapistClients(therapistId)` — client list with history
+- `getTherapistClientDetail(therapistId, clientUserId)` — single client with profile, session history, constellation stub
 - `getUserPricingStage(userId)` — returns "discovery" | "pay_as_you_like" | "standard"
 
 **Business rules:**
@@ -1047,11 +1087,14 @@ export async function getAvailableNowTherapists(
 - `cancelSession`: Must be >2 hours before scheduledAt. Update journey.activeTherapistCount if this was user's last session with that therapist.
 - `completeSession`: Increment journey.completedSessionCount. Update lastSessionAt. Trigger "rate session" nudge.
 - `rateSession`: Update therapist's rolling average rating. Feed into metrics recalculation.
-- `bookInstantSession`: Find first available-now therapist from matching results. Book for NOW + 5 minutes. Notify therapist via WebSocket.
+- `bookInstantSession`: Find first available-now therapist from matching results. Book for NOW + 5 minutes. Notify therapist via in-app Notification (see F5 for interim approach — no WebSocket in BUILD 1).
 
 **TherapyJourney auto-creation:** The TherapyJourney record should be created lazily on first `bookSession` call OR proactively when onboarding completes. Add a hook in the onboarding completion flow (e.g., when step 10 saves) that creates an empty TherapyJourney if one doesn't exist. This way the journey is always ready.
 
 **Error codes (standardized):**
+
+> **⚠️ IMPORTANT:** The existing codebase uses `BIZ_*` error codes in `server/src/lib/errors.ts` (e.g., `BIZ_001`=SLOT_UNAVAILABLE, `BIZ_002`=SESSION_NOT_CANCELLABLE). The codes below use the `THERAPY_*` prefix for clarity in this spec. When implementing, EITHER extend the existing `BIZ_*` pattern (BIZ_010, BIZ_011, etc.) OR add a new `THERAPY_*` block to `errors.ts` — just be **consistent** with whichever you choose. Do NOT mix both patterns in the same file.
+
 | Code | Meaning |
 |------|---------|
 | `THERAPY_001` | Therapist not found or unavailable |
@@ -1087,7 +1130,7 @@ export async function getAvailableNowTherapists(
 1. `first_session_free` — completedSessionCount === 0 AND onboardingComplete === true → "Your first call is free"
 2. `low_mood_streak` — last 3 MoodEntry.score ≤ 3 → "We noticed you've been going through a rough patch"
 3. `constellation_pattern` — (stub for now, will be wired to constellation) → "Your guide specializes in this pattern"
-4. `session_reminder` — lastSessionAt > 14 days ago → "It's been a while. Quick check-in?"
+4. `session_gap_reminder` — lastSessionAt > 14 days ago → "It's been a while. Quick check-in?"
 5. `post_session_rate` — session completed within last 30 min, not rated → "How was your call?"
 6. `astrology_interest` — user.interests includes "astrology" AND no astrology nudge in 7 days → "Your birth chart reveals…"
 7. `pay_as_you_like_return` — completedSessionCount === 1 AND lastSessionAt > 7 days → "Your next call is pay-what-you-feel"
@@ -1130,8 +1173,10 @@ TOTAL = clamp(BASE_RATE + all_modifiers, 500, 1000)
 ### SUBTASK B6: Create therapy.validator.ts
 
 **File:** `server/src/validators/therapy.validator.ts`
-**Action:** REWRITE existing file
+**Action:** REWRITE existing file (this file already has partial Zod schemas — replace entirely)
 **Depends on:** Nothing
+
+**⚠️ NOTE:** A duplicate stub file exists at `server/src/modules/therapy/therapy.validator.ts`. IGNORE that file — it's a leftover stub. The canonical location is `server/src/validators/therapy.validator.ts`. Do NOT import from the modules path.
 
 **Validators needed (using Zod or express-validator):**
 
@@ -1150,7 +1195,7 @@ TOTAL = clamp(BASE_RATE + all_modifiers, 500, 1000)
 
 ---
 
-## PHASE C: BACKEND ROUTES & CONTROLLERS (Subtasks 26-42)
+## PHASE C: BACKEND ROUTES & CONTROLLERS (C1–C2)
 
 ---
 
@@ -1165,7 +1210,7 @@ Replace ALL the `501 Not Implemented` stubs with real route handlers using `requ
 **Route structure:**
 ```typescript
 import { Router } from 'express';
-import { requireAuth, requireRole, requireAnyRole } from '../middleware/auth.middleware.js';
+import { requireAuth, requireRole } from '../middleware/auth.middleware.js';
 import * as therapyController from '../controllers/therapy.controller.js';
 import * as validators from '../validators/therapy.validator.js';
 
@@ -1185,6 +1230,9 @@ router.get('/sessions/:id', requireAuth, therapyController.getSessionDetail);
 router.patch('/sessions/:id/cancel', requireAuth, validators.validateCancelSession, therapyController.cancelSession);
 router.patch('/sessions/:id/reschedule', requireAuth, validators.validateRescheduleSession, therapyController.rescheduleSession);
 router.post('/sessions/:id/rate', requireAuth, validators.validateRateSession, therapyController.rateSession);
+
+// --- User journey (pricing stage) ---
+router.get('/journey', requireAuth, therapyController.getUserJourney);
 
 // --- Nudge endpoints ---
 router.get('/nudges', requireAuth, therapyController.getNudges);
@@ -1233,6 +1281,7 @@ Each controller function is a thin wrapper: validate → call service → format
 10. `cancelSession` — calls `therapy.service.cancelSession`
 11. `rescheduleSession` — calls `therapy.service.rescheduleSession`
 12. `rateSession` — calls `therapy.service.rateSession`
+12b. `getUserJourney` — returns `{ completedSessionCount, pricingStage, activeTherapistCount, firstSessionAt, lastSessionAt }` from TherapyJourney (create lazy if not exists)
 13. `getNudges` — calls `nudge.service.getActiveNudges`
 14. `dismissNudge` — calls `nudge.service.dismissNudge`
 15. `markNudgeActed` — calls `nudge.service.markNudgeActed`
@@ -1262,7 +1311,182 @@ export const bookSession = asyncHandler(async (req: AuthenticatedRequest, res: R
 
 ---
 
-## PHASE D: FRONTEND API SERVICE (Subtasks 43-48)
+## PHASE D: FRONTEND API SERVICE (D0–D1)
+
+---
+
+### SUBTASK D0 (PREREQUISITE): Add `patch` method + query param support to ApiService
+
+**File:** `src/services/api.service.ts`
+**Action:** MODIFY — add missing `patch<T>` method AND `params` support in `RequestConfig`
+**Depends on:** Nothing
+
+**Why (patch):** The existing `ApiService` class only has `get`, `post`, `put`, `delete`, `upload`. D1's therapy.api.ts calls `apiService.patch()` for cancel, reschedule, dismiss nudge, mark nudge acted, and update online status. The `patch` method DOES NOT EXIST and must be added first.
+
+**Why (params):** D1 passes query parameters via `apiService.get('/therapy/therapists', { params: { specialization, language } })`. But `RequestConfig` has NO `params` property, and `ApiService.request()` never builds query strings. Without this, all GET requests with filters/pagination/sorting silently drop parameters.
+
+**Change 1: Add `params` to RequestConfig**
+
+Find the `RequestConfig` type in `src/types/` (likely `src/types/api.types.ts` or `src/types/index.ts`). Add:
+```typescript
+  params?: Record<string, string | number | boolean | undefined>;
+```
+
+**Change 2: Build query string in `request()` method**
+
+In `ApiService.request()`, before the `fetch()` call, add query string serialization:
+```typescript
+  // Build URL with query params
+  let url = `${this.baseUrl}${endpoint}`;
+  if (mergedConfig.params) {
+    const searchParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(mergedConfig.params)) {
+      if (value !== undefined && value !== null) {
+        searchParams.append(key, String(value));
+      }
+    }
+    const qs = searchParams.toString();
+    if (qs) url += `?${qs}`;
+  }
+```
+Then change `fetch(\`${this.baseUrl}${endpoint}\`, ...)` to `fetch(url, ...)`.
+
+**Change 3: Add `patch` method to `ApiService` class**
+
+Add between the existing `put` and `delete` methods:
+```typescript
+  /**
+   * Make PATCH request
+   */
+  async patch<T = unknown>(endpoint: string, data?: unknown, config?: RequestConfig): Promise<ApiResponse<T>> {
+    return this.request<T>('PATCH', endpoint, data, config);
+  }
+```
+
+**Verify:** After changes, these calls should work without TypeScript errors:
+- `apiService.get('/items', { params: { page: 1, status: 'active' } })` → fetches `/items?page=1&status=active`
+- `apiService.patch('/items/1', { name: 'test' })` → PATCH request
+
+---
+
+### SUBTASK D0.5: Create frontend therapy TypeScript types
+
+**File:** `src/types/therapy.types.ts`
+**Action:** CREATE new file
+**Depends on:** Nothing (types are based on the spec, not runtime code)
+
+**Purpose:** Shared TypeScript interfaces for all therapy-related API responses and component props. Used by D1 (therapy.api.ts) and ALL Phase E components.
+
+**Full implementation:**
+```typescript
+/** Therapist card displayed in search/recommendation results */
+export interface TherapistCard {
+  therapistId: string;
+  userId: string;
+  name: string;
+  bio: string;
+  photoUrl: string | null;
+  specializations: string[];
+  approach: 'CBT' | 'HOLISTIC' | 'MIXED';
+  languages: string[];
+  qualifications: string[];
+  experience: number;
+  rating: number;
+  totalReviews: number;
+  totalSessions: number;
+  pricePerSession: number;
+  isOnline: boolean;
+  isAcceptingNow: boolean;
+  nextAvailableSlot: string | null;
+  matchScore: number;
+  matchReasons: string[];
+}
+
+/** Available time slot for booking */
+export interface TimeSlot {
+  date: string;
+  startTime: string;
+  endTime: string;
+  startDateTime: string;
+  endDateTime: string;
+  isBooked: boolean;
+}
+
+/** Session type stages */
+export type SessionType = 'discovery' | 'pay_as_you_like' | 'standard';
+export type SessionStatus = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
+
+/** Session detail (for session list and detail page) */
+export interface SessionDetail {
+  id: string;
+  userId: string;
+  therapistId: string;
+  therapist: {
+    name: string;
+    photoUrl: string | null;
+    specializations: string[];
+    rating: number;
+  };
+  scheduledAt: string;
+  duration: number;
+  status: SessionStatus;
+  sessionType: SessionType;
+  priceAtBooking: number;
+  userPaidAmount: number | null;
+  matchScore: number | null;
+  matchReason: string | null;
+  bookingSource: string;
+  userRating: number | null;
+  userFeedback: string | null;
+  cancelledBy: string | null;
+  cancelReason: string | null;
+  cancelledAt: string | null;
+  createdAt: string;
+}
+
+/** Dashboard nudge item */
+export interface NudgeItem {
+  id: string;
+  nudgeType: string;
+  nudgeData: Record<string, unknown> | null;
+  status: 'pending' | 'shown' | 'dismissed' | 'acted' | 'expired';
+  shownAt: string | null;
+  createdAt: string;
+}
+
+/** Therapist dashboard stats */
+export interface TherapistDashboard {
+  todaySessions: SessionDetail[];
+  totalEarnings: number;
+  totalSessions: number;
+  rating: number;
+  totalClients: number;
+}
+
+/** Client summary in therapist's client list */
+export interface TherapistClient {
+  userId: string;
+  name: string;
+  avatarUrl: string | null;
+  struggles: string[];
+  totalSessions: number;
+  lastSessionAt: string | null;
+  avgRating: number | null;
+}
+
+/** Pricing stage for current user */
+export type PricingStage = 'discovery' | 'pay_as_you_like' | 'standard';
+
+/** User's therapy journey (for pricing stage detection) */
+export interface TherapyJourney {
+  completedSessionCount: number;
+  pricingStage: PricingStage;
+  activeTherapistCount: number;
+  firstSessionAt: string | null;
+  lastSessionAt: string | null;
+  totalSpent: number;
+}
+```
 
 ---
 
@@ -1270,19 +1494,21 @@ export const bookSession = asyncHandler(async (req: AuthenticatedRequest, res: R
 
 **File:** `src/services/therapy.api.ts`
 **Action:** CREATE new file
-**Depends on:** Phase C (backend routes working)
+**Depends on:** Phase C (backend routes working), **D0** (patch method must exist), **D0.5** (types)
 
 **Purpose:** TypeScript API client for all therapy endpoints. Uses the existing `apiService` from `src/services/api.service.ts`.
 
 **Functions:**
 ```typescript
 import { apiService } from './api.service';
-
-// Types (import from src/types/therapy.types.ts or define inline)
-export interface TherapistCard { ... }
-export interface SessionDetail { ... }
-export interface TimeSlot { ... }
-export interface NudgeItem { ... }
+import type {
+  TherapistCard,
+  SessionDetail,
+  TimeSlot,
+  NudgeItem,
+  TherapistDashboard,
+  TherapistClient,
+} from '@/types/therapy.types';
 
 export const therapyApi = {
   // Discovery
@@ -1309,6 +1535,9 @@ export const therapyApi = {
   rateSession: (id: string, data: { rating: number; feedback?: string }) =>
     apiService.post(`/therapy/sessions/${id}/rate`, data),
 
+  // User journey (pricing stage)
+  getUserJourney: () => apiService.get<TherapyJourney>('/therapy/journey'),
+
   // Nudges
   getNudges: () => apiService.get('/therapy/nudges'),
   dismissNudge: (id: string) => apiService.patch(`/therapy/nudges/${id}/dismiss`, {}),
@@ -1334,7 +1563,7 @@ export const therapyApi = {
 
 ---
 
-## PHASE E: FRONTEND WIRING — Replace Mock Data (Subtasks 49-65)
+## PHASE E: FRONTEND WIRING — Replace Mock Data (E1–E12)
 
 ---
 
@@ -1432,7 +1661,7 @@ export const therapyApi = {
 
 ### SUBTASK E4: Wire ScheduledSessionsWidget.tsx to real API
 
-**File:** `src/features/dashboard/components/widgets/ScheduledSessionsWidget.tsx`
+**File:** `src/features/dashboard/components/ScheduledSessionsWidget.tsx` (NOTE: NOT in `widgets/` subfolder)
 **Action:** MODIFY — replace mock sessions with real data
 **Depends on:** D1
 
@@ -1466,7 +1695,7 @@ export const therapyApi = {
 
 **Files:**
 - `src/features/dashboard/components/PractitionerHeader.tsx` — wire earnings, rating, sessions from API
-- `src/features/dashboard/components/ScheduledSessionsWidget.tsx` — wire therapist's sessions
+- `src/features/dashboard/components/ScheduledSessionsWidget.tsx` (NOTE: NOT in `widgets/` subfolder) — wire therapist's sessions
 - `src/features/dashboard/components/ClientIntakeWidget.tsx` — wire to real client list
 - `src/features/dashboard/components/SessionsRecordsWidgets.tsx` — wire to real session records
 
@@ -1482,7 +1711,7 @@ export const therapyApi = {
 
 ### SUBTASK E7: Build availability management UI for therapists
 
-**File:** `src/features/dashboard/pages/AvailabilityPage.tsx` (NEW or modify existing)
+**File:** `src/features/dashboard/pages/AvailabilityPage.tsx` (MODIFY existing — route `/practitioner/availability` already exists pointing to `ManageAvailabilityPage`; replace its contents or create a new page and update the route import)
 **Depends on:** D1
 
 **What to build:**
@@ -1519,7 +1748,7 @@ export const therapyApi = {
 4. **Therapist-only view** (if logged-in user is the therapist):
    - Show client profile summary (struggles, goals, session history count)
    - Astrologer notes field (read-only for now, populated later)
-   - Private notes text area → saved via separate API call (not in spec yet — add to therapy.service.ts)
+   - Private notes text area → use the `completeSession` endpoint (B3 already accepts `notes` param) or add inline save via `PUT /therapy/sessions/:id` (deferred — for BUILD 1, include notes in the `completeSession` call)
    - "Start Session" / "Complete Session" / "No Show" action buttons
 
 **Route registration:** Add to router config: `{ path: '/dashboard/sessions/:id', element: <SessionDetailPage /> }`
@@ -1565,7 +1794,9 @@ export const therapyApi = {
 6. **Error state**: "Something went wrong. Try again?" with retry button
 
 **Triggered by:** "Talk Now" button in SessionsPage (E3) and HumanMatchCard (E1)
-**API call:** `therapyApi.bookInstantSession()` → on success, show found state → listen for WebSocket updates
+**API call:** `therapyApi.bookInstantSession()` → on success, show found state
+
+**⚠️ IMPORTANT (F5 interim):** No WebSocket infrastructure exists yet. For BUILD 1, poll `therapyApi.getSession(sessionId)` every 5 seconds to check status changes (e.g., therapist accepted → status changes to IN_PROGRESS). Add `// TODO: Replace polling with WebSocket when available` comment. See F5 for full rationale.
 
 ---
 
@@ -1575,7 +1806,7 @@ export const therapyApi = {
 **Action:** CREATE new component
 **Depends on:** D1, F5
 
-**Purpose:** Therapist-side UI when they receive an instant session request via WebSocket.
+**Purpose:** Therapist-side UI when they receive an instant session request (via notification polling in BUILD 1; WebSocket in future builds).
 
 **What to build:**
 1. Full-screen overlay/modal with audio chime
@@ -1585,8 +1816,9 @@ export const therapyApi = {
 5. "Decline" button → declines, system tries next available therapist
 6. Auto-decline after timeout → same as decline
 
-**Listens to:** WebSocket event `INSTANT_SESSION_REQUEST`
-**Mount location:** Always mounted in practitioner dashboard layout (listens passively)
+**⚠️ IMPORTANT (F5 interim):** No WebSocket infrastructure exists yet. For BUILD 1, poll the **existing notifications endpoint** `GET /notifications` every 5 seconds (the endpoint already exists at `server/src/routes/notifications.ts`). Filter results for notifications where `data.actionType === 'INSTANT_SESSION_REQUEST'` and `data.expiresAt` is in the future. The `data` field is a Json column on the `Notification` model — F5 populates it with `{ actionType, sessionId, clientName, clientStruggles, matchScore, expiresAt }`. Add `// TODO: Replace polling with WebSocket when available` comment. See F5 for full rationale.
+
+**Mount location:** Always mounted in practitioner dashboard layout (polls passively)
 
 ---
 
@@ -1596,30 +1828,31 @@ export const therapyApi = {
 **Action:** MODIFY — add routes for new pages
 **Depends on:** E7, E8
 
-**Routes to add:**
-- `/dashboard/sessions/:id` → `<SessionDetailPage />`
-- `/practitioner/availability` → `<AvailabilityPage />` (from E7)
+**Routes to add/verify:**
+- `/dashboard/sessions/:id` → `<SessionDetailPage />` (NEW)
+- `/practitioner/availability` → ALREADY EXISTS (points to `ManageAvailabilityPage`). If E7 created a new `AvailabilityPage`, update the import. Otherwise verify the existing page now uses real API data.
 - Verify existing routes for `/dashboard/sessions` still work
 
 ---
 
-## PHASE F: NOTIFICATION INTEGRATION (Subtasks 66-70)
+## PHASE F: NOTIFICATION INTEGRATION (F1–F5)
 
 ---
 
 ### SUBTASK F1: Send booking confirmation notification
 
 **Where:** In `therapy.service.ts` → `bookSession()`
-**After creating the session**, create a notification:
+**After creating the session**, create a notification.
+
+**IMPORTANT:** The `Notification` model uses `body` (not `message`) and `data` Json field (not `actionUrl`/`metadata`). Match the actual schema:
 ```typescript
 await prisma.notification.create({
   data: {
     userId,
     type: 'SESSION_CONFIRMED',
     title: 'Session Booked!',
-    message: `Your call with ${therapistName} is confirmed for ${formatDate(scheduledAt)}`,
-    actionUrl: `/dashboard/sessions/${session.id}`,
-    metadata: { sessionId: session.id, therapistName },
+    body: `Your call with ${therapistName} is confirmed for ${formatDate(scheduledAt)}`,
+    data: { actionUrl: `/dashboard/sessions/${session.id}`, sessionId: session.id, therapistName },
   },
 });
 // Also notify therapist
@@ -1628,9 +1861,8 @@ await prisma.notification.create({
     userId: therapistUserId,
     type: 'SESSION_CONFIRMED',
     title: 'New Booking',
-    message: `${userName} has booked a ${sessionType} call on ${formatDate(scheduledAt)}`,
-    actionUrl: `/practitioner/sessions`,
-    metadata: { sessionId: session.id, clientName: userName },
+    body: `${userName} has booked a ${sessionType} call on ${formatDate(scheduledAt)}`,
+    data: { actionUrl: `/practitioner/sessions`, sessionId: session.id, clientName: userName },
   },
 });
 ```
@@ -1673,7 +1905,31 @@ await prisma.userNudge.create({
 ### SUBTASK F5: WebSocket notification for "Talk Now" requests
 
 **Where:** In `therapy.service.ts` → `bookInstantSession()`
-**Logic:** After creating the instant session, push a WebSocket message to the matched therapist:
+
+**⚠️ IMPORTANT:** No WebSocket service/server exists in the codebase yet. For BUILD 1, use the **in-app Notification model as interim**. The therapist's dashboard will poll for new notifications (or use the existing notification fetch) to detect instant session requests. Full WebSocket infrastructure will be added in a later build.
+
+**Interim approach (BUILD 1):**
+```typescript
+// Create an urgent in-app notification instead of WebSocket
+await prisma.notification.create({
+  data: {
+    userId: therapistUserId,
+    type: 'SESSION_CONFIRMED', // Reuse closest existing NotificationType
+    title: 'Instant Session Request!',
+    body: `${clientName} wants to talk now — accept within 60 seconds`,
+    data: {
+      actionType: 'INSTANT_SESSION_REQUEST',
+      sessionId,
+      clientName,
+      clientStruggles,
+      matchScore,
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    },
+  },
+});
+```
+
+**Future (full WebSocket):**
 ```typescript
 websocketService.sendToUser(therapistUserId, {
   type: 'INSTANT_SESSION_REQUEST',
@@ -1681,9 +1937,11 @@ websocketService.sendToUser(therapistUserId, {
 });
 ```
 
+**E10/E11 impact:** E10 (TalkNowFlow) should poll `therapyApi.getSession(sessionId)` to check status. E11 (InstantSessionAlert) should poll the existing `GET /notifications` endpoint and filter for `data.actionType === 'INSTANT_SESSION_REQUEST'`. Both poll at 5-second intervals as interim. Add `// TODO: Replace polling with WebSocket when available` comment.
+
 ---
 
-## PHASE G: TESTING & VERIFICATION (Subtasks 71-80)
+## PHASE G: TESTING & VERIFICATION (G1–G10)
 
 ---
 
@@ -1719,12 +1977,16 @@ Navigate to dashboard. See real recommended therapist. Click "Connect". See real
 
 ---
 
-## PHASE H: CLEANUP & POLISH (Subtasks 81-90)
+## PHASE H: CLEANUP & POLISH (H1–H10)
 
 ---
 
 ### SUBTASK H1: Remove mock data from SessionsPage
 Delete the `MOCK_THERAPISTS` and `MOCK_SESSIONS` constants entirely.
+
+### SUBTASK H1.5: Delete leftover modules/therapy stubs
+**Delete entire directory:** `server/src/modules/therapy/`
+These 4 files are empty stubs that were replaced by canonical locations (see Phase B note).
 
 ### SUBTASK H2: Remove mock data from HumanMatchCard
 Delete hardcoded "Dr. Aisha M." data.
@@ -1779,7 +2041,9 @@ B6    → NO DEPENDENCIES (validators)
 C1    → DEPENDS ON B3, B6 (routes)
 C2    → DEPENDS ON B1-B5, B6 (controller)
 
-D1    → DEPENDS ON C1, C2 (frontend API)
+D0    → DEPENDS ON NOTHING (add patch method + params support to ApiService — can be done at ANY time)
+D0.5  → DEPENDS ON NOTHING (create frontend therapy types — can be done at ANY time)
+D1    → DEPENDS ON C1, C2, **D0**, **D0.5** (frontend API)
 
 E1-E7 → DEPENDS ON D1, CAN BE PARALLELIZED
 E8    → DEPENDS ON D1, E5 (session detail page)
@@ -1795,4 +2059,4 @@ G1-G10 → DEPENDS ON ALL ABOVE (testing)
 H1-H10 → DEPENDS ON E1-E12 (cleanup)
 ```
 
-**Critical Path:** A1-A6 → B1 → B2 → B3 → C1 → C2 → D1 → E1-E12 → H1-H10
+**Critical Path:** A1-A6 → B1 → B2 → B3 → C1 → C2 → D0 + D0.5 → D1 → E1-E12 → H1-H10

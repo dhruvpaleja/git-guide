@@ -1,147 +1,547 @@
 path,file_type,area,category,deep_reviewed,feature_mapping,live_mock_static_stub,notes
-package.json,json,root,config,yes,all,live,72 deps + 13 scripts; version 0.0.0
-tsconfig.json,json,root,config,yes,all,live,project references + path aliases
-tsconfig.app.json,json,root,config,yes,frontend,live,ES2022 target; strict mode all enabled
-tsconfig.node.json,json,root,config,yes,build,live,ES2023 for build tools
-tsconfig.test.json,json,root,config,yes,testing,live,extends app config
-vite.config.ts,ts,root,config,yes,frontend,live,manual chunks; dev proxy /api to :3000
-tailwind.config.js,js,root,config,yes,frontend,live,HSL variables; dark mode class-based
-postcss.config.js,js,root,config,yes,frontend,live,tailwind + autoprefixer
-eslint.config.js,js,root,config,yes,all,live,strict TS + a11y rules; ignores playwright-report but glob fails
-commitlint.config.js,js,root,config,yes,devops,live,conventional commits enforced
-Dockerfile,dockerfile,root,infra,yes,devops,live,multi-stage; node:20-alpine; missing USER directive
-docker-compose.yml,yaml,root,infra,yes,devops,live,postgres+frontend+backend; hardcoded secrets
-vercel.json,json,root,infra,yes,devops,live,SPA rewrite only
-nginx.conf,conf,root,infra,yes,devops,live,basic SPA; missing gzip/CSP/compression
-playwright.config.ts,ts,root,config,yes,testing,live,5 browsers incl mobile; HTML reporter
-components.json,json,root,config,yes,frontend,live,shadcn/ui new-york style; tailwind config path bug
-index.html,html,root,frontend,yes,all,live,missing meta description/OG/favicon links/canonical
-skills-lock.json,json,root,config,yes,tooling,live,33 marketing skills locked
-src/main.tsx,tsx,src,source_executable,yes,all,live,React 19 root render with providers
-src/App.tsx,tsx,src,source_executable,yes,all,live,RouterProvider + ErrorBoundary + Toaster
-src/index.css,css,src,source_support,yes,all,live,Tailwind directives + CSS variables + custom utilities
-src/router/index.tsx,tsx,src/router,source_executable,yes,routing,live,lazy-loaded routes; 30+ routes with code splitting
-src/router/ProtectedRoute.tsx,tsx,src/router,source_executable,yes,auth,live,AUTH BYPASS via runtimeFlags.authBypassEnabled default true
-src/context/AuthContext.tsx,tsx,src/context,source_executable,yes,auth,mock-backed,hardcoded test accounts; base64 tokens; mock auth default on
-src/context/ThemeContext.tsx,tsx,src/context,source_executable,yes,theme,live,dark/light/system with localStorage
-src/config/index.ts,ts,src/config,source_support,yes,all,live,app name; API base URL
-src/config/permissions.ts,ts,src/config,source_support,yes,auth,live,RBAC for 6 roles
-src/config/routes.ts,ts,src/config,source_support,yes,routing,live,route definitions with icons and roles
-src/config/runtime.flags.ts,ts,src/config,source_support,yes,auth,live,VITE_AUTH_BYPASS=true VITE_ENABLE_MOCK_AUTH=true
-src/config/validation.schemas.ts,ts,src/config,source_support,yes,validation,live,Zod schemas for all forms
-src/constants/app.constants.ts,ts,src/constants,source_support,yes,all,live,API timeout 8s; storage keys; pagination
-src/constants/navigation.constants.ts,ts,src/constants,source_support,yes,navigation,static,hardcoded nav items
-src/constants/responsive.ts,ts,src/constants,source_support,yes,ui,live,breakpoint definitions
-src/services/api.service.ts,ts,src/services,source_executable,yes,api,live,circuit-breaker pattern; auth token injection; retry
-src/services/analytics.service.ts,ts,src/services,source_executable,yes,analytics,stub,logs to console only; TODO backend
-src/services/storage.service.ts,ts,src/services,source_executable,yes,storage,live,localStorage/sessionStorage wrapper
-src/services/websocket.service.ts,ts,src/services,source_executable,yes,realtime,live,auto-reconnect 8 attempts; exponential backoff
-src/hooks/advanced.hooks.ts,ts,src/hooks,source_support,yes,utils,live,useAsyncOperation useFetch useLocalStorage useWindowSize
-src/hooks/responsive.hooks.ts,ts,src/hooks,source_support,yes,ui,live,useWindowSize useMediaQuery useBreakpoint
-src/hooks/use-mobile.ts,ts,src/hooks,source_support,yes,ui,live,useIsMobile 768px
-src/hooks/useDashboard.ts,ts,src/hooks,source_executable,yes,dashboard,live,GET /users/dashboard
-src/hooks/useDocumentTitle.ts,ts,src/hooks,source_support,yes,seo,live,dynamic page titles
-src/layouts/AuthLayout.tsx,tsx,src/layouts,source_executable,yes,auth,live,dark 600px centered form container
-src/layouts/DashboardLayout.tsx,tsx,src/layouts,source_executable,yes,dashboard,live,sidebar + topbar + animated main; responsive mobile drawer
-src/layouts/MainLayout.tsx,tsx,src/layouts,source_executable,yes,public,live,nav/footer with dynamic theme
-src/lib/utils.ts,ts,src/lib,source_support,yes,utils,live,cn() clsx + tailwind-merge
-src/middleware/api.middleware.ts,ts,src/middleware,source_executable,yes,api,live,authMiddleware errorMiddleware loggingMiddleware
-src/utils/security.ts,ts,src/utils,source_executable,yes,security,mock-backed,hashPassword uses btoa (NOT real hash); CSRF gen; sanitizeHTML
-src/utils/testing.utils.ts,ts,src/utils,source_support,yes,testing,mock,mock API responses; mock users
-src/utils/errors/index.ts,ts,src/utils,source_support,yes,errors,live,canonical error codes 20+
-src/utils/helpers/string.helpers.ts,ts,src/utils,source_support,yes,utils,live,capitalize truncate slugify
-src/utils/helpers/date.helpers.ts,ts,src/utils,source_support,yes,utils,live,format getRelativeTime addDays
-src/utils/helpers/number.helpers.ts,ts,src/utils,source_support,yes,utils,live,formatCurrency round clamp
-src/utils/helpers/react.helpers.ts,ts,src/utils,source_support,yes,utils,live,useIsMounted useDebounce usePrevious
-src/utils/helpers/collection.helpers.ts,ts,src/utils,source_support,yes,utils,live,unique groupBy flatten chunk deepMerge
-src/utils/validators/validators.ts,ts,src/utils,source_support,yes,validation,live,isValidEmail isValidUrl isValidPhone
-src/pages/LandingPage.tsx,tsx,src/pages,source_executable,yes,landing,static,composition of 9 feature components; no API
-src/pages/DashboardPage.tsx,tsx,src/pages,source_executable,yes,dashboard,partially-live,useDashboard hook + hardcoded quick actions
-src/pages/AboutPage.tsx,tsx,src/pages,source_executable,yes,about,static,composition of about feature components
-src/pages/SplashScreen.tsx,tsx,src/pages,source_executable,yes,landing,static,animated multilingual greetings; may be orphaned
-src/pages/NotFoundPage.tsx,tsx,src/pages,source_executable,yes,error,static,404 with search; hardcoded UI
-src/pages/CoursesPage.tsx,tsx,src/pages,source_executable,yes,courses,static,wrapper for CoursesProgramsPage
-src/pages/CourseDetailsPage.tsx,tsx,src/pages,source_executable,yes,courses,hardcoded,generates course data from static; enroll not wired
-src/pages/BlogsPage.tsx,tsx,src/pages,source_executable,yes,blogs,hardcoded,9+ hardcoded posts; no API
-src/pages/BlogPostPage.tsx,tsx,src/pages,source_executable,yes,blogs,hardcoded,full HTML content hardcoded; comments UI only
-src/pages/BusinessPage.tsx,tsx,src/pages,source_executable,yes,business,static,B2B solutions composition
-src/pages/CorporatePage.tsx,tsx,src/pages,source_executable,yes,corporate,static,corporate wellness composition
-src/pages/ContactPage.tsx,tsx,src/pages,source_executable,yes,contact,hardcoded,form not wired; T&C inline; Send Request non-functional
-src/pages/CareerPage.tsx,tsx,src/pages,source_executable,yes,careers,hardcoded,15+ positions hardcoded; no API
-src/pages/StudentCounsellingPage.tsx,tsx,src/pages,source_executable,yes,student-counselling,hardcoded,carousel + analytics metrics hardcoded
-src/pages/StudentCounsellingDemoPage.tsx,tsx,src/pages,source_executable,yes,student-counselling,static,demo with back button
-src/pages/WorkshopDemoPage.tsx,tsx,src/pages,source_executable,yes,workshop,static,demo with back button
-src/pages/auth/LoginPage.tsx,tsx,src/pages/auth,source_executable,yes,auth,partially-live,mock auth default; OAuth buttons placeholder
-src/pages/auth/SignupPage.tsx,tsx,src/pages/auth,source_executable,yes,auth,partially-live,multi-step; persists astrology to API
-src/pages/dashboard/MoodPage.tsx,tsx,src/pages/dashboard,source_executable,yes,health-tools,live,API-backed GET/POST /health-tools/mood
-src/pages/dashboard/JournalPage.tsx,tsx,src/pages/dashboard,source_executable,yes,health-tools,live,API-backed GET/POST /health-tools/journal
-src/pages/dashboard/MeditationPage.tsx,tsx,src/pages/dashboard,source_executable,yes,health-tools,live,API-backed GET/POST /health-tools/meditation
-src/pages/dashboard/SessionsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,therapy,hardcoded,mock therapists + sessions; pravatar.cc avatars
-src/pages/dashboard/ConnectionsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,constellation,hardcoded,6 MOCK_MATCHES; synergy scores fake
-src/pages/dashboard/NotificationsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,notifications,live,API + WebSocket; real-time updates
-src/pages/dashboard/ProfilePage.tsx,tsx,src/pages/dashboard,source_executable,yes,users,live,API-backed; avatar upload; stats
-src/pages/dashboard/SettingsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,users,live,API-backed; debounced save 400ms
-src/pages/dashboard/ConfessionalPage.tsx,tsx,src/pages/dashboard,source_executable,yes,health-tools,live,saves as journal entry; Voice Vent coming soon
-src/pages/dashboard/EditProfilePage.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,hardcoded,fake save with setTimeout; Swati Agarwal data
-src/pages/dashboard/LogoutPage.tsx,tsx,src/pages/dashboard,source_executable,yes,auth,hardcoded,hardcoded stats; countdown timer
-src/pages/dashboard/AdminDashboard.tsx,tsx,src/pages/dashboard,source_executable,yes,admin,hardcoded,1284 users + 156 sessions + 4.2L revenue all fake
-src/pages/dashboard/AstrologyDashboard.tsx,tsx,src/pages/dashboard,source_executable,yes,astrology,hardcoded,fake stats; purple/gold theme
-src/pages/dashboard/PractitionerDashboard.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,partially-live,delegates to widgets; some may be hardcoded
-src/pages/dashboard/TodaysSessionsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,hardcoded,heroSession + 4 upcoming + 3 previous all fake
-src/pages/dashboard/MyClientsPage.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,hardcoded,5 clients + 2 intake hardcoded; earnings fake
-src/pages/dashboard/ManageAvailabilityPage.tsx,tsx,src/pages/dashboard,source_executable,yes,practitioner,hardcoded,weekly schedule fake; Google Calendar not wired
-src/components/error-boundary.tsx,tsx,src/components,source_executable,yes,error,live,React error boundary with retry
-src/components/LoadingSpinner.tsx,tsx,src/components,source_executable,yes,ui,live,simple centered spinner
-src/components/layout/Navigation.tsx,tsx,src/components/layout,source_executable,yes,navigation,static,scrolled detection; theme auto-detection
-src/components/layout/Footer.tsx,tsx,src/components/layout,source_executable,yes,navigation,static,email signup not wired; copyright year 2025
-src/components/layout/SmoothScrollProvider.tsx,tsx,src/components/layout,source_executable,yes,ui,live,Lenis smooth scroll; respects reduced-motion
-server/package.json,json,server,config,yes,backend,live,50+ deps
-server/tsconfig.json,json,server,config,yes,backend,live,ES2022 ESNext
-server/prisma.config.ts,ts,server,config,yes,database,live,Prisma config
-server/src/index.ts,ts,server/src,source_executable,yes,backend,live,Express app; Helmet; CORS; rate limit; graceful shutdown; WS
-server/src/config/env.validation.ts,ts,server/src/config,source_support,yes,backend,live,Zod env schema validation
-server/src/config/index.ts,ts,server/src/config,source_support,yes,backend,live,unified config 15 objects
-server/src/middleware/auth.middleware.ts,ts,server/src/middleware,source_executable,yes,auth,live,JWT verify; requireAuth; requireRole; requireOwnership
-server/src/middleware/rbac.middleware.ts,ts,server/src/middleware,source_executable,yes,auth,live,role hierarchy enforcement
-server/src/middleware/security.middleware.ts,ts,server/src/middleware,source_executable,yes,security,live,6 rate limiters (auth/api/strict/sensitive/upload/ai)
-server/src/middleware/request-context.ts,ts,server/src/middleware,source_executable,yes,observability,live,correlation IDs; IP hashing SHA256
-server/src/middleware/error.ts,ts,server/src/middleware,source_executable,yes,errors,live,global error normalization; ZodError/Prisma/JWT
-server/src/middleware/upload.middleware.ts,ts,server/src/middleware,source_executable,yes,uploads,live,Multer; MIME validation; extension blocking
-server/src/middleware/user-rate-limit.middleware.ts,ts,server/src/middleware,source_executable,yes,security,live,in-memory user-based rate limiting
-server/src/lib/async-handler.ts,ts,server/src/lib,source_support,yes,backend,live,promise wrapper for express handlers
-server/src/lib/logger.ts,ts,server/src/lib,source_executable,yes,observability,live,Winston JSON(prod)/colored(dev)
-server/src/lib/prisma.ts,ts,server/src/lib,source_executable,yes,database,live,singleton + health check
-server/src/lib/errors.ts,ts,server/src/lib,source_executable,yes,errors,live,AppError + 40+ error codes
-server/src/lib/response.ts,ts,server/src/lib,source_executable,yes,api,live,sendSuccess/sendError + pagination
-server/src/lib/websocket.ts,ts,server/src/lib,source_executable,yes,realtime,live,WS service; auth; heartbeat; message handling
-server/src/lib/dev-login.ts,ts,server/src/lib,source_executable,yes,auth,mock-backed,dev token generation WITHOUT password; base64 tokens
-server/src/lib/upload.ts,ts,server/src/lib,source_executable,yes,uploads,live,avatar upload + Sharp image processing
-server/src/controllers/auth.controller.ts,ts,server/src/controllers,source_executable,yes,auth,live,register/login/refresh/logout/me
-server/src/controllers/users.controller.ts,ts,server/src/controllers,source_executable,yes,users,live,onboarding steps 1-10; profile; avatar; settings
-server/src/controllers/health-tools.controller.ts,ts,server/src/controllers,source_executable,yes,health-tools,live,mood/journal/meditation CRUD
-server/src/controllers/payments.controller.ts,ts,server/src/controllers,source_executable,yes,payments,stub,all endpoints return 501
-server/src/controllers/therapy.controller.ts,ts,server/src/controllers,source_executable,yes,therapy,stub,all endpoints return 501
-server/src/controllers/ai.controller.ts,ts,server/src/controllers,source_executable,yes,ai,stub,all endpoints return 501
-server/src/controllers/courses.controller.ts,ts,server/src/controllers,source_executable,yes,courses,stub,all endpoints return 501
-server/src/controllers/admin.controller.ts,ts,server/src/controllers,source_executable,yes,admin,stub,all endpoints return 501
-server/src/controllers/blog.controller.ts,ts,server/src/controllers,source_executable,yes,blog,stub,all endpoints return 501
-server/src/controllers/community.controller.ts,ts,server/src/controllers,source_executable,yes,community,stub,all endpoints return 501
-server/src/controllers/notifications.controller.ts,ts,server/src/controllers,source_executable,yes,notifications,stub,all endpoints return 501
-server/src/services/tokens.service.ts,ts,server/src/services,source_executable,yes,auth,live,JWT gen/verify; token families; rotation
-server/src/services/email.service.ts,ts,server/src/services,source_executable,yes,email,stub,template-based; TODO Resend integration
-server/src/services/cache.service.ts,ts,server/src/services,source_executable,yes,cache,live,in-memory TTL cache; TODO Redis swap
-server/src/services/queue.service.ts,ts,server/src/services,source_executable,yes,queue,live,job queue with handlers; TODO BullMQ swap
-server/src/services/storage.service.ts,ts,server/src/services,source_executable,yes,storage,live,file uploads+validation; TODO S3/R2 swap
-server/src/services/ai-event-logger.service.ts,ts,server/src/services,source_executable,yes,audit,live,Winston + Prisma AuditLog
-server/prisma/schema.prisma,prisma,server/prisma,migration_schema,yes,database,live,13 models; 7 enums; 2 migrations
-server/seed-all-dev-users.mjs,mjs,server,scripts,yes,database,live,4 test users seeded
-server/seed-simple.ts,ts,server,scripts,yes,database,live,seed script
-server/setup-dev.cjs,cjs,server,scripts,yes,devops,live,dev setup
-server/setup-dev.mjs,mjs,server,scripts,yes,devops,live,dev setup
-tests/example.spec.ts,ts,tests,tests,yes,testing,live,15 Playwright smoke tests; 7 public + 2 auth + 4 dashboard + 2 resilience
-scripts/check-bundle-budgets.js,js,scripts,scripts,yes,devops,live,enforces chunk size limits
-scripts/responsive-audit.mjs,mjs,scripts,scripts,yes,testing,live,screenshot all routes at 8 breakpoints
-.github/workflows/build.yml,yaml,.github,infra,yes,devops,live,Node 18.x/20.x matrix; lint+build+audit
-.github/workflows/quality.yml,yaml,.github,infra,yes,devops,live,type-check+lint+audit on push/PR
-.husky/pre-commit,sh,.husky,config,yes,devops,live,type-check+lint:check+format:check
-.husky/commit-msg,sh,.husky,config,yes,devops,live,commitlint conventional enforcement
+src/main.tsx,source_executable,frontend,entry_point,true,app_bootstrap,implemented_live,Renders App into #root; StrictMode wrapper
+src/App.tsx,source_executable,frontend,entry_point,true,app_bootstrap,implemented_live,Wraps ThemeProvider+AuthProvider+SmoothScrollProvider+AppRouter; no Zustand
+src/index.css,static_asset,frontend,styles,false,global_styles,implemented_live,Global CSS entry point for Tailwind
+src/router/index.tsx,source_executable,frontend,routing,true,all_routes,implemented_live,createBrowserRouter; 40+ routes lazy-loaded; ProtectedRoute used
+src/router/ProtectedRoute.tsx,source_executable,frontend,routing,true,auth_guard,implemented_mock_backed,Bypassed entirely when runtimeFlags.authBypassEnabled=true (defaults true)
+src/context/AuthContext.tsx,source_executable,frontend,auth,true,authentication,implemented_mock_backed,4 hardcoded mock accounts; real API call path exists but mock path activated by default
+src/context/ThemeContext.tsx,source_executable,frontend,theming,false,theme_toggle,implemented_live,next-themes wrapper
+src/context/index.ts,source_support,frontend,auth,false,exports,implemented_live,Re-exports contexts
+src/config/index.ts,source_support,frontend,config,true,app_config,implemented_live,Exports runtimeFlags + app config
+src/config/runtime.flags.ts,source_support,frontend,config,true,auth_bypass,implemented_mock_backed,VITE_AUTH_BYPASS defaults to TRUE — bypass active unless explicitly disabled
+src/config/routes.ts,source_support,frontend,config,false,routing,implemented_live,Route path constants
+src/config/permissions.ts,source_support,frontend,config,false,rbac,implemented_live,Role-based permission constants
+src/config/validation.schemas.ts,source_support,frontend,config,false,forms,implemented_live,Zod validation schemas for forms
+src/constants/index.ts,source_support,frontend,constants,false,exports,implemented_live,Re-exports constants
+src/constants/app.constants.ts,source_support,frontend,constants,false,api_storage_keys,implemented_live,API_CONSTANTS (base URL from env) and STORAGE_KEYS
+src/constants/navigation.constants.ts,source_support,frontend,constants,false,navigation,implemented_live,Nav item definitions
+src/constants/responsive.ts,source_support,frontend,constants,false,responsive,implemented_live,Breakpoint constants
+src/services/api.service.ts,source_executable,frontend,api_client,true,all_api_calls,implemented_live,Custom fetch wrapper with circuit-breaker; reads VITE_API_URL
+src/services/websocket.service.ts,source_executable,frontend,websocket,true,real_time,partially_wired,WS service implemented but not actively consumed by dashboard components
+src/services/analytics.service.ts,source_executable,frontend,analytics,false,analytics,stubbed,Analytics service; VITE_ENABLE_ANALYTICS gates it
+src/services/storage.service.ts,source_executable,frontend,storage,false,file_storage,implemented_live,Local/session storage abstraction
+src/services/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports services
+src/hooks/useDashboard.ts,source_executable,frontend,dashboard,true,dashboard_stats,partially_wired,Calls GET /users/dashboard via apiService; real API wiring
+src/hooks/useDocumentTitle.ts,source_executable,frontend,ui,false,page_title,implemented_live,Sets document.title
+src/hooks/use-mobile.ts,source_executable,frontend,responsive,false,mobile_detection,implemented_live,useMediaQuery hook
+src/hooks/responsive.hooks.ts,source_executable,frontend,responsive,false,responsive,implemented_live,Responsive breakpoint hooks
+src/hooks/advanced.hooks.ts,source_executable,frontend,ui,false,misc_hooks,implemented_live,Various utility hooks
+src/layouts/MainLayout.tsx,source_executable,frontend,layout,false,public_pages,implemented_live,Navigation + Outlet + Footer for public pages
+src/layouts/DashboardLayout.tsx,source_executable,frontend,layout,false,dashboard,implemented_live,Sidebar + Topbar layout for dashboard routes
+src/layouts/AuthLayout.tsx,source_executable,frontend,layout,false,auth_pages,implemented_live,Minimal layout for login/signup
+src/layouts/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports layouts
+src/pages/SplashScreen.tsx,source_executable,frontend,public,false,splash,implemented_hardcoded_static,Animated splash; redirects to /home
+src/pages/LandingPage.tsx,source_executable,frontend,public,true,landing,implemented_hardcoded_static,Assembles 9 feature components; all data hardcoded in components
+src/pages/AboutPage.tsx,source_executable,frontend,public,false,about,implemented_hardcoded_static,About page; all data hardcoded in feature components
+src/pages/BusinessPage.tsx,source_executable,frontend,public,false,business,implemented_hardcoded_static,Business solutions page; hardcoded content
+src/pages/CorporatePage.tsx,source_executable,frontend,public,false,corporate,implemented_hardcoded_static,Corporate wellness page; hardcoded content
+src/pages/BlogsPage.tsx,source_executable,frontend,public,true,blog_listing,implemented_hardcoded_static,Blog list; 12 hardcoded posts; search/filter local only; no API
+src/pages/BlogPostPage.tsx,source_executable,frontend,public,false,blog_detail,implemented_hardcoded_static,Single blog post; hardcoded content; TODO comments present
+src/pages/CoursesPage.tsx,source_executable,frontend,public,true,courses,implemented_hardcoded_static,Thin wrapper around CoursesProgramsPage feature
+src/pages/CourseDetailsPage.tsx,source_executable,frontend,public,false,course_detail,implemented_hardcoded_static,Course detail page; hardcoded data
+src/pages/CareerPage.tsx,source_executable,frontend,public,false,careers,implemented_hardcoded_static,Careers listing; hardcoded job listings
+src/pages/ContactPage.tsx,source_executable,frontend,public,true,contact,implemented_hardcoded_static,Contact form UI; submission not confirmed API-wired
+src/pages/StudentCounsellingPage.tsx,source_executable,frontend,public,false,student_counselling,implemented_hardcoded_static,Student counselling info page; hardcoded
+src/pages/WorkshopDemoPage.tsx,source_executable,frontend,public,false,workshop,implemented_hardcoded_static,Workshop demo page; hardcoded
+src/pages/StudentCounsellingDemoPage.tsx,source_executable,frontend,public,false,student_counselling_demo,implemented_hardcoded_static,Demo page; hardcoded
+src/pages/NotFoundPage.tsx,source_executable,frontend,public,false,404,implemented_hardcoded_static,404 page; TODO comment present
+src/pages/DashboardPage.tsx,source_executable,frontend,dashboard,true,dashboard_home,partially_wired,Uses useDashboard hook (real API); quick actions hardcoded; widgets mixed
+src/pages/auth/LoginPage.tsx,source_executable,frontend,auth,false,login,implemented_mock_backed,LoginForm; mock auth active by default via AuthContext
+src/pages/auth/SignupPage.tsx,source_executable,frontend,auth,true,signup,implemented_mock_backed,Calls real API but mock mode active; apiService used
+src/pages/dashboard/MoodPage.tsx,source_executable,frontend,dashboard,true,mood_tracking,partially_wired,apiService → GET/POST /health-tools/mood; real wiring
+src/pages/dashboard/JournalPage.tsx,source_executable,frontend,dashboard,true,journaling,partially_wired,apiService → GET/POST /health-tools/journal; real wiring
+src/pages/dashboard/MeditationPage.tsx,source_executable,frontend,dashboard,true,meditation,partially_wired,apiService → GET/POST /health-tools/meditation; timer UI present
+src/pages/dashboard/NotificationsPage.tsx,source_executable,frontend,dashboard,true,notifications,partially_wired,apiService → GET /notifications; real wiring
+src/pages/dashboard/ProfilePage.tsx,source_executable,frontend,dashboard,true,user_profile,partially_wired,apiService → GET/PUT /users/profile + upload /users/avatar; real wiring
+src/pages/dashboard/SettingsPage.tsx,source_executable,frontend,dashboard,true,settings,partially_wired,apiService → settings endpoints; toggle settings UI
+src/pages/dashboard/SessionsPage.tsx,source_executable,frontend,dashboard,true,therapy_booking,implemented_hardcoded_static,Upcoming sessions UI; therapist cards hardcoded; no API calls confirmed
+src/pages/dashboard/ConnectionsPage.tsx,source_executable,frontend,dashboard,true,social_connections,implemented_hardcoded_static,Match cards; all mock data; no API calls
+src/pages/dashboard/ConfessionalPage.tsx,source_executable,frontend,dashboard,true,confessional,partially_wired,apiService → /health-tools/journal filtered; real wiring
+src/pages/dashboard/ConstellationPage.tsx,source_executable,frontend,dashboard,false,constellation_map,frontend_only,Delegates to ConstellationPage feature; local state canvas
+src/pages/dashboard/PractitionerDashboard.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner,partially_wired,Route /practitioner in router; uses PractitionerDashboard feature
+src/pages/dashboard/TodaysSessionsPage.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner_sessions,stubbed,Practitioner sessions list; likely hardcoded
+src/pages/dashboard/MyClientsPage.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner_clients,stubbed,Client list page; likely hardcoded
+src/pages/dashboard/ManageAvailabilityPage.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner_availability,stubbed,Availability calendar; likely hardcoded
+src/pages/dashboard/EditProfilePage.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner_profile,stubbed,Edit practitioner profile
+src/pages/dashboard/LogoutPage.tsx,source_executable,frontend,auth,false,logout,implemented_live,Logout handler page
+src/pages/dashboard/AstrologyDashboard.tsx,source_executable,frontend,astrology_dashboard,false,astrology,implemented_hardcoded_static,Astrology dashboard; hardcoded content
+src/pages/dashboard/AdminDashboard.tsx,source_executable,frontend,admin,true,admin,implemented_hardcoded_static,Admin metrics hardcoded; no real API; tab navigation UI only
+src/pages/practitioner/PractitionerDashboard.tsx,source_executable,frontend,practitioner_dashboard,true,practitioner,duplicate,ORPHANED - not in router; duplicate of dashboard/PractitionerDashboard; hardcoded mock data
+src/features/landing/components/HeroSection.tsx,source_executable,frontend,landing,false,landing_hero,implemented_hardcoded_static,Hero with CTA; images from public/; hardcoded text
+src/features/landing/components/StatsSection.tsx,source_executable,frontend,landing,true,landing_stats,implemented_hardcoded_static,Count-up animation; hardcoded numbers (150K users etc)
+src/features/landing/components/WellnessSection.tsx,source_executable,frontend,landing,false,landing_wellness,implemented_hardcoded_static,Hardcoded wellness service cards
+src/features/landing/components/ServicesSection.tsx,source_executable,frontend,landing,false,landing_services,implemented_hardcoded_static,Hardcoded service offerings
+src/features/landing/components/HowItWorksSection.tsx,source_executable,frontend,landing,false,landing_how_it_works,implemented_hardcoded_static,3-step explanation; hardcoded
+src/features/landing/components/SoulBotSection.tsx,source_executable,frontend,landing,false,ai_bot,implemented_hardcoded_static,Soul Bot feature promo; hardcoded; no actual chat wiring
+src/features/landing/components/CorporateSection.tsx,source_executable,frontend,landing,false,corporate_cta,implemented_hardcoded_static,Corporate wellness CTA; hardcoded
+src/features/landing/components/FAQSection.tsx,source_executable,frontend,landing,false,faq,implemented_hardcoded_static,FAQ accordion; hardcoded Q&A
+src/features/landing/components/CTASection.tsx,source_executable,frontend,landing,false,cta,implemented_hardcoded_static,Final CTA section; links to /login
+src/features/landing/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/about/components/AboutHero.tsx,source_executable,frontend,about,false,about,implemented_hardcoded_static,About hero section; hardcoded
+src/features/about/components/AboutStats.tsx,source_executable,frontend,about,false,about,implemented_hardcoded_static,Stats display; hardcoded numbers
+src/features/about/components/FoundersSection.tsx,source_executable,frontend,about,false,about,implemented_hardcoded_static,Founder profiles; hardcoded
+src/features/about/components/ValuesSection.tsx,source_executable,frontend,about,false,about,implemented_hardcoded_static,Company values; has TODO comment
+src/features/about/components/VisionMission.tsx,source_executable,frontend,about,false,about,implemented_hardcoded_static,Vision/mission content; hardcoded
+src/features/about/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/auth/components/LoginForm.tsx,source_executable,frontend,auth,false,login,implemented_mock_backed,Login form; TODO comment; mock auth path active
+src/features/auth/components/SignupForm.tsx,source_executable,frontend,auth,false,signup,implemented_mock_backed,Signup form; TODO comment; react-hook-form + zod
+src/features/auth/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/business/components/BusinessHero.tsx,source_executable,frontend,business,false,business,implemented_hardcoded_static,Business hero; TODO comment
+src/features/business/components/BusinessSolutions.tsx,source_executable,frontend,business,false,business,implemented_hardcoded_static,Solutions list; hardcoded
+src/features/business/components/SolutionCard.tsx,source_executable,frontend,business,false,business,implemented_hardcoded_static,Solution card component
+src/features/business/components/SolutionsIntro.tsx,source_executable,frontend,business,false,business,implemented_hardcoded_static,Solutions intro section
+src/features/business/components/corporate/CorporateCTA.tsx,source_executable,frontend,corporate,false,corporate,implemented_hardcoded_static,Corporate CTA
+src/features/business/components/corporate/CorporateHero.tsx,source_executable,frontend,corporate,false,corporate,implemented_hardcoded_static,Corporate hero
+src/features/business/components/corporate/CorporateOfferings.tsx,source_executable,frontend,corporate,false,corporate,implemented_hardcoded_static,Corporate offerings list
+src/features/business/components/corporate/CorporateProblem.tsx,source_executable,frontend,corporate,false,corporate,implemented_hardcoded_static,Problem statement section
+src/features/business/components/corporate/CorporateSolution.tsx,source_executable,frontend,corporate,false,corporate,implemented_hardcoded_static,Solution section
+src/features/business/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/constellation/components/ConstellationCanvas.tsx,source_executable,frontend,dashboard,false,constellation,frontend_only,Three.js/canvas visualization; local state
+src/features/constellation/components/AddNodeModal.tsx,source_executable,frontend,dashboard,false,constellation,frontend_only,Add node dialog; TODO comment; local state only
+src/features/constellation/components/InsightsPanel.tsx,source_executable,frontend,dashboard,false,constellation,frontend_only,Insights panel; local state
+src/features/constellation/components/NodeDetailPanel.tsx,source_executable,frontend,dashboard,false,constellation,frontend_only,Node detail panel; local state
+src/features/constellation/hooks/useConstellation.ts,source_executable,frontend,dashboard,false,constellation,frontend_only,Constellation state hook; local state
+src/features/constellation/services/constellation.service.ts,source_executable,frontend,dashboard,false,constellation,stubbed,Constellation API service; likely stub
+src/features/constellation/types/index.ts,source_support,frontend,dashboard,false,constellation,implemented_live,Constellation TypeScript types
+src/features/constellation/pages/ConstellationPage.tsx,source_executable,frontend,dashboard,false,constellation,frontend_only,Page wrapper for constellation feature
+src/features/constellation/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/courses/constants/courses.data.ts,source_support,frontend,courses,true,courses,implemented_hardcoded_static,All course data hardcoded; prices in INR; badges; categories
+src/features/courses/components/CourseCard.tsx,source_executable,frontend,courses,false,courses,implemented_hardcoded_static,Course card UI component
+src/features/courses/pages/CoursesProgramsPage.tsx,source_executable,frontend,courses,false,courses,implemented_hardcoded_static,Courses listing; filter + search; all data from hardcoded constants; TODO present
+src/features/courses/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/dashboard/components/MetricCard.tsx,source_executable,frontend,dashboard,false,dashboard_widgets,implemented_live,Reusable metric display card
+src/features/dashboard/components/PractitionerHeader.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner,implemented_hardcoded_static,Practitioner header; TODO comment
+src/features/dashboard/components/PractitionerSidebar.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner,implemented_live,Sidebar nav for practitioner dashboard
+src/features/dashboard/components/ClientIntakeWidget.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner_clients,stubbed,Client intake widget
+src/features/dashboard/components/PendingApprovalsWidget.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner_admin,stubbed,Pending approvals widget
+src/features/dashboard/components/QuickLinksWidget.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner,implemented_hardcoded_static,Quick links widget; hardcoded links
+src/features/dashboard/components/ScheduledSessionsWidget.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner_sessions,implemented_hardcoded_static,Session list widget; likely hardcoded
+src/features/dashboard/components/SessionsRecordsWidgets.tsx,source_executable,frontend,practitioner_dashboard,false,practitioner_sessions,implemented_hardcoded_static,Session records widget
+src/features/dashboard/components/layout/DashboardSidebar.tsx,source_executable,frontend,dashboard,false,dashboard_layout,implemented_live,User dashboard sidebar nav
+src/features/dashboard/components/layout/DashboardTopbar.tsx,source_executable,frontend,dashboard,false,dashboard_layout,implemented_live,Dashboard top bar; TODO comment for notification bell
+src/features/dashboard/components/widgets/HumanMatchCard.tsx,source_executable,frontend,dashboard,false,connections,implemented_hardcoded_static,Match card widget; hardcoded data
+src/features/dashboard/components/widgets/PatternAlerts.tsx,source_executable,frontend,dashboard,false,dashboard_insights,implemented_hardcoded_static,Pattern alerts widget; hardcoded
+src/features/dashboard/components/widgets/SoulConstellationMap.tsx,source_executable,frontend,dashboard,false,constellation,frontend_only,Mini constellation map widget; local state
+src/features/dashboard/components/widgets/SoulSyncCard.tsx,source_executable,frontend,dashboard,false,dashboard_widgets,implemented_hardcoded_static,Soul sync card widget
+src/features/dashboard/components/widgets/TheConfessional.tsx,source_executable,frontend,dashboard,false,confessional,implemented_hardcoded_static,Confessional widget; TODO comment; local state
+src/features/dashboard/pages/PersonalizationPage.tsx,source_executable,frontend,onboarding,false,personalization,partially_wired,Multi-step personalization form; unclear if persisted to API
+src/features/dashboard/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/journey-preparation/components/JourneyCard.tsx,source_executable,frontend,onboarding,false,journey_prep,implemented_hardcoded_static,Journey preparation card
+src/features/journey-preparation/components/MandalaBackground.tsx,source_executable,frontend,onboarding,false,journey_prep,implemented_live,Animated mandala background
+src/features/journey-preparation/pages/JourneyPreparationPage.tsx,source_executable,frontend,onboarding,false,journey_prep,implemented_hardcoded_static,Journey prep screen post-login; hardcoded cards
+src/features/journey-preparation/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/onboarding/screens/PractitionerOnboardingPage.tsx,source_executable,frontend,onboarding,true,practitioner_onboarding,partially_wired,Multi-step practitioner onboarding; file upload; calls API on submit
+src/features/onboarding/screens/OnboardingSignupPage.tsx,source_executable,frontend,onboarding,false,user_onboarding,partially_wired,User signup onboarding flow
+src/features/onboarding/screens/OnboardingCreateAccountPage.tsx,source_executable,frontend,onboarding,false,user_onboarding,partially_wired,Create account step; TODO comment
+src/features/onboarding/screens/OnboardingAstrologyPage.tsx,source_executable,frontend,onboarding,false,astrology_onboarding,partially_wired,Astrology-specific onboarding; TODO present
+src/features/onboarding/screens/OnboardingPartnerDetailsPage.tsx,source_executable,frontend,onboarding,false,partner_onboarding,partially_wired,Partner details step; TODO present
+src/features/onboarding/components/OnboardingPasswordField.tsx,source_executable,frontend,onboarding,false,auth,implemented_live,Password strength field; zxcvbn integration; TODO comment
+src/features/onboarding/components/steps/StepDOB.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Date of birth step
+src/features/onboarding/components/steps/StepGender.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Gender selection step
+src/features/onboarding/components/steps/StepGoals.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Goals selection step
+src/features/onboarding/components/steps/StepInterests.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Interests selection step
+src/features/onboarding/components/steps/StepStruggles.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Struggles selection step
+src/features/onboarding/components/steps/StepTherapistPrefs.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Therapist preferences step
+src/features/onboarding/components/steps/StepTherapyHistory.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Therapy history step
+src/features/onboarding/components/steps/StepLocation.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Location step; TODO comment
+src/features/onboarding/components/steps/StepEmergencyContact.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Emergency contact step; TODO comment
+src/features/onboarding/components/steps/StepConfirmation.tsx,source_executable,frontend,onboarding,false,user_onboarding,implemented_live,Confirmation step
+src/features/onboarding/components/steps/types.ts,source_support,frontend,onboarding,false,user_onboarding,implemented_live,Step component types
+src/features/onboarding/constants/signupJourneySteps.ts,source_support,frontend,onboarding,false,user_onboarding,implemented_live,Signup journey step definitions
+src/features/onboarding/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/student-counselling/components/StudentCounsellingCard.tsx,source_executable,frontend,student_counselling,false,student_counselling,implemented_hardcoded_static,SC card component
+src/features/student-counselling/components/StudentCounsellingCardsGrid.tsx,source_executable,frontend,student_counselling,false,student_counselling,implemented_hardcoded_static,SC cards grid
+src/features/student-counselling/components/StudentCounsellingHeroContent.tsx,source_executable,frontend,student_counselling,false,student_counselling,implemented_hardcoded_static,SC hero content
+src/features/student-counselling/components/StudentCounsellingHeroSection.tsx,source_executable,frontend,student_counselling,false,student_counselling,implemented_hardcoded_static,SC hero section
+src/features/student-counselling/components/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/student-counselling/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/workshop/components/WorkshopCard.tsx,source_executable,frontend,workshop,false,workshop,implemented_hardcoded_static,Workshop card
+src/features/workshop/components/WorkshopCardsGrid.tsx,source_executable,frontend,workshop,false,workshop,implemented_hardcoded_static,Workshop cards grid
+src/features/workshop/components/WorkshopHeroContent.tsx,source_executable,frontend,workshop,false,workshop,implemented_hardcoded_static,Workshop hero content
+src/features/workshop/components/WorkshopHeroSection.tsx,source_executable,frontend,workshop,false,workshop,implemented_hardcoded_static,Workshop hero section
+src/features/workshop/components/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/workshop/index.ts,source_support,frontend,exports,false,exports,implemented_live,Re-exports
+src/features/README.md,docs,frontend,documentation,false,architecture,docs_only,Feature directory structure guide
+src/components/LoadingSpinner.tsx,source_executable,frontend,ui_shared,false,loading,implemented_live,App-wide loading spinner
+src/components/error-boundary.tsx,source_executable,frontend,ui_shared,false,error_handling,implemented_live,React error boundary wrapper
+src/components/layout/Navigation.tsx,source_executable,frontend,layout,false,navigation,implemented_live,Top navigation bar; responsive
+src/components/layout/Footer.tsx,source_executable,frontend,layout,false,footer,implemented_live,Site footer; hardcoded links; TODO social icons
+src/components/layout/SmoothScrollProvider.tsx,source_executable,frontend,layout,false,smooth_scroll,implemented_live,Lenis smooth scroll wrapper
+src/components/ui/accordion.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui accordion
+src/components/ui/alert-dialog.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui alert dialog
+src/components/ui/alert.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui alert
+src/components/ui/aspect-ratio.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui aspect ratio
+src/components/ui/avatar.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui avatar
+src/components/ui/badge.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui badge
+src/components/ui/breadcrumb.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui breadcrumb
+src/components/ui/button-group.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Button group component
+src/components/ui/button.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui button
+src/components/ui/calendar.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui calendar (react-day-picker)
+src/components/ui/card.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui card
+src/components/ui/carousel.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Embla carousel wrapper
+src/components/ui/chart.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Recharts wrapper
+src/components/ui/checkbox.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui checkbox
+src/components/ui/collapsible.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui collapsible
+src/components/ui/command.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui command palette; TODO comment
+src/components/ui/context-menu.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui context menu
+src/components/ui/dialog.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui dialog
+src/components/ui/drawer.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Vaul drawer wrapper
+src/components/ui/dropdown-menu.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui dropdown
+src/components/ui/empty.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Empty state component
+src/components/ui/field.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Form field wrapper
+src/components/ui/form.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,react-hook-form integration
+src/components/ui/hover-card.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui hover card
+src/components/ui/input-group.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Input group component
+src/components/ui/input-otp.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,OTP input (input-otp)
+src/components/ui/input.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui input; TODO comment
+src/components/ui/item.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,List item component
+src/components/ui/kbd.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Keyboard shortcut display
+src/components/ui/label.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui label
+src/components/ui/menubar.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui menubar
+src/components/ui/navigation-menu.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui navigation menu
+src/components/ui/pagination.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Pagination component
+src/components/ui/popover.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui popover
+src/components/ui/progress.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui progress bar
+src/components/ui/radio-group.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui radio group
+src/components/ui/resizable.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Resizable panels
+src/components/ui/scroll-area.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui scroll area
+src/components/ui/select.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui select; TODO comment
+src/components/ui/separator.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui separator
+src/components/ui/sheet.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui sheet (drawer)
+src/components/ui/sidebar.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui sidebar
+src/components/ui/skeleton.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Loading skeleton
+src/components/ui/slider.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui slider
+src/components/ui/sonner.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Sonner toast wrapper
+src/components/ui/spinner.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,Spinner component
+src/components/ui/switch.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui switch
+src/components/ui/table.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui table
+src/components/ui/tabs.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui tabs
+src/components/ui/textarea.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui textarea; TODO comment
+src/components/ui/toggle-group.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui toggle group
+src/components/ui/toggle.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui toggle
+src/components/ui/tooltip.tsx,source_executable,frontend,ui_primitives,false,ui,implemented_live,shadcn/ui tooltip
+src/types/index.ts,source_support,frontend,types,false,all_features,implemented_live,Master type re-exports
+src/types/auth.types.ts,source_support,frontend,types,false,authentication,implemented_live,User / UserRole / auth types
+src/types/api.types.ts,source_support,frontend,types,false,api_client,implemented_live,ApiResponse / ApiError types
+src/types/dashboard.types.ts,source_support,frontend,types,false,dashboard,implemented_live,Dashboard data types
+src/types/therapy.types.ts,source_support,frontend,types,false,therapy,implemented_live,Therapy session types
+src/types/admin.types.ts,source_support,frontend,types,false,admin,implemented_live,Admin types
+src/types/ai.types.ts,source_support,frontend,types,false,ai,implemented_live,AI/LLM types
+src/types/analytics.types.ts,source_support,frontend,types,false,analytics,implemented_live,Analytics event types
+src/types/astrology.types.ts,source_support,frontend,types,false,astrology,implemented_live,Astrology types
+src/types/blog.types.ts,source_support,frontend,types,false,blog,implemented_live,Blog post types
+src/types/common.types.ts,source_support,frontend,types,false,shared,implemented_live,Shared common types
+src/types/community.types.ts,source_support,frontend,types,false,community,implemented_live,Community/social types
+src/types/course.types.ts,source_support,frontend,types,false,courses,implemented_live,Course types
+src/types/events.types.ts,source_support,frontend,types,false,events,implemented_live,Event types
+src/types/health.types.ts,source_support,frontend,types,false,health_tools,implemented_live,Mood/journal/meditation types
+src/types/navigation.types.ts,source_support,frontend,types,false,navigation,implemented_live,Navigation types
+src/types/notification.types.ts,source_support,frontend,types,false,notifications,implemented_live,Notification types
+src/types/onboarding.types.ts,source_support,frontend,types,false,onboarding,implemented_live,Onboarding step types
+src/types/payment.types.ts,source_support,frontend,types,false,payments,implemented_live,Payment types (Razorpay)
+src/types/seo.types.ts,source_support,frontend,types,false,seo,implemented_live,SEO meta types
+src/types/ui.types.ts,source_support,frontend,types,false,ui,implemented_live,UI component types
+src/utils/index.ts,source_support,frontend,utils,false,exports,implemented_live,Re-exports utilities
+src/utils/errors/index.ts,source_support,frontend,error_handling,false,api_client,implemented_live,Error code canonicalization; canonical error map
+src/utils/helpers/index.ts,source_support,frontend,utils,false,exports,implemented_live,Re-exports helpers
+src/utils/helpers/collection.helpers.ts,source_support,frontend,utils,false,data,implemented_live,Array/collection utilities
+src/utils/helpers/date.helpers.ts,source_support,frontend,utils,false,data,implemented_live,Date formatting utilities
+src/utils/helpers/number.helpers.ts,source_support,frontend,utils,false,data,implemented_live,Number formatting utilities
+src/utils/helpers/react.helpers.ts,source_support,frontend,utils,false,ui,implemented_live,React utility helpers
+src/utils/helpers/string.helpers.ts,source_support,frontend,utils,false,data,implemented_live,String utilities
+src/utils/security.ts,source_support,frontend,security,false,auth,implemented_live,Frontend security utilities
+src/utils/testing.utils.ts,source_support,frontend,testing,false,tests,implemented_live,Test utility helpers
+src/utils/validators/index.ts,source_support,frontend,validation,false,forms,implemented_live,Re-exports validators
+src/utils/validators/validators.ts,source_support,frontend,validation,false,forms,implemented_live,Custom validation functions
+src/# list_network_requests response.txt,docs,frontend,misc,false,unknown,dead_abandoned,Misnamed file — appears to be a stray test/debug artifact
+server/src/index.ts,source_executable,backend,entry_point,false,app_bootstrap,implemented_live,Express app entry; registers all routes
+server/src/config/index.ts,source_executable,backend,config,false,app_config,implemented_live,App config from env vars
+server/src/config/env.validation.ts,source_support,backend,config,false,env_validation,implemented_live,Environment variable validation with zod
+server/src/lib/prisma.ts,source_executable,backend,database,false,db_client,implemented_live,Prisma client singleton
+server/src/lib/websocket.ts,source_executable,backend,websocket,false,real_time,implemented_live,ws WebSocket server setup
+server/src/lib/errors.ts,source_support,backend,error_handling,false,api_errors,implemented_live,Error class definitions
+server/src/lib/logger.ts,source_support,backend,logging,false,logging,implemented_live,Winston logger setup
+server/src/lib/response.ts,source_support,backend,api,false,api_responses,implemented_live,Standard response helpers (sendSuccess/sendError)
+server/src/lib/upload.ts,source_support,backend,file_upload,false,media_upload,implemented_live,Multer file upload config
+server/src/lib/async-handler.ts,source_support,backend,error_handling,false,middleware,implemented_live,Async express handler wrapper
+server/src/lib/dev-login.ts,source_executable,backend,auth,false,dev_auth,stubbed,Dev login helper for test accounts
+server/src/middleware/auth.middleware.ts,source_executable,backend,auth,false,authentication,implemented_live,JWT verification middleware
+server/src/middleware/rbac.middleware.ts,source_executable,backend,auth,false,authorization,implemented_live,Role-based access control middleware
+server/src/middleware/error.ts,source_executable,backend,error_handling,false,error_handling,implemented_live,Global Express error handler
+server/src/middleware/security.middleware.ts,source_executable,backend,security,false,security,implemented_live,Helmet + CORS + rate limiting
+server/src/middleware/request-context.ts,source_executable,backend,middleware,false,request_context,implemented_live,Request ID / context middleware
+server/src/middleware/upload.middleware.ts,source_executable,backend,file_upload,false,media_upload,implemented_live,Upload middleware wrapper
+server/src/middleware/user-rate-limit.middleware.ts,source_executable,backend,security,false,rate_limiting,implemented_live,Per-user rate limit middleware
+server/src/modules/auth/auth.controller.ts,source_executable,backend,auth,true,authentication,implemented_live,Login/register/refresh/logout with bcrypt + JWT; Prisma; httpOnly cookie for refresh
+server/src/modules/auth/auth.routes.ts,source_executable,backend,auth,false,authentication,implemented_live,Auth route definitions
+server/src/modules/auth/auth.types.ts,source_support,backend,auth,false,authentication,implemented_live,Auth TypeScript types
+server/src/modules/auth/auth.validator.ts,source_support,backend,auth,false,authentication,implemented_live,Zod validators for auth endpoints
+server/src/modules/auth/auth-audit.service.ts,source_executable,backend,auth,false,audit_logging,implemented_live,Auth audit/event logging service
+server/src/modules/auth/tokens.service.ts,source_executable,backend,auth,false,authentication,implemented_live,JWT token creation/verification service
+server/src/modules/users/users.controller.ts,source_executable,backend,users,false,user_management,implemented_live,User profile CRUD; dashboard stats endpoint
+server/src/modules/users/users.service.ts,source_executable,backend,users,false,user_management,implemented_live,User business logic
+server/src/modules/users/users.types.ts,source_support,backend,users,false,user_management,implemented_live,User types
+server/src/modules/users/users.validator.ts,source_support,backend,users,false,user_management,implemented_live,User validation schemas
+server/src/modules/therapy/therapy.controller.ts,source_executable,backend,therapy,false,therapy_booking,partially_wired,Therapy CRUD; some endpoints may be stubbed
+server/src/modules/therapy/therapy.service.ts,source_executable,backend,therapy,true,therapy_booking,stubbed,"Contains only // TODO: Implement therapy service"
+server/src/modules/therapy/therapy.types.ts,source_support,backend,therapy,false,therapy_booking,schema_only,Therapy TypeScript types
+server/src/modules/therapy/therapy.validator.ts,source_support,backend,therapy,false,therapy_booking,schema_only,Therapy zod validators
+server/src/modules/health-tools/health-tools.controller.ts,source_executable,backend,health_tools,false,mood_journal_meditation,implemented_live,Mood/journal/meditation CRUD endpoints
+server/src/modules/health-tools/health-tools.service.ts,source_executable,backend,health_tools,false,mood_journal_meditation,implemented_live,Health tools business logic with Prisma
+server/src/modules/health-tools/health-tools.types.ts,source_support,backend,health_tools,false,mood_journal_meditation,implemented_live,Health tools types
+server/src/modules/health-tools/health-tools.validator.ts,source_support,backend,health_tools,false,mood_journal_meditation,implemented_live,Health tools validators
+server/src/modules/notifications/notifications.controller.ts,source_executable,backend,notifications,false,notifications,implemented_live,Notification CRUD
+server/src/modules/notifications/notifications.service.ts,source_executable,backend,notifications,false,notifications,implemented_live,Notification service with Prisma
+server/src/modules/notifications/notifications.types.ts,source_support,backend,notifications,false,notifications,implemented_live,Notification types
+server/src/modules/notifications/notifications.validator.ts,source_support,backend,notifications,false,notifications,implemented_live,Notification validators
+server/src/modules/blog/blog.controller.ts,source_executable,backend,blog,false,blog,backend_only,Blog CRUD API; no frontend API wiring
+server/src/modules/blog/blog.service.ts,source_executable,backend,blog,false,blog,backend_only,Blog service; Prisma
+server/src/modules/blog/blog.types.ts,source_support,backend,blog,false,blog,backend_only,Blog types
+server/src/modules/blog/blog.validator.ts,source_support,backend,blog,false,blog,backend_only,Blog validators
+server/src/modules/payments/payments.controller.ts,source_executable,backend,payments,false,payments,backend_only,Razorpay payment endpoints
+server/src/modules/payments/payments.service.ts,source_executable,backend,payments,false,payments,backend_only,Payment service; Razorpay keys optional
+server/src/modules/payments/payments.types.ts,source_support,backend,payments,false,payments,backend_only,Payment types
+server/src/modules/payments/payments.validator.ts,source_support,backend,payments,false,payments,backend_only,Payment validators
+server/src/modules/admin/admin.controller.ts,source_executable,backend,admin,false,admin,backend_only,Admin management endpoints
+server/src/modules/admin/admin.service.ts,source_executable,backend,admin,false,admin,backend_only,Admin service
+server/src/modules/admin/admin.types.ts,source_support,backend,admin,false,admin,backend_only,Admin types
+server/src/modules/admin/admin.validator.ts,source_support,backend,admin,false,admin,backend_only,Admin validators
+server/src/modules/ai/ai.controller.ts,source_executable,backend,ai,false,ai_features,stubbed,AI/LLM integration; OpenAI key optional
+server/src/modules/ai/ai.service.ts,source_executable,backend,ai,false,ai_features,stubbed,AI service; requires OPENAI_API_KEY
+server/src/modules/ai/ai.types.ts,source_support,backend,ai,false,ai_features,stubbed,AI types
+server/src/modules/ai/ai.validator.ts,source_support,backend,ai,false,ai_features,stubbed,AI validators
+server/src/modules/astrology/astrology.controller.ts,source_executable,backend,astrology,false,astrology,backend_only,Astrology consultation endpoints
+server/src/modules/astrology/astrology.service.ts,source_executable,backend,astrology,false,astrology,backend_only,Astrology service
+server/src/modules/astrology/astrology.types.ts,source_support,backend,astrology,false,astrology,backend_only,Astrology types
+server/src/modules/astrology/astrology.validator.ts,source_support,backend,astrology,false,astrology,backend_only,Astrology validators
+server/src/modules/community/community.controller.ts,source_executable,backend,community,false,community,backend_only,Community/social endpoints
+server/src/modules/community/community.service.ts,source_executable,backend,community,false,community,backend_only,Community service
+server/src/modules/community/community.types.ts,source_support,backend,community,false,community,backend_only,Community types
+server/src/modules/community/community.validator.ts,source_support,backend,community,false,community,backend_only,Community validators
+server/src/modules/corporate/corporate.controller.ts,source_executable,backend,corporate,false,corporate_wellness,stubbed,Corporate wellness endpoints; returns empty
+server/src/modules/corporate/corporate.service.ts,source_executable,backend,corporate,false,corporate_wellness,stubbed,Corporate service stub
+server/src/modules/corporate/corporate.types.ts,source_support,backend,corporate,false,corporate_wellness,stubbed,Corporate types
+server/src/modules/corporate/corporate.validator.ts,source_support,backend,corporate,false,corporate_wellness,stubbed,Corporate validators
+server/src/modules/courses/courses.controller.ts,source_executable,backend,courses,false,courses,backend_only,Courses CRUD endpoints
+server/src/modules/courses/courses.service.ts,source_executable,backend,courses,false,courses,backend_only,Courses service
+server/src/modules/courses/courses.types.ts,source_support,backend,courses,false,courses,backend_only,Courses types
+server/src/modules/courses/courses.validator.ts,source_support,backend,courses,false,courses,backend_only,Courses validators
+server/src/modules/events/events.controller.ts,source_executable,backend,events,false,events,backend_only,Events CRUD endpoints
+server/src/modules/events/events.service.ts,source_executable,backend,events,false,events,backend_only,Events service
+server/src/modules/events/events.types.ts,source_support,backend,events,false,events,backend_only,Events types
+server/src/modules/events/events.validator.ts,source_support,backend,events,false,events,backend_only,Events validators
+server/src/modules/careers/careers.controller.ts,source_executable,backend,careers,false,careers,backend_only,Careers/jobs endpoints
+server/src/modules/careers/careers.service.ts,source_executable,backend,careers,false,careers,backend_only,Careers service
+server/src/modules/careers/careers.types.ts,source_support,backend,careers,false,careers,backend_only,Careers types
+server/src/modules/careers/careers.validator.ts,source_support,backend,careers,false,careers,backend_only,Careers validators
+server/src/modules/ngo/ngo.controller.ts,source_executable,backend,ngo,false,ngo_partnerships,backend_only,NGO program endpoints; returns empty placeholder
+server/src/modules/ngo/ngo.service.ts,source_executable,backend,ngo,false,ngo_partnerships,backend_only,NGO service
+server/src/modules/ngo/ngo.types.ts,source_support,backend,ngo,false,ngo_partnerships,backend_only,NGO types
+server/src/modules/ngo/ngo.validator.ts,source_support,backend,ngo,false,ngo_partnerships,backend_only,NGO validators
+server/src/modules/shop/shop.controller.ts,source_executable,backend,shop,false,ecommerce,backend_only,Shop/product endpoints
+server/src/modules/shop/shop.service.ts,source_executable,backend,shop,false,ecommerce,backend_only,Shop service
+server/src/modules/shop/shop.types.ts,source_support,backend,shop,false,ecommerce,backend_only,Shop types
+server/src/modules/shop/shop.validator.ts,source_support,backend,shop,false,ecommerce,backend_only,Shop validators
+server/src/modules/health/health.routes.ts,source_executable,backend,health_check,false,ops,implemented_live,GET /health endpoint
+server/src/controllers/admin.controller.ts,source_executable,backend,admin,false,admin,duplicate,Legacy top-level controller; superseded by modules/admin/
+server/src/controllers/ai.controller.ts,source_executable,backend,ai,false,ai_features,duplicate,Legacy top-level controller; superseded by modules/ai/
+server/src/controllers/auth.controller.ts,source_executable,backend,auth,false,authentication,duplicate,Legacy top-level controller; superseded by modules/auth/
+server/src/controllers/blog.controller.ts,source_executable,backend,blog,false,blog,duplicate,Legacy top-level controller; superseded by modules/blog/
+server/src/controllers/community.controller.ts,source_executable,backend,community,false,community,duplicate,Legacy top-level controller; superseded by modules/community/
+server/src/controllers/courses.controller.ts,source_executable,backend,courses,false,courses,duplicate,Legacy top-level controller; superseded by modules/courses/
+server/src/controllers/health-tools.controller.ts,source_executable,backend,health_tools,false,mood_journal_meditation,duplicate,Legacy top-level controller; superseded by modules/health-tools/
+server/src/controllers/notifications.controller.ts,source_executable,backend,notifications,false,notifications,duplicate,Legacy top-level controller; superseded by modules/notifications/
+server/src/controllers/payments.controller.ts,source_executable,backend,payments,false,payments,duplicate,Legacy top-level controller; superseded by modules/payments/
+server/src/controllers/placeholders.controller.ts,source_executable,backend,misc,true,multiple_features,stubbed,Returns empty arrays for careers/corporate/events/ngo/shop — explicit stub
+server/src/controllers/therapy.controller.ts,source_executable,backend,therapy,false,therapy_booking,duplicate,Legacy top-level controller; superseded by modules/therapy/
+server/src/controllers/users.controller.ts,source_executable,backend,users,false,user_management,duplicate,Legacy top-level controller; superseded by modules/users/
+server/src/routes/index.ts,source_executable,backend,routing,false,all_routes,implemented_live,Master route registry
+server/src/routes/auth.ts,source_executable,backend,routing,false,authentication,implemented_live,Auth route wiring
+server/src/routes/users.ts,source_executable,backend,routing,false,user_management,implemented_live,Users route wiring
+server/src/routes/therapy.ts,source_executable,backend,routing,false,therapy_booking,partially_wired,Therapy routes; service is TODO stub
+server/src/routes/health-tools.ts,source_executable,backend,routing,false,mood_journal_meditation,implemented_live,Health tools routes
+server/src/routes/notifications.ts,source_executable,backend,routing,false,notifications,implemented_live,Notifications routes
+server/src/routes/blog.ts,source_executable,backend,routing,false,blog,backend_only,Blog routes
+server/src/routes/payments.ts,source_executable,backend,routing,false,payments,backend_only,Payment routes
+server/src/routes/admin.ts,source_executable,backend,routing,false,admin,backend_only,Admin routes
+server/src/routes/ai.ts,source_executable,backend,routing,false,ai_features,stubbed,AI routes
+server/src/routes/astrology.ts,source_executable,backend,routing,false,astrology,backend_only,Astrology routes
+server/src/routes/community.ts,source_executable,backend,routing,false,community,backend_only,Community routes
+server/src/routes/corporate.ts,source_executable,backend,routing,false,corporate_wellness,stubbed,Corporate routes
+server/src/routes/courses.ts,source_executable,backend,routing,false,courses,backend_only,Courses routes
+server/src/routes/events.ts,source_executable,backend,routing,false,events,backend_only,Events routes
+server/src/routes/careers.ts,source_executable,backend,routing,false,careers,backend_only,Careers routes
+server/src/routes/ngo.ts,source_executable,backend,routing,false,ngo_partnerships,backend_only,NGO routes
+server/src/routes/shop.ts,source_executable,backend,routing,false,ecommerce,backend_only,Shop routes
+server/src/routes/health.ts,source_executable,backend,routing,false,health_check,implemented_live,Health check route
+server/src/routes/dev-helper.ts,source_executable,backend,dev_tools,false,development,stubbed,Dev helper routes (conditional on ENABLE_DEV_ROUTES)
+server/src/routes/dev-login.ts,source_executable,backend,dev_tools,false,development,stubbed,Dev login route for test accounts
+server/src/routes/test.ts,source_executable,backend,dev_tools,false,testing,dead_abandoned,Test routes; likely dev-only dead code
+server/src/routes/test-new.ts,source_executable,backend,dev_tools,false,testing,dead_abandoned,Alternate test routes; dead code
+server/src/services/ai-event-logger.service.ts,source_executable,backend,logging,false,audit_logging,implemented_live,AI/ML event logging service
+server/src/services/cache.service.ts,source_executable,backend,caching,false,performance,stubbed,In-memory cache service; no Redis
+server/src/services/email.service.ts,source_executable,backend,email,false,notifications,stubbed,Email service; provider=console in dev; no real provider configured
+server/src/services/queue.service.ts,source_executable,backend,async_jobs,false,background_jobs,stubbed,Job queue service; in-memory only
+server/src/services/storage.service.ts,source_executable,backend,file_storage,false,media_upload,stubbed,File storage service; memory provider only; S3 optional
+server/src/services/tokens.service.ts,source_executable,backend,auth,false,authentication,duplicate,Duplicate of modules/auth/tokens.service.ts
+server/src/shared/contracts/api.contracts.ts,source_support,shared,contracts,false,all_features,implemented_live,Shared API response envelope type guard (used by frontend)
+server/src/shared/contracts/auth.contracts.ts,source_support,shared,contracts,false,authentication,implemented_live,Shared auth contract types
+server/src/shared/contracts/websocket.contracts.ts,source_support,shared,contracts,false,real_time,implemented_live,WebSocket message type contracts (used by frontend ws service)
+server/src/shared/contracts/index.ts,source_support,shared,contracts,false,exports,implemented_live,Re-exports contracts
+server/src/shared/constants/error-codes.ts,source_support,shared,constants,false,error_handling,implemented_live,Canonical error code constants
+server/src/shared/middleware/role.middleware.ts,source_support,backend,auth,false,authorization,implemented_live,Role check middleware
+server/src/shared/middleware/validate.middleware.ts,source_support,backend,validation,false,api_validation,implemented_live,Zod request validation middleware
+server/src/shared/types/express.d.ts,source_support,backend,types,false,express_augmentation,implemented_live,Express request type augmentation
+server/src/shared/utils/api-error.ts,source_support,backend,error_handling,false,api_errors,implemented_live,ApiError class
+server/src/shared/utils/api-response.ts,source_support,backend,api,false,api_responses,implemented_live,ApiResponse helpers
+server/src/shared/utils/async-handler.ts,source_support,backend,error_handling,false,middleware,duplicate,Duplicate of lib/async-handler.ts
+server/src/shared/utils/hash.ts,source_support,backend,security,false,auth,implemented_live,IP hashing utility
+server/src/shared/utils/pagination.ts,source_support,backend,api,false,data_fetching,implemented_live,Cursor/offset pagination utilities
+server/src/validators/admin.validator.ts,source_support,backend,validation,false,admin,duplicate,Legacy top-level validator; superseded by modules/admin/
+server/src/validators/ai.validator.ts,source_support,backend,validation,false,ai_features,duplicate,Legacy top-level validator
+server/src/validators/auth.validator.ts,source_support,backend,validation,false,authentication,duplicate,Legacy top-level validator
+server/src/validators/blog.validator.ts,source_support,backend,validation,false,blog,duplicate,Legacy top-level validator
+server/src/validators/community.validator.ts,source_support,backend,validation,false,community,duplicate,Legacy top-level validator
+server/src/validators/courses.validator.ts,source_support,backend,validation,false,courses,duplicate,Legacy top-level validator
+server/src/validators/health-tools.validator.ts,source_support,backend,validation,false,mood_journal_meditation,duplicate,Legacy top-level validator
+server/src/validators/notifications.validator.ts,source_support,backend,validation,false,notifications,duplicate,Legacy top-level validator
+server/src/validators/payments.validator.ts,source_support,backend,validation,false,payments,duplicate,Legacy top-level validator
+server/src/validators/placeholders.validator.ts,source_support,backend,validation,false,misc,duplicate,Legacy top-level placeholder validator
+server/src/validators/therapy.validator.ts,source_support,backend,validation,false,therapy_booking,duplicate,Legacy top-level validator
+server/src/validators/users.validator.ts,source_support,backend,validation,false,user_management,duplicate,Legacy top-level validator
+server/prisma/schema.prisma,migration_schema,backend,database,true,all_features,schema_only,Full Prisma schema; models: User/Session/Payment/MoodEntry/JournalEntry/MeditationLog/Notification etc; 2 migrations
+server/prisma/migrations/20260303042000_init/migration.sql,migration_schema,backend,database,false,all_features,schema_only,Second migration SQL (latest)
+server/prisma/migrations/20260228143218_init/migration.sql,migration_schema,backend,database,false,all_features,schema_only,First/initial migration SQL
+server/prisma/migrations/migration_lock.toml,config,backend,database,false,database,implemented_live,Prisma migration lock file
+server/prisma/seed-dev.ts,scripts,backend,database,false,development,implemented_live,Dev seed script for test data
+package.json,config,root,build_config,true,app_bootstrap,implemented_live,Frontend deps + scripts; React 19 + Vite 7 + Radix + Framer Motion + GSAP; NO React Query or Zustand
+package-lock.json,generated,root,build_config,false,app_bootstrap,implemented_live,Frontend lockfile
+server/package.json,config,backend,build_config,true,app_bootstrap,implemented_live,Backend deps; Express + Prisma + bcrypt + ws + Winston; NO Socket.io
+server/package-lock.json,generated,backend,build_config,false,app_bootstrap,implemented_live,Backend lockfile
+tsconfig.json,config,root,typescript,false,type_checking,implemented_live,Root TypeScript config
+tsconfig.app.json,config,root,typescript,false,type_checking,implemented_live,App TypeScript config (vite/client types)
+tsconfig.node.json,config,root,typescript,false,type_checking,implemented_live,Node TypeScript config (vite.config.ts)
+tsconfig.test.json,config,root,typescript,false,type_checking,implemented_live,Playwright test TypeScript config
+vite.config.ts,config,root,build_config,true,build,implemented_live,Vite config; manual chunk splitting (vendor/animation/three-core/ui); proxy /api → localhost:3000
+eslint.config.js,config,root,code_quality,false,linting,implemented_live,ESLint flat config with TypeScript + React hooks + a11y rules
+tailwind.config.js,config,root,styling,false,styles,implemented_live,Tailwind CSS config; custom Soul Yatri design tokens
+postcss.config.js,config,root,styling,false,styles,implemented_live,PostCSS config for Tailwind
+commitlint.config.js,config,root,code_quality,false,git,implemented_live,Conventional commits enforcement
+components.json,config,root,ui,false,ui_primitives,implemented_live,shadcn/ui configuration
+playwright.config.ts,config,root,testing,false,tests,implemented_live,Playwright config; base URL localhost:5173
+Dockerfile,infra,root,deployment,true,deployment,implemented_live,Multi-stage Docker build; node:20-alpine; nginx for frontend; backend service
+docker-compose.yml,infra,root,deployment,true,deployment,implemented_live,PostgreSQL 16 + frontend (nginx:80) + backend (3000); hardcoded kimi/kimi_secret DB creds
+vercel.json,infra,root,deployment,true,deployment,implemented_live,SPA wildcard rewrite (frontend only)
+nginx.conf,infra,root,deployment,false,deployment,implemented_live,nginx static file serving config
+.env.example,config,root,environment,true,env_config,implemented_live,Frontend env template; VITE_AUTH_BYPASS=true VITE_ENABLE_MOCK_AUTH=true ⚠️
+.env.local,config,root,environment,false,env_config,implemented_live,⚠️ LOCAL ENV FILE COMMITTED — should be in .gitignore
+.env.production,config,root,environment,false,env_config,implemented_live,Production env placeholder
+server/.env.example,config,backend,environment,true,env_config,implemented_live,Server env template; Razorpay/Email/AI/Daily.co all commented optional
+server/.env.production,config,backend,environment,false,env_config,implemented_live,Server production env placeholder
+.gitignore,config,root,vcs,false,ops,implemented_live,Git ignore file; .env.local should be here but committed anyway
+.prettierrc,config,root,code_quality,false,formatting,implemented_live,Prettier formatting config
+.prettierignore,config,root,code_quality,false,formatting,implemented_live,Prettier ignore patterns
+.huskyrc,config,root,code_quality,false,git_hooks,implemented_live,Husky git hooks config
+.dockerignore,config,root,deployment,false,deployment,implemented_live,Docker ignore patterns
+.vercelignore,config,root,deployment,false,deployment,implemented_live,Vercel ignore patterns
+.github/workflows/build.yml,infra,ci_cd,automation,true,ci_cd,implemented_live,CI: install + lint + build (node 18/20 matrix); uploads dist artifact; npm audit
+.github/workflows/quality.yml,infra,ci_cd,automation,true,ci_cd,implemented_live,CI: type-check + lint (lint failures silenced with || true)
+.husky/pre-commit,config,root,git_hooks,false,code_quality,implemented_live,Pre-commit hook (runs lint/format)
+.husky/commit-msg,config,root,git_hooks,false,code_quality,implemented_live,Commit message validation (commitlint)
+index.html,static_asset,root,entry_point,false,app_bootstrap,implemented_live,Vite HTML entry; loads React root
+README.md,docs,root,documentation,false,all_features,docs_only,Project README; significant drift from code reality (wrong stack claims)
+agentprompt.txt,docs,root,ai_tooling,false,ai_tools,docs_only,AI agent instructions file
+skills-lock.json,config,root,ai_tooling,false,ai_tools,implemented_live,AI skills lock file
+tests/example.spec.ts,tests,root,testing,false,e2e_tests,stubbed,Single placeholder Playwright test; effectively no coverage
+scripts/check-bundle-budgets.js,scripts,root,build_tooling,false,build_quality,implemented_live,Bundle size budget checker; reads dist/
+scripts/responsive-audit.mjs,scripts,root,build_tooling,false,ux_quality,implemented_live,Playwright-based responsive UI audit script
+.kiro/skills/ab-test-setup,docs,ai_tooling,skills,false,marketing,docs_only,AB test setup skill prompt
+.kiro/skills/ad-creative,docs,ai_tooling,skills,false,marketing,docs_only,Ad creative skill prompt
+.kiro/skills/ai-seo,docs,ai_tooling,skills,false,seo,docs_only,AI SEO skill prompt
+.kiro/skills/analytics-tracking,docs,ai_tooling,skills,false,analytics,docs_only,Analytics tracking skill prompt
+.kiro/skills/churn-prevention,docs,ai_tooling,skills,false,marketing,docs_only,Churn prevention skill
+.kiro/skills/cold-email,docs,ai_tooling,skills,false,marketing,docs_only,Cold email skill
+.kiro/skills/competitor-alternatives,docs,ai_tooling,skills,false,marketing,docs_only,Competitor analysis skill
+.kiro/skills/content-strategy,docs,ai_tooling,skills,false,marketing,docs_only,Content strategy skill
+.kiro/skills/copy-editing,docs,ai_tooling,skills,false,marketing,docs_only,Copy editing skill
+.kiro/skills/copywriting,docs,ai_tooling,skills,false,marketing,docs_only,Copywriting skill
+.kiro/skills/email-sequence,docs,ai_tooling,skills,false,marketing,docs_only,Email sequence skill
+.kiro/skills/form-cro,docs,ai_tooling,skills,false,cro,docs_only,Form CRO skill
+.kiro/skills/free-tool-strategy,docs,ai_tooling,skills,false,marketing,docs_only,Free tool strategy skill
+.kiro/skills/launch-strategy,docs,ai_tooling,skills,false,marketing,docs_only,Launch strategy skill
+.kiro/skills/marketing-ideas,docs,ai_tooling,skills,false,marketing,docs_only,Marketing ideas skill
+.kiro/skills/marketing-psychology,docs,ai_tooling,skills,false,marketing,docs_only,Marketing psychology skill
+.kiro/skills/onboarding-cro,docs,ai_tooling,skills,false,cro,docs_only,Onboarding CRO skill
+.kiro/skills/page-cro,docs,ai_tooling,skills,false,cro,docs_only,Page CRO skill
+.kiro/skills/paid-ads,docs,ai_tooling,skills,false,marketing,docs_only,Paid ads skill
+.kiro/skills/paywall-upgrade-cro,docs,ai_tooling,skills,false,cro,docs_only,Paywall upgrade CRO skill
+.kiro/skills/popup-cro,docs,ai_tooling,skills,false,cro,docs_only,Popup CRO skill
+.kiro/skills/pricing-strategy,docs,ai_tooling,skills,false,marketing,docs_only,Pricing strategy skill
+.kiro/skills/product-marketing-context,docs,ai_tooling,skills,false,marketing,docs_only,Product marketing context
+.kiro/skills/programmatic-seo,docs,ai_tooling,skills,false,seo,docs_only,Programmatic SEO skill
+.kiro/skills/referral-program,docs,ai_tooling,skills,false,marketing,docs_only,Referral program skill
+.kiro/skills/revops,docs,ai_tooling,skills,false,marketing,docs_only,RevOps skill
+.kiro/skills/sales-enablement,docs,ai_tooling,skills,false,marketing,docs_only,Sales enablement skill
+.kiro/skills/schema-markup,docs,ai_tooling,skills,false,seo,docs_only,Schema markup skill
+.kiro/skills/seo-audit,docs,ai_tooling,skills,false,seo,docs_only,SEO audit skill
+.kiro/skills/signup-flow-cro,docs,ai_tooling,skills,false,cro,docs_only,Signup flow CRO skill
+.kiro/skills/site-architecture,docs,ai_tooling,skills,false,seo,docs_only,Site architecture skill
+.kiro/skills/social-content,docs,ai_tooling,skills,false,marketing,docs_only,Social content skill
+.qwen/skills/ab-test-setup,docs,ai_tooling,skills,false,marketing,duplicate,Mirror of .kiro/skills/ab-test-setup
+.qwen/skills/ad-creative,docs,ai_tooling,skills,false,marketing,duplicate,Mirror of .kiro/skills/ad-creative
+.qwen/skills/ai-seo,docs,ai_tooling,skills,false,seo,duplicate,Mirror of .kiro/skills/ai-seo
+.qwen/skills/analytics-tracking,docs,ai_tooling,skills,false,analytics,duplicate,Mirror of .kiro/skills/analytics-tracking
+.qwen/skills/churn-prevention,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/cold-email,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/competitor-alternatives,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/content-strategy,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/copy-editing,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/copywriting,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/email-sequence,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/form-cro,docs,ai_tooling,skills,false,cro,duplicate,Mirror skill
+.qwen/skills/free-tool-strategy,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/launch-strategy,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/marketing-ideas,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/marketing-psychology,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/onboarding-cro,docs,ai_tooling,skills,false,cro,duplicate,Mirror skill
+.qwen/skills/page-cro,docs,ai_tooling,skills,false,cro,duplicate,Mirror skill
+.qwen/skills/paid-ads,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/paywall-upgrade-cro,docs,ai_tooling,skills,false,cro,duplicate,Mirror skill
+.qwen/skills/popup-cro,docs,ai_tooling,skills,false,cro,duplicate,Mirror skill
+.qwen/skills/pricing-strategy,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/product-marketing-context,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/programmatic-seo,docs,ai_tooling,skills,false,seo,duplicate,Mirror skill
+.qwen/skills/referral-program,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/revops,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/sales-enablement,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+.qwen/skills/schema-markup,docs,ai_tooling,skills,false,seo,duplicate,Mirror skill
+.qwen/skills/seo-audit,docs,ai_tooling,skills,false,seo,duplicate,Mirror skill
+.qwen/skills/signup-flow-cro,docs,ai_tooling,skills,false,cro,duplicate,Mirror skill
+.qwen/skills/site-architecture,docs,ai_tooling,skills,false,seo,duplicate,Mirror skill
+.qwen/skills/social-content,docs,ai_tooling,skills,false,marketing,duplicate,Mirror skill
+docs/API.md,docs,docs,documentation,false,api,docs_only,API documentation
+docs/ARCHITECTURE.md,docs,docs,documentation,false,architecture,docs_only,Architecture docs; may have drift
+docs/BUILD_PLAN.md,docs,docs,documentation,false,planning,docs_only,Build plan document
+docs/BUILD_PLAN_GAP_ANALYSIS.md,docs,docs,documentation,false,planning,docs_only,Gap analysis document
+docs/COMPREHENSIVE_CODEBASE_AUDIT.md,docs,docs,documentation,false,audit,docs_only,Prior audit doc; may be outdated
+docs/CONTRIBUTING.md,docs,docs,documentation,false,contributing,docs_only,Contributing guide
+docs/DEVELOPMENT.md,docs,docs,documentation,false,development,docs_only,Development guide
+docs/ENTERPRISE_CHECKLIST.md,docs,docs,documentation,false,planning,docs_only,Enterprise readiness checklist
+docs/FLOW_ISOLATION_VERIFICATION.md,docs,docs,documentation,false,testing,docs_only,Flow isolation verification doc
+docs/IMPLEMENTATION_COMPLETE.md,docs,docs,documentation,false,planning,docs_only,⚠️ Claims implementation complete — contradicted by code audit
+docs/IMPLEMENTATION_SUMMARY.md,docs,docs,documentation,false,planning,docs_only,Implementation summary
+docs/MVP_DEFINITION.md,docs,docs,documentation,false,planning,docs_only,MVP definition document
+docs/STRUCTURE_IMPLEMENTATION_REPORT.md,docs,docs,documentation,false,architecture,docs_only,Structure report
+docs/STRUCTURE_STANDARDS.md,docs,docs,documentation,false,architecture,docs_only,Structure standards
+docs/UI_UX_IMPROVEMENT_MASTERPLAN.md,docs,docs,documentation,false,ux,docs_only,UI/UX improvement masterplan
+docs/ULTIMATE_GOD_MODE_ARCHITECTURE.md,docs,docs,documentation,false,architecture,docs_only,Ambitious architecture doc; aspirational
+docs/execution/MASTER_PLAN.md,docs,docs,documentation,false,planning,docs_only,Master execution plan
+docs/execution/STATUS.md,docs,docs,documentation,false,planning,docs_only,Current status tracking
+docs/execution/DECISIONS.md,docs,docs,documentation,false,planning,docs_only,Decision log
+docs/execution/RISKS.md,docs,docs,documentation,false,planning,docs_only,Risk register
+docs/execution/CURRENT_PROBLEMS.md,docs,docs,documentation,false,planning,docs_only,Known problems log
+docs/execution/PHASE3_CONTRACT_MIGRATION_NOTES.md,docs,docs,documentation,false,planning,docs_only,Phase 3 migration notes
+docs/execution/BASELINE_METRICS.json,docs,docs,documentation,false,metrics,docs_only,Baseline metrics JSON
+docs/execution/bundle-budgets.json,config,docs,build_quality,false,build,implemented_live,Bundle size budgets referenced by scripts/check-bundle-budgets.js
+.agent/workflows/restructure.md,docs,ai_tooling,documentation,false,architecture,docs_only,Restructure workflow doc
+.vscode/mcp.json,config,root,ide_config,false,development,implemented_live,VSCode MCP server configuration

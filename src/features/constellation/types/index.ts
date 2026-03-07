@@ -35,6 +35,18 @@ export type ConnectionType = 'harmony' | 'friction' | 'neutral' | 'evolving';
 
 export type NodeIntensity = 1 | 2 | 3 | 4 | 5;
 
+// ── AI generation provenance ─────────────────────────────────────────────
+
+/** Source that triggered AI generation of a constellation node */
+export type NodeGenerationSource =
+  | 'mood_log'
+  | 'journal'
+  | 'chat'
+  | 'onboarding'
+  | 'session_transcript'
+  | 'astro'
+  | 'pattern';
+
 export interface ConstellationNode {
   id: string;
   userId: string;
@@ -50,14 +62,31 @@ export interface ConstellationNode {
   size: number;
   /** Whether this node is pinned by the user */
   isPinned: boolean;
+  /** Whether the user has hidden this node from view */
+  isHidden: boolean;
   /** Node creation timestamp */
   createdAt: string;
   /** Last interaction timestamp */
   updatedAt: string;
-  /** Optional note attached to the node */
+  /** AI-detected note / context for this node */
   note?: string;
+  /** Optional user-added private annotation */
+  userNote?: string;
+  /** User's corrected label for the AI-detected label */
+  userRenamedLabel?: string;
   /** Tags for searching/filtering */
   tags: string[];
+  // ── AI provenance ────────────────────────────────────────────────────
+  /** All nodes are AI-generated; this field records the originating pipeline */
+  generationSource: NodeGenerationSource;
+  /** ID of the source record (e.g., MoodEntry.id, JournalEntry.id) */
+  sourceId?: string;
+  /** AI extraction confidence 0-1 */
+  generationConfidence?: number;
+  /** User accuracy feedback: true=accurate, false=inaccurate, null=not rated */
+  feedbackAccurate?: boolean | null;
+  /** Free-text feedback from user */
+  feedbackNote?: string;
 }
 
 export interface ConstellationConnection {
@@ -105,16 +134,16 @@ export interface CreateNodePayload {
 }
 
 export interface UpdateNodePayload {
-  label?: string;
-  description?: string;
-  category?: NodeCategory;
-  emotion?: NodeEmotion;
+  /** User can nudge intensity (UI restricts to ±1 from AI value) */
   intensity?: NodeIntensity;
   x?: number;
   y?: number;
-  note?: string;
-  tags?: string[];
   isPinned?: boolean;
+  isHidden?: boolean;
+  userNote?: string;
+  userRenamedLabel?: string;
+  feedbackAccurate?: boolean;
+  feedbackNote?: string;
 }
 
 export interface CreateConnectionPayload {
@@ -133,7 +162,6 @@ export interface ConstellationViewState {
   panY: number;
   selectedNodeId: string | null;
   hoveredNodeId: string | null;
-  isAddingNode: boolean;
   activeFilter: NodeCategory | 'all';
   showInsights: boolean;
 }
@@ -245,4 +273,23 @@ export const EMOTION_CONFIGS: Record<NodeEmotion, { label: string; emoji: string
   excitement: { label: 'Excitement', emoji: '⚡', color: '#ec4899' },
   burnout: { label: 'Burnout', emoji: '💔', color: '#dc2626' },
   neutral: { label: 'Neutral', emoji: '◯', color: '#6b7280' },
+};
+
+
+// ── AI node source display config ────────────────────────────────────────
+
+export interface NodeSourceLabel {
+  emoji: string;
+  label: string;
+}
+
+/** Canonical map of NodeGenerationSource → display config. */
+export const NODE_SOURCE_LABELS: Record<NodeGenerationSource, NodeSourceLabel> = {
+  mood_log:           { emoji: '📊', label: 'Mood log' },
+  journal:            { emoji: '📓', label: 'Journal' },
+  chat:               { emoji: '💬', label: 'SoulBot' },
+  onboarding:         { emoji: '🌟', label: 'Profile' },
+  session_transcript: { emoji: '🎙️', label: 'Session' },
+  astro:              { emoji: '🔮', label: 'Astrology' },
+  pattern:            { emoji: '🔁', label: 'Pattern' },
 };

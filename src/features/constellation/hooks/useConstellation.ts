@@ -12,7 +12,6 @@ import type {
   ConstellationConnection,
   ConstellationInsight,
   ConstellationViewState,
-  CreateNodePayload,
   UpdateNodePayload,
   CreateConnectionPayload,
   NodeCategory,
@@ -35,12 +34,10 @@ interface UseConstellationReturn {
   setHoveredNode: (id: string | null) => void;
   setZoom: (zoom: number) => void;
   setPan: (x: number, y: number) => void;
-  setIsAddingNode: (adding: boolean) => void;
   setActiveFilter: (filter: NodeCategory | 'all') => void;
   toggleInsights: () => void;
 
-  // CRUD
-  createNode: (payload: CreateNodePayload) => Promise<void>;
+  // CRUD (AI creates nodes; users update/delete only)
   updateNode: (nodeId: string, payload: UpdateNodePayload) => Promise<void>;
   deleteNode: (nodeId: string) => Promise<void>;
   moveNode: (nodeId: string, x: number, y: number) => void;
@@ -71,7 +68,6 @@ export function useConstellation(): UseConstellationReturn {
     panY: 0,
     selectedNodeId: null,
     hoveredNodeId: null,
-    isAddingNode: false,
     activeFilter: 'all',
     showInsights: true,
   });
@@ -113,10 +109,6 @@ export function useConstellation(): UseConstellationReturn {
     setViewState((prev) => ({ ...prev, panX: x, panY: y }));
   }, []);
 
-  const setIsAddingNode = useCallback((adding: boolean) => {
-    setViewState((prev) => ({ ...prev, isAddingNode: adding, selectedNodeId: adding ? null : prev.selectedNodeId }));
-  }, []);
-
   const setActiveFilter = useCallback((filter: NodeCategory | 'all') => {
     setViewState((prev) => ({ ...prev, activeFilter: filter }));
   }, []);
@@ -126,21 +118,6 @@ export function useConstellation(): UseConstellationReturn {
   }, []);
 
   // ── CRUD operations ────────────────────────────────────────────────────
-
-  const createNode = useCallback(async (payload: CreateNodePayload) => {
-    try {
-      const newNode = await constellationService.createNode(payload);
-      setData((prev) => ({
-        ...prev,
-        nodes: [...prev.nodes, newNode],
-        lastUpdated: new Date().toISOString(),
-      }));
-      setViewState((prev) => ({ ...prev, isAddingNode: false, selectedNodeId: newNode.id }));
-      toast.success('Node added to your constellation');
-    } catch {
-      toast.error('Failed to add node');
-    }
-  }, []);
 
   const updateNode = useCallback(async (nodeId: string, payload: UpdateNodePayload) => {
     try {
@@ -259,10 +236,8 @@ export function useConstellation(): UseConstellationReturn {
     setHoveredNode,
     setZoom,
     setPan,
-    setIsAddingNode,
     setActiveFilter,
     toggleInsights,
-    createNode,
     updateNode,
     deleteNode,
     moveNode,

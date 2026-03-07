@@ -202,6 +202,11 @@ prisma.therapistMetrics
 **Depends on:** A6 (migration must have run)
 **Verify:** Run the seed script and check DB has 12 therapist users + profiles + availability + metrics
 
+**Also:** Add to `server/package.json` scripts:
+```json
+"seed:therapists": "tsx src/seeds/seed-therapists.ts"
+```
+
 **Full implementation:**
 
 ```typescript
@@ -863,7 +868,7 @@ export async function getMatchedTherapists(
   const therapists = await prisma.therapistProfile.findMany({
     where: { isVerified: true, isAvailable: true },
     include: {
-      user: { select: { id: true, name: true, gender: true } },
+      user: { select: { id: true, name: true }, include: { profile: { select: { gender: true } } } },
       onlineStatus: true,
       metrics: true,
     },
@@ -902,11 +907,13 @@ export async function getMatchedTherapists(
     }
 
     // --- Gender Match (10%) ---
+    // NOTE: Gender is on UserProfile, NOT User. The therapist query must include
+    // user -> profile -> gender. Access via t.user.profile?.gender
     const genderPref = userProfile.therapistGenderPref;
     if (!genderPref || genderPref === 'no-preference') {
       score += 10;
     } else {
-      const therapistGender = t.user.gender?.toLowerCase();
+      const therapistGender = t.user.profile?.gender?.toLowerCase();
       score += (therapistGender === genderPref.toLowerCase()) ? 10 : 0;
     }
 
@@ -1041,6 +1048,21 @@ export async function getAvailableNowTherapists(
 - `completeSession`: Increment journey.completedSessionCount. Update lastSessionAt. Trigger "rate session" nudge.
 - `rateSession`: Update therapist's rolling average rating. Feed into metrics recalculation.
 - `bookInstantSession`: Find first available-now therapist from matching results. Book for NOW + 5 minutes. Notify therapist via WebSocket.
+
+**TherapyJourney auto-creation:** The TherapyJourney record should be created lazily on first `bookSession` call OR proactively when onboarding completes. Add a hook in the onboarding completion flow (e.g., when step 10 saves) that creates an empty TherapyJourney if one doesn't exist. This way the journey is always ready.
+
+**Error codes (standardized):**
+| Code | Meaning |
+|------|---------|
+| `THERAPY_001` | Therapist not found or unavailable |
+| `THERAPY_002` | Slot not available (already booked) |
+| `THERAPY_003` | Max 3 active therapists reached |
+| `THERAPY_004` | Cannot cancel — less than 2 hours before session |
+| `THERAPY_005` | Session not found or access denied |
+| `THERAPY_006` | Invalid session status transition (e.g., completing a cancelled session) |
+| `THERAPY_007` | Already rated this session |
+| `THERAPY_008` | No therapists available for instant booking |
+| `THERAPY_009` | Nudge not found or not owned by user |
 
 **This file should be ~300-400 lines. Full implementation with proper error handling, transaction safety, and audit logging.**
 
@@ -1333,6 +1355,13 @@ export const therapyApi = {
 
 **User-facing language:** "Soul Guide" not "Therapist". Match card says "94% match with your emotional pattern" not "94% therapy match".
 
+**Persuasion UX (hack buying psychology):**
+- Show "Helped {totalSessions}+ people like you" beneath specializations
+- Show "{clientReturnRate * 100}% of people return" as trust badge
+- If next slot within 24h: "Available today" in green
+- If online now: pulsing green dot + "Available Now"
+- Micro-copy: "15 min free call — no commitment" to lower barrier
+
 ---
 
 ### SUBTASK E2: Wire PatternAlerts.tsx to real nudges API
@@ -1349,6 +1378,8 @@ export const therapyApi = {
    - `first_session_free` → CTA style with green "Book Free Call" button
    - `constellation_pattern` → insight style with purple icon
    - `session_reminder` → reminder style with blue icon
+   - `astrology_interest` → mystic/cosmic style with purple/gold gradient, "Your birth chart reveals patterns your guide should see" + CTA "Talk to a Vedic Guide" (links to astrologer booking when available, for now links to general booking)
+   - `pay_as_you_like_return` → warm encouragement style: "Your next call is pay-what-you-feel. No pressure."
 4. Dismiss button calls `therapyApi.dismissNudge(id)`
 5. CTA button calls `therapyApi.markNudgeActed(id)` then navigates to booking
 
@@ -1377,6 +1408,25 @@ export const therapyApi = {
 6. "Talk Now" button → `therapyApi.bookInstantSession()` → show loading → redirect to session
 
 **Language updates:** Replace "Book a Therapy Session" with "Connect with a Soul Guide". Replace "Therapist" with "Wellness Guide" in all user-facing text.
+
+**Therapist card persuasion elements (every card must include):**
+- Match score badge: "94% match" in prominent position
+- Social proof: "Helped {totalSessions}+ people" / "{returnRate}% return rate"
+- Urgency: "Available today at {time}" or "Next slot in {X} hours"
+- Scarcity: "Only {N} slots left this week" (compute from available slots)
+- Trust signals: years of experience, qualifications snippet, star rating
+- For discovery-eligible users: green "Free 15 min call" badge on every card
+
+**Session type display standards:**
+- Discovery: "Free • 15 min" (green badge)
+- Pay-As-You-Like: "Pay what you feel • 45 min" (blue badge)
+- Standard: "₹{price} • 45 min" (neutral badge)
+
+**Discovery call special treatment:**
+- If user.completedSessionCount === 0: Show prominent banner at top of page
+  "Your first call is free — 15 minutes to see if it clicks. No commitment."
+- After discovery call completes: Show conversion CTA inline
+  "Want to go deeper? Your next call is pay-what-you-feel. You choose the price."
 
 ---
 
@@ -1441,6 +1491,115 @@ export const therapyApi = {
 - Toggle active/inactive per day
 - "Save Availability" button → calls `therapyApi.updateTherapistAvailability(slots)`
 - Online status toggle ("Available for instant calls") → calls `therapyApi.updateOnlineStatus(...)`
+
+---
+
+### SUBTASK E8: Build Session Detail Page
+
+**File:** `src/pages/dashboard/SessionDetailPage.tsx` (NEW)
+**Action:** CREATE new page component
+**Depends on:** D1, E5
+
+**Purpose:** Full session detail view at route `/dashboard/sessions/:id`. Notification links (`actionUrl`) point here.
+
+**What to build:**
+1. Fetch `therapyApi.getSession(id)` on mount
+2. Display:
+   - Therapist info card (name, photo, specializations, rating)
+   - Session status badge (SCHEDULED / IN_PROGRESS / COMPLETED / CANCELLED / NO_SHOW)
+   - Session type badge: "Discovery (Free • 15 min)" / "Pay As You Like • 45 min" / "₹{price} • 45 min"
+   - Date/time with relative countdown ("in 3 hours", "2 days ago")
+   - Match score and match reasons ("Why we matched you")
+   - Booking source ("AI recommendation", "Talk Now", etc.)
+3. Actions (based on status):
+   - SCHEDULED: "Cancel" button, "Reschedule" button, "Add to Calendar" link
+   - COMPLETED + not rated: Rating form (inline, not modal — see E9)
+   - COMPLETED + rated: Show submitted rating with feedback
+   - CANCELLED: Show cancellation reason + "Book Again" CTA
+4. **Therapist-only view** (if logged-in user is the therapist):
+   - Show client profile summary (struggles, goals, session history count)
+   - Astrologer notes field (read-only for now, populated later)
+   - Private notes text area → saved via separate API call (not in spec yet — add to therapy.service.ts)
+   - "Start Session" / "Complete Session" / "No Show" action buttons
+
+**Route registration:** Add to router config: `{ path: '/dashboard/sessions/:id', element: <SessionDetailPage /> }`
+
+---
+
+### SUBTASK E9: Build Post-Session Rating Component
+
+**File:** `src/features/dashboard/components/SessionRating.tsx` (NEW)
+**Action:** CREATE new component
+**Depends on:** D1
+
+**Purpose:** Reusable rating component used in Session Detail Page (E8) and triggered from nudge clicks.
+
+**What to build:**
+1. Star rating (1-5) — interactive, large tap targets for mobile
+2. Optional text feedback field (textarea, max 2000 chars)
+3. "Submit" button → calls `therapyApi.rateSession(sessionId, { rating, feedback })`
+4. Pre-submission: Show prompt "How was your call with {guideName}?"
+5. Post-submission: Show thank-you message + personalized follow-up:
+   - Rating 4-5: "Glad it went well! Book your next call with {guideName}"
+   - Rating 1-3: "We hear you. We'll use this to improve your matches."
+6. Works as both:
+   - Inline component (embedded in SessionDetailPage)
+   - Modal (triggered from nudge card click or notification)
+
+---
+
+### SUBTASK E10: Build "Talk Now" Waiting UX
+
+**File:** `src/features/dashboard/components/TalkNowFlow.tsx` (NEW)
+**Action:** CREATE new component
+**Depends on:** D1, F5
+
+**Purpose:** When user clicks "Talk Now", show real-time connection flow.
+
+**UX flow:**
+1. **Searching state** (0-10 sec): "Finding you the perfect guide..." with animated dots/spinner
+2. **Found state** (therapist accepted): Show matched therapist card with match score, "Connecting in 5 min..."
+3. **Countdown state**: 5-min countdown timer. "Your guide is preparing for your call"
+4. **Ready state**: "Start Call" button (disabled until BUILD 4 — show "Coming Soon" for now)
+5. **Timeout state** (>60 sec, no match): "No guides available right now. Schedule a call instead?" with CTA to booking flow
+6. **Error state**: "Something went wrong. Try again?" with retry button
+
+**Triggered by:** "Talk Now" button in SessionsPage (E3) and HumanMatchCard (E1)
+**API call:** `therapyApi.bookInstantSession()` → on success, show found state → listen for WebSocket updates
+
+---
+
+### SUBTASK E11: Build Therapist Instant Session Accept UI
+
+**File:** `src/features/dashboard/components/InstantSessionAlert.tsx` (NEW)
+**Action:** CREATE new component
+**Depends on:** D1, F5
+
+**Purpose:** Therapist-side UI when they receive an instant session request via WebSocket.
+
+**What to build:**
+1. Full-screen overlay/modal with audio chime
+2. Show client info: name, struggles, match score
+3. 60-second countdown: "Accept within 60 seconds"
+4. "Accept" button → confirms session → navigates to session detail
+5. "Decline" button → declines, system tries next available therapist
+6. Auto-decline after timeout → same as decline
+
+**Listens to:** WebSocket event `INSTANT_SESSION_REQUEST`
+**Mount location:** Always mounted in practitioner dashboard layout (listens passively)
+
+---
+
+### SUBTASK E12: Register new frontend routes
+
+**File:** `src/router/` — wherever routes are configured
+**Action:** MODIFY — add routes for new pages
+**Depends on:** E7, E8
+
+**Routes to add:**
+- `/dashboard/sessions/:id` → `<SessionDetailPage />`
+- `/practitioner/availability` → `<AvailabilityPage />` (from E7)
+- Verify existing routes for `/dashboard/sessions` still work
 
 ---
 
@@ -1623,12 +1782,17 @@ C2    → DEPENDS ON B1-B5, B6 (controller)
 D1    → DEPENDS ON C1, C2 (frontend API)
 
 E1-E7 → DEPENDS ON D1, CAN BE PARALLELIZED
+E8    → DEPENDS ON D1, E5 (session detail page)
+E9    → DEPENDS ON D1 (rating component, standalone)
+E10   → DEPENDS ON D1, F5 (talk now waiting UX)
+E11   → DEPENDS ON D1, F5 (therapist accept instant session UI)
+E12   → DEPENDS ON E7, E8 (route registration for new pages)
 
 F1-F5 → DEPENDS ON B3 (notification integration)
 
 G1-G10 → DEPENDS ON ALL ABOVE (testing)
 
-H1-H10 → DEPENDS ON E1-E7 (cleanup)
+H1-H10 → DEPENDS ON E1-E12 (cleanup)
 ```
 
-**Critical Path:** A1-A6 → B1 → B2 → B3 → C1 → C2 → D1 → E1-E7 → H1-H10
+**Critical Path:** A1-A6 → B1 → B2 → B3 → C1 → C2 → D1 → E1-E12 → H1-H10

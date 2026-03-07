@@ -71,7 +71,7 @@ DIMENSION                   WEIGHT   SOURCE
 Struggle ↔ Specialization   30%      UserProfile.struggles ↔ TherapistProfile.specializations
 Approach Compatibility       15%      UserProfile.therapistApproach ↔ TherapistProfile.approach
 Language Match               15%      UserProfile.therapistLanguages ↔ TherapistProfile.languages
-Gender Preference            10%      UserProfile.therapistGenderPref ↔ TherapistProfile user gender
+Gender Preference            10%      UserProfile.therapistGenderPref ↔ Therapist's UserProfile.gender (join through User→UserProfile)
 Goals ↔ Expertise            10%      UserProfile.goals ↔ TherapistProfile.specializations
 Success Rate (same issues)   10%      Completed sessions with same struggles + high ratings
 Availability Proximity       5%       Next available slot within 24h gets bonus
@@ -121,6 +121,23 @@ success_score = (
 ```
 - Builds over time from real sessions.
 - For launch: seeded therapists get pre-set stats.
+
+### Persuasion UX — "Hack Buying Psychology"
+Every therapist card and booking flow must include these conversion elements:
+- **Social proof:** "Helped {totalSessions}+ people" / "{returnRate}% of people return"
+- **Urgency:** "Available today at {time}" / "Next slot in {N} hours"
+- **Scarcity:** "Only {N} slots left this week" (computed from available slots)
+- **Trust signals:** Star rating, years experience, qualifications, "Verified"
+- **Low barrier:** For discovery-eligible users, green badge on every card: "Free 15 min call — no commitment"
+- **Discovery banner:** If completedSessionCount === 0, persistent banner: "Your first call is free — 15 minutes to see if it clicks"
+- **Post-discovery conversion CTA:** After first session completes: "Want to go deeper? Your next call is pay-what-you-feel"
+
+### Session Type Display Standards
+| Type | Badge | Color | Display |
+|------|-------|-------|---------|
+| Discovery | "Free • 15 min" | Green | Prominent, celebratory |
+| Pay-As-You-Like | "Pay what you feel • 45 min" | Blue | Warm, encouraging |
+| Standard | "₹{price} • 45 min" | Neutral | Clean, straightforward |
 
 ---
 
@@ -309,6 +326,19 @@ model User {
 
 **Total: 26 endpoints**
 
+### Error Codes (Therapy-Specific)
+| Code | HTTP | Meaning |
+|------|------|---------|
+| `THERAPY_001` | 404 | Therapist not found or unavailable |
+| `THERAPY_002` | 409 | Slot not available (already booked) |
+| `THERAPY_003` | 403 | Max 3 active therapists reached |
+| `THERAPY_004` | 403 | Cannot cancel — less than 2 hours before session |
+| `THERAPY_005` | 404 | Session not found or access denied |
+| `THERAPY_006` | 400 | Invalid session status transition |
+| `THERAPY_007` | 409 | Already rated this session |
+| `THERAPY_008` | 404 | No therapists available for instant booking |
+| `THERAPY_009` | 404 | Nudge not found or not owned by user |
+
 ---
 
 ## SEEDED DATA (For Launch)
@@ -373,18 +403,23 @@ src/
 ├── features/
 │   └── dashboard/
 │       └── components/
-│           └── widgets/
-│               ├── HumanMatchCard.tsx    ← MODIFY: Wire to real API
-│               ├── PatternAlerts.tsx     ← MODIFY: Wire to real nudges
-│               └── ScheduledSessionsWidget.tsx ← MODIFY: Wire to real sessions
+│           ├── widgets/
+│           │   ├── HumanMatchCard.tsx    ← MODIFY: Wire to real API
+│           │   ├── PatternAlerts.tsx     ← MODIFY: Wire to real nudges
+│           │   └── ScheduledSessionsWidget.tsx ← MODIFY: Wire to real sessions
+│           ├── BookingFlow.tsx           ← NEW: Step-by-step booking modal
+│           ├── SessionRating.tsx         ← NEW: Post-session rating form
+│           ├── TalkNowFlow.tsx           ← NEW: Instant session waiting UX
+│           └── InstantSessionAlert.tsx   ← NEW: Therapist accept/decline instant session
 │
 ├── pages/
 │   └── dashboard/
-│       └── SessionsPage.tsx             ← MODIFY: Wire to real API
+│       ├── SessionsPage.tsx             ← MODIFY: Wire to real API
+│       └── SessionDetailPage.tsx        ← NEW: Individual session view
 ```
 
 ---
 
 ## SUBTASK BREAKDOWN
 
-See: `docs/execution/BUILD_1_SUBTASKS.md` for the complete 100+ subtask breakdown with self-contained prompts for each.
+See: `docs/execution/BUILD_1_SUBTASKS.md` for the complete 95+ subtask breakdown with self-contained prompts for each.

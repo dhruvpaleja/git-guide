@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useLenis } from 'lenis/react';
 
 const navItems = [
   { label: 'Home', path: '/home' },
@@ -30,9 +31,23 @@ export default function Navigation() {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const location = useLocation();
   const navigate = useNavigate();
+  const lenis = useLenis();
   const isScrolledRef = useRef(isScrolled);
   const themeRef = useRef(theme);
   const rafIdRef = useRef<number | null>(null);
+
+  const resetScrollToTop = useCallback(() => {
+    lenis?.scrollTo(0, { immediate: true });
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    // Second pass after route/layout paint to prevent retained positions on smooth-scroll pages.
+    window.requestAnimationFrame(() => {
+      lenis?.scrollTo(0, { immediate: true });
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    });
+  }, [lenis]);
 
   const updateHeaderState = useCallback(() => {
     const nextIsScrolled = window.scrollY > 30;
@@ -99,13 +114,18 @@ export default function Navigation() {
     return () => clearTimeout(timeoutId);
   }, [location.pathname, updateHeaderState]);
 
+  // Always reset scroll for route changes triggered via navbar navigation.
+  useEffect(() => {
+    resetScrollToTop();
+  }, [location.pathname, resetScrollToTop]);
+
   // Handle Logo click
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (location.pathname !== '/home') {
       navigate('/home');
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    resetScrollToTop();
   };
 
   const isLight = theme === 'light';
@@ -150,6 +170,7 @@ export default function Navigation() {
               <Link
                 key={item.label}
                 to={item.path}
+                onClick={resetScrollToTop}
                 className={`px-4 py-2 rounded-full text-[13px] tracking-[-0.14px] transition-all duration-300 whitespace-nowrap ${textStyle}`}
               >
                 {item.label}
@@ -188,7 +209,10 @@ export default function Navigation() {
                 <Link
                   key={item.label}
                   to={item.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={() => {
+                    resetScrollToTop();
+                    setIsMobileMenuOpen(false);
+                  }}
                   className={`block px-4 py-3 rounded-xl text-sm transition-colors ${mobileTextStyle}`}
                 >
                   {item.label}

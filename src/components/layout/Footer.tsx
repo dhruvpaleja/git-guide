@@ -1,124 +1,241 @@
-import { useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 
-const footerLinks = [
-  { label: 'Overview', href: '#overview' },
+const exploreLinks = [
+  { label: 'Overview', href: '/home', isRoute: true },
   { label: 'Careers', href: '/careers', isRoute: true },
   { label: 'Blog', href: '/blogs', isRoute: true },
-  { label: 'B2B', href: '#b2b' },
+  { label: 'B2B', href: '/business', isRoute: true },
+];
+
+const legalLinks = [
   { label: 'Terms & Conditions', href: '#terms' },
   { label: 'Privacy Policy', href: '#privacy' },
   { label: 'Contact', href: '/contact', isRoute: true },
 ];
 
+const socialLinks = [
+  {
+    label: 'Instagram',
+    href: 'https://instagram.com/soulyatri',
+    icon: Instagram,
+    hoverClass: 'group-hover:text-[#E4405F] group-hover:border-[#E4405F]/35',
+  },
+  {
+    label: 'Facebook',
+    href: 'https://facebook.com/soulyatri',
+    icon: Facebook,
+    hoverClass: 'group-hover:text-[#1877F2] group-hover:border-[#1877F2]/35',
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://linkedin.com/company/soulyatri',
+    icon: Linkedin,
+    hoverClass: 'group-hover:text-[#0A66C2] group-hover:border-[#0A66C2]/35',
+  },
+  {
+    label: 'X / Twitter',
+    href: 'https://twitter.com/soulyatri',
+    icon: Twitter,
+    hoverClass: 'group-hover:text-white group-hover:border-white/35',
+  },
+];
+
 export default function Footer() {
   const [email, setEmail] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+  const footerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const columnAnimation = (delayMs: number) =>
+    isVisible
+      ? {
+          animation: `footer-fade-up 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards`,
+          animationDelay: `${delayMs}ms`,
+        }
+      : undefined;
 
   return (
-    <footer className="bg-black">
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-12 py-10">
-        {/* Top row */}
-        <div className="flex flex-col gap-6 sm:flex-row sm:justify-between sm:items-start mb-6">
-          <img
-            src="/images/soul-yatri-logo-footer.png"
-            alt="Soul Yatri"
-            className="h-[28px] w-auto object-contain"
-          />
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 sm:flex sm:flex-col sm:items-end">
-            {footerLinks.map((link) =>
-              link.isRoute ? (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  className="inline-flex min-h-[40px] min-w-[96px] items-center text-[12px] text-white/70 hover:text-white transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="inline-flex min-h-[40px] min-w-[96px] items-center text-[12px] text-white/70 hover:text-white transition-colors"
-                >
-                  {link.label}
-                </a>
-              )
-            )}
+    <footer ref={footerRef} className="relative overflow-hidden bg-[#0a0a0a] text-white">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_100%,rgba(224,123,57,0.2),rgba(10,10,10,0.96)_70%)]" />
+        <div className="absolute inset-0 opacity-[0.08] [background-image:radial-gradient(rgba(255,255,255,0.22)_0.35px,transparent_0.35px)] [background-size:3px_3px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-[1280px] px-6 pt-14 lg:px-12 lg:pt-16">
+        <div className="grid items-start gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.15fr)]">
+          <div className="flex flex-col self-start opacity-0" style={columnAnimation(0)}>
+            <div className="mb-4 flex h-10 items-center gap-3">
+              <span className="footer-lotus-glow inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#E07B39]/35 bg-[#E07B39]/12">
+                <img src="/images/main-logo.png" alt="Soul Yatri Lotus" className="h-6 w-6 object-contain" />
+              </span>
+              <span
+                className="text-[28px] leading-none tracking-[0.01em] text-white"
+                style={{ fontFamily: '"Cormorant Garamond", "Playfair Display", Georgia, serif' }}
+              >
+                Soul Yatri
+              </span>
+            </div>
+            <p
+              className="mb-6 max-w-[320px] text-sm leading-6 text-white/70"
+              style={{ fontFamily: '"DM Sans", "Lato", Inter, sans-serif' }}
+            >
+              Blending modern psychology with cultural wisdom.
+            </p>
+
+            <div className="mb-3">
+              <label htmlFor="footer-email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="footer-email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter email address"
+                className="h-11 w-full rounded-full border border-[#E07B39]/20 bg-[#1a1a1a] px-5 text-sm text-white placeholder:text-white/35 outline-none transition-all duration-300 focus:border-[#E07B39]/70 focus:shadow-[0_0_0_3px_rgba(224,123,57,0.12)]"
+              />
+            </div>
+
+            <button className="h-11 rounded-full bg-[#E07B39] px-6 text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.02] hover:bg-[#eb8a4f] hover:shadow-[0_0_20px_rgba(224,123,57,0.4)]">
+              Book A Therapist
+            </button>
+          </div>
+
+          <div className="flex flex-col self-start opacity-0" style={columnAnimation(110)}>
+            <h3 className="mb-4 flex h-10 items-center text-sm font-semibold tracking-[0.02em] text-white">Explore</h3>
+            <ul className="space-y-3">
+              {exploreLinks.map((link) => (
+                <li key={link.label}>
+                  {link.isRoute ? (
+                    <Link
+                      to={link.href}
+                      className="inline-block border-b border-transparent pb-0.5 text-sm text-[#aaaaaa] transition-all duration-250 hover:border-[#E07B39]/70 hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="inline-block border-b border-transparent pb-0.5 text-sm text-[#aaaaaa] transition-all duration-250 hover:border-[#E07B39]/70 hover:text-white"
+                    >
+                      {link.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-col self-start opacity-0" style={columnAnimation(220)}>
+            <h3 className="mb-4 flex h-10 items-center text-sm font-semibold tracking-[0.02em] text-white">Legal</h3>
+            <ul className="space-y-3">
+              {legalLinks.map((link) => (
+                <li key={link.label}>
+                  {link.isRoute ? (
+                    <Link
+                      to={link.href}
+                      className="inline-block border-b border-transparent pb-0.5 text-sm text-[#aaaaaa] transition-all duration-250 hover:border-[#E07B39]/70 hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="inline-block border-b border-transparent pb-0.5 text-sm text-[#aaaaaa] transition-all duration-250 hover:border-[#E07B39]/70 hover:text-white"
+                    >
+                      {link.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-col self-start opacity-0" style={columnAnimation(330)}>
+            <h3 className="mb-4 flex h-10 items-center text-sm font-semibold tracking-[0.02em] text-white">Follow Our Journey</h3>
+            <ul className="space-y-3">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <li key={social.label}>
+                    <a
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-3 text-sm text-[#aaaaaa] transition-colors duration-250 hover:text-white"
+                    >
+                      <span
+                        className={`inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/12 text-white/75 transition-all duration-250 ${social.hoverClass}`}
+                      >
+                        <Icon size={15} />
+                      </span>
+                      <span className="border-b border-transparent pb-0.5 transition-all duration-250 group-hover:border-[#E07B39]/70">
+                        {social.label}
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </div>
 
-        {/* Description */}
-        <p className="text-[12px] text-white/50 leading-[2] max-w-[500px] mb-6">
-          Soul Yatri blends modern psychology with cultural wisdom to offer compassionate,
-          science-backed and culturally-sensitive mental well-being. We help you understand
-          what's happening inside and give you practical steps.
-        </p>
+        <div className="mt-10 h-px w-full bg-[#E07B39]/20" />
 
-        {/* Email + CTA */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-10">
-          <div className="flex items-center h-[42px] rounded-full border border-white/15 bg-[#080808] px-5 w-full sm:w-[260px]">
-            <label htmlFor="footer-email" className="sr-only">Email address</label>
-            <input
-              id="footer-email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter Email Address"
-              className="h-full w-full bg-transparent text-[12px] text-white/50 placeholder-white/30 focus:outline-none"
-            />
-          </div>
-          <button className="h-[42px] px-6 bg-white rounded-full text-[12px] font-semibold text-black transition-all duration-300 hover:bg-zinc-100 hover:scale-105">
-            Book A Therapist
-          </button>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-white/8 pt-5">
-          <p className="text-[11px] text-white/50 text-center sm:text-left">
-            © 2025 Soul Yatri Pvt. Ltd. | All Rights Reserved
-          </p>
-          <div className="flex items-center justify-center sm:justify-end gap-3">
-            <span className="text-[11px] text-white/60 mr-1">Follow Our Journey:</span>
-            <a
-              href="https://instagram.com/soulyatri"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/5 transition-colors"
-            >
-              <img src="/images/insta-link.png" alt="Instagram" className="w-[16px] h-[16px] opacity-60 hover:opacity-100 transition-opacity" />
-            </a>
-            <a
-              href="https://facebook.com/soulyatri"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/5 transition-colors"
-            >
-              <img src="/images/facebook-link.png" alt="Facebook" className="w-[16px] h-[16px] opacity-60 hover:opacity-100 transition-opacity" />
-            </a>
-            <a
-              href="https://linkedin.com/company/soulyatri"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/5 transition-colors"
-            >
-              <img src="/images/linkedin-link.png" alt="LinkedIn" className="w-[16px] h-[16px] opacity-60 hover:opacity-100 transition-opacity" />
-            </a>
-            <a
-              href="https://twitter.com/soulyatri"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/5 transition-colors"
-            >
-              <img src="/images/twitter-link.png" alt="Twitter" className="w-[16px] h-[16px] opacity-60 hover:opacity-100 transition-opacity" />
-            </a>
-          </div>
+        <div className="mt-0 bg-[#111111] px-3 py-4">
+          <p className="text-center text-xs text-white/55">© 2025 Soul Yatri Pvt. Ltd. | All Rights Reserved</p>
         </div>
       </div>
+
+      <style>{`
+        @keyframes footer-fade-up {
+          from {
+            opacity: 0;
+            transform: translateY(24px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes footer-lotus-pulse {
+          0%,
+          100% {
+            box-shadow: 0 0 0 rgba(224, 123, 57, 0);
+            transform: scale(1);
+          }
+          50% {
+            box-shadow: 0 0 22px rgba(224, 123, 57, 0.28);
+            transform: scale(1.03);
+          }
+        }
+
+        .footer-lotus-glow {
+          animation: footer-lotus-pulse 4s ease-in-out infinite;
+        }
+      `}</style>
     </footer>
   );
 }
+

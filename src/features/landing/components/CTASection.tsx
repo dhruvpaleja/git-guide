@@ -38,7 +38,7 @@ export default function CTASection() {
       {/* Content */}
       <div className="relative z-10 flex justify-center px-4">
         <Link
-          to="/contact"
+          to="/login"
           className={`group relative px-10 py-3.5 bg-white text-black font-medium text-sm rounded-full transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-white/20 active:scale-95 ${
             isVisible
               ? 'opacity-100 translate-y-0'

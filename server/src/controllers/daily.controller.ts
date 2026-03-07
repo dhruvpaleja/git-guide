@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { asyncHandler } from '../lib/asyncHandler.js';
 import { AppError, ErrorCode } from '../lib/errors.js';
 import { sendSuccess } from '../lib/response.js';
@@ -11,13 +11,16 @@ import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
  * POST /api/v1/daily/start
  */
 export const startSession = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId, role } = req.auth!;
+  const auth = req.auth;
+  if (!auth) throw new AppError({ message: 'Unauthorized', statusCode: 401, code: ErrorCode.UNAUTHORIZED });
+  
+  const userId = auth.userId;
   const { sessionId, enableRecording, enableChat } = req.body;
 
   // Verify user has access to session
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
-    select: { userId, therapist: { select: { userId: true } } },
+    select: { userId, therapistId: true },
   });
 
   if (!session) {
@@ -29,7 +32,7 @@ export const startSession = asyncHandler(async (req: AuthenticatedRequest, res: 
   }
 
   const isUser = session.userId === userId;
-  const isTherapist = session.therapist.userId === userId;
+  const isTherapist = session.therapistId === userId;
 
   if (!isUser && !isTherapist) {
     throw new AppError({
@@ -67,16 +70,19 @@ export const startSession = asyncHandler(async (req: AuthenticatedRequest, res: 
  * POST /api/v1/daily/end
  */
 export const endSession = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-  const { userId } = req.auth!;
+  const auth = req.auth;
+  if (!auth) throw new AppError({ message: 'Unauthorized', statusCode: 401, code: ErrorCode.UNAUTHORIZED });
+  
+  const userId = auth.userId;
   const { sessionId } = req.body;
 
   // Verify access
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
-    select: { userId, therapist: { select: { userId: true } } },
+    select: { userId, therapistId: true },
   });
 
-  if (!session || (session.userId !== userId && session.therapist.userId !== userId)) {
+  if (!session || (session.userId !== userId && session.therapistId !== userId)) {
     throw new AppError({
       message: 'Access denied',
       statusCode: 403,
@@ -88,7 +94,7 @@ export const endSession = asyncHandler(async (req: AuthenticatedRequest, res: Re
   await dailyService.endRoom(sessionId);
 
   // Update session status to COMPLETED (only therapist can complete)
-  if (session.therapist.userId === userId) {
+  if (session.therapistId === userId) {
     await prisma.session.update({
       where: { id: sessionId },
       data: { status: 'COMPLETED' },
@@ -103,16 +109,19 @@ export const endSession = asyncHandler(async (req: AuthenticatedRequest, res: Re
  * GET /api/v1/daily/room/:sessionId
  */
 export const getRoom = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const auth = req.auth;
+  if (!auth) throw new AppError({ message: 'Unauthorized', statusCode: 401, code: ErrorCode.UNAUTHORIZED });
+  
+  const userId = auth.userId;
   const { sessionId } = req.params;
-  const { userId } = req.auth!;
 
   // Verify access
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
-    select: { userId, therapist: { select: { userId: true } } },
+    select: { userId, therapistId: true },
   });
 
-  if (!session || (session.userId !== userId && session.therapist.userId !== userId)) {
+  if (!session || (session.userId !== userId && session.therapistId !== userId)) {
     throw new AppError({
       message: 'Access denied',
       statusCode: 403,
@@ -181,16 +190,20 @@ export const getRecordingUrl = asyncHandler(async (req: AuthenticatedRequest, re
  * POST /api/v1/daily/token
  */
 export const getToken = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  const auth = req.auth;
+  if (!auth) throw new AppError({ message: 'Unauthorized', statusCode: 401, code: ErrorCode.UNAUTHORIZED });
+  
   const { sessionId } = req.body;
-  const { userId, name } = req.auth!;
+  const userId = auth.userId;
+  const userName = auth.name || 'User';
 
   // Verify access
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
-    select: { userId, therapist: { select: { userId: true } } },
+    select: { userId, therapistId: true },
   });
 
-  if (!session || (session.userId !== userId && session.therapist.userId !== userId)) {
+  if (!session || (session.userId !== userId && session.therapistId !== userId)) {
     throw new AppError({
       message: 'Access denied',
       statusCode: 403,
@@ -209,7 +222,7 @@ export const getToken = asyncHandler(async (req: AuthenticatedRequest, res: Resp
   }
 
   // Generate token
-  const token = await dailyService.generateToken(room.roomName, userId, name || 'User');
+  const token = await dailyService.generateToken(room.roomName, userId, userName);
 
   sendSuccess(res, { token, roomName: room.roomName }, 'Token generated');
 });

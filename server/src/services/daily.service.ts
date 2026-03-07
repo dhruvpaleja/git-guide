@@ -12,7 +12,7 @@ import axios from 'axios';
 import { prisma } from '../lib/prisma.js';
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY || '';
-const DAILY_DOMAIN = process.env.DAILY_DOMAIN || 'soulyatri.daily.co';
+// const DAILY_DOMAIN = process.env.DAILY_DOMAIN || 'soulyatri.daily.co'; // Reserved for future use
 
 const dailyApi = axios.create({
   baseURL: `https://api.daily.co/v1`,
@@ -73,8 +73,9 @@ export async function createRoom(options: CreateRoomOptions): Promise<RoomInfo> 
     });
 
     return { roomName, roomUrl, sessionId };
-  } catch (error: any) {
-    console.error('Failed to create Daily room:', error.response?.data || error.message);
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    console.error('Failed to create Daily room:', err.response?.data || err.message);
     throw new Error('Failed to create video room');
   }
 }
@@ -115,8 +116,9 @@ export async function endRoom(sessionId: string): Promise<void> {
       where: { sessionId },
       data: { endedAt: new Date() },
     });
-  } catch (error: any) {
-    console.error('Failed to end room:', error.response?.data || error.message);
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    console.error('Failed to end room:', err.response?.data || err.message);
   }
 }
 
@@ -148,8 +150,9 @@ export async function startRecording(sessionId: string): Promise<string | null> 
     });
 
     return recordingId;
-  } catch (error: any) {
-    console.error('Failed to start recording:', error.response?.data || error.message);
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    console.error('Failed to start recording:', err.response?.data || err.message);
     return null;
   }
 }
@@ -167,8 +170,9 @@ export async function stopRecording(sessionId: string): Promise<string | null> {
   try {
     await dailyApi.post(`/recordings/${room.recordingId}/stop`);
     return room.recordingId;
-  } catch (error: any) {
-    console.error('Failed to stop recording:', error.response?.data || error.message);
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    console.error('Failed to stop recording:', err.response?.data || err.message);
     return null;
   }
 }
@@ -180,8 +184,9 @@ export async function getRecordingUrl(recordingId: string): Promise<string | nul
   try {
     const response = await dailyApi.get(`/recordings/${recordingId}`);
     return response.data.download_link || null;
-  } catch (error: any) {
-    console.error('Failed to get recording URL:', error.response?.data || error.message);
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    console.error('Failed to get recording URL:', err.response?.data || err.message);
     return null;
   }
 }
@@ -201,8 +206,9 @@ export async function generateToken(roomName: string, userId: string, userName: 
     });
 
     return response.data.token;
-  } catch (error: any) {
-    console.error('Failed to generate token:', error.response?.data || error.message);
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: unknown }; message?: string };
+    console.error('Failed to generate token:', err.response?.data || err.message);
     throw new Error('Failed to generate access token');
   }
 }

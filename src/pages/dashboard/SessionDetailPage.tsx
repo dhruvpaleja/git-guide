@@ -256,8 +256,9 @@ export default function SessionDetailPage() {
       await videoApi.startSession(session.id);
       setVideoStarted(true);
       setShowVideo(true);
-    } catch (err: any) {
-      setVideoError(err.message || 'Failed to start video call');
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setVideoError(error.message || 'Failed to start video call');
       console.error(err);
     }
   }, [session]);

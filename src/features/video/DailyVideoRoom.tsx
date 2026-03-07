@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { DailyProvider } from '@daily-co/daily-react';
 import { useNavigate } from 'react-router-dom';
 import { videoApi } from '@/services/video.api';
@@ -19,45 +19,25 @@ export default function DailyVideoRoom({ sessionId, userName, isTherapist, onLea
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Create call object
-    const call = (window as any).DailyIframe.createCallObject({
-      theme: {
-        colors: {
-          accent: '#f59e0b',
-          accentText: '#ffffff',
-          background: '#0c0c10',
-          backgroundAccent: '#1a1a24',
-          mainText: '#ffffff',
-          mainAccentText: '#f59e0b',
-          border: '#ffffff10',
-          localVideo: '#ffffff20',
-        },
-      },
-    });
+  const handleLeave = useCallback(async () => {
+    if (callObject) {
+      await callObject.leave();
+      await videoApi.endSession(sessionId);
+      onLeave?.();
+      navigate('/dashboard/sessions');
+    }
+  }, [callObject, sessionId, onLeave, navigate]);
 
-    setCallObject(call);
+  const toggleRecording = useCallback(async () => {
+    try {
+      await videoApi.toggleRecording(sessionId, isRecording ? 'stop' : 'start');
+      setIsRecording(!isRecording);
+    } catch (err) {
+      console.error('Failed to toggle recording:', err);
+    }
+  }, [sessionId, isRecording]);
 
-    // Join room
-    joinRoom(call);
-
-    // Event listeners
-    call.on('left-meeting', () => {
-      handleLeave();
-    });
-
-    call.on('error', (event: any) => {
-      console.error('Daily.co error:', event);
-      setError('Connection error. Please refresh the page.');
-    });
-
-    // Cleanup
-    return () => {
-      call.destroy();
-    };
-  }, [sessionId]);
-
-  const joinRoom = async (call: any) => {
+  const joinRoom = useCallback(async (call: any) => {
     try {
       const roomResponse = await videoApi.getRoom(sessionId);
       const tokenResponse = await videoApi.getToken(sessionId);
@@ -77,25 +57,49 @@ export default function DailyVideoRoom({ sessionId, userName, isTherapist, onLea
       setError(err.message || 'Failed to join video room');
       console.error(err);
     }
-  };
+  }, [sessionId, userName]);
 
-  const handleLeave = async () => {
-    if (callObject) {
-      await callObject.leave();
-      await videoApi.endSession(sessionId);
-      onLeave?.();
-      navigate('/dashboard/sessions');
-    }
-  };
+  useEffect(() => {
+    // Create call object
+    const call = (window as any).DailyIframe.createCallObject({
+      theme: {
+        colors: {
+          accent: '#f59e0b',
+          accentText: '#ffffff',
+          background: '#0c0c10',
+          backgroundAccent: '#1a1a24',
+          mainText: '#ffffff',
+          mainAccentText: '#f59e0b',
+          border: '#ffffff10',
+          localVideo: '#ffffff20',
+        },
+      },
+    });
 
-  const toggleRecording = async () => {
-    try {
-      await videoApi.toggleRecording(sessionId, isRecording ? 'stop' : 'start');
-      setIsRecording(!isRecording);
-    } catch (err) {
-      console.error('Failed to toggle recording:', err);
-    }
-  };
+    // Join room after call object is created
+    call.on('joined-meeting', async () => {
+      await joinRoom(call);
+    });
+
+    // Event listeners
+    call.on('left-meeting', () => {
+      handleLeave();
+    });
+
+    call.on('error', (event: unknown) => {
+      console.error('Daily.co error:', event);
+      setError('Connection error. Please refresh the page.');
+    });
+
+    // Set call object after event listeners are set up
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCallObject(call);
+
+    // Cleanup
+    return () => {
+      call.destroy();
+    };
+  }, [joinRoom, handleLeave]);
 
   if (error) {
     return (

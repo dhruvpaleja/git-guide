@@ -24,7 +24,7 @@ export default function CorporateSection() {
       <div className="max-w-[1200px] mx-auto px-6 lg:px-12 pt-14 pb-6">
         <div className="text-center">
           <h2
-            className={`text-[24px] font-semibold text-black tracking-tight mb-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+            className={`text-[20px] sm:text-[22px] md:text-[24px] font-semibold text-black tracking-tight mb-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
           >
             Corporate Wellness
@@ -45,7 +45,7 @@ export default function CorporateSection() {
         <div
           className={`relative rounded-[30px] overflow-hidden transition-all ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.97]'
             }`}
-          style={{ transitionDuration: '1200ms', transitionDelay: '0.2s', height: '500px' }}
+          style={{ transitionDuration: '1200ms', transitionDelay: '0.2s', height: 'clamp(280px, 50vw, 500px)' }}
         >
           <img
             src="/images/corporate-figma.png"
@@ -61,7 +61,7 @@ export default function CorporateSection() {
               style={{ background: 'rgba(255,255,255,0.25)' }}
             >
               <h3 className="text-sm md:text-[16px] font-semibold text-black mb-1">Topic</h3>
-              <p className="text-[11px] md:text-[12px] text-black/90 text-center leading-snug">
+              <p className="text-[12px] md:text-[12px] text-black/90 text-center leading-snug">
                 Leadership Mindfulness Training
               </p>
             </div>
@@ -72,7 +72,7 @@ export default function CorporateSection() {
               style={{ background: 'rgba(255,255,255,0.25)' }}
             >
               <h3 className="text-sm md:text-[16px] font-semibold text-black mb-1">Problem</h3>
-              <p className="text-[11px] md:text-[12px] text-black/90 text-center leading-[1.6]">
+              <p className="text-[12px] md:text-[12px] text-black/90 text-center leading-[1.6]">
                 Workplace pressure drives leader burnout and reactive decisions, impacting teams.
               </p>
             </div>
@@ -83,7 +83,7 @@ export default function CorporateSection() {
               style={{ background: 'rgba(255,255,255,0.25)' }}
             >
               <h3 className="text-sm md:text-[16px] font-semibold text-black mb-1">Solution</h3>
-              <p className="text-[11px] md:text-[12px] text-black/90 text-center leading-[1.6]">
+              <p className="text-[12px] md:text-[12px] text-black/90 text-center leading-[1.6]">
                 Soul Yatri's Leadership Mindfulness Training helps leaders build clarity and emotional intelligence through a 4–8 week program.
               </p>
             </div>

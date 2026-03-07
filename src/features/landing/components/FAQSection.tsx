@@ -35,7 +35,7 @@ export default function FAQSection() {
 
       <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
         <h2
-          className={`text-[24px] font-semibold text-white text-center tracking-tight mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          className={`text-[20px] sm:text-[22px] md:text-[24px] font-semibold text-white text-center tracking-tight mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
         >
           Get Your All Questions Answered
@@ -45,14 +45,14 @@ export default function FAQSection() {
           {faqs.map((faq, i) => (
             <div
               key={i}
-              className={`flex items-center h-[52px] rounded-full px-3 mb-3 group cursor-pointer hover:bg-white/5 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              className={`flex items-center min-h-[52px] rounded-full px-3 py-2 mb-3 group cursor-pointer hover:bg-white/5 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               style={{ transitionDelay: `${0.1 + i * 0.06}s` }}
             >
               <div className="w-[34px] h-[34px] rounded-[12px] flex items-center justify-center flex-shrink-0">
                 <span className="text-[13px] font-semibold text-white">{i + 1}</span>
               </div>
-              <p className="flex-1 ml-3 text-[12px] text-white/80 leading-snug">
+              <p className="flex-1 ml-3 text-[12px] sm:text-[13px] text-white/80 leading-relaxed">
                 {faq.question}
               </p>
               <div className="flex-shrink-0 w-[34px] h-[34px] flex items-center justify-center">

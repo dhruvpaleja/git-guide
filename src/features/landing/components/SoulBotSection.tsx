@@ -18,7 +18,7 @@ export default function SoulBotSection() {
       {/* Title area - Figma: text-32px, text-16px */}
       <div className="text-center py-[50px]">
         <h2
-          className={`text-[32px] font-semibold text-black tracking-[-0.32px] mb-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          className={`text-[24px] sm:text-[28px] md:text-[32px] font-semibold text-black tracking-[-0.32px] mb-3 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
         >
           You Personal AI SouBot
@@ -36,16 +36,16 @@ export default function SoulBotSection() {
       <div
         className={`bg-black relative overflow-hidden transition-all ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
-        style={{ height: '820px', transitionDuration: '1000ms', transitionDelay: '0.2s' }}
+        style={{ height: 'clamp(600px, 120vh, 820px)', transitionDuration: '1000ms', transitionDelay: '0.2s' }}
       >
         {/* Grey blur circle - Figma: size-400, top:-200 */}
-        <div className="absolute pointer-events-none" style={{ width: '400px', height: '400px', left: '33.33%', top: '-200px' }}>
+        <div className="absolute pointer-events-none" style={{ width: 'clamp(200px, 80vw, 400px)', height: 'clamp(200px, 80vw, 400px)', left: '33.33%', top: 'clamp(-100px, -25vw, -200px)' }}>
           <div className="absolute inset-[-100%]">
             <img src="/images/grey-blur-circle.svg" alt="" className="block max-w-none w-full h-full" />
           </div>
         </div>
 
-        <div className="max-w-[1440px] mx-auto relative h-full flex flex-col justify-between py-12 md:py-20 px-4 md:px-[82px] z-10">
+        <div className="max-w-[1440px] mx-auto relative h-full flex flex-col justify-between py-12 md:py-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[82px] z-10">
           {/* Welcome text */}
           <div className="text-center pt-8 md:pt-10">
             <h3 className="text-2xl md:text-[32px] font-semibold text-white tracking-[-0.32px] mb-3 md:w-[420px] mx-auto">

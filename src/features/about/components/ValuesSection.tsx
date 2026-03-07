@@ -38,11 +38,11 @@ export default function ValuesSection() {
     }
 
     return (
-        <section ref={sectionRef} className="w-full bg-white py-[100px]">
+        <section ref={sectionRef} className="w-full bg-white py-[40px] md:py-[60px] lg:py-[100px]">
             <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24">
 
                 <h2
-                    className="text-[48px] font-bold text-center mb-16"
+                    className="text-[28px] sm:text-[36px] md:text-[42px] lg:text-[48px] font-bold text-center mb-16"
                     style={{
                         fontFamily: "'Playfair Display', serif",
                         opacity: isVisible ? 1 : 0,
@@ -57,7 +57,7 @@ export default function ValuesSection() {
                     {values.map((val, index) => (
                         <div
                             key={index}
-                            className="group flex flex-col items-center justify-center w-[200px] h-[200px] rounded-[32px] overflow-hidden relative cursor-default"
+                            className="group flex flex-col items-center justify-center w-[140px] sm:w-[170px] md:w-[200px] h-[140px] sm:h-[170px] md:h-[200px] rounded-[24px] sm:rounded-[32px] overflow-hidden relative cursor-default"
                             style={{
                                 opacity: isVisible ? 1 : 0,
                                 transform: isVisible ? 'scale(1)' : 'scale(0.95)',

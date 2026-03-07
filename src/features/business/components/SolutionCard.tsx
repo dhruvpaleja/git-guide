@@ -30,7 +30,7 @@ export default function SolutionCard({
     };
 
     return (
-        <div className={`w-full max-w-[1240px] mx-auto bg-white rounded-[32px] border border-black/5 overflow-hidden flex flex-col ${imagePosition === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'} items-stretch min-h-[500px] shadow-sm hover:shadow-lg transition-shadow duration-500`}>
+        <div className={`w-full max-w-[1240px] mx-auto bg-white rounded-[32px] border border-black/5 overflow-hidden flex flex-col ${imagePosition === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'} items-stretch min-h-[300px] md:min-h-[500px] shadow-sm hover:shadow-lg transition-shadow duration-500`}>
 
             {/* Image Container */}
             <div className="w-full md:w-1/2 relative bg-zinc-100 min-h-[300px] md:min-h-full">

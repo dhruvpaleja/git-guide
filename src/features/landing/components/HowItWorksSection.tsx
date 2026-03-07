@@ -21,11 +21,11 @@ export default function HowItWorksSection() {
 
   return (
     <section id="how-it-works" ref={sectionRef} className="relative bg-white py-[60px]">
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-[82px]">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-[82px]">
         {/* Title */}
         <div className="text-center mb-2">
           <h2
-            className={`text-3xl md:text-[32px] font-semibold text-black tracking-[-0.32px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+            className={`text-[24px] sm:text-[28px] md:text-[32px] font-semibold text-black tracking-[-0.32px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
           >
             How Soul Yatri Works For You
@@ -46,13 +46,13 @@ export default function HowItWorksSection() {
           {features.map((feature, i) => (
             <div
               key={feature.title}
-              className={`transition-all duration-700 w-full max-w-[350px] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              className={`transition-all duration-700 w-full max-w-[95vw] sm:max-w-[350px] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                 }`}
               style={{ transitionDelay: `${0.2 + i * 0.1}s` }}
             >
               {/* Card */}
               <div
-                className="relative overflow-hidden rounded-[25px] group cursor-pointer border border-black/20 pb-4 h-[450px] w-full"
+                className="relative overflow-hidden rounded-[25px] group cursor-pointer border border-black/20 pb-4 min-h-[380px] sm:min-h-[420px] md:min-h-[450px] w-full"
               >
                 <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[25px]">
                   <img
@@ -80,7 +80,7 @@ export default function HowItWorksSection() {
 
               {/* CTA button below card */}
               <div className="flex justify-center mt-6">
-                <button className="h-[60px] w-full max-w-[200px] rounded-[25px] border border-black/20 text-[16px] font-semibold text-black text-center tracking-[-0.16px] leading-[30px] bg-white transition-all duration-300 hover:bg-black hover:text-white hover:scale-105 shadow-sm">
+                <button className="h-[60px] w-full sm:max-w-[200px] rounded-[25px] border border-black/20 text-[16px] font-semibold text-black text-center tracking-[-0.16px] leading-[30px] bg-white transition-all duration-300 hover:bg-black hover:text-white hover:scale-105 shadow-sm">
                   {feature.buttonText}
                 </button>
               </div>

@@ -120,7 +120,7 @@ const openingGroups: Array<{ name: string; count: number; jobs: Job[] }> = [
 
 function JobCard({ job }: { job: Job }) {
   return (
-    <article className="h-[200px] rounded-[25px] border border-white/10 bg-[#080808] px-[30px] py-[30px] text-white">
+    <article className="min-h-[200px] rounded-[25px] border border-white/10 bg-[#080808] px-4 sm:px-[30px] py-5 sm:py-[30px] text-white">
       <div className="mb-5 flex items-center justify-between">
         <h4 className="text-[16px] font-semibold tracking-[-0.16px]">{job.title}</h4>
         <span className="inline-flex items-center gap-1.5 text-[14px] text-white">
@@ -146,21 +146,21 @@ export default function CareerPage() {
   useDocumentTitle('Careers');
   return (
     <div className="w-full bg-[#f3f3f3] font-['Manrope',sans-serif] text-black">
-      <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 pt-[120px] sm:px-10 lg:px-[82px]">
+      <section className="mx-auto w-full max-w-[1440px] px-4 pb-16 pt-[80px] sm:px-6 sm:pt-[100px] md:px-10 md:pt-[120px] lg:px-[82px]">
         <div className="mt-6 text-center">
-          <h1 className="text-[32px] font-semibold tracking-[-0.32px]">Soul Yatri Career</h1>
+          <h1 className="text-[24px] sm:text-[28px] md:text-[32px] font-semibold tracking-[-0.32px]">Soul Yatri Career</h1>
           <p className="mt-4 text-[16px] tracking-[-0.16px] text-black/50">Join a mission-led team creating accessible mental wellness for everyone.</p>
         </div>
 
         <div className="mt-[80px] text-center">
-          <h2 className="text-[42px] font-semibold tracking-[-0.42px]">About Soul Yatri</h2>
+          <h2 className="text-[28px] sm:text-[34px] md:text-[42px] font-semibold tracking-[-0.42px]">About Soul Yatri</h2>
           <p className="mx-auto mt-6 max-w-[1016px] text-[16px] leading-[30px] tracking-[-0.16px] text-black/80">
             Soul Yatri blends modern psychology with cultural wisdom to offer compassionate, science-backed and culturally-sensitive mental well-being.
             We help you understand what&apos;s happening inside and give you practical steps—whether you prefer a therapist, a healer, or both.
           </p>
           <div className="mt-[20px] flex flex-wrap justify-center gap-[30px]">
-            <button type="button" className="h-[60px] w-[220px] rounded-[25px] border border-white bg-[#080808] text-[16px] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.3)]">All Positions</button>
-            <button type="button" className="inline-flex h-[60px] w-[220px] items-center justify-center gap-2 rounded-[25px] border border-black/10 bg-white text-[16px]">
+            <button type="button" className="h-[60px] w-full sm:w-[220px] rounded-[25px] border border-white bg-[#080808] text-[16px] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.3)]">All Positions</button>
+            <button type="button" className="inline-flex h-[60px] w-full sm:w-[220px] items-center justify-center gap-2 rounded-[25px] border border-black/10 bg-white text-[16px]">
               <img src="/images/linkedin-link.png" alt="LinkedIn" className="h-4 w-4" />
               LinkedIn Posts
             </button>
@@ -179,8 +179,8 @@ export default function CareerPage() {
         </div>
 
         <section className="mt-[56px]">
-          <h3 className="text-center text-[32px] font-semibold tracking-[-0.32px]">Why Work With Us?</h3>
-          <div className="mt-[30px] grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-[30px]">
+          <h3 className="text-center text-[24px] sm:text-[28px] md:text-[32px] font-semibold tracking-[-0.32px]">Why Work With Us?</h3>
+          <div className="mt-[30px] grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-[30px]">
             <article className="rounded-[25px] border border-white bg-[#080808] px-[30px] py-[30px] text-white shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
               <h4 className="text-[16px] font-semibold tracking-[-0.16px]">Purpose-Driven Impact</h4>
               <p className="mt-6 text-[14px] leading-[30px] tracking-[-0.14px] text-white/85">Your work directly supports mental well-being, mindfulness, and human growth—creating real change beyond just business goals.</p>
@@ -197,7 +197,7 @@ export default function CareerPage() {
         </section>
 
         <section className="mt-[120px]">
-          <h3 className="text-center text-[32px] font-semibold tracking-[-0.32px]">Meet Our Team Behind Soul Yatri</h3>
+          <h3 className="text-center text-[24px] sm:text-[28px] md:text-[32px] font-semibold tracking-[-0.32px]">Meet Our Team Behind Soul Yatri</h3>
           <div className="mt-[30px] grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-[30px]">
             {[
               { name: 'Dhruv Paleja', role: 'Founder  |  CEO' },
@@ -225,13 +225,13 @@ export default function CareerPage() {
         </section>
       </section>
 
-      <section className="mx-auto mt-6 w-full max-w-[1440px] rounded-t-[50px] bg-black px-6 pb-10 pt-20 text-white sm:px-10 lg:px-[82px]">
-        <h3 className="text-center text-[32px] font-semibold tracking-[-0.32px]">All Current Openings</h3>
+      <section className="mx-auto mt-6 w-full max-w-[1440px] rounded-t-[50px] bg-black px-4 pb-10 pt-20 text-white sm:px-6 md:px-10 lg:px-[82px]">
+        <h3 className="text-center text-[24px] sm:text-[28px] md:text-[32px] font-semibold tracking-[-0.32px]">All Current Openings</h3>
         <p className="mx-auto mt-6 max-w-[810px] text-center text-[16px] tracking-[-0.16px] text-white/50">Explore open roles where your skills create meaningful impact, support mental well-being, and grow with purpose.</p>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
           <label className="relative block">
-            <input className="h-[60px] w-[340px] rounded-[25px] border border-white bg-white pl-[30px] pr-12 text-[16px] text-black placeholder:text-black/50 focus:outline-none" placeholder="Search for openings" />
+            <input className="h-[60px] w-full sm:w-[340px] rounded-[25px] border border-white bg-white pl-[30px] pr-12 text-[16px] text-black placeholder:text-black/50 focus:outline-none" placeholder="Search for openings" />
             <Search size={16} className="absolute right-6 top-1/2 -translate-y-1/2 text-black/50" />
           </label>
           <button type="button" className="inline-flex min-h-[40px] items-center gap-4 px-2 text-[16px]">Categories <span className="space-y-1.5"><span className="block h-[2px] w-[25px] rounded bg-white" /><span className="block h-[2px] w-[25px] rounded bg-white" /><span className="block h-[2px] w-[25px] rounded bg-white" /></span></button>

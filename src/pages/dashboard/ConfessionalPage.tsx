@@ -79,7 +79,7 @@ export default function ConfessionalPage() {
         </div>
 
         {/* Trust badges */}
-        <p className="text-xs text-white/25 mt-3 ml-[52px] flex items-center gap-3">
+        <p className="text-xs text-white/25 mt-3 ml-[52px] sm:ml-[52px] flex items-center gap-2 sm:gap-3 flex-wrap">
           <span className="inline-flex items-center gap-1"><Lock className="w-3 h-3" /> Private</span>
           <span className="inline-flex items-center gap-1"><Shield className="w-3 h-3" /> No judgment</span>
           <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> Always open</span>
@@ -97,8 +97,8 @@ export default function ConfessionalPage() {
           className={cn(
             'relative w-full rounded-[24px] border transition-all duration-500 overflow-hidden flex flex-col',
             isFocused
-              ? 'bg-[#111] border-white/10 min-h-[280px]'
-              : 'bg-[#0c0c0c] border-[#2b2b2b] min-h-[160px] hover:bg-[#111] hover:border-white/10',
+              ? 'bg-[#111] border-white/10 min-h-[220px] sm:min-h-[280px]'
+              : 'bg-[#0c0c0c] border-[#2b2b2b] min-h-[140px] sm:min-h-[160px] hover:bg-[#111] hover:border-white/10',
           )}
         >
           <AnimatePresence mode="wait">

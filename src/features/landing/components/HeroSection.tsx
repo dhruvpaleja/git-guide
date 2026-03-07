@@ -103,9 +103,9 @@ export default function HeroSection() {
       <div
         className="absolute pointer-events-none"
         style={{
-          width: '500px',
-          height: '500px',
-          top: '-250px',
+          width: 'clamp(250px, 60vw, 500px)',
+          height: 'clamp(250px, 60vw, 500px)',
+          top: 'clamp(-125px, -30vw, -250px)',
           left: '50%',
           transform: 'translateX(-50%)',
         }}

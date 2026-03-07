@@ -13,6 +13,7 @@ export default defineConfig([
     '.next',
     'build',
     'server/dist',
+    'public/plugins/**',
     '.agent/**',
     '.agents/**',
     'playwright-utils/**',

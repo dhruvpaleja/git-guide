@@ -134,7 +134,7 @@ export default function StudentCounsellingPage() {
               {offerCards.map((card) => (
                 <div
                   key={card.id}
-                  className="group flex-shrink-0 w-72 md:w-96 h-80 md:h-96 relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-2xl"
+                  className="group flex-shrink-0 w-64 sm:w-72 lg:w-96 h-72 sm:h-80 md:h-96 relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-2xl"
                 >
                   {/* Image */}
                   <img

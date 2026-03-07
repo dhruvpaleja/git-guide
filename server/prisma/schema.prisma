@@ -363,6 +363,9 @@ model Session {
   paymentId       String?          @unique
   payment         Payment?         @relation(fields: [paymentId], references: [id])
 
+  // Video room relation
+  videoRoom       DailyVideoRoom?
+
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 
@@ -421,6 +424,26 @@ model UserNudge {
 
   @@index([userId, status])
   @@index([nudgeType])
+}
+
+model DailyVideoRoom {
+  id              String    @id @default(uuid())
+  sessionId       String    @unique
+  session         Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  roomName        String    @unique
+  roomUrl         String?
+  
+  startedAt       DateTime?
+  endedAt         DateTime?
+  
+  recordingUrl    String?
+  recordingId     String?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([sessionId])
 }
 
 model TherapistMetrics {

@@ -26,6 +26,8 @@
     "test:report": "playwright show-report"
   },
   "dependencies": {
+    "@daily-co/daily-js": "^0.87.0",
+    "@daily-co/daily-react": "^0.24.0",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
@@ -60,6 +62,7 @@
     "@types/aos": "^3.0.7",
     "animejs": "^4.3.6",
     "aos": "^2.3.4",
+    "axios": "^1.13.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

@@ -133,6 +133,53 @@ export interface TherapyJourney {
 }
 
 // ---------------------------------------------------------------------------
+// Request / param shapes (used by therapy.api.ts + Phase E components)
+// ---------------------------------------------------------------------------
+
+export interface ListTherapistsParams {
+  specialization?: string;
+  language?: string;
+  approach?: 'CBT' | 'HOLISTIC' | 'MIXED';
+  minRating?: number;
+  sort?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface BookSessionPayload {
+  therapistId: string;
+  scheduledAt: string;
+  sessionType?: SessionType;
+  bookingSource?: string;
+}
+
+export interface RateSessionPayload {
+  rating: number;
+  feedback?: string;
+}
+
+export interface AvailabilitySlot {
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  slotDuration?: number;
+  breakAfterSlot?: number;
+  isActive: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Paginated list wrapper (matches backend sendSuccess envelope)
+// ---------------------------------------------------------------------------
+
+export interface PaginatedList<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+// ---------------------------------------------------------------------------
 // Legacy alias — keep until dashboard.types.ts is cleaned up
 // ---------------------------------------------------------------------------
 

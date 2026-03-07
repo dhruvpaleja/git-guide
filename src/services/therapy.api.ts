@@ -7,6 +7,11 @@ import type {
   TherapistDashboard,
   TherapistClient,
   TherapyJourney,
+  ListTherapistsParams,
+  BookSessionPayload,
+  RateSessionPayload,
+  AvailabilitySlot,
+  PaginatedList,
 } from '@/types/therapy.types';
 
 export const therapyApi = {
@@ -17,15 +22,8 @@ export const therapyApi = {
   getAvailableNowTherapists: () =>
     apiService.get<TherapistCard[]>('/therapy/therapists/available-now'),
 
-  listTherapists: (params: {
-    specialization?: string;
-    language?: string;
-    approach?: string;
-    minRating?: number;
-    sort?: string;
-    page?: number;
-    pageSize?: number;
-  }) => apiService.get<TherapistCard[]>('/therapy/therapists', { params }),
+  listTherapists: (params: ListTherapistsParams) =>
+    apiService.get<PaginatedList<TherapistCard>>('/therapy/therapists', { params }),
 
   getTherapist: (id: string) =>
     apiService.get<TherapistCard>(`/therapy/therapists/${id}`),
@@ -36,12 +34,8 @@ export const therapyApi = {
     }),
 
   // ── Sessions ───────────────────────────────────────────────────────────
-  bookSession: (data: {
-    therapistId: string;
-    scheduledAt: string;
-    sessionType?: string;
-    bookingSource?: string;
-  }) => apiService.post<SessionDetail>('/therapy/sessions', data),
+  bookSession: (data: BookSessionPayload) =>
+    apiService.post<SessionDetail>('/therapy/sessions', data),
 
   bookInstantSession: (data?: { therapistId?: string }) =>
     apiService.post<SessionDetail>('/therapy/sessions/instant', data ?? {}),
@@ -50,7 +44,7 @@ export const therapyApi = {
     status?: string;
     page?: number;
     pageSize?: number;
-  }) => apiService.get<SessionDetail[]>('/therapy/sessions', { params }),
+  }) => apiService.get<PaginatedList<SessionDetail>>('/therapy/sessions', { params }),
 
   getSession: (id: string) =>
     apiService.get<SessionDetail>(`/therapy/sessions/${id}`),
@@ -63,7 +57,7 @@ export const therapyApi = {
       newScheduledAt,
     }),
 
-  rateSession: (id: string, data: { rating: number; feedback?: string }) =>
+  rateSession: (id: string, data: RateSessionPayload) =>
     apiService.post<SessionDetail>(`/therapy/sessions/${id}/rate`, data),
 
   // ── User Journey ───────────────────────────────────────────────────────
@@ -85,7 +79,7 @@ export const therapyApi = {
     apiService.get<TherapistDashboard>('/therapy/therapist/dashboard'),
 
   getTherapistSessions: (params?: { status?: string; page?: number }) =>
-    apiService.get<SessionDetail[]>('/therapy/therapist/sessions', { params }),
+    apiService.get<PaginatedList<SessionDetail>>('/therapy/therapist/sessions', { params }),
 
   getTherapistClients: () =>
     apiService.get<TherapistClient[]>('/therapy/therapist/clients'),
@@ -94,23 +88,13 @@ export const therapyApi = {
     apiService.get(`/therapy/therapist/clients/${id}`),
 
   getTherapistAvailability: () =>
-    apiService.get('/therapy/therapist/availability'),
+    apiService.get<AvailabilitySlot[]>('/therapy/therapist/availability'),
 
-  updateTherapistAvailability: (
-    slots: {
-      dayOfWeek: number;
-      startTime: string;
-      endTime: string;
-      slotDuration?: number;
-      breakAfterSlot?: number;
-      isActive: boolean;
-    }[],
-  ) => apiService.put('/therapy/therapist/availability', { slots }),
+  updateTherapistAvailability: (slots: AvailabilitySlot[]) =>
+    apiService.put('/therapy/therapist/availability', { slots }),
 
-  updateOnlineStatus: (data: {
-    isOnline?: boolean;
-    isAcceptingNow?: boolean;
-  }) => apiService.patch('/therapy/therapist/online-status', data),
+  updateOnlineStatus: (data: { isOnline?: boolean; isAcceptingNow?: boolean }) =>
+    apiService.patch('/therapy/therapist/online-status', data),
 
   getTherapistProfile: () =>
     apiService.get('/therapy/therapist/profile'),

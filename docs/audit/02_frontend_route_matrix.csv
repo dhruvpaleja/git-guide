@@ -1,46 +1,37 @@
-route,page_component,layout,auth_required,data_source,implementation_state,ui_state,ux_state,accessibility_status,performance_status,cta_button_status,seo_status,api_dependencies,notes
-/,SplashScreen,none,no,hardcoded,implemented_live,complete,polished,good,unknown,unknown,none,none,multilingual greetings animation; click navigates to /home
-/home,LandingPage,MainLayout,no,static,implemented_live,complete,polished,good,good,good,good,none,9 feature sections composed; no API; premium visual quality
-/about,AboutPage,MainLayout,no,static,implemented_live,complete,polished,good,unknown,unknown,unknown,none,hero+stats+vision+founders+values sections
-/business,BusinessPage,MainLayout,no,static,implemented_live,complete,polished,good,unknown,unknown,unknown,none,B2B solutions hero+grid layout
-/corporate,CorporatePage,MainLayout,no,static,implemented_live,complete,polished,good,unknown,unknown,unknown,none,corporate wellness offering page
-/blogs,BlogsPage,MainLayout,no,hardcoded,implemented_hardcoded_static,complete,polished,fair,unknown,unknown,unknown,none,9+ blogs hardcoded; search+filter works client-side; no API
-/blog/:id,BlogPostPage,MainLayout,no,hardcoded,implemented_hardcoded_static,partial,polished,fair,unknown,unknown,unknown,none,full content hardcoded; comments UI only not wired
-/courses,CoursesPage,MainLayout,no,hardcoded,implemented_hardcoded_static,complete,polished,fair,unknown,unknown,unknown,none,static course data; filter+search works client-side
-/courses/:id,CourseDetailsPage,MainLayout,no,hardcoded,implemented_hardcoded_static,partial,good,fair,unknown,unknown,unknown,none,tabs+curriculum; enroll button placeholder
-/contact,ContactPage,MainLayout,no,hardcoded,partially_wired,partial,good,fair,unknown,unknown,unknown,none,form fields tracked but Send Request non-functional
-/careers,CareerPage,MainLayout,no,hardcoded,implemented_hardcoded_static,complete,good,fair,unknown,unknown,unknown,none,15+ positions; department filter; no apply flow
-/student-counselling,StudentCounsellingPage,MainLayout,no,hardcoded,implemented_live,complete,polished,good,unknown,unknown,unknown,none,carousel+analytics; service showcase
-/student-counselling-demo,StudentCounsellingDemoPage,MainLayout,no,static,implemented_live,complete,good,fair,unknown,unknown,unknown,none,demo page with back button
-/workshop-demo,WorkshopDemoPage,MainLayout,no,static,implemented_live,complete,good,fair,unknown,unknown,unknown,none,demo page with back button
-/login,LoginPage,AuthLayout,no,mock_auth,implemented_mock_backed,complete,polished,fair,unknown,unknown,unknown,POST /auth/login,mock auth default enabled; OAuth placeholder; role-based redirect
-/signup,SignupPage,AuthLayout,no,api+mock,implemented_mock_backed,complete,polished,fair,unknown,unknown,unknown,"POST /users/astrology-profile",multi-step (account→astrology→partner); persists astrology data to backend
-/journey-preparation,JourneyPreparationPage,none,yes_bypassed,static,implemented_live,complete,polished,good,unknown,unknown,unknown,none,post-signup onboarding; animation heavy; auth bypass enabled
-/dashboard,DashboardPage,DashboardLayout,yes_bypassed,api+hardcoded,implemented_live,complete,polished,good,unknown,unknown,unknown,"GET /users/dashboard",greeting+quick-actions+widgets; confessional overlay available
-/dashboard/mood,MoodPage,DashboardLayout,yes_bypassed,api,implemented_live,complete,good,good,unknown,unknown,unknown,"GET/POST /health-tools/mood",1-10 slider+chart+history; full CRUD operations
-/dashboard/journal,JournalPage,DashboardLayout,yes_bypassed,api,implemented_live,complete,good,good,unknown,unknown,unknown,"GET/POST/PATCH /health-tools/journal",write/read modes; mood+tags; pagination supported
-/dashboard/meditate,MeditationPage,DashboardLayout,yes_bypassed,api,implemented_live,complete,good,good,unknown,unknown,unknown,"GET/POST /health-tools/meditation",quick timer+presets+logs; total minutes tracked
-/dashboard/sessions,SessionsPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,polished,poor,unknown,unknown,unknown,none (therapy endpoints stubbed),mock therapists+sessions; pravatar avatars; booking not functional
-/dashboard/connections,ConnectionsPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,polished,poor,unknown,unknown,unknown,none (matching not implemented),6 MOCK_MATCHES hardcoded; synergy scores fake; actions not wired
-/dashboard/notifications,NotificationsPage,DashboardLayout,yes_bypassed,api+ws,partially_wired,complete,good,good,unknown,unknown,unknown,"GET/PUT /notifications + WebSocket",real-time updates; mark-read; WebSocket connection indicator
-/dashboard/profile,ProfilePage,DashboardLayout,yes_bypassed,api,implemented_live,complete,good,good,unknown,unknown,unknown,"GET/PUT /users/profile; POST /users/avatar",avatar upload 5MB limit; stats display; edit mode functional
-/dashboard/settings,SettingsPage,DashboardLayout,yes_bypassed,api,implemented_live,complete,good,good,unknown,unknown,unknown,"GET/PUT /users/settings",9 toggles; debounced 400ms auto-save
-/dashboard/confessional,ConfessionalPage,DashboardLayout,yes_bypassed,api,implemented_live,complete,good,good,unknown,unknown,unknown,POST /health-tools/journal,saves as journal entry; Voice Vent feature coming soon
-/dashboard/constellation,ConstellationPage,DashboardLayout,yes_bypassed,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,none,constellation feature implementation unclear
-/dashboard/personalization,PersonalizationPage,DashboardLayout,yes_bypassed,mixed,implemented_live,complete,polished,fair,unknown,unknown,unknown,unknown,constellation-based personalization flow
-/dashboard/edit-profile,EditProfilePage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,good,poor,unknown,unknown,unknown,none,Swati Agarwal fake data; setTimeout mock save; practitioner only
-/dashboard/logout,LogoutPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,complete,fair,fair,unknown,unknown,unknown,none,hardcoded stats display; 3s countdown; auto-redirect to /home
-/dashboard/todays-sessions,TodaysSessionsPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,polished,poor,unknown,unknown,unknown,none,hero+4 upcoming+3 previous all fake data; practitioner view
-/dashboard/my-clients,MyClientsPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,polished,poor,unknown,unknown,unknown,none,5 clients+2 intake fake; ₹48.5k earnings hardcoded
-/dashboard/manage-availability,ManageAvailabilityPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,polished,poor,unknown,unknown,unknown,none,weekly grid hardcoded; Google Calendar not wired
-/dashboard/admin,AdminDashboard,none,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,fair,poor,unknown,unknown,unknown,none,1284 users/156 sessions/₹4.2L all fake; tabs empty
-/dashboard/astrology,AstrologyDashboard,none,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,fair,poor,unknown,unknown,unknown,none,5 consults/128 clients/4.8 rating all fake; tabs empty
-/practitioner,PractitionerDashboard,DashboardLayout,yes_bypassed,mixed,partially_wired,partial,polished,fair,unknown,unknown,unknown,depends on widgets,delegates to widget components; some may be hardcoded
-/practitioner/sessions,TodaysSessionsPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,polished,poor,unknown,unknown,unknown,none,practitioner session management view
-/practitioner/clients,MyClientsPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,polished,poor,unknown,unknown,unknown,none,practitioner client management view
-/practitioner/availability,ManageAvailabilityPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,polished,poor,unknown,unknown,unknown,none,practitioner availability management
-/practitioner/profile,EditProfilePage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,partial,good,poor,unknown,unknown,unknown,none,practitioner profile editing
-/practitioner/logout,LogoutPage,DashboardLayout,yes_bypassed,hardcoded,implemented_hardcoded_static,complete,fair,fair,unknown,unknown,unknown,none,practitioner logout flow
-/astrology,AstrologyDashboard,none,yes_bypassed,hardcoded,stubbed,partial,fair,poor,unknown,unknown,unknown,none,astrology dashboard stubbed; backend returns empty
-/admin,AdminDashboard,none,yes_bypassed,hardcoded,stubbed,partial,fair,poor,unknown,unknown,unknown,none,admin dashboard stubbed; backend returns empty
-/404,NotFoundPage,none,no,hardcoded,implemented_live,complete,good,good,unknown,unknown,unknown,none,animated 404 page with search functionality
+route,page_component,layout,auth_required,data_source,implementation_state,ui_state,ux_state,api_dependencies,notes
+/aboutpage,AboutPage,MainLayout,false,static,partial,TBD,TBD,,
+/blogpostpage,BlogPostPage,MainLayout,false,static,partial,TBD,TBD,,
+/blogspage,BlogsPage,MainLayout,false,static,partial,TBD,TBD,,
+/businesspage,BusinessPage,MainLayout,false,static,partial,TBD,TBD,,
+/careerpage,CareerPage,MainLayout,false,static,partial,TBD,TBD,,
+/contactpage,ContactPage,MainLayout,false,static,partial,TBD,TBD,,
+/corporatepage,CorporatePage,MainLayout,false,static,partial,TBD,TBD,,
+/coursedetailspage,CourseDetailsPage,MainLayout,false,static,partial,TBD,TBD,,
+/coursespage,CoursesPage,MainLayout,false,static,partial,TBD,TBD,,
+/dashboardpage,DashboardPage,MainLayout,false,static,partial,TBD,TBD,,
+/landingpage,LandingPage,MainLayout,false,static,partial,TBD,TBD,,
+/notfoundpage,NotFoundPage,MainLayout,false,static,partial,TBD,TBD,,
+/splashscreen,SplashScreen,MainLayout,false,static,partial,TBD,TBD,,
+/studentcounsellingdemopage,StudentCounsellingDemoPage,MainLayout,false,static,partial,TBD,TBD,,
+/studentcounsellingpage,StudentCounsellingPage,MainLayout,false,static,partial,TBD,TBD,,
+/workshopdemopage,WorkshopDemoPage,MainLayout,false,static,partial,TBD,TBD,,
+/loginpage,LoginPage,MainLayout,false,static,partial,TBD,TBD,,
+/signuppage,SignupPage,MainLayout,false,static,partial,TBD,TBD,,
+/admindashboard,AdminDashboard,MainLayout,false,static,partial,TBD,TBD,,
+/astrologydashboard,AstrologyDashboard,MainLayout,false,static,partial,TBD,TBD,,
+/confessionalpage,ConfessionalPage,MainLayout,false,static,partial,TBD,TBD,,
+/connectionspage,ConnectionsPage,MainLayout,false,static,partial,TBD,TBD,,
+/editprofilepage,EditProfilePage,MainLayout,false,static,partial,TBD,TBD,,
+/journalpage,JournalPage,MainLayout,false,static,partial,TBD,TBD,,
+/logoutpage,LogoutPage,MainLayout,false,static,partial,TBD,TBD,,
+/manageavailabilitypage,ManageAvailabilityPage,MainLayout,false,static,partial,TBD,TBD,,
+/meditationpage,MeditationPage,MainLayout,false,static,partial,TBD,TBD,,
+/moodpage,MoodPage,MainLayout,false,static,partial,TBD,TBD,,
+/myclientspage,MyClientsPage,MainLayout,false,static,partial,TBD,TBD,,
+/notificationspage,NotificationsPage,MainLayout,false,static,partial,TBD,TBD,,
+/practitionerdashboard,PractitionerDashboard,MainLayout,false,static,partial,TBD,TBD,,
+/profilepage,ProfilePage,MainLayout,false,static,partial,TBD,TBD,,
+/sessionspage,SessionsPage,MainLayout,false,static,partial,TBD,TBD,,
+/settingspage,SettingsPage,MainLayout,false,static,partial,TBD,TBD,,
+/todayssessionspage,TodaysSessionsPage,MainLayout,false,static,partial,TBD,TBD,,
+/practitionerdashboard,PractitionerDashboard,MainLayout,false,static,partial,TBD,TBD,,

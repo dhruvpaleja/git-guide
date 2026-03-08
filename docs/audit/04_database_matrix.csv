@@ -1,14 +1,14 @@
 model,fields_summary,relations,used_by_frontend,used_by_backend,migration_present,seeded,notes
-User,"id uuid PK, email unique, passwordHash, role enum(USER/THERAPIST/ASTROLOGER/ADMIN/MODERATOR/SUPER_ADMIN), isActive, isEmailVerified, failedLoginAttempts, lockedUntil, createdAt, updatedAt",has UserProfile(1:1) UserSettings(1:1) RefreshTokens(1:M) AuditLogs(1:M) MoodEntries(1:M) JournalEntries(1:M) MeditationLogs(1:M) Sessions(1:M) Payments(1:M) Notifications(1:M) TherapistProfile(1:1),yes,yes,yes,yes (4 test users),core model; account lockout after 5 failures
-UserProfile,"id uuid PK, userId FK unique, firstName, lastName, phone, dateOfBirth, gender enum, bio, avatarUrl, timezone, locale, onboardingStep int, onboardingComplete bool, astrologicalSign, birthTime, birthPlace, partnerPreferences json, therapyHistory enum, preferredTherapyType, goals text[], currentMood, emergencyContact json",belongs to User,yes,yes,yes,yes (user@test.com has full profile),10-step onboarding flow; stores astrology+partner data
-UserSettings,"id uuid PK, userId FK unique, darkMode bool, emailNotifications bool, pushNotifications bool, smsNotifications bool, language, profileVisibility enum(PUBLIC/PRIVATE/CONNECTIONS)",belongs to User,yes,yes,yes,yes (defaults),user preferences; debounced frontend save
-RefreshToken,"id uuid PK, userId FK, token text unique, tokenFamily uuid, expiresAt DateTime, revokedAt DateTime?, revokedByIp, replacedByToken, isBlacklisted bool",belongs to User,no (backend only),yes,yes,no,token rotation with hijack detection via tokenFamily
-AuditLog,"id uuid PK, userId FK, category enum(AUTH/PROFILE/SETTINGS/HEALTH/THERAPY/PAYMENT/ADMIN/SYSTEM/AI_TRAINING), action, details json, ipHash, userAgent, requestId, timestamp",belongs to User,no (backend only),yes,yes,no,used by ai-event-logger.service.ts
-TherapistProfile,"id uuid PK, userId FK unique, specializations text[], qualifications text[], experience int, bio text, hourlyRate Decimal, rating float, totalSessions int, isVerified bool, licenseNumber, availableForVideo bool",belongs to User; has TherapistAvailability(1:M) Sessions(1:M),no (frontend hardcoded),no (controllers stubbed),yes,yes (therapist@test.com),schema exists but no API reads/writes to this model
-TherapistAvailability,"id uuid PK, therapistId FK, dayOfWeek int, startTime string, endTime string, duration int, isActive bool",belongs to TherapistProfile,no (frontend hardcoded),no (controllers stubbed),yes,yes (therapist has slots),schema exists but backend routes return 501
-Session,"id uuid PK, userId FK, therapistId FK, scheduledAt DateTime, duration int, status enum(SCHEDULED/IN_PROGRESS/COMPLETED/CANCELLED/NO_SHOW), type enum(INDIVIDUAL/COUPLE/GROUP), notes text, videoRoomUrl, videoProvider, meetingId, cancelledAt, cancelReason",belongs to User + TherapistProfile; has Payment(1:1),no (frontend hardcoded),no (controllers stubbed),yes,no,Daily.co placeholder for videoRoomUrl; schema only
-Payment,"id uuid PK, userId FK, sessionId FK unique, amount Decimal, currency, status enum(PENDING/COMPLETED/FAILED/REFUNDED), provider string, providerId, metadata json, createdAt, updatedAt",belongs to User + Session,no (frontend hardcoded),no (controllers stubbed),yes,no,Razorpay fields but no integration code
-MoodEntry,"id uuid PK, userId FK, score int, note text, tags text[], createdAt",belongs to User,yes (MoodPage),yes (health-tools controller),yes,no,1-10 scale; used by mood tracker
-JournalEntry,"id uuid PK, userId FK, title, content text, mood, tags text[], isPrivate bool, createdAt, updatedAt",belongs to User,yes (JournalPage + ConfessionalPage),yes (health-tools controller),yes,no,also used for confessional entries
-MeditationLog,"id uuid PK, userId FK, duration int, type string, notes text, completedAt DateTime, createdAt",belongs to User,yes (MeditationPage),yes (health-tools controller),yes,no,duration in minutes; type: guided/unguided/breathwork
-Notification,"id uuid PK, userId FK, type enum(SYSTEM/WELLNESS/MATCH/INSIGHT/ALERT/INFO), title, message text, data json, readAt DateTime?, deliveryChannel enum(IN_APP/EMAIL/PUSH/SMS), createdAt",belongs to User,yes (NotificationsPage),partially (routes stubbed but WebSocket sends),yes,no,frontend reads via API+WS but notification API routes are 501 stubs
+User,TBD,TBD,TBD,TBD,TBD,TBD,
+RefreshToken,TBD,TBD,TBD,TBD,TBD,TBD,
+AuditLog,TBD,TBD,TBD,TBD,TBD,TBD,
+UserProfile,TBD,TBD,TBD,TBD,TBD,TBD,
+UserSettings,TBD,TBD,TBD,TBD,TBD,TBD,
+TherapistProfile,TBD,TBD,TBD,TBD,TBD,TBD,
+TherapistAvailability,TBD,TBD,TBD,TBD,TBD,TBD,
+Session,TBD,TBD,TBD,TBD,TBD,TBD,
+MoodEntry,TBD,TBD,TBD,TBD,TBD,TBD,
+JournalEntry,TBD,TBD,TBD,TBD,TBD,TBD,
+MeditationLog,TBD,TBD,TBD,TBD,TBD,TBD,
+Payment,TBD,TBD,TBD,TBD,TBD,TBD,
+Notification,TBD,TBD,TBD,TBD,TBD,TBD,

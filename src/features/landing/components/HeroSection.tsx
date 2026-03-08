@@ -140,7 +140,7 @@ export default function HeroSection() {
       </div>
 
       {/* Text Content */}
-      <div ref={textRef} className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-6 md:px-12 pointer-events-none flex flex-col justify-start lg:justify-center lg:block pt-24 sm:pt-28 lg:pt-0 pb-48 sm:pb-0">
+      <div ref={textRef} className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 pointer-events-none flex flex-col justify-start lg:justify-center lg:block pt-20 sm:pt-28 lg:pt-0 pb-32 sm:pb-0">
 
         {/* Title "Your Journey Begins." */}
         <div

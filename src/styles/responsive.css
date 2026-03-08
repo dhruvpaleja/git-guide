@@ -49,10 +49,11 @@
     -webkit-text-size-adjust: 100%;
   }
   
-  /* Touch-friendly tap targets - only standalone interactive elements */
-  button:not([class*="px-"]):not([class*="p-"]):not([class*="py-"]),
-  [role="button"]:not([class*="px-"]):not([class*="p-"]):not([class*="py-"]) {
+  /* Touch-friendly tap targets - avoid overriding link spacing */
+  button,
+  [role="button"] {
     min-height: 44px;
+    min-width: 44px;
   }
 }
 

@@ -1,20 +1,22 @@
+import tailwindcssAnimate from "tailwindcss-animate";
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   darkMode: ["class"],
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     // Extended breakpoints for perfect responsiveness
     screens: {
-      'xs': '475px',   // Small phones
-      'sm': '640px',   // Large phones
-      'md': '768px',   // Tablets
-      'lg': '1024px',  // Laptops
-      'xl': '1280px',  // Desktops
-      '2xl': '1536px', // Large desktops
-      '3xl': '1920px', // Full HD
-      '4xl': '2560px', // 2K/QHD
-      '5xl': '3440px', // Ultrawide
-      '4k': '3840px',  // 4K
+      xs: "475px", // Small phones
+      sm: "640px", // Large phones
+      md: "768px", // Tablets
+      lg: "1024px", // Laptops
+      xl: "1280px", // Desktops
+      "2xl": "1536px", // Large desktops
+      "3xl": "1920px", // Full HD
+      "4xl": "2560px", // 2K/QHD
+      "5xl": "3440px", // Ultrawide
+      "4k": "3840px", // 4K
     },
     extend: {
       colors: {
@@ -93,5 +95,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-}
+  plugins: [tailwindcssAnimate],
+};

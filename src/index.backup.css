@@ -1,0 +1,529 @@
+/* Responsive utility imports temporarily disabled due CSS transform failure */
+/* @import './styles/responsive.css'; */
+/* @import './styles/container-queries.css'; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 174 72% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 174 72% 40%;
+    --radius: 0.625rem;
+  }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 240 10% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+    --primary: 240 10% 10%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 10% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --ring: 240 10% 10%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+@layer utilities {
+
+  /* Glow Effects */
+  .glow-teal {
+    background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.35) 0%, transparent 70%);
+  }
+
+  .glow-cyan {
+    background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
+  }
+
+  /* Orange Gradient for Wellness Section */
+  .gradient-orange {
+    background: radial-gradient(circle at center, #FBBF24 0%, #F97316 50%, #EA580C 100%);
+  }
+
+  /* Glassmorphism */
+  .glass {
+    background: rgba(255, 255, 255, 0.03);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Gradient Divider */
+  .gradient-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  }
+
+  /* Card Gradient Overlay */
+  .card-gradient-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+  }
+
+  /* Hide scrollbar */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+  }
+
+  @supports (scrollbar-width: none) {
+    .hide-scrollbar {
+      scrollbar-width: none;
+    }
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── Soul Constellation Map styles ── */
+  .constellation-grain {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 128px;
+  }
+
+  .constellation-vignette {
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(5, 5, 7, 0.6) 100%);
+  }
+
+  .constellation-node-glow {
+    width: var(--glow-size);
+    height: var(--glow-size);
+    background-color: var(--glow-bg);
+    filter: var(--glow-blur);
+  }
+
+  .constellation-node-core {
+    width: var(--core-size);
+    height: var(--core-size);
+    background-color: #0a0a0c;
+    border-color: var(--core-border);
+    box-shadow: var(--core-shadow);
+  }
+
+  .constellation-node-inner {
+    width: 40%;
+    height: 40%;
+    background-color: var(--inner-bg);
+    filter: blur(1px);
+  }
+
+  .constellation-node-label {
+    font-size: var(--label-size);
+    top: var(--label-top);
+    letter-spacing: var(--label-spacing);
+  }
+
+  .constellation-pulse-ring {
+    width: var(--ring-size);
+    height: var(--ring-size);
+    background-color: var(--ring-bg);
+    border: 1px solid var(--ring-border);
+  }
+
+  /* Reusable transition timing utilities to avoid ambiguous Tailwind tokens */
+  .ease-soul-smooth {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ease-soul-spring {
+    transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Auth decorative background orbs */
+  .auth-orb-warm {
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.4) 0%, rgba(255, 69, 0, 0.2) 40%, transparent 70%);
+    filter: blur(60px);
+  }
+
+  .auth-orb-cool {
+    background: radial-gradient(circle, rgba(0, 191, 255, 0.4) 0%, rgba(30, 144, 255, 0.2) 40%, transparent 70%);
+    filter: blur(60px);
+  }
+}
+
+/* Animations */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes circle-expand {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.animate-circle-expand {
+  animation: circle-expand 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Stagger delays */
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+
+.stagger-5 {
+  animation-delay: 0.5s;
+}
+
+.stagger-6 {
+  animation-delay: 0.6s;
+}
+
+/* Animation delay utilities for splash screen circles */
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-2500 {
+  animation-delay: 2.5s;
+}
+
+/* Initial state for animations */
+.animate-on-scroll {
+  opacity: 0;
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+}
+
+/* Journey scene immersive entry */
+@keyframes immersive-scene-in {
+  0% {
+    opacity: 0;
+    filter: blur(1.5px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+.animate-immersive-scene-in {
+  animation: immersive-scene-in 0.9s ease-out forwards;
+}
+
+/* Ambient breathing glow */
+@keyframes ambient-breathe {
+  0% {
+    transform: scale(0.98);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: scale(1.03);
+    opacity: 0.75;
+  }
+
+  100% {
+    transform: scale(0.98);
+    opacity: 0.55;
+  }
+}
+
+.animate-ambient-breathe {
+  animation: ambient-breathe 9s ease-in-out infinite;
+}
+
+/* Subtle non-rotational mandala movement */
+@keyframes mandala-breathe {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.05;
+  }
+
+  50% {
+    transform: translate3d(0, -4px, 0) scale(1.008);
+    opacity: 0.065;
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.05;
+  }
+}
+
+.animate-mandala-breathe {
+  animation: mandala-breathe 16s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Floating card ambience */
+@keyframes card-float-slow {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes card-float-slower {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-card-float-slow {
+  animation: card-float-slow 6.5s ease-in-out infinite;
+}
+
+.animate-card-float-slower {
+  animation: card-float-slower 8s ease-in-out infinite;
+}
+
+/* Card unblur animation - transitions from blur to sharp */
+@keyframes unblur-in {
+  0% {
+    filter: blur(4px);
+    transform: translateY(6px) scale(0.992);
+    opacity: 0.7;
+  }
+
+  100% {
+    filter: blur(0px);
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-unblur-in {
+  animation: unblur-in 1.2s ease-out forwards;
+}
+
+/* Grain movement */
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-1%, 1%);
+  }
+
+  50% {
+    transform: translate(1%, -1%);
+  }
+
+  75% {
+    transform: translate(-0.5%, 0.5%);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.animate-grain-shift {
+  animation: grain-shift 7s steps(6) infinite;
+}
+
+/* Loading dot pulse */
+@keyframes pulse-soft {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Delay classes for staggered animation */
+.delay-journey-1 {
+  animation-delay: 0.5s;
+}
+
+.delay-journey-2 {
+  animation-delay: 2s;
+}
+
+.delay-journey-3 {
+  animation-delay: 3.5s;
+}

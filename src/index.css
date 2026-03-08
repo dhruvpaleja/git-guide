@@ -1,6 +1,6 @@
-/* Import responsive styles */
-@import './styles/responsive.css';
-@import './styles/container-queries.css';
+/* Responsive utility imports temporarily disabled due CSS transform failure */
+/* @import './styles/responsive.css'; */
+/* @import './styles/container-queries.css'; */
 
 @tailwind base;
 @tailwind components;

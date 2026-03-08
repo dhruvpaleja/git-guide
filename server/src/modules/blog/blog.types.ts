@@ -1,1 +1,0 @@
-// TODO: Define blog types

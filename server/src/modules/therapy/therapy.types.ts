@@ -1,1 +1,0 @@
-// TODO: Define therapy types

@@ -1,102 +1,24 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Testing
-coverage/
-*.lcov
-.nyc_output
-
-# Production builds
-dist/
-build/
-out/
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
 # Logs
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-# OS files
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
-*.swp
-*.swo
-*~
-
-# IDE
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# Temporary files
-tmp/
-temp/
-.tmp/
-.tmpclaude-*
-app/
-app.worktrees/
-
-# Debug/output files
-*.patch
-backup_diff.patch
-branches.txt
-build_output.txt
-build-result*.txt
-status_*.txt
-branch_diff.txt
-branch_files.txt
-conflict_status.txt
-git_log.txt
-lint_output.txt
-eslint-*.txt
-lint-result*.txt
-merged_lint.txt
-repo_url*.txt
-status.txt
-tc_output.txt
-server/build_out.txt
-server/build-result*.txt
-
-# Playwright
-playwright-report/
-blob-report/
-test-results/
-playwright-utils/
-PLAYWRIGHT_*.md
-
-# Agent/AI tools
-.agents/
-.agent/
-.agentic/
-
-# Prisma
-prisma/migrations/*/migration_lock.toml
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Vite
-vite.config.ts.timestamp-*
-
-# Docker
-docker-compose.override.yml
-.dockerignore.local
-
-# Misc
-*.md.bak
-*.md.backup
-nul
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

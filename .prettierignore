@@ -1,8 +1,0 @@
-# Prettier Ignore
-dist/
-node_modules/
-build/
-.next/
-*.min.js
-*.min.css
-coverage/

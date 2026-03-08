@@ -179,7 +179,7 @@ export default function HeroSection() {
           className={`flex flex-col items-center lg:items-end transition-all duration-700 lg:absolute lg:top-[340px] lg:right-[6.67%] z-30 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           style={{ transitionDelay: '0.5s' }}
         >
-          <p className="text-xs sm:text-[13px] font-normal text-white/50 text-center lg:text-right leading-[22px] sm:leading-[26px] tracking-[-0.01em] max-w-sm sm:max-w-md mx-auto lg:mx-0 lg:w-[350px] mb-4 sm:mb-6 drop-shadow-sm px-4 lg:px-0">
+          <p className="text-[13px] sm:text-[14px] font-normal text-white/50 text-center lg:text-right leading-[22px] sm:leading-[26px] tracking-[-0.01em] max-w-sm sm:max-w-md mx-auto lg:mx-0 lg:w-[350px] mb-4 sm:mb-6 drop-shadow-sm px-2 lg:px-0">
             A Tech-enabled Mental wellbeing platform <br className="hidden lg:block" />
             blending modern Psychology, Coaching & <br className="hidden lg:block" />
             Traditional Indian wisdom.

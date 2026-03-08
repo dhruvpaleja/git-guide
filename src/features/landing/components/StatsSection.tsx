@@ -98,7 +98,7 @@ function StatCard({
         {stat.suffix}
       </p>
 
-      <p className="text-[14px] lg:text-[15px] font-normal text-white/50 leading-relaxed mb-5 text-center max-w-[280px]">
+      <p className="text-[13px] sm:text-[14px] lg:text-[15px] font-normal text-white/50 leading-relaxed mb-5 text-center max-w-[260px] sm:max-w-[280px]">
         {stat.subtitle}
       </p>
 

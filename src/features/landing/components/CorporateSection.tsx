@@ -45,7 +45,7 @@ export default function CorporateSection() {
         <div
           className={`relative rounded-[30px] overflow-hidden transition-all ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.97]'
             }`}
-          style={{ transitionDuration: '1200ms', transitionDelay: '0.2s', height: 'clamp(280px, 50vw, 500px)' }}
+          style={{ transitionDuration: '1200ms', transitionDelay: '0.2s', height: 'clamp(360px, 55vw, 500px)' }}
         >
           <img
             src="/images/corporate-figma.png"
@@ -54,7 +54,7 @@ export default function CorporateSection() {
           />
 
           {/* Overlay cards */}
-          <div className="absolute top-[5%] md:top-6 left-[5%] md:left-6 right-[5%] md:right-6 flex flex-col md:flex-row gap-3 overflow-y-auto max-h-[90%] md:overflow-visible">
+          <div className="absolute top-3 md:top-6 left-3 md:left-6 right-3 md:right-6 flex flex-col md:flex-row gap-2 md:gap-3 overflow-y-auto max-h-[85%] md:overflow-visible">
             {/* Topic */}
             <div
               className="rounded-[20px] md:rounded-[30px] border border-white/60 backdrop-blur-md flex flex-col items-center justify-center px-4 md:px-5 py-3 md:py-4 shrink-0 w-full md:w-[200px]"

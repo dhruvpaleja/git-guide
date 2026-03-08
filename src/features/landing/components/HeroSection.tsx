@@ -140,7 +140,7 @@ export default function HeroSection() {
       </div>
 
       {/* Text Content */}
-      <div ref={textRef} className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-6 md:px-12 pointer-events-none flex flex-col justify-start lg:justify-center lg:block pt-24 sm:pt-28 lg:pt-0 pb-48 sm:pb-0">
+      <div ref={textRef} className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 pointer-events-none flex flex-col justify-start lg:justify-center lg:block pt-20 sm:pt-28 lg:pt-0 pb-32 sm:pb-0">
 
         {/* Title "Your Journey Begins." */}
         <div
@@ -179,7 +179,7 @@ export default function HeroSection() {
           className={`flex flex-col items-center lg:items-end transition-all duration-700 lg:absolute lg:top-[340px] lg:right-[6.67%] z-30 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           style={{ transitionDelay: '0.5s' }}
         >
-          <p className="text-xs sm:text-[13px] font-normal text-white/50 text-center lg:text-right leading-[22px] sm:leading-[26px] tracking-[-0.01em] max-w-sm sm:max-w-md mx-auto lg:mx-0 lg:w-[350px] mb-4 sm:mb-6 drop-shadow-sm px-4 lg:px-0">
+          <p className="text-[13px] sm:text-[14px] font-normal text-white/50 text-center lg:text-right leading-[22px] sm:leading-[26px] tracking-[-0.01em] max-w-sm sm:max-w-md mx-auto lg:mx-0 lg:w-[350px] mb-4 sm:mb-6 drop-shadow-sm px-2 lg:px-0">
             A Tech-enabled Mental wellbeing platform <br className="hidden lg:block" />
             blending modern Psychology, Coaching & <br className="hidden lg:block" />
             Traditional Indian wisdom.
@@ -188,7 +188,7 @@ export default function HeroSection() {
 
         {/* CTA Button Centered over the Monk at bottom */}
         <div
-          className={`absolute bottom-24 sm:bottom-16 lg:bottom-[12%] left-1/2 -translate-x-1/2 z-50 transition-all ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          className={`absolute bottom-16 sm:bottom-16 lg:bottom-[12%] left-1/2 -translate-x-1/2 z-50 transition-all ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           style={{ transitionDuration: '1000ms', transitionDelay: '1.2s' }}
         >
           <Link to="/login" className="h-[52px] sm:h-[56px] px-8 sm:px-10 rounded-[28px] text-[13px] sm:text-[14px] font-medium text-white/90 tracking-[0.02em] text-center transition-all duration-300 hover:scale-105 border border-white/10 bg-[#311d17]/60 hover:bg-[#311d17]/90 backdrop-blur-xl pointer-events-auto shadow-[0_0_20px_rgba(49,29,23,0.5)] inline-flex items-center justify-center">

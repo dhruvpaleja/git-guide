@@ -87,7 +87,7 @@ export default function FAQSection() {
                   <div className="w-[34px] h-[34px] rounded-[12px] flex items-center justify-center flex-shrink-0">
                     <span className="text-[13px] font-semibold text-white">{i + 1}</span>
                   </div>
-                  <p className="flex-1 ml-3 pr-3 text-[12px] sm:text-[13px] text-white/85 leading-relaxed">
+                  <p className="flex-1 ml-3 pr-3 text-[13px] sm:text-[14px] text-white/85 leading-relaxed">
                     {faq.question}
                   </p>
                   <span className="flex-shrink-0 w-[34px] h-[34px] flex items-center justify-center">
@@ -104,7 +104,7 @@ export default function FAQSection() {
                     }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="px-12 pb-4 text-[12px] sm:text-[13px] leading-relaxed text-white/65 whitespace-pre-line">
+                    <p className="px-6 sm:px-12 pb-4 text-[13px] sm:text-[14px] leading-relaxed text-white/65 whitespace-pre-line">
                       {faq.answer}
                     </p>
                   </div>

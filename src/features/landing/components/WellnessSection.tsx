@@ -71,7 +71,7 @@ export default function WellnessSection() {
       id="about"
       ref={sectionRef}
       className="relative overflow-hidden bg-black flex flex-col items-center justify-center pt-24 pb-16"
-      style={{ minHeight: 'clamp(800px, 140vh, 1100px)' }}
+      style={{ minHeight: 'clamp(600px, 100vh, 1100px)' }}
     >
       {/* Dynamic Background Brightness Illusion */}
       <div

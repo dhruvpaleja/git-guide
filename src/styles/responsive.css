@@ -49,11 +49,10 @@
     -webkit-text-size-adjust: 100%;
   }
   
-  /* Touch-friendly tap targets */
-  button, a, [role="button"] {
+  /* Touch-friendly tap targets - only standalone interactive elements */
+  button:not([class*="px-"]):not([class*="p-"]):not([class*="py-"]),
+  [role="button"]:not([class*="px-"]):not([class*="p-"]):not([class*="py-"]) {
     min-height: 44px;
-    min-width: 44px;
-    padding: 0.75rem 1rem;
   }
 }
 

@@ -36,7 +36,7 @@ export default function SoulBotSection() {
       <div
         className={`bg-black relative overflow-hidden transition-all ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
-        style={{ height: 'clamp(600px, 120vh, 820px)', transitionDuration: '1000ms', transitionDelay: '0.2s' }}
+        style={{ minHeight: 'clamp(500px, 85vh, 820px)', transitionDuration: '1000ms', transitionDelay: '0.2s' }}
       >
         {/* Grey blur circle - Figma: size-400, top:-200 */}
         <div className="absolute pointer-events-none" style={{ width: 'clamp(200px, 80vw, 400px)', height: 'clamp(200px, 80vw, 400px)', left: '33.33%', top: 'clamp(-100px, -25vw, -200px)' }}>

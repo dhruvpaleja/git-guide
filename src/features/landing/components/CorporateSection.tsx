@@ -45,7 +45,7 @@ export default function CorporateSection() {
         <div
           className={`relative rounded-[30px] overflow-hidden transition-all ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.97]'
             }`}
-          style={{ transitionDuration: '1200ms', transitionDelay: '0.2s', height: 'clamp(280px, 50vw, 500px)' }}
+          style={{ transitionDuration: '1200ms', transitionDelay: '0.2s', height: 'clamp(360px, 55vw, 500px)' }}
         >
           <img
             src="/images/corporate-figma.png"

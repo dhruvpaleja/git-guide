@@ -104,7 +104,7 @@ export default function FAQSection() {
                     }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="px-12 pb-4 text-[12px] sm:text-[13px] leading-relaxed text-white/65 whitespace-pre-line">
+                    <p className="px-6 sm:px-12 pb-4 text-[13px] sm:text-[14px] leading-relaxed text-white/65 whitespace-pre-line">
                       {faq.answer}
                     </p>
                   </div>

@@ -79,30 +79,18 @@ export default function SplashScreen() {
     >
       {/* Animated Concentric Circles */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        {/* Outer circle - cyan/teal - wave 1 */}
+        {/* Outer circle - cyan/teal */}
         <GradientCircle
-          size={1000}
-          color="#18A2B8"
+          size={700}
+          color="rgba(24, 162, 184, 0.5)"
           className="animate-circle-expand"
         />
-        {/* Outer circle - cyan/teal - wave 2 (staggered) */}
-        <GradientCircle
-          size={1000}
-          color="#18A2B8"
-          className="animate-circle-expand animation-delay-2000"
-        />
 
-        {/* Inner circle - orange - wave 1 */}
+        {/* Inner circle - orange */}
         <GradientCircle
-          size={500}
-          color="#FF7B00"
-          className="animate-circle-expand animation-delay-500"
-        />
-        {/* Inner circle - orange - wave 2 (staggered) */}
-        <GradientCircle
-          size={500}
-          color="#FF7B00"
-          className="animate-circle-expand animation-delay-2500"
+          size={400}
+          color="rgba(255, 123, 0, 0.6)"
+          className="animate-circle-expand animation-delay-2000"
         />
       </div>
 
